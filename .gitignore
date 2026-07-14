@@ -1,3 +1,19 @@
+# targets store (caches, can be very large)
+_targets/
+
+# Large local inputs (zone polygons; rebuilt/copied by ensure_zones())
+input/
+
+# GTFS feeds converted by the pipeline (rebuilt from raw data)
+gtfs/
+
+# Main outputs are large binary files; copy to ../inputdata/pt_frequency for
+# the build pipeline rather than committing
+data/*.Rds
+
+# Logs
+logs/
+
 # History files
 .Rhistory
 .Rapp.history
