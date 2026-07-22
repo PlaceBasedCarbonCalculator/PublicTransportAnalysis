@@ -35,24 +35,6 @@ sum_feeds <- function(res_list) {
   dplyr::ungroup(res)
 }
 
-#' Element-wise maximum of two trips-per-zone tables
-#'
-#' Used for 2023, where the bus figure is the fuller of a spring and an
-#' autumn TNDS snapshot (school-term services differ between terms).
-max_feeds <- function(a, b) {
-  a <- as.data.frame(a)
-  b <- as.data.frame(b)
-  names(b) <- paste0(names(b), "_b")
-  both <- dplyr::full_join(a, b,
-                           by = c("zone_id" = "zone_id_b",
-                                  "route_type" = "route_type_b"))
-  stat_cols <- setdiff(names(a), c("zone_id", "route_type"))
-  for (nm in stat_cols) {
-    both[[nm]] <- pmax(both[[nm]], both[[paste0(nm, "_b")]], na.rm = TRUE)
-  }
-  both[names(a)]
-}
-
 #' Produce data/trips_per_lsoa21_22_by_mode_<year>.Rds for one year
 #'
 #' `...` is unused directly: it carries the file dependencies on the feeds
@@ -71,11 +53,7 @@ run_year <- function(year, zones_path, ..., cfg = load_cfg()) {
   zones <- sf::st_transform(zones, 4326)
 
   bus_res <- lapply(spec$bus, feed_trips, zones = zones, cfg = cfg)
-  res <- if (spec$bus_combine == "max") {
-    Reduce(max_feeds, bus_res)
-  } else {
-    sum_feeds(bus_res)
-  }
+  res <- sum_feeds(bus_res)
 
   if (!is.null(spec$rail)) {
     rail <- feed_trips(spec$rail, zones, cfg)

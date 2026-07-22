@@ -7,9 +7,10 @@
 #
 # Every source is converted from RAW timetable data with the current
 # (audited/fixed) UK2GTFS: NPTDR ATCO-CIF, Bus Archive and TNDS TransXChange
-# (incl. the NCSD coach archive), ATOC / Rail Data Portal CIF. Only the
-# DfT-produced BODS GTFS (2024/2025 bus) is used as supplied — it is an
-# independently converted source in its own right.
+# (incl. the NCSD coach archive), ATOC / Rail Data Portal CIF. The 2024/2025
+# bus figures sum this pipeline's own TNDS conversion with the DfT-produced
+# BODS GTFS, which is used as supplied — it is an independently converted
+# source in its own right.
 #
 # Run with run.R or targets::tar_make(). The conversions take days of
 # compute in total; targets caches every step and the multi-file
@@ -60,8 +61,9 @@ list(
   tar_target(tnds_20200701, convert_tnds_snapshot("20200701", txc_cal, naptan), format = "file"),
   tar_target(tnds_20211012, convert_tnds_snapshot("20211012", txc_cal, naptan), format = "file"),
   tar_target(tnds_20221102, convert_tnds_snapshot("20221102", txc_cal, naptan), format = "file"),
-  tar_target(tnds_20230503, convert_tnds_snapshot("20230503", txc_cal, naptan), format = "file"),
   tar_target(tnds_20231101, convert_tnds_snapshot("20231101", txc_cal, naptan), format = "file"),
+  tar_target(tnds_20241004, convert_tnds_snapshot("20241004", txc_cal, naptan), format = "file"),
+  tar_target(tnds_20251003, convert_tnds_snapshot("20251003", txc_cal, naptan), format = "file"),
 
   # Rail: ATOC CIF (2018-2024), then the National Rail Data Portal (2025)
   tar_target(rail_2018, convert_atoc_date("2018-10-16"), format = "file"),
@@ -69,7 +71,7 @@ list(
   tar_target(rail_2020, convert_atoc_date("2020-11-26"), format = "file"),
   tar_target(rail_2021, convert_atoc_date("2021-10-09"), format = "file"),
   tar_target(rail_2022, convert_atoc_date("2022-11-02"), format = "file"),
-  tar_target(rail_2023, convert_atoc_date("2023-05-03"), format = "file"),
+  tar_target(rail_2023, convert_atoc_date("2023-11-01"), format = "file"),
   tar_target(rail_2024, convert_atoc_date("2024-10-05"), format = "file"),
   tar_target(rail_rdp_2025, convert_rail_rdp("20251006"), format = "file"),
 
@@ -92,14 +94,14 @@ list(
   tar_target(trips_2020, run_year(2020, zones_file, tnds_20200701, rail_2020), format = "file"),
   tar_target(trips_2021, run_year(2021, zones_file, tnds_20211012, rail_2021), format = "file"),
   tar_target(trips_2022, run_year(2022, zones_file, tnds_20221102, rail_2022), format = "file"),
-  tar_target(trips_2023, run_year(2023, zones_file, tnds_20230503, tnds_20231101, rail_2023), format = "file"),
-  tar_target(trips_2024, run_year(2024, zones_file, rail_2024), format = "file"),
-  tar_target(trips_2025, run_year(2025, zones_file, rail_rdp_2025), format = "file"),
+  tar_target(trips_2023, run_year(2023, zones_file, tnds_20231101, rail_2023), format = "file"),
+  tar_target(trips_2024, run_year(2024, zones_file, tnds_20241004, rail_2024), format = "file"),
+  tar_target(trips_2025, run_year(2025, zones_file, tnds_20251003, rail_rdp_2025), format = "file"),
 
   # --- October 2025 bus source comparison: TNDS TransXChange vs BODS
   # --- TransXChange vs BODS GTFS, all counted over the same window/zones
+  # (tnds_20251003 is defined above, shared with the main trips_2025 target)
 
-  tar_target(tnds_20251003, convert_tnds_snapshot("20251003", txc_cal, naptan), format = "file"),
   tar_target(bods_txc_2025, convert_bods_txc("20251006", txc_cal, naptan), format = "file"),
   tar_target(
     comparison_data,

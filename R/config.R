@@ -43,9 +43,7 @@ study_window <- function(ref) {
 #' Timetable sources for each analysis year
 #'
 #' One entry per year. `bus` is a list of feeds (path + window reference
-#' date); `bus_combine` says how multiple bus feeds are combined ("max" =
-#' element-wise maximum, used in 2023 where school-term differences mean we
-#' take the fuller of a spring and an autumn timetable). `rail` is a single
+#' date), summed together where there is more than one. `rail` is a single
 #' feed or NULL (rail is only separately available from 2018; NPTDR includes
 #' some rail within the bus-era feeds).
 #'
@@ -62,7 +60,6 @@ year_sources <- function(cfg = load_cfg()) {
       year = y,
       bus = list(feed(sprintf("gtfs/nptdr_%s.zip", y),
                       sprintf("%s-10-01", y))),
-      bus_combine = "sum",
       rail = NULL
     )
   }
@@ -78,7 +75,6 @@ year_sources <- function(cfg = load_cfg()) {
       year = y,
       bus = list(feed(sprintf("gtfs/busarchive_%s_merged.zip", y),
                       ba_ref[[as.character(y)]])),
-      bus_combine = "sum",
       rail = NULL
     )
   }
@@ -102,34 +98,33 @@ year_sources <- function(cfg = load_cfg()) {
     spec[[y]] <- list(
       year = as.integer(y),
       bus = list(feed(sprintf("gtfs/tnds_%s_merged.zip", snap), snap_ref)),
-      bus_combine = "sum",
       rail = feed(sprintf("gtfs/rail_atoc_%s.zip", rail_date), rail_date)
     )
   }
-  # 2023: element-wise max of spring and autumn TNDS snapshots (school-term
-  # services differ between terms; we take the fuller timetable).
+  # 2023: November TNDS snapshot only (the fuller of the two available that
+  # year; the spring snapshot is dropped rather than combined).
   spec[["2023"]] <- list(
     year = 2023,
-    bus = list(feed("gtfs/tnds_20230503_merged.zip", "2023-05-03"),
-               feed("gtfs/tnds_20231101_merged.zip", "2023-11-01")),
-    bus_combine = "max",
-    rail = feed("gtfs/rail_atoc_2023-05-03.zip", "2023-05-03")
+    bus = list(feed("gtfs/tnds_20231101_merged.zip", "2023-11-01")),
+    rail = feed("gtfs/rail_atoc_2023-11-01.zip", "2023-11-01")
   )
 
-  # 2024: Bus Open Data Service national GTFS (used directly) + ATOC rail.
+  # 2024: Bus Open Data Service national GTFS + this pipeline's own TNDS
+  # conversion (summed), + ATOC rail.
   spec[["2024"]] <- list(
     year = 2024,
-    bus = list(feed("OpenBusData/GTFS/20241007/itm_all_gtfs.zip", "2024-10-07")),
-    bus_combine = "sum",
+    bus = list(feed("OpenBusData/GTFS/20241007/itm_all_gtfs.zip", "2024-10-07"),
+               feed("gtfs/tnds_20241004_merged.zip", "2024-10-04")),
     rail = feed("gtfs/rail_atoc_2024-10-05.zip", "2024-10-05")
   )
 
-  # 2025: BODS national GTFS + rail from the National Rail Data Portal
-  # (new CIF source, converted by this pipeline with atoc2gtfs()).
+  # 2025: BODS national GTFS + this pipeline's own TNDS conversion (summed),
+  # + rail from the National Rail Data Portal (new CIF source, converted by
+  # this pipeline with atoc2gtfs()).
   spec[["2025"]] <- list(
     year = 2025,
-    bus = list(feed("OpenBusData/GTFS/20251006/itm_all_gtfs.zip", "2025-10-06")),
-    bus_combine = "sum",
+    bus = list(feed("OpenBusData/GTFS/20251006/itm_all_gtfs.zip", "2025-10-06"),
+               feed("gtfs/tnds_20251003_merged.zip", "2025-10-03")),
     rail = feed("gtfs/rail_rdp_20251006.zip", "2025-10-06")
   )
 
