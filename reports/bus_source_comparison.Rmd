@@ -1,0 +1,531 @@
+# Comparing the three bus timetable sources, 2022–2026
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      fig.path = "figures/comparison-", dpi = 110,
+                      fig.width = 9, fig.height = 5)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+
+cmps <- lapply(comparison_paths, readRDS)
+names(cmps) <- vapply(cmps, function(x) as.character(x$year), "")
+years <- names(cmps)
+latest <- tail(years, 1)
+
+src_labels <- c(tnds = "TNDS (TransXChange)",
+                bods_txc = "BODS (TransXChange)",
+                bods_gtfs = "BODS (GTFS)")
+# Categorical palette, fixed order, validated for CVD separation and
+# lightness. Every chart below is paired with the table of its own numbers,
+# so identity never rests on colour alone.
+src_cols <- c("TNDS (TransXChange)" = "#2a78d6",
+              "BODS (TransXChange)" = "#1baf7a",
+              "BODS (GTFS)" = "#eda100")
+# Second categorical pair, for the two ways two sources can disagree
+gap_cols <- c("#2a78d6", "#d94f70")
+
+theme_report <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        legend.position = "top",
+        plot.title.position = "plot")
+
+fmt <- function(x) format(round(x), big.mark = ",")
+pct <- function(x) sprintf("%.1f%%", 100 * x)
+
+# Bind a per-year extraction across all years
+across_years <- function(f) bind_rows(lapply(cmps, f), .id = "year")
+```
+
+Since the Bus Open Data Service (BODS) became the statutory home of English
+bus timetables, three parallel versions of "the bus timetable" exist:
+
+1. **TNDS (TransXChange)** — the Traveline National Dataset, compiled by the
+   traveline consortium from local authority and operator data. This was the
+   source used for the 2018–2023 analysis years. Converted to GTFS with
+   `UK2GTFS::transxchange2gtfs()`.
+2. **BODS (TransXChange)** — the raw TransXChange files that operators
+   publish directly to the DfT's Bus Open Data Service (its "change archive"
+   containing every dataset revision, filtered to the revisions valid on the
+   analysis date). Converted to GTFS with `UK2GTFS::transxchange2gtfs()`.
+3. **BODS (GTFS)** — the DfT's own GTFS rendering of the BODS data, used
+   directly without any UK2GTFS conversion. This is the source used for the
+   2024 and 2025 analysis years.
+
+This report compares all three over **five years, one matched snapshot per
+year**, to establish whether the differences seen in October 2025 are a
+persistent property of the sources or an artefact of one snapshot.
+
+```{r snapshots, results="asis"}
+snap <- across_years(function(c) {
+  data.frame(window = sprintf("%s to %s", c$window$startdate, c$window$enddate),
+             tnds = basename(c$snapshot$tnds),
+             bods_txc = basename(c$snapshot$bods_txc),
+             bods_gtfs = sub(".*GTFS/([0-9]+)/.*", "\\1", c$snapshot$bods_gtfs))
+})
+knitr::kable(snap, col.names = c("Year", "28-day counting window",
+                                 "TNDS snapshot", "BODS TransXChange snapshot",
+                                 "BODS GTFS snapshot"))
+```
+
+Within a year all three sources are counted with
+`UK2GTFS::gtfs_trips_per_zone()` over the **same 28-day window** and the
+**same widened LSOA zones**, so every difference below is a difference in the
+sources or their conversion, not in the counting method. Route types were
+harmonised to the set used throughout this analysis (0 tram, 1 metro, 2 rail,
+3 bus, 4 ferry, **200 coach**); coach is kept distinct from local bus in every
+source, and the headline bus comparisons are for `route_type == 3` only.
+
+### Why the series starts in 2022, and not 2021
+
+The comparison needs all three sources at one date. That is not available for
+2021:
+
+- The **BODS TransXChange change archive begins in May 2022** — there is no
+  earlier archive on the data drive, so a 2021 three-way comparison is
+  impossible.
+- The only **2021 BODS GTFS** snapshot is from **January 2021**, while the
+  nearest TNDS snapshots are December 2020 and September 2021. Any pairing
+  spans at least eight weeks of the third national lockdown, during which
+  operators were cutting timetables week by week — the date gap, not the
+  sources, would dominate the result.
+
+2026 is included in its place, giving five years of genuinely matched
+snapshots. Two structural changes fall inside the series and are visible in
+the numbers below: **TNDS discontinued its separate NCSD national coach
+archive after February 2025**, and the TNDS regional files grew substantially
+from the 2025 snapshots onward.
+
+## Feed-level summary
+
+```{r feed-stats, results="asis"}
+stats <- across_years(function(c) c$stats)
+stats$source <- src_labels[stats$source]
+knitr::kable(stats[, c("year", "source", "agencies", "routes",
+                       "routes_in_window", "trips_in_window",
+                       "missing_departure_times")],
+             format.args = list(big.mark = ","), row.names = FALSE,
+             col.names = c("Year", "Source", "Agencies", "Routes",
+                           "Routes in window", "Trips in window",
+                           "Missing departure times"))
+```
+
+## National bus service totals
+
+Total counted bus (`route_type == 3`) departures from stops, summed over all
+zones (a departure serving stops in more than one zone is counted in each, so
+levels are comparable between sources but are not a national vehicle-trip
+count).
+
+```{r totals-table, results="asis"}
+tot <- across_years(function(c) {
+  c$bands |> group_by(source) |> summarise(runs = sum(runs), .groups = "drop")
+})
+tot_rel <- tot |>
+  group_by(year) |>
+  mutate(rel = 100 * (runs / runs[source == "bods_gtfs"] - 1)) |>
+  ungroup()
+
+# Select by name, never by pivot_wider's column order (which is alphabetical
+# by source and does not match the reading order of the table)
+tot_wide <- tot |>
+  pivot_wider(names_from = source, values_from = runs) |>
+  select(year, tnds, bods_txc, bods_gtfs)
+rel_wide <- tot_rel |>
+  mutate(rel = sprintf("%+.1f%%", rel)) |>
+  select(year, source, rel) |>
+  pivot_wider(names_from = source, values_from = rel) |>
+  select(year, rel_tnds = tnds, rel_txc = bods_txc)
+
+knitr::kable(left_join(tot_wide, rel_wide, by = "year"),
+             format.args = list(big.mark = ","),
+             col.names = c("Year", "TNDS", "BODS TXC", "BODS GTFS",
+                           "TNDS vs BODS GTFS", "BODS TXC vs BODS GTFS"))
+```
+
+```{r totals-chart, fig.height=4.5}
+tot_plot <- tot |>
+  mutate(source = factor(src_labels[source], levels = src_labels),
+         year = as.integer(year))
+
+ggplot(tot_plot, aes(x = year, y = runs / 1e6, colour = source)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.6) +
+  geom_text(data = filter(tot_plot, year == max(year)),
+            aes(label = sprintf("%.0fM", runs / 1e6)),
+            hjust = -0.25, size = 3.4, show.legend = FALSE) +
+  scale_colour_manual(values = src_cols, name = NULL) +
+  scale_x_continuous(breaks = unique(tot_plot$year),
+                     expand = expansion(mult = c(0.04, 0.12))) +
+  scale_y_continuous(limits = c(0, NA),
+                     expand = expansion(mult = c(0, 0.08))) +
+  labs(title = "Counted bus departures in the 28-day window, by source",
+       subtitle = "Millions of stop departures; same window and zones within each year",
+       x = NULL, y = "Bus departures (millions)") +
+  theme_report
+```
+
+## Zone-level agreement
+
+Per-zone average daytime bus trips per hour (`tph_daytime_avg`, the headline
+measure used by Carbon & Place), each TransXChange-derived source against the
+BODS GTFS baseline.
+
+```{r agreement, results="asis"}
+agree <- function(x, base) {
+  ok <- !is.na(x) & !is.na(base)
+  x <- x[ok]; base <- base[ok]
+  data.frame(r = round(cor(x, base), 3),
+             rho = round(cor(x, base, method = "spearman"), 3),
+             mad = round(median(abs(x - base)), 2),
+             within10 = mean(abs(x - base) <= 0.1 * pmax(base, x)))
+}
+agree_all <- across_years(function(c) {
+  bw <- c$bus_wide
+  bind_rows(
+    cbind(pair = "TNDS vs BODS GTFS", agree(bw$tnds, bw$bods_gtfs)),
+    cbind(pair = "BODS TXC vs BODS GTFS", agree(bw$bods_txc, bw$bods_gtfs)),
+    cbind(pair = "TNDS vs BODS TXC", agree(bw$tnds, bw$bods_txc)))
+})
+agree_all$within10 <- pct(agree_all$within10)
+knitr::kable(agree_all, row.names = FALSE,
+             col.names = c("Year", "Comparison", "Pearson r", "Spearman rho",
+                           "Median abs diff (tph)", "Zones within 10%"))
+```
+
+```{r agreement-chart, fig.height=4}
+ag_plot <- agree_all |>
+  mutate(year = as.integer(year),
+         pair = factor(pair, levels = c("TNDS vs BODS GTFS",
+                                        "BODS TXC vs BODS GTFS",
+                                        "TNDS vs BODS TXC")))
+ggplot(ag_plot, aes(x = year, y = r, colour = pair)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 2.6) +
+  scale_colour_manual(values = setNames(unname(src_cols), levels(ag_plot$pair)),
+                      name = NULL) +
+  scale_x_continuous(breaks = unique(ag_plot$year)) +
+  scale_y_continuous(limits = c(0, 1)) +
+  labs(title = "Per-zone agreement with the BODS GTFS baseline, by year",
+       subtitle = "Pearson correlation of daytime bus trips per hour across all zones",
+       x = NULL, y = "Pearson r") +
+  theme_report
+```
+
+## Coverage by country
+
+BODS is an **England-only statutory requirement**; Scottish and Welsh
+services reach it only where operators cross the border or publish
+voluntarily. TNDS ingests the Scottish and Welsh traveline data directly, so
+country-level coverage is where the sources should differ most.
+
+```{r country, results="asis"}
+country <- across_years(function(c) {
+  c$bus_wide |>
+    mutate(country = recode(country, "E" = "England", "W" = "Wales",
+                            "S" = "Scotland", .default = "Other")) |>
+    filter(country != "Other") |>
+    group_by(country) |>
+    summarise(zones = n(),
+              tnds = round(mean(tnds), 2),
+              bods_txc = round(mean(bods_txc), 2),
+              bods_gtfs = round(mean(bods_gtfs), 2),
+              zero_txc = sum(bods_txc == 0),
+              zero_gtfs = sum(bods_gtfs == 0),
+              zero_tnds = sum(tnds == 0),
+              .groups = "drop")
+})
+knitr::kable(country[, c("year", "country", "zones", "tnds", "bods_txc",
+                         "bods_gtfs", "zero_tnds", "zero_txc", "zero_gtfs")],
+             format.args = list(big.mark = ","), row.names = FALSE,
+             col.names = c("Year", "Country", "Zones", "TNDS mean tph",
+                           "BODS TXC mean tph", "BODS GTFS mean tph",
+                           "TNDS zero-service zones",
+                           "BODS TXC zero-service zones",
+                           "BODS GTFS zero-service zones"))
+```
+
+## What the sources actually disagree about
+
+The zone-level statistics say *how much* the sources differ. To say *what*
+they differ about, individual bus routes were matched between the three
+feeds.
+
+Routes cannot be matched on identifiers — `route_id` is source-specific and
+the BODS GTFS `agency_id` is a synthetic code (`OP77`), not a NOC. Instead
+each route is identified by its **public route number plus the set of stops
+it serves**. Two routes are linked when they share a normalised route number
+and their stop sets overlap by at least half; connected components of that
+graph are treated as one **service**. Linking runs *within* a source as well
+as between them, so a service that one source splits across several
+`route_id`s is still compared as a single service.
+
+The unit counted here is **vehicle journeys in the 28-day window** — a
+journey counts once however many stops or zones it passes through. This is a
+stricter measure than the zone-level departure counts above.
+
+```{r service-counts, results="asis"}
+svc_counts <- across_years(function(c) {
+  s <- as.data.frame(c$services)
+  data.frame(services = nrow(s),
+             all_three = sum(s$tnds > 0 & s$bods_txc > 0 & s$bods_gtfs > 0),
+             tnds_only = sum(s$tnds > 0 & s$bods_txc == 0 & s$bods_gtfs == 0),
+             txc_only = sum(s$bods_txc > 0 & s$tnds == 0 & s$bods_gtfs == 0),
+             gtfs_only = sum(s$bods_gtfs > 0 & s$tnds == 0 & s$bods_txc == 0))
+})
+knitr::kable(svc_counts, format.args = list(big.mark = ","), row.names = FALSE,
+             col.names = c("Year", "Matched services", "In all three sources",
+                           "TNDS only", "BODS TXC only", "BODS GTFS only"))
+```
+
+### Missing services, or different frequencies?
+
+For the TNDS / BODS GTFS pair — the two sources that agree most closely at
+zone level — the total gap splits into journeys on services the other source
+does not carry at all, and journeys on services both carry but time
+differently.
+
+```{r decomp, results="asis"}
+dec <- across_years(function(c) {
+  d <- c$decomposition
+  d[d$comparison == "tnds vs bods_gtfs", ]
+})
+dec_tbl <- dec |>
+  transmute(Year = year,
+            `Services in both` = services_both,
+            `TNDS-only services` = services_only_a,
+            `BODS GTFS-only services` = services_only_b,
+            `Journeys on TNDS-only services` = round(runs_only_a),
+            `Journeys on BODS GTFS-only services` = round(runs_only_b),
+            `Net difference on shared services` = round(gap_from_frequency),
+            `Total gap (TNDS - BODS GTFS)` = round(gap_total))
+knitr::kable(dec_tbl, format.args = list(big.mark = ","), row.names = FALSE)
+```
+
+```{r exclusive-chart, fig.height=4.2}
+excl <- dec |>
+  mutate(year = as.integer(year),
+         `Only in TNDS` = runs_only_a / runs_a,
+         `Only in BODS GTFS` = runs_only_b / runs_b) |>
+  select(year, `Only in TNDS`, `Only in BODS GTFS`) |>
+  pivot_longer(-year, names_to = "which", values_to = "share")
+
+ggplot(excl, aes(x = factor(year), y = share, fill = which)) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.68) +
+  geom_text(aes(label = pct(share)),
+            position = position_dodge(width = 0.75), vjust = -0.4,
+            size = 3.2, colour = "grey30") +
+  scale_fill_manual(values = setNames(gap_cols,
+                                      c("Only in TNDS", "Only in BODS GTFS")),
+                    name = NULL) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     expand = expansion(mult = c(0, 0.12))) +
+  labs(title = "Share of each source's bus journeys on services the other source lacks",
+       subtitle = "Services matched on route number and stop pattern; TNDS vs BODS GTFS",
+       x = NULL, y = "Share of the source's journeys") +
+  theme_report
+```
+
+Among the services **both** sources carry, how closely do they agree on the
+number of journeys?
+
+```{r shared-agreement, results="asis"}
+shared <- across_years(function(c) {
+  s <- as.data.frame(c$services)
+  s <- s[s$tnds > 0 & s$bods_gtfs > 0, ]
+  d <- abs(s$tnds - s$bods_gtfs) / pmax(s$tnds, s$bods_gtfs)
+  data.frame(services = nrow(s),
+             within2 = mean(d <= 0.02),
+             within10 = mean(d <= 0.10),
+             over50 = mean(d > 0.50),
+             median_diff = round(median(d), 3))
+})
+shared_tbl <- shared |>
+  transmute(Year = year, `Shared services` = services,
+            `Within 2%` = pct(within2), `Within 10%` = pct(within10),
+            `Differ by more than 50%` = pct(over50),
+            `Median absolute difference` = pct(median_diff))
+knitr::kable(shared_tbl, format.args = list(big.mark = ","), row.names = FALSE)
+```
+
+In the four autumn windows (2022–2025) most shared services agree *exactly*:
+the modal TNDS ÷ BODS GTFS journey-count ratio is 1.00 and around 60% of
+services are identical. **The February 2026 window is the exception** — the
+whole ratio distribution shifts to about 1.09 (TNDS counts ~9% more journeys
+than BODS GTFS on the same services) and the share of exactly-equal services
+collapses to 4%. February is the only window here that contains a school
+half-term, so the most likely cause is the two converters handling term-time
+and half-term operating profiles differently; the autumn windows sit clear of
+school holidays and so agree far more closely. This is worth investigating
+before relying on a February snapshot for anything frequency-sensitive, and is
+a reminder that the counting window itself — not just the source — affects how
+closely the sources agree.
+
+```{r shared-chart, fig.height=4.2}
+sh_plot <- shared |>
+  mutate(year = as.integer(year),
+         `Agree within 10%` = within10,
+         `Differ by more than 50%` = over50) |>
+  select(year, `Agree within 10%`, `Differ by more than 50%`) |>
+  pivot_longer(-year, names_to = "band", values_to = "share")
+
+ggplot(sh_plot, aes(x = factor(year), y = share, fill = band)) +
+  geom_col(position = position_dodge(width = 0.75), width = 0.68) +
+  geom_text(aes(label = pct(share)),
+            position = position_dodge(width = 0.75), vjust = -0.4,
+            size = 3.2, colour = "grey30") +
+  scale_fill_manual(values = setNames(gap_cols, c("Agree within 10%",
+                                                  "Differ by more than 50%")),
+                    name = NULL) +
+  scale_y_continuous(labels = scales::percent_format(accuracy = 1),
+                     expand = expansion(mult = c(0, 0.12))) +
+  labs(title = "Agreement on journey counts for services both sources carry",
+       subtitle = "TNDS vs BODS GTFS, 28-day vehicle journey counts per service",
+       x = NULL, y = "Share of shared services") +
+  theme_report
+```
+
+### Worked examples
+
+The largest services each source carries and the other does not, and the
+largest disagreements on services both carry, for **`r latest`**.
+
+```{r examples-setup}
+s_latest <- as.data.frame(cmps[[latest]]$services)
+route_label <- function(d) {
+  data.frame(Route = d$route_short_name,
+             Operator = ifelse(is.na(d$agency_name), "—", d$agency_name),
+             From = ifelse(is.na(d$from), "—", d$from),
+             To = ifelse(is.na(d$to), "—", d$to))
+}
+```
+
+```{r ex-tnds-only, results="asis"}
+d <- s_latest[s_latest$tnds > 0 & s_latest$bods_gtfs == 0, ]
+d <- d[order(-d$tnds), ][seq_len(min(12, nrow(d))), ]
+knitr::kable(cbind(route_label(d),
+                   `TNDS journeys` = round(d$tnds),
+                   `BODS TXC journeys` = round(d$bods_txc)),
+             row.names = FALSE, format.args = list(big.mark = ","),
+             caption = paste("Busiest services in TNDS but absent from BODS GTFS,", latest))
+```
+
+```{r ex-gtfs-only, results="asis"}
+d <- s_latest[s_latest$bods_gtfs > 0 & s_latest$tnds == 0, ]
+d <- d[order(-d$bods_gtfs), ][seq_len(min(12, nrow(d))), ]
+knitr::kable(cbind(route_label(d),
+                   `BODS GTFS journeys` = round(d$bods_gtfs),
+                   `BODS TXC journeys` = round(d$bods_txc)),
+             row.names = FALSE, format.args = list(big.mark = ","),
+             caption = paste("Busiest services in BODS GTFS but absent from TNDS,", latest))
+```
+
+```{r ex-shared-diff, results="asis"}
+d <- s_latest[s_latest$tnds > 0 & s_latest$bods_gtfs > 0, ]
+d$diff <- d$tnds - d$bods_gtfs
+d <- d[order(-abs(d$diff)), ][seq_len(min(15, nrow(d))), ]
+knitr::kable(cbind(route_label(d),
+                   `TNDS journeys` = round(d$tnds),
+                   `BODS GTFS journeys` = round(d$bods_gtfs),
+                   `Difference` = round(d$diff),
+                   `Ratio` = sprintf("%.2f", d$tnds / d$bods_gtfs)),
+             row.names = FALSE, format.args = list(big.mark = ","),
+             caption = paste("Largest journey-count disagreements on services both sources carry,", latest))
+```
+
+## Interpretation
+
+```{r interpretation, results="asis"}
+# Data-driven headline observations; the discussion below is written.
+rel_tnds <- tot_rel[tot_rel$source == "tnds", ]
+rel_txc <- tot_rel[tot_rel$source == "bods_txc", ]
+ag_tg <- agree_all[agree_all$pair == "TNDS vs BODS GTFS", ]
+ag_xg <- agree_all[agree_all$pair == "BODS TXC vs BODS GTFS", ]
+
+cat(sprintf(
+  paste0("- Across %s the TNDS bus total runs between %+.1f%% and %+.1f%% of ",
+         "the BODS GTFS total, and the BODS TransXChange total between ",
+         "%+.1f%% and %+.1f%%.\n"),
+  paste(range(years), collapse = "-"),
+  min(rel_tnds$rel), max(rel_tnds$rel),
+  min(rel_txc$rel), max(rel_txc$rel)))
+
+cat(sprintf(
+  paste0("- Per-zone agreement with BODS GTFS is stable across the series: ",
+         "Pearson r ranges %.3f-%.3f for TNDS and %.3f-%.3f for BODS ",
+         "TransXChange.\n"),
+  min(ag_tg$r), max(ag_tg$r), min(ag_xg$r), max(ag_xg$r)))
+
+cat(sprintf(
+  paste0("- Of TNDS bus journeys, %s-%s sit on services BODS GTFS does not ",
+         "carry at all; of BODS GTFS journeys, %s-%s sit on services TNDS ",
+         "does not carry.\n"),
+  pct(min(dec$runs_only_a / dec$runs_a)), pct(max(dec$runs_only_a / dec$runs_a)),
+  pct(min(dec$runs_only_b / dec$runs_b)), pct(max(dec$runs_only_b / dec$runs_b))))
+
+cat(sprintf(
+  paste0("- Where both sources carry a service, %s-%s of services agree on ",
+         "the 28-day journey count to within 10%%.\n"),
+  pct(min(shared$within10)), pct(max(shared$within10))))
+
+# The Feb 2026 window is the one that breaks the otherwise-exact agreement
+sh26 <- shared[shared$year == "2026", ]
+sh_aut <- shared[shared$year != "2026", ]
+cat(sprintf(
+  paste0("- The agreement on shared services is near-exact in the four ",
+         "autumn windows (median difference 0%%, %s-%s of services within 2%%) ",
+         "but not in the February 2026 window (median difference %s, only %s ",
+         "within 2%%) — consistent with a school half-term falling inside the ",
+         "2026 window and being handled differently by the two converters.\n"),
+  pct(min(sh_aut$within2)), pct(max(sh_aut$within2)),
+  pct(sh26$median_diff), pct(sh26$within2)))
+```
+
+### Why the sources differ
+
+- **Coverage obligations differ.** BODS is a statutory requirement for
+  English local bus services only. TNDS carries the Scottish and Welsh
+  traveline datasets. The BODS GTFS and BODS TransXChange feeds do include
+  some Scottish and Welsh services (cross-border operators, voluntary
+  publication, and TfW/Traveline Cymru bulk uploads), but coverage outside
+  England should be treated as incomplete in both BODS-derived sources.
+- **Different compilation routes.** TNDS is compiled and quality-assured by
+  traveline from local authority systems; BODS TransXChange is published
+  directly by operators (with varying quality and duplication across dataset
+  revisions); BODS GTFS is the DfT's automated conversion of the latter.
+  Services can legitimately appear in one and not another (e.g. new
+  operators publishing only to BODS; local services still only in local
+  authority systems).
+- **Duplication handling.** The BODS change archive contains every revision
+  of every dataset; superseded revisions were dropped with
+  `UK2GTFS::txc_filter_files()` keeping the revision valid on the analysis
+  date. Residual duplication (the same service published by both an operator
+  and a local authority scheme) inflates counts in the TransXChange-derived
+  sources; the DfT GTFS pipeline applies its own de-duplication.
+- **Conversion differences.** The TransXChange sources are converted with
+  UK2GTFS (this pipeline), while BODS GTFS is converted by the DfT's ITO
+  World pipeline. Differences in how each handles operating profiles, bank
+  holidays, school-term services and duplicate journeys show up as small
+  per-zone differences even where the underlying timetable is identical.
+- **Coach coverage differs by design.** All sources distinguish coach (200)
+  from local bus (3), but TNDS's coach data came from the separate NCSD
+  archive, discontinued after February 2025 — so TNDS snapshots from 2025
+  onward have no coach services at all. Services classified as coach in one
+  source and bus in another also remain a real (small) difference.
+
+### Caveats on the route matching
+
+- Matching keys on the **public route number and stop pattern**. Where an
+  operator renumbers a route between snapshots, or two genuinely different
+  services share a number and a large part of their stop pattern, the match
+  can be wrong. The stop-overlap threshold (half the smaller stop set) is a
+  deliberate compromise: raising it splits legitimate matches where one
+  source omits a branch, lowering it merges distinct services.
+- Services counted as "absent" from a source may be present under a
+  **different route number** rather than genuinely missing. The worked
+  example tables should be read as leads to investigate, not as a
+  certified list of gaps.
+- Journey counts are the number of vehicle journeys operating in the
+  28-day window under GTFS calendar semantics, including `calendar_dates`
+  exceptions. They are not passenger-facing frequencies.

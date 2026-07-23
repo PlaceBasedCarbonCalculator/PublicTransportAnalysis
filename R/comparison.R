@@ -1,17 +1,68 @@
-# Three-way comparison of the October 2025 bus timetable sources.
+# Multi-year comparison of the three bus timetable sources.
 #
-# For the most recent years three versions of the bus timetable exist:
-#  - TNDS:     Traveline National Dataset, TransXChange format (the source
-#              used for 2018-2023), converted with UK2GTFS
-#  - BODS TXC: Bus Open Data Service, TransXChange format (operator-published
-#              change archive), converted with UK2GTFS
+# For recent years three versions of the bus timetable exist:
+#  - TNDS:      Traveline National Dataset, TransXChange format (the source
+#               used for 2018-2023), converted with UK2GTFS
+#  - BODS TXC:  Bus Open Data Service, TransXChange format (operator-published
+#               change archive), converted with UK2GTFS
 #  - BODS GTFS: the DfT's own GTFS rendering of BODS data (the source used
-#              directly for 2024-2025)
+#               directly for 2024-2025)
+#
 # All three are counted with gtfs_trips_per_zone() over the same 28-day
 # Monday window and the same zones, so any differences are differences in
 # the sources (or their conversion), not in the method.
+#
+# The comparison runs for 2022-2026, one snapshot per year. It cannot run
+# earlier: the BODS TransXChange change archive only starts in May 2022, and
+# the only 2021 BODS GTFS snapshot is from January 2021, months away from
+# any TNDS snapshot and in the middle of the third national lockdown.
+#
+# Alongside the zone-level comparison, R/route_match.R matches individual
+# bus routes between the sources so the difference can be split into
+# services a source lacks entirely and services it runs at a different
+# frequency.
 
-comparison_window_ref <- "2025-10-06"
+#' Snapshot triples: one matched set of the three sources per year
+#'
+#' `ref` is the window reference date, floored to its Monday by
+#' study_window(); all three sources of a year are counted over that one
+#' window. `bods_txc` names the feed convert_bods_txc() writes, `tnds` the
+#' feed convert_tnds_snapshot() writes, and `bods_gtfs` is the DfT feed used
+#' as supplied (a path under cfg$data_root).
+comparison_snapshots <- function() {
+  list(
+    `2022` = list(ref = "2022-11-02",
+                  tnds = "gtfs/tnds_20221102_merged.zip",
+                  bods_txc = "gtfs/bods_txc_20221102.zip",
+                  bods_gtfs = "OpenBusData/GTFS/20221102/itm_all_gtfs.zip"),
+    `2023` = list(ref = "2023-11-01",
+                  tnds = "gtfs/tnds_20231101_merged.zip",
+                  bods_txc = "gtfs/bods_txc_20231101.zip",
+                  bods_gtfs = "OpenBusData/GTFS/20231101/itm_all_gtfs.zip"),
+    `2024` = list(ref = "2024-10-07",
+                  tnds = "gtfs/tnds_20241004_merged.zip",
+                  bods_txc = "gtfs/bods_txc_20241007.zip",
+                  bods_gtfs = "OpenBusData/GTFS/20241007/itm_all_gtfs.zip"),
+    `2025` = list(ref = "2025-10-06",
+                  tnds = "gtfs/tnds_20251003_merged.zip",
+                  bods_txc = "gtfs/bods_txc_20251006.zip",
+                  bods_gtfs = "OpenBusData/GTFS/20251006/itm_all_gtfs.zip"),
+    `2026` = list(ref = "2026-02-04",
+                  tnds = "gtfs/tnds_20260204_merged.zip",
+                  bods_txc = "gtfs/bods_txc_20260204.zip",
+                  bods_gtfs = "OpenBusData/GTFS/20260204/itm_all_gtfs.zip")
+  )
+}
+
+comparison_years <- function() as.integer(names(comparison_snapshots()))
+
+comparison_sources <- function() c("tnds", "bods_txc", "bods_gtfs")
+
+comparison_source_labels <- function() {
+  c(tnds = "TNDS (TransXChange)",
+    bods_txc = "BODS (TransXChange)",
+    bods_gtfs = "BODS (GTFS)")
+}
 
 #' Map extended GTFS route types to the types used in this analysis
 #'
@@ -84,91 +135,132 @@ add_tph_daytime_avg <- function(res) {
   res
 }
 
-#' Count trips per zone for one comparison source
-comparison_source_trips <- function(path, zones, cfg = load_cfg()) {
-  win <- study_window(comparison_window_ref)
-  gtfs <- read_feed(path, cfg)
+#' Count one source-year: per-zone trips, feed stats and per-route summary
+#'
+#' One target per source and year, so an interrupted run resumes at the last
+#' completed source rather than restarting the year.
+#'
+#' @param year analysis year (must be in comparison_snapshots())
+#' @param source one of comparison_sources()
+#' @param zones_path path to the zone polygons
+#' @param ... unused; carries the file dependency on the converted feed so
+#'   targets rebuilds this when the conversion changes
+comparison_source_result <- function(year, source, zones_path, ...,
+                                     cfg = load_cfg()) {
+  spec <- comparison_snapshots()[[as.character(year)]]
+  if (is.null(spec)) stop("No comparison snapshot for year ", year)
+  if (!source %in% comparison_sources()) stop("Unknown source ", source)
 
+  suppressMessages(sf::sf_use_s2(FALSE))
+  win <- study_window(spec$ref)
+  message(source, " ", year, ": window ", win$startdate, " to ", win$enddate)
+
+  gtfs <- read_feed(spec[[source]], cfg)
   stats <- feed_summary_stats(gtfs, win)
   composition <- feed_mode_composition(gtfs)
 
   # Harmonise extended route types before counting so modes align
   gtfs$routes$route_type <- map_route_type_simple(gtfs$routes$route_type)
 
+  # Route-level summary first: it needs stop_times, which the zone counting
+  # consumes. It works on its own date-trimmed copy of the feed, so release
+  # that before the (memory-heavy) zone counting starts.
+  routes <- route_window_summary(gtfs, win, keep_type = 3L)
+  gc()
+
+  zones <- readRDS(zones_path)
+  zones <- sf::st_transform(zones, 4326)
   res <- UK2GTFS::gtfs_trips_per_zone(gtfs, zone = zones,
                                       startdate = win$startdate,
                                       enddate = win$enddate,
                                       ncores = cfg$ncores)
-  res <- as.data.frame(res)
-  res <- add_tph_daytime_avg(res)
-  list(trips = res, stats = stats, composition = composition)
+  res <- add_tph_daytime_avg(as.data.frame(res))
+
+  list(year = year, source = source, window = win,
+       stats = stats, composition = composition, trips = res, routes = routes)
 }
 
-#' Run the three-way comparison and save the results
+#' Bus departures by day and time band, from a per-zone result table
+band_runs_bus <- function(trips) {
+  b <- trips[trips$route_type == 3 & !is.na(trips$zone_id), ]
+  runs_cols <- grep("^runs_", names(b), value = TRUE)
+  out <- data.frame(column = runs_cols,
+                    runs = colSums(b[runs_cols], na.rm = TRUE))
+  out <- tidyr::separate(out, column, into = c("measure", "day", "band"),
+                         sep = "_", extra = "merge")
+  out[, c("day", "band", "runs")]
+}
+
+#' Combine the three sources of one year into the report inputs
 #'
-#' Saves data/bus_source_comparison_2025.Rds: a list with per-source feed
-#' stats, mode composition, and the per-zone results (all modes), plus a
-#' wide bus-only per-zone table used by the report.
-compare_bus_sources <- function(tnds_path, bods_txc_path,
-                                zones_path, cfg = load_cfg()) {
-  suppressMessages(sf::sf_use_s2(FALSE))
-  zones <- readRDS(zones_path)
-  zones <- sf::st_transform(zones, 4326)
-
-  sources <- list(
-    tnds = tnds_path,
-    bods_txc = bods_txc_path,
-    bods_gtfs = "OpenBusData/GTFS/20251006/itm_all_gtfs.zip"
-  )
-
-  res <- lapply(sources, comparison_source_trips, zones = zones, cfg = cfg)
+#' Writes data/bus_source_comparison_<year>.Rds holding only what the report
+#' needs: feed stats, mode composition, the per-zone bus table, day/band
+#' totals, and the cross-source route matching.
+combine_year_comparison <- function(year, results, cfg = load_cfg()) {
+  names(results) <- vapply(results, `[[`, "", "source")
+  srcs <- comparison_sources()
+  results <- results[srcs]
 
   # Wide bus-only table: one row per zone, tph_daytime_avg per source
   bus_wide <- NULL
-  for (nm in names(res)) {
-    b <- res[[nm]]$trips
-    b <- b[b$route_type == 3 & !is.na(b$zone_id), c("zone_id", "tph_daytime_avg")]
+  for (nm in srcs) {
+    b <- results[[nm]]$trips
+    b <- b[b$route_type == 3 & !is.na(b$zone_id),
+           c("zone_id", "tph_daytime_avg")]
     names(b)[2] <- nm
     bus_wide <- if (is.null(bus_wide)) b else
       dplyr::full_join(bus_wide, b, by = "zone_id")
   }
   # A zone missing from a source genuinely has no counted bus service there
-  for (nm in names(sources)) {
-    bus_wide[[nm]][is.na(bus_wide[[nm]])] <- 0
-  }
+  for (nm in srcs) bus_wide[[nm]][is.na(bus_wide[[nm]])] <- 0
   bus_wide$country <- substr(bus_wide$zone_id, 1, 1)
 
+  bands <- dplyr::bind_rows(lapply(results, function(r) band_runs_bus(r$trips)),
+                            .id = "source")
+
+  # Cross-source route matching and the missing-vs-frequency decomposition
+  matched <- match_route_services(lapply(results, `[[`, "routes"))
+  pairs <- list(c("tnds", "bods_gtfs"), c("bods_txc", "bods_gtfs"),
+                c("tnds", "bods_txc"))
+  decomp <- dplyr::bind_rows(lapply(pairs, function(p) {
+    decompose_difference(matched$services, p[1], p[2])
+  }))
+
   out <- list(
-    window = study_window(comparison_window_ref),
-    sources = sources,
-    stats = dplyr::bind_rows(lapply(res, `[[`, "stats"), .id = "source"),
-    composition = dplyr::bind_rows(lapply(res, `[[`, "composition"),
+    year = year,
+    window = results[[1]]$window,
+    snapshot = comparison_snapshots()[[as.character(year)]],
+    stats = dplyr::bind_rows(lapply(results, `[[`, "stats"), .id = "source"),
+    composition = dplyr::bind_rows(lapply(results, `[[`, "composition"),
                                    .id = "source"),
-    trips = lapply(res, `[[`, "trips"),
-    bus_wide = bus_wide
+    bus_wide = bus_wide,
+    bands = bands,
+    services = matched$services,
+    decomposition = decomp
   )
 
   dir.create(cfg$out_dir, showWarnings = FALSE, recursive = TRUE)
-  out_path <- file.path(cfg$out_dir, "bus_source_comparison_2025.Rds")
+  out_path <- file.path(cfg$out_dir,
+                        sprintf("bus_source_comparison_%s.Rds", year))
   saveRDS(out, out_path)
   out_path
 }
 
-#' Knit the comparison report to markdown
-render_comparison_report <- function(comparison_path, cfg = load_cfg()) {
+#' Knit the multi-year comparison report to markdown
+render_comparison_report <- function(comparison_paths, cfg = load_cfg()) {
   dir.create(cfg$report_dir, showWarnings = FALSE, recursive = TRUE)
   env <- new.env(parent = globalenv())
-  env$comparison_path <- normalizePath(comparison_path)
+  env$comparison_paths <- normalizePath(comparison_paths)
 
   # Knit from inside reports/ so figure links in the md are relative to it.
   # knitr::knit (not rmarkdown::render) so no pandoc dependency.
   old_wd <- setwd(cfg$report_dir)
   on.exit(setwd(old_wd), add = TRUE)
   knitr::knit(
-    input = "bus_source_comparison_2025.Rmd",
-    output = "bus_source_comparison_2025.md",
+    input = "bus_source_comparison.Rmd",
+    output = "bus_source_comparison.md",
     envir = env,
     quiet = TRUE
   )
-  file.path(cfg$report_dir, "bus_source_comparison_2025.md")
+  file.path(cfg$report_dir, "bus_source_comparison.md")
 }

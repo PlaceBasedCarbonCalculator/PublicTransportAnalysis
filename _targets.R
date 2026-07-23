@@ -2,8 +2,8 @@
 #
 # Main outputs: data/trips_per_lsoa21_22_by_mode_<year>.Rds, consumed by the
 # PlaceBasedCarbonCalculator build pipeline (../build, `pt_frequency` target).
-# Also: a three-way comparison of the October 2025 bus timetable sources
-# (reports/bus_source_comparison_2025.md).
+# Also: a three-way comparison of the bus timetable sources, one snapshot per
+# year for 2022-2026 (reports/bus_source_comparison.md).
 #
 # Every source is converted from RAW timetable data with the current
 # (audited/fixed) UK2GTFS: NPTDR ATCO-CIF, Bus Archive and TNDS TransXChange
@@ -19,13 +19,61 @@
 library(targets)
 
 tar_option_set(
-  packages = c("UK2GTFS", "sf", "dplyr", "tidyr", "lubridate", "purrr"),
+  packages = c("UK2GTFS", "sf", "dplyr", "tidyr", "lubridate", "purrr",
+               "data.table", "igraph"),
   format = "rds",
   memory = "transient",
   garbage_collection = TRUE
 )
 
 for (f in list.files("R", full.names = TRUE)) source(f)
+
+# --- Bus source comparison targets, built programmatically ---
+#
+# One target per source and year (so an interrupted run resumes at the last
+# completed source), then one combining target per year, then one report
+# over all years. The TNDS and BODS TransXChange feeds are converted by this
+# pipeline, so those targets are referenced by symbol to create the
+# dependency; the BODS GTFS feed is read from the data drive as supplied.
+cmp_tnds_target <- c(`2022` = "tnds_20221102", `2023` = "tnds_20231101",
+                     `2024` = "tnds_20241004", `2025` = "tnds_20251003",
+                     `2026` = "tnds_20260204")
+
+comparison_targets <- unlist(lapply(comparison_years(), function(y) {
+  ys <- as.character(y)
+  feed_target <- c(tnds = cmp_tnds_target[[ys]],
+                   bods_txc = paste0("bods_txc_", ys),
+                   bods_gtfs = NA_character_)
+
+  per_source <- lapply(comparison_sources(), function(s) {
+    dep <- feed_target[[s]]
+    call <- if (is.na(dep)) {
+      bquote(comparison_source_result(.(y), .(s), zones_file))
+    } else {
+      bquote(comparison_source_result(.(y), .(s), zones_file, .(as.name(dep))))
+    }
+    tar_target_raw(sprintf("cmp_%s_%s", ys, s), call)
+  })
+
+  combine <- tar_target_raw(
+    paste0("comparison_", ys),
+    bquote(combine_year_comparison(
+      .(y),
+      list(.(as.name(sprintf("cmp_%s_tnds", ys))),
+           .(as.name(sprintf("cmp_%s_bods_txc", ys))),
+           .(as.name(sprintf("cmp_%s_bods_gtfs", ys)))))),
+    format = "file")
+
+  c(per_source, list(combine))
+}), recursive = FALSE)
+
+comparison_report_target <- tar_target_raw(
+  "comparison_report",
+  as.call(c(quote(render_comparison_report),
+            list(as.call(c(quote(c),
+                           lapply(paste0("comparison_", comparison_years()),
+                                  as.name)))))),
+  format = "file")
 
 list(
   # Zone polygons: LSOA21 (E&W) / DZ22 (Scotland), widened for stop access
@@ -98,18 +146,32 @@ list(
   tar_target(trips_2024, run_year(2024, zones_file, tnds_20241004, rail_2024), format = "file"),
   tar_target(trips_2025, run_year(2025, zones_file, tnds_20251003, rail_rdp_2025), format = "file"),
 
-  # --- October 2025 bus source comparison: TNDS TransXChange vs BODS
-  # --- TransXChange vs BODS GTFS, all counted over the same window/zones
-  # (tnds_20251003 is defined above, shared with the main trips_2025 target)
+  # --- Bus source comparison, 2022-2026: TNDS TransXChange vs BODS
+  # --- TransXChange vs BODS GTFS, each year counted over one shared
+  # --- window and the same zones.
+  #
+  # The TNDS feeds for 2022-2025 are the same targets the main trips_<year>
+  # outputs use; 2026 is converted only for the comparison. The BODS
+  # TransXChange change archives are converted here (the archive file name
+  # does not always match its folder, hence the explicit `archive`).
+  tar_target(tnds_20260204, convert_tnds_snapshot("20260204", txc_cal, naptan), format = "file"),
 
-  tar_target(bods_txc_2025, convert_bods_txc("20251006", txc_cal, naptan), format = "file"),
-  tar_target(
-    comparison_data,
-    compare_bus_sources(tnds_path = tnds_20251003,
-                        bods_txc_path = bods_txc_2025,
-                        zones_path = zones_file),
-    format = "file"
-  ),
-  tar_target(comparison_report, render_comparison_report(comparison_data),
-             format = "file")
+  tar_target(bods_txc_2022, convert_bods_txc("20221102", txc_cal, naptan,
+                                             archive = "bodds_archive_20221102.zip",
+                                             filter_date = "2022-11-02"), format = "file"),
+  tar_target(bods_txc_2023, convert_bods_txc("20231101", txc_cal, naptan,
+                                             archive = "bodds_archive_20231101.zip",
+                                             filter_date = "2023-11-01"), format = "file"),
+  tar_target(bods_txc_2024, convert_bods_txc("20241007", txc_cal, naptan,
+                                             archive = "bodds_archive_20241006.zip",
+                                             filter_date = "2024-10-07"), format = "file"),
+  tar_target(bods_txc_2025, convert_bods_txc("20251006", txc_cal, naptan,
+                                             archive = "bodds_archive_20251005.zip",
+                                             filter_date = "2025-10-06"), format = "file"),
+  tar_target(bods_txc_2026, convert_bods_txc("20260204", txc_cal, naptan,
+                                             archive = "bodds_archive_20260204.zip",
+                                             filter_date = "2026-02-04"), format = "file"),
+
+  comparison_targets,
+  comparison_report_target
 )
