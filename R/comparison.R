@@ -29,8 +29,20 @@
 #' window. `bods_txc` names the feed convert_bods_txc() writes, `tnds` the
 #' feed convert_tnds_snapshot() writes, and `bods_gtfs` is the DfT feed used
 #' as supplied (a path under cfg$data_root).
+#'
+#' The DfT's national GTFS changed character between the 2024 and 2026
+#' snapshots: the older feeds carry history (the 2022-11-02 feed has
+#' calendars back to 2022-08-01), the 2026 ones do not — every calendar in
+#' `20260204/itm_all_gtfs.zip` starts on or after the extraction date. When
+#' the reference date is not a Monday, flooring it opens the window before
+#' the extraction date and the BODS GTFS column is silently short by those
+#' days, which is what made February 2026 look anomalous. Where the feed has
+#' no history the window is therefore anchored forward, to the first Monday
+#' on or after the extraction date, via an explicit `ref`.
 comparison_snapshots <- function() {
   list(
+    # 2022-2024: feeds carry history, so flooring the reference date to its
+    # Monday stays inside their coverage.
     `2022` = list(ref = "2022-11-02",
                   tnds = "gtfs/tnds_20221102_merged.zip",
                   bods_txc = "gtfs/bods_txc_20221102.zip",
@@ -43,15 +55,55 @@ comparison_snapshots <- function() {
                   tnds = "gtfs/tnds_20241004_merged.zip",
                   bods_txc = "gtfs/bods_txc_20241007.zip",
                   bods_gtfs = "OpenBusData/GTFS/20241007/itm_all_gtfs.zip"),
+    # 2025: the extraction date is itself a Monday, so nothing to correct.
     `2025` = list(ref = "2025-10-06",
                   tnds = "gtfs/tnds_20251003_merged.zip",
                   bods_txc = "gtfs/bods_txc_20251006.zip",
                   bods_gtfs = "OpenBusData/GTFS/20251006/itm_all_gtfs.zip"),
-    `2026` = list(ref = "2026-02-04",
+    # 2026: extracted on Wednesday 4 February with no history, so the window
+    # opens on the following Monday rather than the preceding one.
+    `2026` = list(ref = "2026-02-09", snapshot_date = "2026-02-04",
                   tnds = "gtfs/tnds_20260204_merged.zip",
                   bods_txc = "gtfs/bods_txc_20260204.zip",
                   bods_gtfs = "OpenBusData/GTFS/20260204/itm_all_gtfs.zip")
   )
+}
+
+#' The snapshot triple used for validation against published timetables
+#'
+#' Separate from comparison_snapshots(): the multi-year comparison wants one
+#' matched snapshot per year, while validation wants whichever snapshot the
+#' available PDFs are actually valid for. Published timetables are easy to
+#' obtain for today and hard to obtain for the past, so this is a current
+#' snapshot of all three sources.
+#'
+#' Extracted Sunday 26 July 2026 (BODS TransXChange the previous day), so the
+#' window opens on Monday 27 July for the same no-history reason as 2026-02.
+validation_snapshot <- function() {
+  list(ref = "2026-07-27", snapshot_date = "2026-07-26",
+       tnds = "gtfs/tnds_20260726_merged.zip",
+       bods_txc = "gtfs/bods_txc_20260725.zip",
+       bods_gtfs = "OpenBusData/GTFS/20260726/itm_all_gtfs.zip")
+}
+
+#' Windows the validation counts over
+#'
+#' Two, because the two bank holidays fall either side of a single 28-day
+#' window and bank holiday handling is the nearest untested neighbour of the
+#' holiday-profile duplication that was fixed in UK2GTFS.
+#'
+#'  * `main` (27 Jul - 23 Aug 2026) contains Monday 3 August, the Scottish
+#'    summer bank holiday. The Glasgow, Falkirk and Fife references are all
+#'    inside it.
+#'  * `bankhol` (10 Aug - 6 Sep 2026) contains Monday 31 August, the England
+#'    and Wales summer bank holiday, and so covers the Cardiff 62's "Sundays
+#'    & public holidays" table and Kinchbus's "Sunday & Bank Holiday Monday"
+#'    table - the only two published references for a bank holiday in the
+#'    set. It runs six weeks past the extraction date, which is well within
+#'    what the TransXChange sources carry forward but should be read with
+#'    that in mind.
+validation_windows <- function() {
+  c(main = "2026-07-27", bankhol = "2026-08-10")
 }
 
 comparison_years <- function() as.integer(names(comparison_snapshots()))

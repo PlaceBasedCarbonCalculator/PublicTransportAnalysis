@@ -1,0 +1,125 @@
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE,
+                      fig.path = "figures/validation-")
+library(data.table)
+v <- readRDS(validation_path)
+lbl <- comparison_source_labels()
+```
+
+# Validating the sources against published timetables
+
+The multi-year comparison in `bus_source_comparison.md` can say that TNDS,
+BODS TransXChange and BODS GTFS disagree; only an operator's own published
+timetable says which of them is right. This checks individual routes against
+the documents in `data/example_timetables/`.
+
+Published timetables are easy to obtain for the current week and hard to
+obtain for the past, so this uses a **current snapshot of all three sources**
+rather than one of the historic comparison snapshots.
+
+```{r window}
+wins <- paste(names(v$window), vapply(v$window, function(x)
+  paste(x$startdate, "to", x$enddate), ""), sep = ": ", collapse = "; ")
+w <- data.frame(
+  Item = c("Snapshot extracted", "Counting windows", "TNDS",
+           "BODS TransXChange", "BODS GTFS"),
+  Value = c(as.character(v$snapshot$snapshot_date), wins,
+            v$snapshot$tnds, v$snapshot$bods_txc, v$snapshot$bods_gtfs))
+knitr::kable(w)
+```
+
+The window opens on the first Monday on or after the extraction date. The
+DfT's GTFS carries no history — every calendar in it starts on the extraction
+date — so a window opening earlier would silently understate that source, as
+it did in the February 2026 comparison.
+
+## Journeys per operating day, published against each source
+
+`Published` is the number of journeys the document prints for one operating
+day at the reference stop. Where a document abbreviates a frequent-service
+period the block is expanded before counting, and the row is flagged:
+
+* **Expanded** — the count includes journeys recovered from an abbreviation
+  such as "at these minutes past each hour until" or "and every 10 mins
+  until". These are exact: the printed pattern determines the departures.
+* **Upper bound** — the abbreviation was qualified, as in Lothian's "**up
+  to** every 10 mins until". The true service is at most this frequent, so
+  the expansion is a ceiling and a source counting fewer journeys is not
+  necessarily wrong.
+* **Reliable** — `FALSE` where any of three checks failed. **Rows marked
+  unreliable must not be read as ground truth.** The checks all guard the
+  same failure: not a reader that stops, but one that quietly returns a
+  plausible subset of the day.
+    * the document advertises a frequent-service period and nothing was
+      expanded from it — the explicit times either side still parse, so the
+      figure looks reasonable while most of the service is missing;
+    * a lone two-digit cell appeared with nothing on the page to say whether
+      it means a headway or a minute past the hour, readings that differ by
+      a factor of several;
+    * **Continuous** below is `FALSE`.
+* **Continuous** — whether the departures read for a day have a plausible
+  shape. A single gap that dwarfs the rest of the day's spacing means a
+  block was missed, usually because its heading or stop label is written
+  differently from the others. The Fife 34 reads as running 06:10–10:10 and
+  then nothing until 18:31.
+
+Where several routes share one printed table — Glasgow's "Service No.: 1 1C
+1A 1C …", Fife's bare "91A 91A 90A …" — each column is attributed to its
+route from the header row and only the routes being counted are kept.
+Without that, another route's journeys are credited to this one, which is
+what made the Manchester 142 unusable.
+
+```{r published}
+pub <- rbindlist(Filter(Negate(is.null), v$published), fill = TRUE)
+if (nrow(pub)) {
+  p <- pub[, list(`Day type` = daytype, Direction = direction,
+                  Published = journeys, Expanded = expanded,
+                  `Upper bound` = upper_bound, Continuous = continuous,
+                  Reliable = reliable),
+           by = list(Route = key)]
+  knitr::kable(p)
+  bad <- unique(pub[reliable == FALSE]$key)
+  if (length(bad)) {
+    cat("\n**Unreliable:", paste(bad, collapse = ", "),
+        "** - a frequent-service abbreviation in these documents was not",
+        "expanded, so the counts are far too low. See the notes below.\n")
+  }
+} else {
+  cat("No timetable could be read.\n")
+}
+```
+
+## Window totals
+
+Journeys counted over the whole window, per source. These are directly
+comparable with the `Published` figures above only after multiplying by the
+number of each day type in the window, so the ratio column is the useful one.
+
+```{r feeds}
+f <- dcast(v$feeds, key + window ~ source, value.var = "runs", fill = 0)
+setnames(f, c("key", "window"), c("Route", "Window"))
+knitr::kable(f)
+```
+
+```{r ids}
+ids <- dcast(v$feeds[window == names(v$window)[1]], key ~ source,
+             value.var = "route_ids", fill = "")
+setnames(ids, "key", "Route")
+knitr::kable(ids, caption = "route_id(s) matched in each source")
+```
+
+Where a source lists several `route_id`s for one route they are summed: a
+source that splits one service across several ids must still be compared as
+one service. Several ids is in itself worth noting, since it is how duplicate
+publication shows up.
+
+## Notes on each document
+
+```{r notes}
+n <- rbindlist(lapply(v$routes, function(r)
+  data.table(Route = r$key,
+             Operator = r$operator,
+             Skipped = isTRUE(r$skip),
+             Note = r$note)))
+knitr::kable(n)
+```

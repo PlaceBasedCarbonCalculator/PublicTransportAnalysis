@@ -43,12 +43,43 @@ trip_runs_in_window <- function(gtfs) {
   dow <- c("monday", "tuesday", "wednesday", "thursday", "friday",
            "saturday", "sunday")
 
+  keep_cols <- c("service_id", dow, "start_date", "end_date")
   cal <- as.data.frame(gtfs$calendar)
+  cal <- if (all(keep_cols %in% names(cal))) cal[, keep_cols] else
+    data.frame(service_id = character(0),
+               matrix(integer(0), ncol = 7, dimnames = list(NULL, dow)),
+               start_date = as.Date(character(0)),
+               end_date = as.Date(character(0)),
+               stringsAsFactors = FALSE)
+  cal$service_id <- as.character(cal$service_id)
+  cal$start_date <- as.Date(cal$start_date)
+  cal$end_date <- as.Date(cal$end_date)
+
+  cd_raw <- as.data.frame(gtfs$calendar_dates)
+
+  # GTFS allows a service_id to exist only in calendar_dates.txt, running on
+  # exactly the dates added there. The DfT's BODS GTFS uses this for
+  # school-holiday timetables (1,544 services, 4.9% of trips in the 2026-02-04
+  # feed). Give each one a synthetic all-zero calendar row so it reaches the
+  # exception handling below, where `extra` supplies its run count. Without
+  # this they count as zero and the feed is understated.
+  if (nrow(cd_raw) > 0) {
+    dates_only <- setdiff(unique(as.character(cd_raw$service_id)),
+                          cal$service_id)
+    if (length(dates_only) > 0) {
+      pad <- data.frame(service_id = dates_only, stringsAsFactors = FALSE)
+      # Every weekday flag zero, so the base run count is zero whatever the
+      # (unused, NA) date range, and the exception handling supplies the runs.
+      for (d in dow) pad[[d]] <- 0L
+      pad$start_date <- as.Date(NA)
+      pad$end_date <- as.Date(NA)
+      cal <- rbind(cal, pad[, keep_cols])
+    }
+  }
+
   if (nrow(cal) == 0) {
     return(data.table::data.table(trip_id = character(0), runs = numeric(0)))
   }
-  cal$start_date <- as.Date(cal$start_date)
-  cal$end_date <- as.Date(cal$end_date)
 
   # Occurrences of each weekday in [start_date, end_date]: step forward from
   # start_date to the first matching weekday, then count whole weeks.
@@ -66,7 +97,7 @@ trip_runs_in_window <- function(gtfs) {
 
   # calendar_dates exceptions, counted per weekday so the GTFS semantics can
   # be applied against the matching calendar.txt day flag
-  cd <- as.data.frame(gtfs$calendar_dates)
+  cd <- cd_raw
   if (!is.null(cd) && nrow(cd) > 0) {
     cd$date <- as.Date(cd$date)
     # A date can only be added or cancelled once per service

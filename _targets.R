@@ -172,6 +172,24 @@ list(
                                              archive = "bodds_archive_20260204.zip",
                                              filter_date = "2026-02-04"), format = "file"),
 
+  # --- Validation against published timetables ---
+  #
+  # A current snapshot of all three sources, converted the same way as the
+  # comparison feeds. Published timetables are easy to obtain for today and
+  # hard for the past, so the PDFs in data/example_timetables are checked
+  # against this rather than against a historic snapshot.
+  tar_target(tnds_20260726, convert_tnds_snapshot("20260726", txc_cal, naptan),
+             format = "file"),
+  tar_target(bods_txc_20260725,
+             convert_bods_txc("20260725", txc_cal, naptan,
+                              archive = "bodds_archive_20260725.zip",
+                              filter_date = "2026-07-26"), format = "file"),
+
+  tar_target(pdf_validation, validate_published_timetables(
+    zones_file, tnds_20260726, bods_txc_20260725), format = "file"),
+  tar_target(pdf_validation_report, render_validation_report(pdf_validation),
+             format = "file"),
+
   comparison_targets,
   comparison_report_target
 )
