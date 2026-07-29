@@ -77,12 +77,13 @@ comparison_snapshots <- function() {
 #' obtain for today and hard to obtain for the past, so this is a current
 #' snapshot of all three sources.
 #'
-#' Extracted Sunday 26 July 2026 (BODS TransXChange the previous day), so the
-#' window opens on Monday 27 July for the same no-history reason as 2026-02.
+#' Extracted Sunday 26 July 2026, so the window opens on Monday 27 July for
+#' the same no-history reason as 2026-02.
+#'
+#' BODS TransXChange is deliberately absent: see validation_sources().
 validation_snapshot <- function() {
   list(ref = "2026-07-27", snapshot_date = "2026-07-26",
        tnds = "gtfs/tnds_20260726_merged.zip",
-       bods_txc = "gtfs/bods_txc_20260725.zip",
        bods_gtfs = "OpenBusData/GTFS/20260726/itm_all_gtfs.zip")
 }
 
@@ -109,6 +110,19 @@ validation_windows <- function() {
 comparison_years <- function() as.integer(names(comparison_snapshots()))
 
 comparison_sources <- function() c("tnds", "bods_txc", "bods_gtfs")
+
+#' Sources checked against published timetables
+#'
+#' Only two. Validation asks which source is *right*, and the multi-year
+#' comparison has already settled that for BODS TransXChange: it is the
+#' operator-published change archive, and converting it needs per-file error
+#' tolerance because a fraction of the files are malformed, so it carries a
+#' silent coverage gap the other two do not (see the "Failed to import files"
+#' discussion in bus_source_comparison.md). Checking it against the PDFs would
+#' measure that gap again rather than tell us anything new about TNDS or the
+#' DfT's GTFS, and converting the 1.7 GB archive costs hours. The multi-year
+#' comparison still covers all three; this does not.
+validation_sources <- function() c("tnds", "bods_gtfs")
 
 comparison_source_labels <- function() {
   c(tnds = "TNDS (TransXChange)",

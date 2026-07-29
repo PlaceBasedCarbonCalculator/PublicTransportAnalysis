@@ -21,6 +21,16 @@
 #' `expect` is the journeys-per-operating-day the document implies, where it
 #' can be read off unambiguously; NA where the document abbreviates in a way
 #' that cannot be resolved (see the 142).
+#'
+#' Two different stop patterns, doing two different jobs:
+#'   `stop_regex`      matches the reference stop's row *label in the document*
+#'   `stop_name_regex` matches the same stop's `stop_name` *in the feeds*, and
+#'                     is what confines the comparison to routes that actually
+#'                     serve it - see feed_route_departures(). It need not be
+#'                     unique nationally, only within a candidate route, so the
+#'                     distinctive part of the name is enough and is preferred:
+#'                     NaPTAN writes Fife Leisure Park as plain "Leisure Park"
+#'                     and Costock Main Street as plain "Main Street".
 validation_routes <- function() {
   list(
     list(key = "279", short_name = "279", operator = "Arriva London",
@@ -57,6 +67,7 @@ validation_routes <- function() {
          format = "column",
          file = "EFA01__0000979_TP.pdf",
          stop_regex = "^Bristol Airport, Public Transport Interchange",
+         stop_name_regex = "Public Transport Interchange",
          directions = c(
            out = "Bristol Airport - Bristol Temple Meads - Bristol Bus Station",
            back = "Bristol Bus Station - Bristol Temple Meads - Bristol Airport"),
@@ -66,6 +77,7 @@ validation_routes <- function() {
          format = "column",
          file = "EFA01__0000b3a_TP.pdf",
          stop_regex = "^Newbridge, Newbridge P&R",
+         stop_name_regex = "Newbridge P&R",
          directions = c(out = "Newbridge Park & Ride - Bath Centre",
                         back = "Bath Centre - Newbridge Park & Ride"),
          note = "valid from 06/04/2026, so current for this snapshot"),
@@ -74,7 +86,20 @@ validation_routes <- function() {
          operator = "Stagecoach.*(North West|Cumbria)",
          format = "column",
          file = "CNL 0625 1 1A WEB.pdf",
-         stop_regex = "Lancaster Bus Station stand 17 dep",
+         # The two directions do not leave from the same stand, and the
+         # document capitalises the word differently in each: "Lancaster Bus
+         # Station stand 17 dep" outbound, "Lancaster Bus Station Stand 8 dep"
+         # inbound. Matching only stand 17 read the outbound tables and
+         # silently reported nothing at all for the inbound, halving the route.
+         # "dep" is left unanchored so it also matches the "depart" the Sunday
+         # tables use, while still excluding the "arr"/"arrive" rows.
+         stop_regex = "Lancaster Bus Station [Ss]tand (17|8) dep",
+         # NaPTAN has no "Lancaster Bus Station": the stands are named after the
+         # street, "Common Garden Street". Matching the document's own wording
+         # matched nothing, so this fell back to counting all eight candidate
+         # route_ids - Preston - Longridge, Chester - Liverpool, Furness,
+         # Whitehaven - and read 3.46x the document.
+         stop_name_regex = "Common Garden",
          directions = c(
            to_heysham = "Lancaster University . Bus Station . Morecambe . Heysham",
            to_university = "Heysham . Morecambe . Bus Station . Lancaster University"),
@@ -90,6 +115,7 @@ validation_routes <- function() {
     list(key = "111", short_name = "111", operator = "Bee Network|Metroline",
          format = "column", file = "111_26-SC-0230_Summer.pdf",
          stop_regex = "^Southern Cemetery, Bus Station",
+         stop_name_regex = "Southern Cemetery",
          directions = NULL,
          note = paste("summer edition covering the window; the frequent",
                       "period is abbreviated in-column and this page mixes",
@@ -98,6 +124,7 @@ validation_routes <- function() {
     list(key = "143", short_name = "143", operator = "Bee Network|Metroline",
          format = "column", file = "143_26-SC-0248_Summer.pdf",
          stop_regex = "^West Didsbury, Central Road",
+         stop_name_regex = "Central Road",
          directions = NULL,
          note = "summer edition covering the window; 10-minute headway block"),
 
@@ -111,6 +138,7 @@ validation_routes <- function() {
                    Sa = "timetable_1-1A-1C-1E_saturday.pdf",
                    Su = "timetable_1-1A-1C-1E_sunday.pdf"),
          stop_regex = "^Clydebank, Chalmers St",
+         stop_name_regex = "Chalmers Street",
          directions = NULL,
          routes_in_table = c("1", "1A", "1C", "1E"),
          count_routes = c("1", "1A"),
@@ -125,6 +153,7 @@ validation_routes <- function() {
                    Sa = "timetable_X85-X87_saturday.pdf",
                    Su = "timetable_X85-X87_sunday.pdf"),
          stop_regex = "^Kirkintilloch, Catherine St",
+         stop_name_regex = "Catherine Street",
          directions = NULL,
          routes_in_table = c("X85", "X87"),
          note = "two routes in one table, both counted"),
@@ -132,6 +161,7 @@ validation_routes <- function() {
     list(key = "F38", short_name = "38", operator = "First|Midland Bluebird",
          format = "column", file = "38-timetable-20250915-5aa561fc.pdf",
          stop_regex = "^Larbert Viaduct",
+         stop_name_regex = "Viaduct",
          directions = NULL,
          note = paste("Falkirk-Stirling; the 'then every 15 mins until'",
                       "legend is stacked one word per stop row inside the",
@@ -140,6 +170,7 @@ validation_routes <- function() {
     list(key = "SF2A", short_name = "2A", operator = "Stagecoach",
          format = "column", file = "ESCOT_Fife_Service_2A_Timetable.pdf",
          stop_regex = "^Fife Leisure Park",
+         stop_name_regex = "Leisure Park",
          directions = NULL,
          note = "Dunfermline circular; minutes-past-the-hour abbreviation"),
 
@@ -148,6 +179,7 @@ validation_routes <- function() {
          format = "column",
          file = "ESCOT_Fife_Service_34_34A_34B_Timetable.pdf",
          stop_regex = "^Chapel Roundabout",
+         stop_name_regex = "Chapel Roundabout",
          directions = NULL,
          routes_in_table = c("34", "34A", "34B"),
          note = "Kirkcaldy circular; three routes in one table"),
@@ -156,6 +188,7 @@ validation_routes <- function() {
          operator = "Stagecoach",
          format = "column", file = "ESCOT_Special_Fife_90_91.pdf",
          stop_regex = "^David Russell Apts",
+         stop_name_regex = "David Russell",
          directions = NULL,
          routes_in_table = c("90A", "90B", "91A"),
          note = "St Andrews circular; three routes in one table"),
@@ -163,22 +196,33 @@ validation_routes <- function() {
     list(key = "SFX24", short_name = c("X24", "X27"),
          operator = "Stagecoach",
          format = "column", file = "ESCOT_Special_X24_X27.pdf",
-         stop_regex = "^Glenrothes Bus Station Dep",
+         # The label's word order is not stable across the document's fourteen
+         # pages: most read "Glenrothes Bus Station Dep", one reads "Dep
+         # Glenrothes Bus Station", and anchoring on the first form dropped that
+         # page's departures.
+         stop_regex = "Glenrothes Bus Station Dep|Dep Glenrothes Bus Station",
+         stop_name_regex = "Glenrothes Bus Station",
          directions = NULL,
          routes_in_table = c("X24", "X27"),
-         note = "Fife-Glasgow limited stop; tests longer-distance services"),
+         note = paste("Fife-Glasgow limited stop; tests longer-distance",
+                      "services. Saturday is still flagged unreliable: the",
+                      "abbreviated block closes on the following page, so the",
+                      "run of minute cells that ends the row has nothing to",
+                      "bound it and is not expanded")),
 
     # Wales. TNDS is effectively the only source with real coverage there,
     # so until now nothing independent checked it.
     list(key = "CDF1", short_name = "1", operator = "Cardiff Bus|Bws Caerdydd",
          format = "column", file = "1-timetable-20260719-78437e73.pdf",
          stop_regex = "^Leckwith Close",
+         stop_name_regex = "Leckwith Close",
          directions = NULL,
          note = "city circle, commencing 19/07/2026 so current for the window"),
 
     list(key = "CDF24", short_name = "24", operator = "Cardiff Bus|Bws Caerdydd",
          format = "column", file = "24-timetable-20260719-baf4da5e.pdf",
          stop_regex = "^Three Elms",
+         stop_name_regex = "Three Elms",
          directions = NULL,
          note = "commencing 19/07/2026; minutes-past-the-hour abbreviation"),
 
@@ -186,6 +230,7 @@ validation_routes <- function() {
          operator = "Cardiff Bus|Bws Caerdydd",
          format = "column", file = "608-timetable-20230903-be43cf29.pdf",
          stop_regex = "^Channel View Road",
+         stop_name_regex = "Channel View",
          directions = NULL,
          note = paste("schooldays-only school service, one journey each way.",
                       "The edition is from 2023, so a zero in the feeds may",
@@ -197,6 +242,7 @@ validation_routes <- function() {
          operator = "Cardiff Bus|Bws Caerdydd",
          format = "column", file = "62-timetable-20260412-d4fd5ee2.pdf",
          stop_regex = "^Llandaff Fields",
+         stop_name_regex = "Llandaff Fields",
          directions = NULL,
          routes_in_table = c("62", "63", "64"),
          note = paste("valid from 12/04/2026; three routes in one table.",
@@ -211,6 +257,7 @@ validation_routes <- function() {
     list(key = "KB9", short_name = "9", operator = "Kinchbus|trentbarton",
          format = "docx", file = "Kinchbus 9.docx",
          stop_regex = "^Costock Main Street",
+         stop_name_regex = "Main Street",
          note = paste("Loughborough-Nottingham. One Monday-to-Saturday table",
                       "carries both day types, marked per journey: NS runs",
                       "Monday to Friday only, S on Saturdays only, unmarked",
@@ -218,24 +265,135 @@ validation_routes <- function() {
                       "publishes a separate Sunday & Bank Holiday Monday",
                       "table - the only bank holiday reference in the set")),
 
-    list(key = "TBALL", short_name = NULL, long_name_regex = "allestree",
+    # Matched on BOTH names because the two sources number it differently and
+    # only one of them carries a long name at all: TNDS calls the line "all"
+    # with long name "Derby - Allestree", the DfT's GTFS calls it "TA" and
+    # leaves route_long_name empty - as it does for all 12,822 of its routes.
+    # Matching on the long name alone therefore found this service in TNDS and
+    # nothing in the GTFS, which read as a coverage gap (4,184 against 0) when
+    # the GTFS does carry it. bustimes.org corroborates: it renders the service
+    # as "TA - the allestree" from "trentbarton/Bus Open Data Service (BODS)".
+    list(key = "TBALL", short_name = c("TA", "all"),
+         long_name_regex = "allestree",
          operator = "trentbarton|Kinchbus|Wellglade",
          format = "docx", file = "Kinchbus allestree .docx",
          stop_regex = "^Kedleston Road University",
+         stop_name_regex = "Kedleston Road",
          note = paste("trentbarton Derby-Allestree, from a Word extract:",
                       "the six PDFs of this timetable have no text layer at",
                       "all. The document names no route number - its 'Bus",
-                      "No' column is blank - so it is matched on route long",
-                      "name, which needs confirming against the feeds.",
+                      "No' column is blank - so it is matched on the line",
+                      "names the feeds use ('all' in TNDS, 'TA' in the GTFS)",
+                      "as well as on the long name.",
                       "Monday-Friday includes journeys marked 'F - Fridays",
                       "only', so that figure is the Friday service level and",
                       "slightly overstates Monday to Thursday. Carries a",
                       "Sunday & Bank Holiday Monday table")),
 
+    # Routes chosen from the 2026 comparison because TNDS and BODS GTFS
+    # disagree on them, so a document decides which is right. Three groups:
+    # services TNDS carries and BODS GTFS does not (727, 59, 400), services
+    # where TNDS is about twice BODS GTFS (125, 320, X38), and one where the
+    # route number alone is ambiguous nationally (57/59/59a Barnsley, which is
+    # a different 59 from Aberdeen's).
+    list(key = "BB727", short_name = "727", operator = "Stagecoach Bluebird",
+         format = "column", file = "0426 Service 727.pdf",
+         stop_regex = "^P&J Live Arena",
+         # No stop_name_regex: NaPTAN has no "P&J Live Arena", "Bucksburn
+         # Police Station" or "Northfield Terminus", so there is nothing to
+         # confine this with. Harmless here - "Stagecoach Bluebird" plus 727 is
+         # already specific, unlike the bare "Stagecoach" patterns.
+         directions = NULL,
+         note = paste("Aberdeen Airport - Stonehaven. TNDS carries this and",
+                      "BODS GTFS does not (4,439 journeys against 0 in the",
+                      "February window), so this tests whether that coverage",
+                      "is real. Counted at P&J Live Arena, which appears in",
+                      "both directions' tables; every time is explicit")),
+
+    list(key = "BB59", short_name = "59", operator = "Stagecoach Bluebird",
+         format = "column", file = "0426 Service 59.pdf",
+         stop_regex = "^Aberdeen Royal Infirmary",
+         stop_name_regex = "Aberdeen Royal Infirmary",
+         directions = NULL,
+         note = paste("Northfield - Balnagask, also TNDS-only (4,156 against",
+                      "0). Aberdeen Royal Infirmary is mid-route and appears",
+                      "in both directions")),
+
+    list(key = "OX400", short_name = "400", operator = "Oxford Bus",
+         format = "column", file = "400-timetable-20260222-8b0bfa70.pdf",
+         stop_regex = "^Wheatley Ambrose Rise",
+         stop_name_regex = "Ambrose Rise",
+         directions = NULL,
+         note = paste("Thame - Oxford, TNDS-only (4,460 against 0). This",
+                      "generator prints the row label to the *right* of the",
+                      "times, which is why the label is matched with the",
+                      "leading cells stripped")),
+
+    list(key = "SC125", short_name = "125", operator = "Stagecoach",
+         format = "column", file = "C&L 125 0526 WEB.pdf",
+         stop_regex = "^Bolton Interchange",
+         stop_name_regex = "Bolton Interchange",
+         directions = NULL,
+         note = paste("Preston - Bolton. TNDS reads 1.83x BODS GTFS (9,322",
+                      "against 5,091) with BODS TransXChange siding with",
+                      "GTFS, so TNDS is the one to doubt")),
+
+    # TNDS files this under "Arriva Merseyside" where the DfT's GTFS says
+    # "Arriva North West", and holds it as three route_ids - St Helens Bus
+    # Station - Wigan twice (282 trips each) plus Chalon Way West - Wigan (264)
+    # - against one in the GTFS. That is the 1.96x, visible in the route table
+    # before any counting.
+    list(key = "AN320", short_name = "320",
+         operator = "Arriva Merseyside|Arriva North West",
+         format = "column", file = "20-320-19Jul26.pdf",
+         stop_regex = "^St Helens Temporary Bus Hub",
+         # NaPTAN does not carry the word "Temporary"; left unset rather than
+         # matched loosely on "Bus Hub", which is five unrelated stops.
+         #
+         # This document puts its two routes on separate pages, each headed
+         # with its own number, rather than in one table with a column header
+         # row - so routes_in_table/count_routes has nothing to work on and
+         # silently counted both routes' journeys against the 320. The page
+         # heading behaves exactly like a direction title, so it is matched as
+         # one and count_directions keeps only the 320's pages.
+         directions = c(r20 = "^20 Earlestown", r320 = "^320 St Helens"),
+         count_directions = "r320",
+         note = paste("St Helens - Wigan. TNDS reads 1.96x BODS GTFS (6,228",
+                      "against 3,176). Routes 20 and 320 are printed on",
+                      "separate pages of one document; only the 320's pages",
+                      "are counted. Saturday prints its row labels to the",
+                      "right of the times")),
+
+    list(key = "TBX38", short_name = "X38", operator = "trentbarton|Trent Barton",
+         format = "docx", file = "Trentbarton X38.docx",
+         stop_regex = "^Derby, Victoria Street",
+         note = paste("Derby - Burton. TNDS reads 1.98x BODS GTFS (8,144",
+                      "against 4,116). From a Word extract, and the least",
+                      "trustworthy of this batch: reading it at Burton High",
+                      "Street returns 4 journeys for a Saturday against 113",
+                      "for a weekday, so the reader is not handling all",
+                      "twelve of its tables. Derby, Victoria Street reads",
+                      "with a plausible shape; treat with caution and check",
+                      "Continuous before using it")),
+
+    list(key = "SY57", short_name = c("57", "59", "59A"),
+         operator = "Stagecoach Yorkshire",
+         format = "column", file = "57 59 59a Barnsley - Royston.pdf",
+         stop_regex = "^Barnsley Interchange A13",
+         stop_name_regex = "Barnsley Interchange",
+         directions = NULL,
+         routes_in_table = c("57", "59", "59a"),
+         note = paste("Barnsley - Royston. The first document here to print",
+                      "its times as '07:05' rather than '0705', which the",
+                      "reader could not see at all: with no token looking",
+                      "like a time, every data row was classified as a",
+                      "heading and nothing was read")),
+
     list(key = "142", short_name = "142", operator = "Bee Network|Metroline",
          format = "column",
          file = "142_26-SC-0249_Summer.pdf",
          stop_regex = "^East Didsbury, Parrs Wood",
+         stop_name_regex = "Parrs Wood",
          directions = NULL,
          skip = TRUE,
          note = paste("SUMMER timetable (19 Jul - 29 Aug 2026): covers this",
@@ -251,6 +409,7 @@ validation_routes <- function() {
     list(key = "L100", short_name = "100", operator = "Lothian",
          format = "column", file = "r100-260222.pdf",
          stop_regex = "^Edinburgh Airport",
+         stop_name_regex = "^Airport$",
          directions = c(from_airport = "^100 Airport",
                         to_airport = "^100 City Centre"),
          note = paste("NOT USABLE YET. The frequent-service period is a",
@@ -314,6 +473,12 @@ published_departures <- function(spec, dir = "data/example_timetables") {
   }))
   reliable <- all(vapply(res, function(x) isTRUE(x$reliable), logical(1)))
   times <- tt_dedupe_repeated_blocks(times)
+  # Where a document covers several routes on separate pages, the page heading
+  # is matched as a direction and only the wanted ones are kept. Filtering here
+  # rather than in the reader keeps the reliability checks looking at the whole
+  # document, which is what they are about.
+  if (!is.null(spec$count_directions) && nrow(times))
+    times <- times[direction %in% spec$count_directions]
   if (!nrow(times)) {
     return(data.table::data.table(daytype = character(0), direction = character(0),
                                   journeys = integer(0), expanded = logical(0),
@@ -354,8 +519,35 @@ tt_no_hole <- function(m, floor_mins = 150, factor = 8) {
 #' Routes are located by public number and operator, and every matching
 #' route_id is summed: a source that splits one service across several ids
 #' (TNDS holds the Manchester 142 under three) must still be compared as one.
+#'
+#' Route number plus operator is not by itself specific enough. A bus number is
+#' only unique within a town, and the agency patterns have to stay loose because
+#' the sources name the same operator differently - TNDS calls Stagecoach's Fife
+#' operation "Stagecoach East Scotland" where the timetable says "Stagecoach",
+#' and holds Lancaster's route 1 under both "Stagecoach North West" and
+#' "Stagecoach Cumbria and Lancashire". Matching on `"Stagecoach"` and `"2A"`
+#' therefore collected eighteen route_ids: Oxford - Kidlington, Gloucester -
+#' Upton St Leonards, Sheffield - Barnsley and thirteen more alongside the
+#' Dunfermline circular that was wanted. Every one of those journeys was
+#' counted against a Fife timetable, in both sources equally, which is why the
+#' two sources agreed with each other and diverged wildly from the document.
+#'
+#' `stop_name_regex` resolves it. The published figure counts departures at one
+#' named stop, so the comparable feed figure is trips that call there - and a
+#' Gloucester 2A calls at no stop named "Fife Leisure Park". A stop name that is
+#' hopelessly ambiguous nationally ("Leisure Park" matches thirty stops) becomes
+#' unique once intersected with a candidate route's own stops. This also makes
+#' the two figures measure the same thing: before, `Published` counted one stop
+#' and the feed columns counted whole routes.
+#'
+#' @param stop_name_regex regex matching the reference stop's name in the feed's
+#'   stops.txt. NULL, or a name no candidate route calls at, falls back to
+#'   counting every trip of the matched routes; `stop_matched` reports which
+#'   happened, because the fallback is the loose comparison described above.
+#' @return list(route_ids, runs, runs_at_stop, runs_all_stops, stop_matched)
 feed_route_departures <- function(gtfs, short_name, operator, win,
-                                  long_name_regex = NULL) {
+                                  long_name_regex = NULL,
+                                  stop_name_regex = NULL) {
   routes <- data.table::as.data.table(as.data.frame(gtfs$routes))
   agency <- data.table::as.data.table(as.data.frame(gtfs$agency))
   routes[, route_id := as.character(route_id)]
@@ -368,10 +560,11 @@ feed_route_departures <- function(gtfs, short_name, operator, win,
   } else {
     routes[, agency_name := NA_character_]
   }
-  # Some operators brand rather than number. trentbarton's Derby-Allestree
-  # service is published as "allestree" with the bus number column left
-  # blank, so there is no short name to match on and the long name is the
-  # only handle the feeds offer.
+  # Some operators brand rather than number, so a spec may have to match on the
+  # long name - but only TNDS carries one. Every route in the DfT's GTFS has
+  # route_long_name empty (12,822 of 12,822 in the July 2026 feed), so a
+  # long-name match silently returns nothing there and the route reads as
+  # missing. Any spec relying on long_name_regex needs a short name too.
   by_short <- if (is.null(short_name)) rep(FALSE, nrow(routes)) else
     toupper(trimws(routes$route_short_name)) %in% toupper(short_name)
   by_long <- if (is.null(long_name_regex)) rep(FALSE, nrow(routes)) else
@@ -380,20 +573,58 @@ feed_route_departures <- function(gtfs, short_name, operator, win,
     grepl(operator, routes$agency_name, ignore.case = TRUE)
   ids <- routes$route_id[which(keep)]
   if (!length(ids)) {
-    return(list(route_ids = character(0), runs = 0L, per_date = NULL))
+    return(list(route_ids = character(0), runs = 0L, runs_at_stop = 0L,
+                runs_all_stops = 0L, stop_matched = FALSE))
   }
 
   trimmed <- UK2GTFS::gtfs_trim_dates(gtfs, startdate = win$startdate,
                                       enddate = win$enddate)
   runs <- trip_runs_in_window(trimmed)
   trips <- data.table::as.data.table(as.data.frame(trimmed$trips))
-  trips <- trips[as.character(route_id) %in% ids,
-                 list(trip_id = as.character(trip_id))]
-  runs <- runs[trip_id %in% trips$trip_id]
-  list(route_ids = ids, runs = sum(runs$runs))
+  trips[, `:=`(trip_id = as.character(trip_id), route_id = as.character(route_id))]
+  trips <- trips[route_id %in% ids, list(trip_id, route_id)]
+  runs_all <- sum(runs[trip_id %in% trips$trip_id]$runs)
+
+  at_stop <- NULL
+  if (!is.null(stop_name_regex)) {
+    stops <- data.table::as.data.table(as.data.frame(gtfs$stops))
+    sids <- stops[grepl(stop_name_regex, stop_name, ignore.case = TRUE),
+                  as.character(stop_id)]
+    if (length(sids)) {
+      st <- data.table::as.data.table(as.data.frame(trimmed$stop_times))
+      st <- st[as.character(stop_id) %in% sids,
+               list(trip_id = as.character(trip_id))]
+      hit <- trips[trip_id %in% unique(st$trip_id)]
+      if (nrow(hit)) at_stop <- hit
+    }
+  }
+
+  if (is.null(at_stop)) {
+    return(list(route_ids = ids, runs = runs_all, runs_at_stop = runs_all,
+                runs_all_stops = runs_all, stop_matched = FALSE))
+  }
+  # Only routes that actually reach the reference stop are the document's
+  # subject; report those rather than every same-numbered route in Britain.
+  #
+  # `runs` counts every trip of those routes, not only the trips that call at
+  # the stop. Restricting to calling trips looks like the exact analogue of the
+  # published figure, but it assumes both directions call at a stop of that
+  # name, and measurement says otherwise: Cardiff's 62 is counted at Llandaff
+  # Fields precisely because that is the only stop named identically in both
+  # directions, yet the feeds hold a single stop_id there on the outbound side,
+  # so the calling-trip count is 0.53 of the document against 1.02 for the
+  # route. Filtering by route loses none of the point of this - the Gloucester
+  # 2A still goes, because its route never reaches Fife (SF2A 8,648 -> 1,000)
+  # and London's 143 still goes (9,992 -> 5,288). `runs_at_stop` is kept
+  # alongside so the stricter reading stays visible.
+  keep_ids <- sort(unique(at_stop$route_id))
+  list(route_ids = keep_ids,
+       runs = sum(runs[trip_id %in% trips[route_id %in% keep_ids]$trip_id]$runs),
+       runs_at_stop = sum(runs[trip_id %in% at_stop$trip_id]$runs),
+       runs_all_stops = runs_all, stop_matched = TRUE)
 }
 
-#' Check every route with a published timetable against all three sources
+#' Check every route with a published timetable against validation_sources()
 #'
 #' Writes data/pdf_validation.Rds and returns its path.
 validate_published_timetables <- function(zones_path, ..., cfg = load_cfg()) {
@@ -417,17 +648,24 @@ validate_published_timetables <- function(zones_path, ..., cfg = load_cfg()) {
   names(published) <- vapply(routes, `[[`, "", "key")
 
   feeds <- list()
-  for (src in comparison_sources()) {
+  for (src in validation_sources()) {
     message("Reading ", src)
     gtfs <- read_feed(spec[[src]], cfg)
     gtfs$routes$route_type <- map_route_type_simple(gtfs$routes$route_type)
     feeds[[src]] <- data.table::rbindlist(lapply(names(wins), function(wn) {
       data.table::rbindlist(lapply(routes, function(r) {
         f <- feed_route_departures(gtfs, r$short_name, r$operator, wins[[wn]],
-                                   long_name_regex = r$long_name_regex)
-        data.table::data.table(key = r$key, source = src, window = wn,
+                                   long_name_regex = r$long_name_regex,
+                                   stop_name_regex = r$stop_name_regex)
+        # setDT(list(...)) rather than data.table(...): data.table() reserves
+        # `key` for the sort key, so data.table(key = r$key, ...) tries to key
+        # the table by a column named "279" instead of creating a key column.
+        data.table::setDT(list(key = r$key, source = src, window = wn,
                                route_ids = paste(f$route_ids, collapse = "+"),
-                               runs = f$runs)
+                               runs = f$runs,
+                               runs_at_stop = f$runs_at_stop,
+                               runs_all_stops = f$runs_all_stops,
+                               stop_matched = f$stop_matched))
       }))
     }))
     rm(gtfs); gc()

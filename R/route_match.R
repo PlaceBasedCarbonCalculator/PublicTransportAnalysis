@@ -238,11 +238,30 @@ route_window_summary <- function(gtfs, win, keep_type = 3L) {
 #' between them, so a service a source splits across several route_ids is
 #' still compared as one service.
 #'
+#' A second pass then links what the first pass left alone, on stop overlap
+#' only. Requiring a shared route number is what keeps the first self-join
+#' small, but a route number is not something the sources agree on for
+#' operators who brand rather than number: TNDS carries trentbarton's Ilkeston
+#' service as "indigo" and the DfT's GTFS as "IGO", Kinchbus's as "Sprint"
+#' against "SP", and several with no short name at all. Those pairs never
+#' became candidates, so each appeared as a service the other source lacked
+#' entirely - 1,544 "missing from BODS GTFS" against 874 "missing from TNDS" in
+#' the 2026 window, largely the same services counted twice. That inflates the
+#' missing-services half of decompose_difference() on both sides at once, so it
+#' reads as a coverage gap in each source rather than a naming difference.
+#'
+#' The second pass is confined to routes still in a component of one, which
+#' keeps the number-free join to a small fraction of the routes, and it asks a
+#' higher overlap, since stop sets alone are the whole of the evidence.
+#'
 #' @param summaries named list of route_window_summary() results
 #' @param min_overlap minimum stop-set overlap coefficient to link two routes
+#' @param min_overlap_unnumbered overlap required in the second pass, where the
+#'   route numbers did not match and only the stops are being compared
 #' @return list(services = per-service runs by source, members = route to
 #'   service lookup)
-match_route_services <- function(summaries, min_overlap = 0.5) {
+match_route_services <- function(summaries, min_overlap = 0.5,
+                                 min_overlap_unnumbered = 0.8) {
   srcs <- names(summaries)
 
   meta <- data.table::rbindlist(lapply(srcs, function(s) {
@@ -279,9 +298,37 @@ match_route_services <- function(summaries, min_overlap = 0.5) {
     edges <- data.table::data.table(node = character(0), i.node = character(0))
   }
 
-  g <- igraph::graph_from_data_frame(edges, directed = FALSE,
-                                     vertices = data.frame(name = meta$node))
-  comp <- igraph::components(g)
+  build <- function(edges) {
+    g <- igraph::graph_from_data_frame(edges, directed = FALSE,
+                                       vertices = data.frame(name = meta$node))
+    igraph::components(g)$membership
+  }
+
+  # Second pass on stop overlap alone, for routes the numbers failed to pair.
+  memb <- build(edges)
+  csize <- table(memb)
+  lone <- names(memb)[csize[as.character(memb)] == 1L]
+  if (length(lone) > 1L) {
+    rl <- rs[node %in% lone, list(node, stop_id)]
+    data.table::setkey(rl, stop_id)
+    p2 <- rl[rl, on = "stop_id", allow.cartesian = TRUE, nomatch = 0L]
+    p2 <- p2[node < i.node, list(shared = .N), by = list(node, i.node)]
+    if (nrow(p2) > 0) {
+      p2 <- merge(p2, sizes, by = "node")
+      data.table::setnames(p2, "n_stops", "n_a")
+      p2 <- merge(p2, sizes, by.x = "i.node", by.y = "node")
+      data.table::setnames(p2, "n_stops", "n_b")
+      p2[, overlap := shared / pmin(n_a, n_b)]
+      extra <- p2[overlap >= min_overlap_unnumbered, list(node, i.node)]
+      if (nrow(extra) > 0) {
+        message("Route matching: ", nrow(extra), " further link(s) from stop ",
+                "overlap alone, among ", length(lone), " unpaired routes")
+        edges <- data.table::rbindlist(list(edges, extra))
+      }
+    }
+  }
+
+  comp <- list(membership = build(edges))
   meta[, service := as.integer(comp$membership[node])]
 
   # One row per service and source

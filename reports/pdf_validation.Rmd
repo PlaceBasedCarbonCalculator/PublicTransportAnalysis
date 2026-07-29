@@ -14,17 +14,22 @@ timetable says which of them is right. This checks individual routes against
 the documents in `data/example_timetables/`.
 
 Published timetables are easy to obtain for the current week and hard to
-obtain for the past, so this uses a **current snapshot of all three sources**
-rather than one of the historic comparison snapshots.
+obtain for the past, so this uses a **current snapshot** rather than one of
+the historic comparison snapshots.
+
+Two sources, not three. BODS TransXChange is excluded here: the multi-year
+comparison already establishes that a fraction of the operator-published
+files fail to convert, so it carries a coverage gap the other two do not, and
+checking it against the PDFs would re-measure that gap rather than say
+anything new about TNDS or the DfT's GTFS.
 
 ```{r window}
 wins <- paste(names(v$window), vapply(v$window, function(x)
   paste(x$startdate, "to", x$enddate), ""), sep = ": ", collapse = "; ")
 w <- data.frame(
-  Item = c("Snapshot extracted", "Counting windows", "TNDS",
-           "BODS TransXChange", "BODS GTFS"),
+  Item = c("Snapshot extracted", "Counting windows", "TNDS", "BODS GTFS"),
   Value = c(as.character(v$snapshot$snapshot_date), wins,
-            v$snapshot$tnds, v$snapshot$bods_txc, v$snapshot$bods_gtfs))
+            v$snapshot$tnds, v$snapshot$bods_gtfs))
 knitr::kable(w)
 ```
 
@@ -69,7 +74,7 @@ route from the header row and only the routes being counted are kept.
 Without that, another route's journeys are credited to this one, which is
 what made the Manchester 142 unusable.
 
-```{r published}
+```{r published, results = 'asis'}
 pub <- rbindlist(Filter(Negate(is.null), v$published), fill = TRUE)
 if (nrow(pub)) {
   p <- pub[, list(`Day type` = daytype, Direction = direction,
@@ -77,7 +82,10 @@ if (nrow(pub)) {
                   `Upper bound` = upper_bound, Continuous = continuous,
                   Reliable = reliable),
            by = list(Route = key)]
-  knitr::kable(p)
+  # kable() has to be cat()ed: it is not the last expression in this chunk, so
+  # knitr discards its value and the table goes missing from the report - which
+  # it silently did, while the prose kept referring to it.
+  cat("\n", knitr::kable(p), "\n", sep = "\n")
   bad <- unique(pub[reliable == FALSE]$key)
   if (length(bad)) {
     cat("\n**Unreliable:", paste(bad, collapse = ", "),
@@ -95,10 +103,32 @@ Journeys counted over the whole window, per source. These are directly
 comparable with the `Published` figures above only after multiplying by the
 number of each day type in the window, so the ratio column is the useful one.
 
+A route is located by its public number, its operator, and the stop the
+document counts. The stop is what makes the comparison like-for-like. A bus
+number is unique only within a town and the operator patterns have to stay
+loose, because the sources name the same operator differently - TNDS files the
+St Helens 320 under "Arriva Merseyside" where the DfT's GTFS says "Arriva North
+West". Number plus operator alone therefore collected eighteen `route_id`s for
+the Fife 2A (Oxford, Gloucester, Sheffield, Skegness among them) and nine for
+the Falkirk 38 across seven First subsidiaries. Both sources were inflated
+equally, so they agreed with each other and diverged wildly from the document -
+which reads as a shared converter problem rather than the measurement error it
+was. `Stop matched` below is `FALSE` where the reference stop could not be
+found in that feed and the count fell back to every same-numbered route of a
+matching operator; those rows are the loose comparison and should be read with
+that in mind.
+
 ```{r feeds}
 f <- dcast(v$feeds, key + window ~ source, value.var = "runs", fill = 0)
 setnames(f, c("key", "window"), c("Route", "Window"))
 knitr::kable(f)
+```
+
+```{r stopmatch}
+sm <- dcast(v$feeds[window == names(v$window)[1]], key ~ source,
+            value.var = "stop_matched")
+setnames(sm, "key", "Route")
+knitr::kable(sm, caption = "Stop matched: was the reference stop found?")
 ```
 
 ```{r ids}

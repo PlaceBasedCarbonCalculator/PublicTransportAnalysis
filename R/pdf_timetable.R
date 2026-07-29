@@ -19,6 +19,22 @@
 
 MINS_PER_DAY <- 24L * 60L
 
+#' A printed departure time, as a single cell
+#'
+#' Two dialects, and a document uses one throughout: "0705" (most operators)
+#' and "07:05" (Stagecoach Yorkshire's 57/59/59a among others). Recognising
+#' only the first made every data row in a colon-format document look like a
+#' heading, because a heading is identified as a row carrying no times - so the
+#' day type never advanced and not one departure was read.
+#'
+#' Deliberately not matching the "6.05" dotted form: that is the Word-extract
+#' dialect, which arrives through tt_docx_canonical() with its am/pm resolved,
+#' and treating a bare "6.05" as a time here would also catch decimal numbers.
+TT_TIME_RE <- "^\\d{4}$|^\\d{1,2}:\\d{2}$"
+
+#' A minutes-past-the-hour cell in an abbreviated block
+TT_MIN_RE <- "^\\d{2}$"
+
 #' Clock time to minutes since midnight
 #'
 #' Accepts "HHMM" (published timetables) and "HH:MM[:SS]" (GTFS). Values below
@@ -142,7 +158,7 @@ tt_headway_legends <- function(p) {
 #' @return data.table(x, route) or NULL if this row is not a header
 tt_route_header <- function(tokens, routes) {
   if (is.null(routes) || !nrow(tokens)) return(NULL)
-  if (any(grepl("^\\d{4}$", tokens$text))) return(NULL)
+  if (any(grepl(TT_TIME_RE, tokens$text))) return(NULL)
   hit <- toupper(tokens$text) %in% toupper(routes)
   if (sum(hit) < 2L) return(NULL)
   data.table::data.table(x = tokens$x[hit], route = tokens$text[hit])
@@ -235,6 +251,10 @@ read_column_timetable <- function(path,
   direction <- if (is.null(direction_patterns)) "all" else NA_character_
   block <- 0L
   header <- NULL
+  # The last departure read for each direction and day type. A day type's table
+  # is continued across blocks and pages, so a block opening the next one is
+  # bracketed by this rather than by nothing at all - see tt_expand_row().
+  last_dep <- list()
 
   for (pi in seq_along(pages)) {
     p <- data.table::as.data.table(pages[[pi]])
@@ -247,7 +267,7 @@ read_column_timetable <- function(path,
     data.table::setorder(p, y, x)
     p[, row := cumsum(c(1L, diff(y) > 3L))]
     lines <- p[, list(txt = paste(text, collapse = " "),
-                      ntime = sum(grepl("^\\d{4}$", text))), by = row]
+                      ntime = sum(grepl(TT_TIME_RE, text))), by = row]
     legends <- tt_headway_legends(p)
     hw <- tt_page_headway(lines$txt)
     if (!is.na(hw$headway) || nrow(legends)) legend_seen <- TRUE
@@ -280,19 +300,32 @@ read_column_timetable <- function(path,
         next
       }
 
-      if (!grepl(stop_regex, txt) || is.na(day) || is.na(direction)) next
+      # The row label is not always the leftmost thing on its row. Where the
+      # legend column is set to the left of the stop names, reading the row in x
+      # order puts the abbreviated cells and the legend words first - the Fife
+      # 34's midday row is "27 40 57 10 Chapel Roundabout 1627 1640 ..." - and
+      # an anchored stop_regex then fails to match a row it should, losing the
+      # whole block. Try the label with that prefix stripped as well as the raw
+      # line, rather than unanchoring every affected route's pattern by hand.
+      lab <- sub(paste0("^(?:(?:\\d{2}|\\d{4}|[Tt]hen|[Uu]ntil|at|these|times|",
+                        "past|each|hour|mins?|and|up|to)\\s+)+"), "", txt)
+      if ((!grepl(stop_regex, txt) && !grepl(stop_regex, lab)) ||
+          is.na(day) || is.na(direction)) next
 
-      num <- tokens[grepl("^\\d{2}$|^\\d{4}$", text)]
+      num <- tokens[grepl(paste0(TT_MIN_RE, "|", TT_TIME_RE), text)]
       num <- tt_filter_routes(num, header, count_routes)
       if (!nrow(num)) next
 
+      dkey <- paste(direction, day, sep = "\r")
       res <- tt_expand_row(num$text, num$x, num$x + num$width,
                            legends = legends, row_y = num$y[1],
                            headway = hw$headway,
-                           minute_dialect = minute_dialect)
+                           minute_dialect = minute_dialect,
+                           prev0 = last_dep[[dkey]] %||% NA_integer_)
       if (isTRUE(res$expanded)) expanded_any <- TRUE
       if (isTRUE(res$ambiguous)) ambiguous_any <- TRUE
       if (length(res$minutes)) {
+        last_dep[[dkey]] <- max(res$minutes)
         out[[length(out) + 1L]] <- data.table::data.table(
           page = pi, direction = direction, daytype = day, block = block,
           minutes = res$minutes, expanded = res$expanded,
@@ -378,19 +411,39 @@ tt_dedupe_repeated_blocks <- function(times, min_distinct = 8L) {
 #' @param legends tt_headway_legends() for the page
 #' @param row_y this row's vertical position, used to keep a legend from
 #'   being applied to a different day type's table further down the page
+#' A fourth case is an abbreviated block printed to the *left* of the row's
+#' first explicit time, which has nothing on its left to bracket it and so used
+#' to be dropped in silence - taking the busiest part of the day with it. It
+#' arises two ways, and `prev0` and the largest-gap fallback handle them:
+#'
+#'  * the block continues a table that ended on an earlier page, so the
+#'    departure bracketing it belongs to the previous row of the same day type.
+#'    The Stagecoach 1/1A's late-evening table opens "00 20 40 0000 0020", the
+#'    19:40 that closes it sitting on the page before. `prev0` carries it.
+#'  * the row label is set at a larger x than the legend column, so reading the
+#'    row left to right puts the abbreviation first however the table looks. The
+#'    Fife 34's midday row reads "27 40 57 10 Chapel Roundabout 1627 1640 ...",
+#'    and losing that block is what made the day read as 06:10-10:10 and then
+#'    nothing until 18:31. There is no bracket to carry, so the block is placed
+#'    in the row's largest gap - which is where an abbreviation always belongs,
+#'    since it stands in for the most regular part of the day. Guarded by a
+#'    margin over the row's median spacing, so it cannot fill an ordinary gap.
+#'
 #' @param headway page-level fallback headway, or NA
 #' @param minute_dialect TRUE where the page says its abbreviation is a
 #'   minute pattern ("at these minutes past each hour"), which settles what a
 #'   lone two-digit cell means
+#' @param prev0 the last departure already read for this direction and day
+#'   type, used to bracket a block that opens the row. NA where none.
 tt_expand_row <- function(cells, x, xend = NULL, legends = NULL,
                           row_y = NA_integer_, headway = NA_integer_,
-                          minute_dialect = FALSE) {
+                          minute_dialect = FALSE, prev0 = NA_integer_) {
   ord <- order(x)
   cells <- cells[ord]
   xs <- x[ord]
   xe <- if (is.null(xend)) xs else xend[ord]
-  is_time <- grepl("^\\d{4}$", cells)
-  is_min <- grepl("^\\d{2}$", cells)
+  is_time <- grepl(TT_TIME_RE, cells)
+  is_min <- grepl(TT_MIN_RE, cells)
 
   times <- rep(NA_integer_, length(cells))
   times[is_time] <- tt_minutes(cells[is_time])
@@ -409,8 +462,58 @@ tt_expand_row <- function(cells, x, xend = NULL, legends = NULL,
   upper <- FALSE
   last_xe <- NA_integer_
   gap_done <- FALSE
-  i <- 1L
   n <- length(cells)
+
+  # A block that opens the row (see Details). Handled before the walk and then
+  # removed, so the walk still sees a row that starts with a printed time and
+  # its bracketing logic is unchanged. Kept out of `out` until the end: `out`
+  # supplies `prev` as the walk proceeds, and these departures are later in the
+  # day than the times that follow them.
+  lead <- integer(0)
+  if (n > 0L && is_min[1]) {
+    j <- 1L
+    while (j <= n && is_min[j]) j <- j + 1L
+    run <- as.integer(cells[seq_len(j - 1L)])
+    nx <- j
+    while (nx <= n && !is_time[nx]) nx <- nx + 1L
+    nxt <- if (nx <= n) times[nx] else NA_integer_
+    tt <- times[is_time]
+
+    lo <- NA_integer_
+    hi <- NA_integer_
+    if (!is.na(prev0) && !is.na(nxt) && prev0 < nxt) {
+      lo <- prev0
+      hi <- nxt
+    } else if (length(tt) >= 3L) {
+      g <- diff(tt)
+      k <- which.max(g)
+      if (g[k] >= max(120L, 4L * as.integer(stats::median(g)))) {
+        lo <- tt[k]
+        hi <- tt[k + 1L]
+      }
+    }
+    if (!is.na(lo)) {
+      lg <- find_legend(xs[1], xe[j - 1L])
+      hw <- if (!is.null(lg)) lg$headway else headway
+      lead <- if (length(run) == 1L && !is.na(hw)) {
+        upper <- upper || isTRUE(lg$upper_bound)
+        expand_headway_block(lo, hi, headway = hw)
+      } else if (length(run) == 1L && !minute_dialect) {
+        ambiguous <- TRUE
+        expand_headway_block(lo, hi, minutes = run)
+      } else {
+        expand_headway_block(lo, hi, minutes = run)
+      }
+      if (length(lead)) expanded <- TRUE
+    }
+
+    keep <- if (j > n) integer(0) else seq.int(j, n)
+    cells <- cells[keep]; xs <- xs[keep]; xe <- xe[keep]
+    is_time <- is_time[keep]; is_min <- is_min[keep]; times <- times[keep]
+    n <- length(cells)
+  }
+
+  i <- 1L
   while (i <= n) {
     if (is_time[i]) {
       prev <- if (length(out)) out[length(out)] else NA_integer_
@@ -466,6 +569,7 @@ tt_expand_row <- function(cells, x, xend = NULL, legends = NULL,
     }
     i <- i + 1L
   }
+  out <- c(lead, out)
   list(minutes = sort(unique(out[!is.na(out)])), expanded = expanded,
        upper_bound = upper, ambiguous = ambiguous)
 }
