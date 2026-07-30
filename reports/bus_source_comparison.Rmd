@@ -327,6 +327,184 @@ ggplot(excl, aes(x = factor(year), y = share, fill = which)) +
   theme_report
 ```
 
+#### How much of that is really the same service under another name?
+
+The "exclusive" counts above are an upper bound on the coverage gap, because
+the matching can only link two routes that agree on a public route number.
+Where the two sources disagree about what the number *is* — TNDS carrying the
+operator's marketing name, the DfT's GTFS carrying the short code — no link is
+ever made and the one service is counted as exclusive to each source, twice
+over.
+
+The test below looks for exactly that: a TNDS-only service and a BODS
+GTFS-only service that share **both terminals**, run under a recognisably
+**identical operator name**, and carry a journey count **within 20%** of each
+other. Requiring the operator to match as well keeps generic terminal names
+("Bus Station") from pairing unrelated routes.
+
+```{r exclusive-pairs, results="asis"}
+norm_ag <- function(x) {
+  x <- tolower(ifelse(is.na(x), "", x))
+  gsub("[^a-z0-9]", "", gsub("&", "and", x, fixed = TRUE))
+}
+
+pair_exclusive <- function(cm) {
+  s <- as.data.frame(cm$services)
+  s$ag <- norm_ag(s$agency_name)
+  t_only <- s[s$tnds > 0 & s$bods_gtfs == 0, ]
+  g_only <- s[s$bods_gtfs > 0 & s$tnds == 0, ]
+  keep <- c("service", "from", "to", "ag", "route_short_name")
+  m <- merge(t_only[, c(keep, "tnds")], g_only[, c(keep, "bods_gtfs")],
+             by = c("from", "to"), suffixes = c("_t", "_g"))
+  m <- m[!is.na(m$from) & !is.na(m$to), ]
+  if (nrow(m)) {
+    same_op <- mapply(function(a, b)
+      nzchar(a) && nzchar(b) && (grepl(a, b, fixed = TRUE) ||
+                                   grepl(b, a, fixed = TRUE)),
+      m$ag_t, m$ag_g)
+    m <- m[same_op, ]
+  }
+  if (nrow(m)) {
+    m$ratio <- pmin(m$tnds, m$bods_gtfs) / pmax(m$tnds, m$bods_gtfs)
+    m <- m[order(m$service_t, -m$ratio), ]
+    m <- m[!duplicated(m$service_t), ]
+    m <- m[!duplicated(m$service_g), ]
+  }
+  close <- m[m$ratio >= 0.8, , drop = FALSE]
+  data.frame(
+    pairs = nrow(close),
+    identical_counts = sum(close$tnds == close$bods_gtfs),
+    blank_tnds_number = sum(is.na(close$route_short_name_t) |
+                              trimws(close$route_short_name_t) == ""),
+    runs_t = sum(close$tnds), runs_g = sum(close$bods_gtfs),
+    share_t = if (sum(t_only$tnds) > 0)
+      sum(close$tnds) / sum(t_only$tnds) else NA_real_,
+    share_g = if (sum(g_only$bods_gtfs) > 0)
+      sum(close$bods_gtfs) / sum(g_only$bods_gtfs) else NA_real_)
+}
+
+xp <- across_years(pair_exclusive)
+xp_tbl <- xp |>
+  transmute(Year = year,
+            `Paired services` = pairs,
+            `...with identical counts` = identical_counts,
+            `...with no TNDS route number` = blank_tnds_number,
+            `TNDS journeys involved` = runs_t,
+            `BODS GTFS journeys involved` = runs_g,
+            `Share of TNDS-only journeys` = pct(share_t),
+            `Share of BODS GTFS-only journeys` = pct(share_g))
+knitr::kable(xp_tbl, format.args = list(big.mark = ","), row.names = FALSE)
+```
+
+```{r exclusive-pairs-text, results="asis"}
+cat(sprintf(paste0(
+  "This is a persistent, material share of the apparent gap, present in every ",
+  "year of the series: %s-%s of the journeys attributed to TNDS-only services ",
+  "and %s-%s of those attributed to BODS GTFS-only services belong to a ",
+  "service the *other* source also carries, under a different name. In %s, ",
+  "%d of the %d pairs match to the journey, which puts them beyond reasonable ",
+  "doubt, and %d of them have no route number in TNDS at all.\n"),
+  pct(min(xp$share_t)), pct(max(xp$share_t)),
+  pct(min(xp$share_g)), pct(max(xp$share_g)),
+  latest,
+  xp$identical_counts[xp$year == latest], xp$pairs[xp$year == latest],
+  xp$blank_tnds_number[xp$year == latest]))
+```
+
+```{r exclusive-pairs-examples, results="asis"}
+s <- as.data.frame(cmps[[latest]]$services)
+s$ag <- norm_ag(s$agency_name)
+t_only <- s[s$tnds > 0 & s$bods_gtfs == 0, ]
+g_only <- s[s$bods_gtfs > 0 & s$tnds == 0, ]
+keep <- c("service", "from", "to", "ag", "route_short_name")
+m <- merge(t_only[, c(keep, "tnds", "agency_name")],
+           g_only[, c(keep, "bods_gtfs", "agency_name")],
+           by = c("from", "to"), suffixes = c("_t", "_g"))
+m <- m[!is.na(m$from) & !is.na(m$to), ]
+same_op <- mapply(function(a, b)
+  nzchar(a) && nzchar(b) && (grepl(a, b, fixed = TRUE) ||
+                               grepl(b, a, fixed = TRUE)), m$ag_t, m$ag_g)
+m <- m[same_op, ]
+m$ratio <- pmin(m$tnds, m$bods_gtfs) / pmax(m$tnds, m$bods_gtfs)
+m <- m[order(m$service_t, -m$ratio), ]
+# Two statements, not a chain: `m[!duplicated(m$service_g), ]` written after
+# `m[!duplicated(m$service_t), ]` would build its logical vector from the
+# original m and misalign against the shorter one, letting duplicates through.
+m <- m[!duplicated(m$service_t), ]
+m <- m[!duplicated(m$service_g), ]
+# m_all: every accepted pair, used by the mechanism paragraph below.
+# m: the largest few, for the table.
+m_all <- m[m$ratio >= 0.8, ]
+m <- m_all[order(-m_all$tnds), ][seq_len(min(12, nrow(m_all))), ]
+
+knitr::kable(
+  data.frame(From = m$from, To = m$to,
+             `TNDS number` = ifelse(is.na(m$route_short_name_t) |
+                                      trimws(m$route_short_name_t) == "",
+                                    "(blank)", m$route_short_name_t),
+             `TNDS journeys` = round(m$tnds),
+             `BODS GTFS number` = m$route_short_name_g,
+             `BODS GTFS journeys` = round(m$bods_gtfs),
+             Operator = m$agency_name_t,
+             check.names = FALSE),
+  row.names = FALSE, format.args = list(big.mark = ","),
+  caption = paste("Largest services counted as exclusive to both sources at",
+                  "once,", latest))
+```
+
+```{r exclusive-pairs-mechanism, results="asis"}
+# Two different naming habits produce these pairs, and they have very different
+# weights by count and by journeys - so both are described from the data rather
+# than asserted.
+nm_t <- ifelse(is.na(m_all$route_short_name_t) |
+                 trimws(m_all$route_short_name_t) == "", "",
+               m_all$route_short_name_t)
+nm_g <- ifelse(is.na(m_all$route_short_name_g), "", m_all$route_short_name_g)
+longer <- nzchar(nm_t) & nchar(nm_t) > nchar(nm_g)
+shorter <- nzchar(nm_t) & nchar(nm_t) < nchar(nm_g)
+ops <- sort(table(m_all$agency_name_t), decreasing = TRUE)
+by_runs <- tapply(m_all$tnds, m_all$agency_name_t, sum)
+by_runs <- sort(by_runs, decreasing = TRUE)
+
+# Illustrate the branded habit only. A marketing name carries a lowercase
+# letter ("indigo", "comet", "Link 2") where a route code does not, which
+# separates it cleanly from the school-service affixes (S458, 807D) described
+# next - otherwise the same pair lands in both lists. Require the two counts to
+# agree within 5% as well, so an example cannot be one of the loose pairings
+# caveated below.
+ex <- which(longer & grepl("[a-z]", nm_t) & m_all$ratio >= 0.95)
+ex <- ex[order(-m_all$tnds[ex])][seq_len(min(3, length(ex)))]
+
+cat(sprintf(paste0(
+  "Two naming habits produce these pairs, and they carry very different ",
+  "weight. In %s, TNDS holds the longer name in %d pairs and the shorter one ",
+  "in %d, with %d carrying no number at all. One habit is a marketing name ",
+  "or local variant against a bare code - %s, each agreeing on journeys to ",
+  "within 5%%. The other is school-service prefixes and suffixes ",
+  "(`S458`/`458`, `807D`/`808`), a long tail of tiny services: it is why ",
+  "**%s** contributes the most pairs (%d) while **%s** contributes the most ",
+  "journeys (%s of %s).\n\n"),
+  latest, sum(longer), sum(shorter), sum(!nzchar(nm_t)),
+  paste0("`", nm_t[ex], "`/`", nm_g[ex], "`", collapse = ", "),
+  names(ops)[1], as.integer(ops[1]),
+  names(by_runs)[1], fmt(by_runs[1]), fmt(sum(m_all$tnds))))
+```
+
+One caveat on reading the table: where an operator runs many routes between
+the same pair of generic terminals, the *aggregate* is sound but an individual
+pairing can be wrong, because the counterpart is chosen as the closest journey
+count among same-terminal, same-operator candidates. The rows to trust
+unreservedly are the ones whose counts match exactly.
+
+`match_route_services()` does have a second pass that links routes on stop
+overlap alone (80%) when the numbers fail, but it only considers routes left
+**completely unpaired** by the first pass. A service that a source splits
+across two or more route_ids sharing one number is linked to *itself* in the
+first pass, so it is no longer unpaired and the second pass never sees it —
+which is precisely the situation for these multi-registration branded
+operators. Widening that pass to whole components, rather than lone routes,
+is the fix.
+
 Among the services **both** sources carry, how closely do they agree on the
 number of journeys?
 
@@ -351,16 +529,44 @@ knitr::kable(shared_tbl, format.args = list(big.mark = ","), row.names = FALSE)
 
 In the four autumn windows (2022–2025) most shared services agree *exactly*:
 the modal TNDS ÷ BODS GTFS journey-count ratio is 1.00 and around 60% of
-services are identical. **The February 2026 window is the exception** — the
-whole ratio distribution shifts to about 1.09 (TNDS counts ~9% more journeys
-than BODS GTFS on the same services) and the share of exactly-equal services
-collapses to 4%. February is the only window here that contains a school
-half-term, so the most likely cause is the two converters handling term-time
-and half-term operating profiles differently; the autumn windows sit clear of
-school holidays and so agree far more closely. This is worth investigating
-before relying on a February snapshot for anything frequency-sensitive, and is
-a reminder that the counting window itself — not just the source — affects how
-closely the sources agree.
+services are identical. **The February 2026 window is the exception**, and the
+reason is not a converter disagreement about school terms but the age of the
+TNDS snapshot relative to the window.
+
+A TNDS snapshot carries the registration that is operative *at the snapshot
+date*. The BODS change archive also carries future-dated files, so it holds the
+successor timetable where TNDS does not. Any window extending weeks past a TNDS
+snapshot therefore understates TNDS, and it does so lumpily, because operators
+re-register around school terms. Measured on the rebuilt 2026 feed
+(snapshot 2026-02-04, window 2026-02-09 to 2026-03-08):
+
+- Of 1,384,215 TNDS bus trips, **335,493 (24.2%) sit on calendars that expire
+  before the feed's own end date**, and they average **2.14 runs** in the window
+  against **8.17** for trips that survive to it.
+- The expiry is concentrated on two dates: **172,345 trips end Saturday
+  2026-02-14** and **72,373 end Saturday 2026-02-21** — the Saturdays either
+  side of English school half-term (16–20 February 2026).
+- TNDS counts about **9.29 M** bus journeys in the window. Had nothing expired
+  early it would count roughly **11.66 M, or 25% more**. Early expiry alone
+  costs some **2.19 M journeys**, which is larger than the entire 1.36 M
+  journey gap to BODS GTFS: run the full window and TNDS would *exceed* it.
+
+A second, smaller effect compounds it. `convert_tnds_snapshot()` trims each
+region to the snapshot date ±31 days, so this feed ends on **2026-03-07** while
+its counting window runs to **2026-03-08**. The window's last day is empty in
+TNDS by construction, costing a further **0.18 M journeys**.
+
+(Trip and date counts here are exact counts from the feed's `calendar` and
+`trips` tables; the journey totals are rounded, because they depend on the
+run-counting convention and are quoted only to size the effect.)
+
+Neither effect is a converter bug, and neither should be read as TNDS carrying
+less service. The consequence for interpretation is that a TNDS figure measures
+**service as registered at the snapshot date**, not service operated across the
+window — so a TNDS snapshot should either be counted over a window inside its
+operative period, or reported with that caveat attached. It is also a reminder
+that the counting window, not only the source, affects how closely the sources
+agree.
 
 ```{r shared-chart, fig.height=4.2}
 sh_plot <- shared |>
@@ -476,10 +682,18 @@ cat(sprintf(
   paste0("- The agreement on shared services is near-exact in the four ",
          "autumn windows (median difference 0%%, %s-%s of services within 2%%) ",
          "but not in the February 2026 window (median difference %s, only %s ",
-         "within 2%%) — consistent with a school half-term falling inside the ",
-         "2026 window and being handled differently by the two converters.\n"),
+         "within 2%%). That window is measured against a snapshot whose ",
+         "registrations expire inside it: 24.2%% of TNDS bus trips sit on ",
+         "calendars ending before the feed does, costing roughly 2.19 M ",
+         "journeys — more than the whole gap to BODS GTFS.\n"),
   pct(min(sh_aut$within2)), pct(max(sh_aut$within2)),
   pct(sh26$median_diff), pct(sh26$within2)))
+
+cat(paste0("- The measured differences above are upper bounds on two counts: ",
+           "route matching cannot link a service the two sources number ",
+           "differently (see the paired-services table), and a TNDS figure is ",
+           "service *as registered at the snapshot date*, not service ",
+           "operated across the window.\n"))
 ```
 
 ### Why the sources differ
@@ -508,6 +722,14 @@ cat(sprintf(
   World pipeline. Differences in how each handles operating profiles, bank
   holidays, school-term services and duplicate journeys show up as small
   per-zone differences even where the underlying timetable is identical.
+- **The snapshot dates mean different things.** A TNDS snapshot is the
+  registration operative on the day it was taken, and it carries nothing
+  forward; the BODS change archive contains future-dated files, so it already
+  holds the successor timetable. A counting window that reaches weeks past the
+  TNDS snapshot therefore understates TNDS — sharply, where operators
+  re-register around school terms. This is the dominant effect in the February
+  2026 window and is measured above. It is not a defect in either source, but
+  it does mean the two columns answer slightly different questions.
 - **Coach coverage differs by design.** All sources distinguish coach (200)
   from local bus (3), but TNDS's coach data came from the separate NCSD
   archive, discontinued after February 2025 — so TNDS snapshots from 2025
@@ -523,9 +745,16 @@ cat(sprintf(
   deliberate compromise: raising it splits legitimate matches where one
   source omits a branch, lowering it merges distinct services.
 - Services counted as "absent" from a source may be present under a
-  **different route number** rather than genuinely missing. The worked
-  example tables should be read as leads to investigate, not as a
-  certified list of gaps.
+  **different route number** rather than genuinely missing. This is not
+  hypothetical: the paired-services table above shows it accounts for a fifth
+  to a third of the journeys on "exclusive" services in every year of the
+  series. The worked example tables should be read as leads to investigate, not
+  as a certified list of gaps.
+- The stop-overlap fallback that exists for this case only rescues routes left
+  **completely unpaired** by the number match, so it cannot help a service that
+  a source splits across several route_ids under one number. Widening it to
+  operate on connected components rather than lone routes would close most of
+  the gap, at the cost of re-running the matching for every year.
 - Journey counts are the number of vehicle journeys operating in the
   28-day window under GTFS calendar semantics, including `calendar_dates`
   exceptions. They are not passenger-facing frequencies.

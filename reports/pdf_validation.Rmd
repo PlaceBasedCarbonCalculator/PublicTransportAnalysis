@@ -101,7 +101,8 @@ if (nrow(pub)) {
 
 Journeys counted over the whole window, per source. These are directly
 comparable with the `Published` figures above only after multiplying by the
-number of each day type in the window, so the ratio column is the useful one.
+number of each day type in the window; `Ratio` is TNDS ÷ BODS GTFS, which
+needs no such conversion and is where the two sources can be seen to disagree.
 
 A route is located by its public number, its operator, and the stop the
 document counts. The stop is what makes the comparison like-for-like. A bus
@@ -120,9 +121,63 @@ that in mind.
 
 ```{r feeds}
 f <- dcast(v$feeds, key + window ~ source, value.var = "runs", fill = 0)
+if (all(c("tnds", "bods_gtfs") %in% names(f))) {
+  f[, Ratio := ifelse(bods_gtfs > 0, sprintf("%.2f", tnds / bods_gtfs), "—")]
+}
 setnames(f, c("key", "window"), c("Route", "Window"))
 knitr::kable(f)
 ```
+
+```{r window-decay, results = 'asis'}
+# The second window against the first, per source. Written as computed values
+# rather than quoted ones: the trim overrun below is arithmetic, but how far it
+# bites depends on the snapshot, so it must not be hard-coded into the prose.
+wn <- names(v$window)
+trim_days <- 31L
+snap <- as.Date(v$snapshot$snapshot_date)
+tnds_end <- snap + trim_days
+over <- as.integer(v$window[[wn[2]]]$enddate - tnds_end)
+
+d <- dcast(v$feeds, key + source ~ window, value.var = "runs", fill = 0)
+d <- d[get(wn[1]) > 0]
+d[, ratio := get(wn[2]) / get(wn[1])]
+rr <- d[, list(n = .N, med = median(ratio)), by = source]
+tn <- rr[source == "tnds"]; bg <- rr[source == "bods_gtfs"]
+band <- d[source == "tnds" & ratio > 0.5, list(lo = min(ratio), hi = max(ratio),
+                                               n = .N)]
+both_low <- intersect(d[source == "tnds" & ratio <= 0.5]$key,
+                      d[source == "bods_gtfs" & ratio <= 0.5]$key)
+
+cat(sprintf(paste0(
+  "The two windows are **not** comparable for TNDS, and the table shows why. ",
+  "A TNDS snapshot is trimmed to the snapshot date plus or minus %d days by ",
+  "`convert_tnds_snapshot()`, so the %s feed ends on **%s** - %d days before ",
+  "the `%s` window closes on %s. Those %d days are empty in TNDS by ",
+  "construction, which predicts a second-window count of %d/28 = **%.3f** of ",
+  "a full one. Measured: the TNDS `%s` divided by `%s` ratio has a median of ",
+  "%.3f and sits between %.3f and %.3f for %d of the %d routes, against a ",
+  "median of %.3f for BODS GTFS. The apparent collapse of TNDS in the second ",
+  "window is therefore an artefact of the conversion trim, not a property of ",
+  "the source, and **the `%s` TNDS column must not be read as a service ",
+  "level**.\n\n"),
+  trim_days, format(snap), format(tnds_end), over, wn[2],
+  format(v$window[[wn[2]]]$enddate), over, 28L - over, (28 - over) / 28,
+  wn[2], wn[1], tn$med, band$lo, band$hi, band$n, tn$n, bg$med, wn[2]))
+
+if (length(both_low)) {
+  cat(sprintf(paste0(
+    "The exceptions are informative. %s fall below half in *both* sources by ",
+    "the same factor, so those are a real change in the timetable rather than ",
+    "the artefact. Both are First Glasgow, and the drop falls where a Scottish ",
+    "summer timetable would end.\n\n"),
+    paste0("`", both_low, "`", collapse = " and ")))
+}
+```
+
+The bank-holiday references the second window was built for — the Cardiff 62's
+"Sundays & public holidays" table and Kinchbus's "Sunday & Bank Holiday
+Monday" table — therefore cannot be tested against TNDS until the conversion
+trim is widened past the end of that window.
 
 ```{r stopmatch}
 sm <- dcast(v$feeds[window == names(v$window)[1]], key ~ source,
@@ -143,7 +198,36 @@ source that splits one service across several ids must still be compared as
 one service. Several ids is in itself worth noting, since it is how duplicate
 publication shows up.
 
+Several ids is not *by itself* evidence of duplication, though, and the four
+routes where TNDS reads well above BODS GTFS divide cleanly on that point. For
+each of them every trip was reduced to the sorted set of its (stop, departure
+time) pairs, and those signatures compared across the route's TNDS `route_id`s
+(measured on `tnds_20260726_merged.zip`):
+
+| Route | TNDS ÷ GTFS | TNDS `route_id`s | Trip patterns shared between ids | Reading |
+|:------|------------:|-----------------:|:---------------------------------|:--------|
+| TBALL | 2.00 | 2 | **148 of 148** | the same timetable published twice |
+| TBX38 | 3.00 | 6 | **363 of 688**, as three identical pairs | three registrations, each published twice |
+| SC125 | 2.00 | 2 | **0 of 731** | not duplication |
+| CDF62 | 3.86 | 3 | **0 of 147** | not duplication |
+
+For TBALL and TBX38 the TNDS excess is therefore an artefact of duplicate
+registration, and the exact ratios of 2.00 and 3.00 follow directly from it —
+TNDS is wrong and BODS GTFS is right. For SC125 and CDF62 the `route_id`s
+carry genuinely distinct trips, so their excess is a real disagreement that
+duplicate publication does not explain; SC125's ratio of exactly 2.00 with
+disjoint patterns points instead at the two sources modelling directions
+differently, which would need a direction-level breakdown to confirm and is
+not established here.
+
 ## Notes on each document
+
+Figures quoted *inside* these notes come from the February 2026 comparison that
+motivated each document's selection, not from this snapshot — the BB727 note
+says so explicitly, and the others share its origin. Where a note disagrees
+with the Window totals table above, the table is the measurement: the Wigan
+`AN320`, for instance, is noted as TNDS reading 1.96× BODS GTFS, but on this
+July snapshot the two sources agree exactly.
 
 ```{r notes}
 n <- rbindlist(lapply(v$routes, function(r)
