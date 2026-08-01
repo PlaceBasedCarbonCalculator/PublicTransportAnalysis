@@ -33,12 +33,21 @@
 #' The DfT's national GTFS changed character between the 2024 and 2026
 #' snapshots: the older feeds carry history (the 2022-11-02 feed has
 #' calendars back to 2022-08-01), the 2026 ones do not — every calendar in
-#' `20260204/itm_all_gtfs.zip` starts on or after the extraction date. When
-#' the reference date is not a Monday, flooring it opens the window before
-#' the extraction date and the BODS GTFS column is silently short by those
-#' days, which is what made February 2026 look anomalous. Where the feed has
-#' no history the window is therefore anchored forward, to the first Monday
-#' on or after the extraction date, via an explicit `ref`.
+#' the 2026 feeds starts on or after the extraction date. When the reference
+#' date is not a Monday, flooring it opens the window before the extraction
+#' date and the BODS GTFS column is silently short by those days. Where the
+#' feed has no history the window is therefore anchored forward, to the first
+#' Monday on or after the extraction date, via an explicit `ref`.
+#'
+#' 2026 is the July snapshot, not February. February 2026 was dropped: its
+#' TNDS side is distorted by service registrations that expire *inside* the
+#' counting window, so a quarter of its trips stop part-way through and the
+#' TNDS column understates the timetable actually running. That is a property
+#' of that particular extract rather than of TNDS, and it made every February
+#' 2026 figure incomparable with the other years. The July triple is also the
+#' one validation_snapshot() checks against published timetables, so the
+#' comparison's most recent year and the PDF validation now describe the same
+#' feeds.
 comparison_snapshots <- function() {
   list(
     # 2022-2024: feeds carry history, so flooring the reference date to its
@@ -60,12 +69,13 @@ comparison_snapshots <- function() {
                   tnds = "gtfs/tnds_20251003_merged.zip",
                   bods_txc = "gtfs/bods_txc_20251006.zip",
                   bods_gtfs = "OpenBusData/GTFS/20251006/itm_all_gtfs.zip"),
-    # 2026: extracted on Wednesday 4 February with no history, so the window
-    # opens on the following Monday rather than the preceding one.
-    `2026` = list(ref = "2026-02-09", snapshot_date = "2026-02-04",
-                  tnds = "gtfs/tnds_20260204_merged.zip",
-                  bods_txc = "gtfs/bods_txc_20260204.zip",
-                  bods_gtfs = "OpenBusData/GTFS/20260204/itm_all_gtfs.zip")
+    # 2026: extracted on Sunday 26 July (BODS TransXChange on the 25th) with
+    # no history, so the window opens on the following Monday rather than the
+    # preceding one.
+    `2026` = list(ref = "2026-07-27", snapshot_date = "2026-07-26",
+                  tnds = "gtfs/tnds_20260726_merged.zip",
+                  bods_txc = "gtfs/bods_txc_20260725.zip",
+                  bods_gtfs = "OpenBusData/GTFS/20260726/itm_all_gtfs.zip")
   )
 }
 
@@ -78,9 +88,11 @@ comparison_snapshots <- function() {
 #' snapshot of all three sources.
 #'
 #' Extracted Sunday 26 July 2026, so the window opens on Monday 27 July for
-#' the same no-history reason as 2026-02.
+#' the same no-history reason described in comparison_snapshots().
 #'
-#' BODS TransXChange is deliberately absent: see validation_sources().
+#' Since February 2026 was dropped this is the same triple the comparison
+#' calls 2026, minus BODS TransXChange, which is deliberately absent: see
+#' validation_sources().
 validation_snapshot <- function() {
   list(ref = "2026-07-27", snapshot_date = "2026-07-26",
        tnds = "gtfs/tnds_20260726_merged.zip",
@@ -113,14 +125,13 @@ comparison_sources <- function() c("tnds", "bods_txc", "bods_gtfs")
 
 #' Sources checked against published timetables
 #'
-#' Only two. Validation asks which source is *right*, and the multi-year
-#' comparison has already settled that for BODS TransXChange: it is the
-#' operator-published change archive, and converting it needs per-file error
-#' tolerance because a fraction of the files are malformed, so it carries a
-#' silent coverage gap the other two do not (see the "Failed to import files"
-#' discussion in bus_source_comparison.md). Checking it against the PDFs would
-#' measure that gap again rather than tell us anything new about TNDS or the
-#' DfT's GTFS, and converting the 1.7 GB archive costs hours. The multi-year
+#' Only two. Validation asks which source is *right*, and BODS TransXChange
+#' cannot help decide: it is the same operator-published data the DfT's GTFS is
+#' rendered from, so the two differ mainly in which dataset revision survives
+#' de-duplication and in who converted it, not in what the timetable says. A
+#' published document adjudicates TNDS against the DfT's rendering; a third
+#' column drawn from the same upstream files as the second would not break a
+#' tie. Converting the 1.7 GB change archive also costs hours. The multi-year
 #' comparison still covers all three; this does not.
 validation_sources <- function() c("tnds", "bods_gtfs")
 
@@ -166,6 +177,90 @@ feed_summary_stats <- function(gtfs, win) {
     trips_in_window = nrow(gtfs_win$trips),
     calendar_start = as.character(min(gtfs$calendar$start_date, na.rm = TRUE)),
     calendar_end = as.character(max(gtfs$calendar$end_date, na.rm = TRUE))
+  )
+}
+
+#' How much of a feed's service stops before the counting window ends
+#'
+#' A TransXChange snapshot carries the registration operative at the snapshot
+#' date and nothing beyond it, so a window reaching weeks past the snapshot
+#' counts services that stop part-way through. This measures that directly
+#' rather than leaving it as an argument: the share of the feed's bus trips
+#' whose calendar ends before the window does, and how many times those trips
+#' run compared with the ones that survive to the end.
+#'
+#' Expiry is measured against the **horizon**, the earlier of the window end
+#' and the feed's own last calendar date - not against the window end alone.
+#' A TransXChange feed is trimmed to a fixed span around its snapshot, so where
+#' that span stops short of the window every single calendar ends before the
+#' window does and a window-end test reports 100% of trips as expiring, which
+#' says nothing. Against the horizon the two effects separate: this measures
+#' service that stops while the feed still has coverage, and `feed_end` against
+#' `window_end` shows the trim running out.
+#'
+#' `runs_if_full` scales each early-ending trip's run count up by the ratio of
+#' the horizon to the part of it the trip is available for, giving a rough
+#' upper bound on what the source would count had nothing expired early. It is
+#' an approximation - it assumes the expiring service would have continued at
+#' its own rate - and is quoted only to size the effect.
+#'
+#' Trips defined only in `calendar_dates` have no calendar end date; they are
+#' counted in `trips_no_calendar` and excluded from the expiry shares rather
+#' than assumed to expire.
+window_expiry_stats <- function(gtfs, win) {
+  bus <- as.data.frame(gtfs$routes)
+  bus <- bus[map_route_type_simple(bus$route_type) == 3L, "route_id"]
+  trips <- as.data.frame(gtfs$trips)
+  trips <- trips[trips$route_id %in% bus, c("trip_id", "service_id")]
+
+  trimmed <- UK2GTFS::gtfs_trim_dates(gtfs, startdate = win$startdate,
+                                      enddate = win$enddate)
+  runs <- as.data.frame(trip_runs_in_window(trimmed))
+  rm(trimmed)
+
+  cal <- as.data.frame(gtfs$calendar)
+  end <- as.Date(cal$end_date)[match(trips$service_id, cal$service_id)]
+  trips$end_date <- end
+  trips$runs <- runs$runs[match(trips$trip_id, runs$trip_id)]
+  trips$runs[is.na(trips$runs)] <- 0
+
+  feed_end <- suppressWarnings(max(as.Date(cal$end_date), na.rm = TRUE))
+  horizon <- min(win$enddate, feed_end, na.rm = TRUE)
+
+  known <- !is.na(trips$end_date)
+  early <- known & trips$end_date < horizon
+  horizon_days <- as.integer(horizon - win$startdate) + 1L
+  avail <- pmax(as.integer(pmin(trips$end_date, horizon) - win$startdate) + 1L,
+                1L)
+  scale <- ifelse(early, horizon_days / avail, 1)
+
+  # The dates on which the most service ends, which is where the effect is
+  # concentrated (operators re-register together, around school terms)
+  top_end <- if (any(early)) {
+    tb <- sort(tapply(trips$runs[early], as.character(trips$end_date[early]),
+                      function(x) length(x)), decreasing = TRUE)
+    i <- seq_len(min(2, length(tb)))
+    paste(sprintf("%s (%s trips)", names(tb)[i],
+                  format(as.integer(tb[i]), big.mark = ",", trim = TRUE)),
+          collapse = "; ")
+  } else NA_character_
+
+  data.frame(
+    window_start = as.character(win$startdate),
+    window_end = as.character(win$enddate),
+    feed_end = as.character(feed_end),
+    horizon = as.character(horizon),
+    bus_trips = nrow(trips),
+    trips_no_calendar = sum(!known),
+    trips_ending_early = sum(early),
+    share_ending_early = if (sum(known)) sum(early) / sum(known) else NA_real_,
+    runs_mean_early = if (any(early)) mean(trips$runs[early]) else NA_real_,
+    runs_mean_full = if (any(known & !early)) mean(trips$runs[known & !early])
+      else NA_real_,
+    runs_counted = sum(trips$runs),
+    runs_if_full = sum(trips$runs * scale),
+    biggest_end_dates = top_end,
+    stringsAsFactors = FALSE
   )
 }
 
@@ -224,6 +319,7 @@ comparison_source_result <- function(year, source, zones_path, ...,
   gtfs <- read_feed(spec[[source]], cfg)
   stats <- feed_summary_stats(gtfs, win)
   composition <- feed_mode_composition(gtfs)
+  expiry <- window_expiry_stats(gtfs, win)
 
   # Harmonise extended route types before counting so modes align
   gtfs$routes$route_type <- map_route_type_simple(gtfs$routes$route_type)
@@ -243,7 +339,8 @@ comparison_source_result <- function(year, source, zones_path, ...,
   res <- add_tph_daytime_avg(as.data.frame(res))
 
   list(year = year, source = source, window = win,
-       stats = stats, composition = composition, trips = res, routes = routes)
+       stats = stats, composition = composition, expiry = expiry,
+       trips = res, routes = routes)
 }
 
 #' Bus departures by day and time band, from a per-zone result table
@@ -299,6 +396,7 @@ combine_year_comparison <- function(year, results, cfg = load_cfg()) {
     stats = dplyr::bind_rows(lapply(results, `[[`, "stats"), .id = "source"),
     composition = dplyr::bind_rows(lapply(results, `[[`, "composition"),
                                    .id = "source"),
+    expiry = dplyr::bind_rows(lapply(results, `[[`, "expiry"), .id = "source"),
     bus_wide = bus_wide,
     bands = bands,
     services = matched$services,

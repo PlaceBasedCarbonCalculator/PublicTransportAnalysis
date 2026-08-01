@@ -32,6 +32,29 @@ MINS_PER_DAY <- 24L * 60L
 #' and treating a bare "6.05" as a time here would also catch decimal numbers.
 TT_TIME_RE <- "^\\d{4}$|^\\d{1,2}:\\d{2}$"
 
+#' Which four-digit tokens on a row are a year in a date, not a departure time
+#'
+#' "2026" is a valid HHMM departure (20:26) and a valid year, and nothing about
+#' the token itself separates them - only what precedes it. National Express
+#' prints "Monday to Friday ... From 19th July 2026" as one row, so the year
+#' made the row look like data, the row was never recognised as a day heading,
+#' and the whole document read as zero journeys.
+#'
+#' Deliberately narrow: a four-digit token in 1900-2099 counts as a year only
+#' where the token before it is a month, an ordinal date, or a word that
+#' introduces a validity date. A departure time in a timetable column is never
+#' preceded by "July" or "commencing".
+tt_year_tokens <- function(text) {
+  yr <- grepl("^(19|20)\\d{2}$", text)
+  if (!any(yr)) return(rep(FALSE, length(text)))
+  prev <- c("", utils::head(text, -1))
+  datey <- grepl(paste0("(?i)^(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)",
+                        "[a-z]*$|^\\d{1,2}(st|nd|rd|th)$|",
+                        "^(from|commencing|valid|effective|dated|until|w\\.e\\.f\\.?)$"),
+                 prev, perl = TRUE)
+  yr & datey
+}
+
 #' A minutes-past-the-hour cell in an abbreviated block
 TT_MIN_RE <- "^\\d{2}$"
 
@@ -267,7 +290,8 @@ read_column_timetable <- function(path,
     data.table::setorder(p, y, x)
     p[, row := cumsum(c(1L, diff(y) > 3L))]
     lines <- p[, list(txt = paste(text, collapse = " "),
-                      ntime = sum(grepl(TT_TIME_RE, text))), by = row]
+                      ntime = sum(grepl(TT_TIME_RE, text) &
+                                    !tt_year_tokens(text))), by = row]
     legends <- tt_headway_legends(p)
     hw <- tt_page_headway(lines$txt)
     if (!is.na(hw$headway) || nrow(legends)) legend_seen <- TRUE

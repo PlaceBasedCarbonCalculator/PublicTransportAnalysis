@@ -1,0 +1,543 @@
+# Where TNDS and the DfT's BODS GTFS disagree most, zone by zone
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      fig.path = "figures/lsoagap-", dpi = 110,
+                      fig.width = 9, fig.height = 5)
+library(ggplot2)
+library(data.table)
+
+g <- readRDS(gap_path)
+z <- as.data.table(g$zones)
+top <- as.data.table(g$top)
+svc <- as.data.table(g$services)
+nat <- g$national
+
+# scientific = FALSE: format() renders a round number such as 9000000 as 9e+06
+# whatever big.mark says
+fmt <- function(x) format(round(x), big.mark = ",", scientific = FALSE,
+                          trim = TRUE)
+pct <- function(x) sprintf("%.1f%%", 100 * x)
+cn <- c(E = "England", W = "Wales", S = "Scotland")
+
+theme_report <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        legend.position = "top",
+        plot.title.position = "plot")
+gap_cols <- c("#2a78d6", "#d94f70")
+
+# Reused for both directions of the comparison: the zone table and, under it,
+# the services that make up each zone's gap.
+zone_table <- function(d) {
+  data.frame(
+    Zone = d$zone_id,
+    Locality = ifelse(is.na(d$locality), "—", d$locality),
+    Country = cn[d$country],
+    TNDS = round(d$runs_tnds),
+    `BODS GTFS` = round(d$runs_bods),
+    Difference = round(d$gap),
+    `Only TNDS` = round(d$gap_services_only_tnds),
+    `Only BODS` = round(d$gap_services_only_bods),
+    Frequency = round(d$gap_frequency),
+    check.names = FALSE)
+}
+
+service_table <- function(zid, n = 8) {
+  d <- svc[zone_id == zid]
+  setorderv(d, "gap", -1L)
+  d <- d[order(-abs(gap))][seq_len(min(n, .N))]
+  data.frame(
+    Service = ifelse(is.na(d$name) | d$name == "", "(unnamed)", d$name),
+    Description = substr(ifelse(is.na(d$long_name), "—", d$long_name), 1, 46),
+    TNDS = round(d$tnds),
+    `BODS GTFS` = round(d$bods_gtfs),
+    Difference = round(d$gap),
+    Cause = d$cause,
+    check.names = FALSE)
+}
+```
+
+The comparison report (`bus_source_comparison.md`) measures how far the three
+bus timetable sources disagree nationally. This report asks a narrower and more
+practical question: **for which individual LSOAs (Data Zones in Scotland) does
+the choice between TNDS and the DfT's BODS GTFS change the answer most, and
+which bus routes are responsible?**
+
+Both sources are the **`r g$year`** snapshot, counted over the same 28-day
+window (**`r g$window$startdate` to `r g$window$enddate`**) and the same widened
+zone polygons as every other figure in this analysis:
+
+- TNDS (TransXChange), converted with `UK2GTFS::transxchange2gtfs()`:
+  `r basename(g$snapshot$tnds)`
+- BODS GTFS, the DfT's own rendering, used as supplied:
+  `r sub(".*GTFS/([0-9]+)/.*", "\\1", g$snapshot$bods_gtfs)`
+
+The measure is **total bus trip-runs in the window**: every vehicle journey
+that calls at least once inside the zone, weighted by the number of times it
+runs over the 28 days. A journey counts once per zone however many of the
+zone's stops it calls at, which is exactly what `gtfs_trips_per_zone()` does, so
+these numbers reconcile with the comparison report's zone totals. Unlike
+`tph_daytime_avg` — the measure the pipeline publishes — it includes the night
+band and does not weight weekdays, so it is a plain total.
+
+## The national picture
+
+```{r national, results="asis"}
+tot <- data.frame(
+  Measure = c("Zones with counted bus service in either source",
+              "Total bus trip-runs, TNDS",
+              "Total bus trip-runs, BODS GTFS",
+              "Zones where TNDS counts more",
+              "Zones where BODS GTFS counts more",
+              "Zones where the two agree exactly",
+              "Zones with service in TNDS only",
+              "Zones with service in BODS GTFS only"),
+  Value = c(fmt(nat$zones), fmt(nat$runs_tnds), fmt(nat$runs_bods),
+            fmt(nat$zones_tnds_higher), fmt(nat$zones_bods_higher),
+            fmt(nat$zones_equal), fmt(nat$zones_only_tnds),
+            fmt(nat$zones_only_bods)))
+knitr::kable(tot, row.names = FALSE, align = c("l", "r"))
+```
+
+```{r national-note, results="asis"}
+# Deliberately does not characterise the size of the national difference in
+# words - an earlier draft called it "near-agreement", which was written before
+# the number was known and was wrong by an order of magnitude.
+higher <- if (nat$runs_tnds > nat$runs_bods) "TNDS" else "BODS GTFS"
+cat(sprintf(paste0(
+  "Nationally TNDS counts %s bus trip-runs against BODS GTFS's %s, so %s is ",
+  "the higher of the two by %s (%+.1f%% of the BODS GTFS total). The direction ",
+  "is not uniform: BODS GTFS is the higher source in %s zones and TNDS in %s, ",
+  "so the national total is a partial cancellation of disagreements pointing ",
+  "opposite ways.\n\n"),
+  fmt(nat$runs_tnds), fmt(nat$runs_bods), higher,
+  fmt(abs(nat$runs_tnds - nat$runs_bods)),
+  100 * (nat$runs_tnds / nat$runs_bods - 1),
+  fmt(nat$zones_bods_higher), fmt(nat$zones_tnds_higher)))
+
+cat(sprintf(paste0(
+  "At zone level the two agree exactly in only %s of %s zones (%s), and in ",
+  "**%s zones** one source shows a bus service where the other shows none at ",
+  "all — %s in TNDS only, %s in BODS GTFS only. Those are the zones where the ",
+  "choice of source is not a matter of degree.\n"),
+  fmt(nat$zones_equal), fmt(nat$zones), pct(nat$zones_equal / nat$zones),
+  fmt(nat$zones_only_tnds + nat$zones_only_bods),
+  fmt(nat$zones_only_tnds), fmt(nat$zones_only_bods)))
+```
+
+```{r gap-dist, fig.height=4.2}
+zz <- copy(z)
+zz[, band := cut(gap, breaks = c(-Inf, -2000, -500, -100, -1, 1, 100, 500,
+                                 2000, Inf),
+                 labels = c("< -2,000", "-2,000 to -500", "-500 to -100",
+                            "-100 to -1", "equal", "1 to 100", "100 to 500",
+                            "500 to 2,000", "> 2,000"))]
+bd <- zz[, .N, by = band][order(band)]
+ggplot(bd, aes(x = band, y = N,
+               fill = ifelse(band == "equal", "equal",
+                             ifelse(as.integer(band) < 5, "BODS GTFS higher",
+                                    "TNDS higher")))) +
+  geom_col(width = 0.72) +
+  scale_fill_manual(values = c("BODS GTFS higher" = gap_cols[2],
+                               "TNDS higher" = gap_cols[1],
+                               "equal" = "grey65"), name = NULL) +
+  scale_y_continuous(expand = expansion(mult = c(0, 0.08))) +
+  labs(title = "How far the two sources differ, zone by zone",
+       subtitle = "TNDS minus BODS GTFS bus trip-runs in the 28-day window",
+       x = NULL, y = "Zones") +
+  theme_report +
+  theme(axis.text.x = element_text(angle = 30, hjust = 1))
+```
+
+### Is the disagreement spread across the country or concentrated?
+
+Every zone, ordered by its difference and plotted in that order: the far left is
+where TNDS counts most more, the far right where the DfT's GTFS does. The
+histogram above shows how many zones fall in each band; this shows the shape of
+the whole distribution at once, and in particular whether the national totals
+are driven by a long broad disagreement or by a short extreme tail.
+
+```{r gap-curve, fig.height=4.6}
+zc <- z[order(-gap)]
+zc[, rank := seq_len(.N)]
+zc[, side := ifelse(gap > 0, "TNDS higher",
+                    ifelse(gap < 0, "BODS GTFS higher", "equal"))]
+side_cols <- c("TNDS higher" = gap_cols[1], "BODS GTFS higher" = gap_cols[2],
+               "equal" = "grey75")
+comma <- function(x) format(x, big.mark = ",", scientific = FALSE, trim = TRUE)
+
+ggplot(zc, aes(x = rank, y = gap, fill = side)) +
+  geom_col(width = 1) +
+  geom_hline(yintercept = 0, colour = "grey25", linewidth = 0.4) +
+  scale_fill_manual(values = side_cols, name = NULL) +
+  scale_x_continuous(expand = expansion(mult = c(0.005, 0.005)),
+                     labels = comma) +
+  scale_y_continuous(labels = comma) +
+  labs(title = "Every zone, ordered by how far the two sources disagree",
+       subtitle = paste0("TNDS minus BODS GTFS bus trip-runs in the 28-day ",
+                         "window; above the line TNDS counts more"),
+       x = paste0("Zones, ordered by difference (", comma(nrow(zc)), " in all)"),
+       y = "TNDS − BODS GTFS") +
+  theme_report
+```
+
+On a linear axis the middle of that curve is flat whether the zones there agree
+exactly or differ by a hundred departures, because the ends are thousands of
+times larger. The same curve on a signed logarithmic axis separates the two —
+each gridline is ten times the last, in both directions from zero:
+
+```{r gap-curve-log, fig.height=4.6}
+# Signed pseudo-log: sign(x) * log10(1 + |x|). Plain log cannot show negatives
+# and cannot show zero, and both matter here.
+slog <- function(x) sign(x) * log10(1 + abs(x))
+brk <- c(-100000, -10000, -1000, -100, -10, 0, 10, 100, 1000, 10000, 100000)
+brk <- brk[abs(brk) <= max(abs(zc$gap)) * 10]
+
+ggplot(zc, aes(x = rank, y = slog(gap), fill = side)) +
+  geom_col(width = 1) +
+  geom_hline(yintercept = 0, colour = "grey25", linewidth = 0.4) +
+  scale_fill_manual(values = side_cols, name = NULL) +
+  scale_x_continuous(expand = expansion(mult = c(0.005, 0.005)),
+                     labels = comma) +
+  scale_y_continuous(breaks = slog(brk), labels = comma(brk)) +
+  labs(title = "The same curve on a signed logarithmic scale",
+       subtitle = paste0("Each gridline is ten times the one before; the flat ",
+                         "middle of the linear plot opens up here"),
+       x = paste0("Zones, ordered by difference (", comma(nrow(zc)), " in all)"),
+       y = "TNDS − BODS GTFS") +
+  theme_report
+```
+
+```{r gap-curve-text, results = 'asis'}
+tot <- sum(abs(zc$gap))
+share <- function(frac) {
+  n <- ceiling(frac * nrow(zc))
+  o <- sort(abs(zc$gap), decreasing = TRUE)
+  sum(o[seq_len(n)]) / tot
+}
+band <- function(lo, hi) sum(abs(zc$gap) >= lo & abs(zc$gap) < hi)
+# State the two measurements and let them sit next to each other. An earlier
+# draft opened with "the disagreement is concentrated", written before the
+# numbers were computed; the tail is heavy AND the middle is far from zero, and
+# only one of those was in the sentence.
+cat(sprintf(paste0(
+  "Summed over every zone, the two sources differ by **%s trip-runs** in ",
+  "absolute terms, against **%s** between the national totals — the ",
+  "difference between those two figures is disagreement that cancels between ",
+  "zones pointing opposite ways. Of the absolute total, the worst **1%%** of ",
+  "zones carry **%s** and the worst **10%%** carry **%s**.\n\n"),
+  fmt(tot), fmt(abs(nat$runs_tnds - nat$runs_bods)),
+  pct(share(0.01)), pct(share(0.10))))
+cat(sprintf(paste0(
+  "By size of difference: **%s zones** differ by 1,000 trip-runs or more (%s ",
+  "of all zones), **%s** by between 100 and 1,000, **%s** by between 1 and 100, ",
+  "and **%s** agree exactly. A zone differing by 100 trip-runs over 28 days is ",
+  "under four departures a day; one differing by 1,000 is thirty-six.\n\n"),
+  fmt(band(1000, Inf)), pct(band(1000, Inf) / nrow(zc)),
+  fmt(band(100, 1000)), fmt(band(1, 100)), fmt(sum(zc$gap == 0))))
+cross <- which(zc$gap <= 0)[1]
+cat(sprintf(paste0(
+  "The curve is not symmetric. It crosses zero at rank **%s of %s**, %s of the ",
+  "way along, and the two ends are of very different size: the highest zone is ",
+  "**+%s** and the lowest **%s**, so the drop on the right is about %.0f times ",
+  "the rise on the left. BODS GTFS counts more service than TNDS in more zones ",
+  "and by a wider margin.\n\n"),
+  fmt(cross), fmt(nrow(zc)), pct(cross / nrow(zc)),
+  fmt(max(zc$gap)), fmt(min(zc$gap)), abs(min(zc$gap)) / max(zc$gap)))
+
+# Counting zones and ranking them by size give different answers about where
+# the TNDS-high side is, so report both rather than either alone.
+cty <- function(d) {
+  n <- d[, .N, by = country][order(-N)]
+  paste(sprintf("%s %s", fmt(n$N), ifelse(is.na(cn[n$country]), "unknown",
+                                          cn[n$country])), collapse = ", ")
+}
+pos <- zc[gap > 0]
+worst <- pos[seq_len(max(1, ceiling(0.01 * .N)))]
+lead <- function(d) unname(cn[d[, .N, by = country][order(-N)][1]$country])
+# Which country leads by count and which by size are separate questions, and on
+# some snapshots they have the same answer - the sentence has to work either way
+# rather than assume they differ.
+verdict <- if (identical(lead(pos), lead(worst))) {
+  sprintf(paste0("%s leads on both counts here, though that is a property of ",
+                 "this snapshot rather than of the sources: on the February ",
+                 "2026 feeds the extremes were mostly Scottish"), lead(pos))
+} else {
+  sprintf(paste0("%s has the most such zones and %s the most extreme ones, so ",
+                 "counting zones and ranking them by size give different ",
+                 "answers"), lead(pos), lead(worst))
+}
+cat(sprintf(paste0(
+  "The left-hand side is not one country's story either way. Of the **%s ",
+  "zones** where TNDS counts more, the split by country is %s; but among the ",
+  "worst **1%%** of that side it is %s. %s. The top-ten tables below rank by ",
+  "size, so they show only the second of those two answers.\n\n"),
+  fmt(nrow(pos)), cty(pos), cty(worst), verdict))
+cat(sprintf(paste0(
+  "So the answer to \"a few extreme zones or many moderate ones\" is both, and ",
+  "the two facts have to be held together: the tail is heavy enough that a ",
+  "tenth of zones account for %s of all disagreement, yet **%s of zones** ",
+  "differ by more than thirty-six departures a day, which is not a rounding ",
+  "error in any of them. The choice of source changes the answer over most of ",
+  "the country, and changes it drastically in a small part of it.\n\n"),
+  pct(share(0.10)), pct(band(1000, Inf) / nrow(zc))))
+```
+
+## The zones that disagree most
+
+Ranked on the absolute difference in trip-runs, both directions. The last three
+columns split each zone's difference into services **only** one source carries
+and services **both** carry at different frequencies — the same decomposition
+the comparison report applies nationally, but computed within the zone. They are
+signed contributions and add up to `Difference`, so "Only BODS" is negative:
+service the DfT feed has and TNDS does not pulls the difference down.
+
+Expect repeated localities. City-centre LSOAs are small and the zone polygons
+are widened by 500 m, so half a dozen adjacent zones can all contain the same
+bus station and all rank together on the same handful of services. That is a
+faithful answer to "which zones disagree most" rather than a fault in the
+ranking, but it means the tables describe fewer distinct places than rows. The
+route-level section below therefore takes one zone per locality.
+
+### Zones where TNDS counts substantially more service
+
+```{r top-tnds, results="asis"}
+t1 <- head(top[order(-gap)], 15)
+knitr::kable(zone_table(t1), row.names = FALSE,
+             format.args = list(big.mark = ","))
+```
+
+### Zones where BODS GTFS counts substantially more service
+
+```{r top-bods, results="asis"}
+t2 <- head(top[order(gap)], 15)
+knitr::kable(zone_table(t2), row.names = FALSE,
+             format.args = list(big.mark = ","))
+```
+
+```{r split-summary, results="asis"}
+sp <- top[, list(
+  only_tnds = sum(gap_services_only_tnds),
+  only_bods = sum(gap_services_only_bods),
+  freq = sum(gap_frequency))]
+cat(sprintf(paste0(
+  "Across the %d zones investigated in detail, the differences come to %s ",
+  "trip-runs on services only TNDS carries, %s on services only BODS GTFS ",
+  "carries, and a net %s from services both carry at different frequencies. ",
+  "Missing services, not frequency differences, dominate.\n"),
+  nrow(top), fmt(sp$only_tnds), fmt(-sp$only_bods), fmt(sp$freq)))
+```
+
+## Is either source counting the same bus twice?
+
+A zone's total can be inflated without any extra service existing, if the feed
+publishes one journey more than once. This tests for it directly: within each
+zone, a journey is identified by the (stop, departure time) pairs it makes at
+that zone's stops, and two trips with the same route number, the same signature
+and the same operating **date** are the same bus counted twice.
+
+The date matters. GTFS models a school-term journey and its holiday twin as two
+trips with identical times and complementary calendars, which is correct
+modelling; a test that ignored dates would call every one of those a duplicate.
+
+```{r duplication-national, results="asis"}
+dn <- as.data.table(g$duplication_national)
+if (nrow(dn)) {
+  src_lab <- c(tnds = "TNDS (TransXChange)", bods_gtfs = "BODS (GTFS)")
+  # print(): a kable inside an if block is not the chunk's last expression, so
+  # its value is discarded and the table silently never appears
+  print(knitr::kable(
+    data.frame(Source = src_lab[dn$source],
+               `Bus trips` = fmt(dn$bus_trips),
+               `Distinct journeys` = fmt(dn$distinct_journeys),
+               `Trip-days` = fmt(dn$trip_days),
+               `Duplicate runs` = fmt(dn$duplicate_runs),
+               Share = pct(dn$share_duplicate),
+               check.names = FALSE),
+    row.names = FALSE, align = c("l", "r", "r", "r", "r", "r"),
+    caption = "Whole-feed duplicate journeys, by source"))
+  worse <- dn$source[which.max(dn$share_duplicate)]
+  cat(sprintf(paste0(
+    "\nNationally, **%s** of counted runs in %s are the same journey twice on ",
+    "one day, against %s in the other source. Across the whole feed a journey ",
+    "is its entire itinerary, which is a stricter test than the zone-level one ",
+    "below: inside a zone only the part of the trip that touches the zone's ",
+    "stops can be compared.\n\n"),
+    pct(max(dn$share_duplicate)), src_lab[worse],
+    pct(min(dn$share_duplicate))))
+}
+```
+
+```{r duplication, results="asis"}
+# `top` already carries the duplication columns - merging g$duplication in again
+# would suffix every one of them .x/.y
+if (all(c("dup_runs_tnds", "dup_runs_bods_gtfs") %in% names(top))) {
+  dd <- copy(top[, list(zone_id, locality, country, gap, trip_days_tnds,
+                        dup_runs_tnds, trip_days_bods_gtfs,
+                        dup_runs_bods_gtfs)])
+  dd[, share_t := ifelse(trip_days_tnds > 0, dup_runs_tnds / trip_days_tnds, NA)]
+  dd[, share_g := ifelse(trip_days_bods_gtfs > 0,
+                         dup_runs_bods_gtfs / trip_days_bods_gtfs, NA)]
+  cat(sprintf(paste0(
+    "Across the %d zones investigated, duplicate runs account for a median of ",
+    "**%s** of TNDS's counted trip-days and **%s** of the DfT GTFS's. ",
+    "Totals: %s of %s TNDS trip-days and %s of %s BODS GTFS trip-days.\n\n"),
+    nrow(dd), pct(median(dd$share_t, na.rm = TRUE)),
+    pct(median(dd$share_g, na.rm = TRUE)),
+    fmt(sum(dd$dup_runs_tnds)), fmt(sum(dd$trip_days_tnds)),
+    fmt(sum(dd$dup_runs_bods_gtfs)), fmt(sum(dd$trip_days_bods_gtfs))))
+
+  setorderv(dd, "share_g", -1L)
+  # print(): see the note in duplication-national above
+  print(knitr::kable(
+    data.frame(Zone = dd$zone_id[1:min(12, nrow(dd))],
+               Locality = ifelse(is.na(dd$locality), "—", dd$locality)[1:min(12, nrow(dd))],
+               `TNDS trip-days` = round(dd$trip_days_tnds)[1:min(12, nrow(dd))],
+               `TNDS duplicate` = pct(dd$share_t)[1:min(12, nrow(dd))],
+               `BODS trip-days` = round(dd$trip_days_bods_gtfs)[1:min(12, nrow(dd))],
+               `BODS duplicate` = pct(dd$share_g)[1:min(12, nrow(dd))],
+               check.names = FALSE),
+    row.names = FALSE, format.args = list(big.mark = ","),
+    caption = "Zones with the largest share of duplicated runs in BODS GTFS"))
+
+  cat(paste0("\nA duplicate here is a statement about the feed, not about the ",
+             "road: two identical journeys on one day is one bus described ",
+             "twice. Where a source's excess over the other is close to its ",
+             "duplicate share, that is the explanation for the zone's gap; ",
+             "where it is not, the gap is real service one source lacks.\n"))
+} else {
+  cat("No duplication measurements in this analysis output.\n")
+}
+```
+
+## What is actually going on in those zones
+
+The route-level breakdown for the largest disagreement in each direction.
+"Service" is a group of routes matched across the two sources on route number
+and stop pattern, so a service split across several `route_id`s in one source
+is compared as one thing.
+
+```{r detail, results="asis"}
+# One zone per locality. City-centre LSOAs come in adjacent clusters that all
+# contain the same bus station, so the raw top ten is seven versions of one
+# place; taking the largest zone of each locality covers distinct places
+# instead. Zones with no locality keep their own identity.
+distinct_places <- function(d, n) {
+  d <- copy(d)
+  d[, grp := ifelse(is.na(locality), zone_id, locality)]
+  d <- d[, .SD[1], by = grp]
+  head(d, n)[, grp := NULL][]
+}
+detail <- rbind(distinct_places(top[order(-gap)], 5),
+                distinct_places(top[order(gap)], 5))
+for (i in seq_len(nrow(detail))) {
+  d <- detail[i]
+  cat(sprintf("\n### %s — %s (%s)\n\n", d$zone_id,
+              ifelse(is.na(d$locality), "unnamed", d$locality),
+              cn[d$country]))
+  cat(sprintf(paste0("TNDS %s trip-runs, BODS GTFS %s, difference **%s**. ",
+                     "%d stops in the zone; %d services only in TNDS, %d only ",
+                     "in BODS GTFS, %d in both.\n\n"),
+              fmt(d$runs_tnds), fmt(d$runs_bods), fmt(d$gap),
+              ifelse(is.na(d$stops), 0L, d$stops),
+              d$n_only_tnds, d$n_only_bods, d$n_both))
+  print(knitr::kable(service_table(d$zone_id), row.names = FALSE,
+                     format.args = list(big.mark = ",")))
+  cat("\n")
+}
+```
+
+## Interpretation
+
+```{r interpretation, results="asis"}
+big <- top[order(-abs(gap))]
+one_sided <- top[runs_bods == 0 | runs_tnds == 0]
+cause_tot <- svc[, list(runs = sum(abs(gap)), n = .N), by = cause]
+cause_tot <- cause_tot[order(-runs)]
+
+cat(sprintf(paste0(
+  "- The largest single-zone disagreement is %s (%s), where the two sources ",
+  "differ by %s trip-runs over the four weeks — %s of the larger of the two ",
+  "figures.\n"),
+  big$zone_id[1], ifelse(is.na(big$locality[1]), "unnamed", big$locality[1]),
+  fmt(abs(big$gap[1])), pct(big$rel[1])))
+
+cat(sprintf(paste0(
+  "- Within the zones investigated, %s of the difference (by trip-runs) is ",
+  "services one source carries and the other does not at all, against %s from ",
+  "differing frequencies on shared services.\n"),
+  pct(sum(cause_tot$runs[cause_tot$cause != "both, different frequency"]) /
+        sum(cause_tot$runs)),
+  pct(sum(cause_tot$runs[cause_tot$cause == "both, different frequency"]) /
+        sum(cause_tot$runs))))
+
+if (nrow(one_sided) > 0) {
+  cat(sprintf(paste0(
+    "- %d of the %d zones investigated have **no counted bus service at all** ",
+    "in one of the two sources. For those zones the choice of source is not a ",
+    "matter of degree: one says the zone has a bus service and the other says ",
+    "it has none.\n"), nrow(one_sided), nrow(top)))
+}
+
+by_country <- z[, list(zones = .N,
+                       disagree = sum(gap != 0),
+                       med_abs = median(abs(gap))), by = country]
+by_country <- by_country[country %in% names(cn)]
+cat("- Disagreement by country:",
+    paste(sprintf("%s %s of zones", cn[by_country$country],
+                  pct(by_country$disagree / by_country$zones)),
+          collapse = "; "), "\n")
+```
+
+### Why these particular zones
+
+The zone-level pattern is the national pattern concentrated:
+
+- **Country coverage.** BODS is a statutory requirement for English local bus
+  services only. Scottish and Welsh services reach it only where an operator
+  crosses the border or publishes voluntarily, so Welsh and Scottish zones
+  supply a disproportionate share of the "only in TNDS" cases, up to and
+  including zones with no BODS GTFS service at all.
+- **Interchanges amplify.** A zone containing a bus station or a major
+  interchange has many services calling at many stops, so a single service
+  missing from one source moves that zone's total by thousands of runs. The
+  largest absolute disagreements are therefore concentrated on town-centre
+  zones, and are not evidence that those places are badly described — the
+  *relative* column is the fairer reading for them.
+- **Snapshot age.** A TNDS snapshot carries the registration operative on the
+  day it was taken; the BODS change archive holds future-dated files. Where a
+  registration expires inside the counting window, TNDS counts a part-window
+  service and BODS GTFS a whole-window one, which appears here as a frequency
+  difference on a shared service rather than a missing service. See the
+  snapshot-expiry section of the comparison report for the size of this effect.
+- **Route naming.** Where the two sources disagree about a service's public
+  number — TNDS carrying an operator's marketing name against the DfT's short
+  code — the matching links them on stop pattern alone, and only for
+  single-source groups. Any pair it still fails to link is counted as exclusive
+  to each source, which inflates both "only in" columns at once.
+- **Duplicate publication.** Measured above, and it works in both directions:
+  a source that describes one bus twice reports twice the service. This is one
+  of the few causes on this list that an outside check can settle, and where a
+  published timetable has been brought to bear it has settled it — First
+  Bristol's 21 is counted 5,816 times in the DfT's GTFS, of which 3,296 are
+  distinct journeys, which is exactly what both TNDS and the operator's own
+  timetable say (see `pdf_validation.md`).
+
+### Caveats
+
+- The unit is trip-runs touching a zone, not passenger-facing frequency. A
+  zone crossed by a busy corridor scores highly whether or not the service is
+  useful to people living there.
+- Zones are the widened LSOA/Data Zone polygons used throughout this analysis
+  (small LSOAs unioned with a 500 m buffer of their population-weighted
+  centroid, then buffered 100 m). They overlap, so a stop can count in more
+  than one zone and the zone totals do not sum to a national trip count.
+- The service groupings come from the same route matching the comparison report
+  uses, with the same limitations: a wrong pairing shows up here as a spurious
+  frequency difference, and a failed pairing as a service missing from both
+  directions at once.
+- Zones carry only a code, so the "Locality" column is the commonest locality
+  prefix among the NaPTAN names of the stops inside the zone. It names the
+  place, not the LSOA.
+```

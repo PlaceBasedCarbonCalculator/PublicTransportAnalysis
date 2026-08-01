@@ -31,7 +31,10 @@ theme_report <- theme_minimal(base_size = 12) +
         legend.position = "top",
         plot.title.position = "plot")
 
-fmt <- function(x) format(round(x), big.mark = ",")
+# scientific = FALSE: format() renders a round number such as 9000000 as 9e+06
+# whatever big.mark says, which looks like a bug in the middle of a sentence
+fmt <- function(x) format(round(x), big.mark = ",", scientific = FALSE,
+                          trim = TRUE)
 pct <- function(x) sprintf("%.1f%%", 100 * x)
 
 # Bind a per-year extraction across all years
@@ -97,7 +100,35 @@ the numbers below: **TNDS discontinued its separate NCSD national coach
 archive after February 2025**, and the TNDS regional files grew substantially
 from the 2025 snapshots onward.
 
+### Which 2026 snapshot, and why not February
+
+Two 2026 triples exist on the data drive, February and July. The series uses
+**July**. February was dropped because its TNDS side is distorted by
+registrations that expire *inside* the counting window: about a quarter of the
+feed's bus trips stop part-way through it, and the effect is large enough to
+exceed the whole measured gap to BODS GTFS, so every February figure was
+incomparable with the other four years. The mechanism is general and is
+measured for every year below — February was simply the window in which it
+dominated. Using July has a second benefit: it is the same snapshot the
+published-timetable validation (`pdf_validation.md`) checks against, so the
+comparison's most recent year and the PDF validation now describe the same
+feeds.
+
+All five years of both TransXChange sources were converted with one UK2GTFS
+build. An earlier version of this report mixed builds across the series, which
+made part of the apparent year-on-year improvement in BODS TransXChange coverage
+an artefact of the converter rather than of the data.
+
 ## Feed-level summary
+
+`Agencies` and `Routes` count the whole converted feed; `Routes in window` and
+`Trips in window` count only what operates inside the 28-day window. **Compare
+sources on the windowed columns.** The whole-feed columns are not like-for-like:
+a TNDS conversion is kept for the snapshot date ±`r tnds_trim_days()` days and a
+BODS TransXChange one for ±31, so TNDS carries a longer stretch of calendar and
+its whole-feed counts are correspondingly higher. That difference disappears
+once anything is counted over a window, which is every other figure in this
+report.
 
 ```{r feed-stats, results="asis"}
 stats <- across_years(function(c) c$stats)
@@ -259,7 +290,9 @@ it serves**. Two routes are linked when they share a normalised route number
 and their stop sets overlap by at least half; connected components of that
 graph are treated as one **service**. Linking runs *within* a source as well
 as between them, so a service that one source splits across several
-`route_id`s is still compared as a single service.
+`route_id`s is still compared as a single service. A second pass then links
+whatever the numbers failed to pair, on stop overlap alone (80%), because the
+sources do not always agree on what a service's public number is.
 
 The unit counted here is **vehicle journeys in the 28-day window** — a
 journey counts once however many stops or zones it passes through. This is a
@@ -496,14 +529,19 @@ pairing can be wrong, because the counterpart is chosen as the closest journey
 count among same-terminal, same-operator candidates. The rows to trust
 unreservedly are the ones whose counts match exactly.
 
-`match_route_services()` does have a second pass that links routes on stop
-overlap alone (80%) when the numbers fail, but it only considers routes left
-**completely unpaired** by the first pass. A service that a source splits
-across two or more route_ids sharing one number is linked to *itself* in the
-first pass, so it is no longer unpaired and the second pass never sees it —
-which is precisely the situation for these multi-registration branded
-operators. Widening that pass to whole components, rather than lone routes,
-is the fix.
+`match_route_services()` has a second pass for exactly this case: where the
+numbers fail, it links routes on stop overlap alone (80%). It used to consider
+only routes left **completely unpaired** by the first pass, which excluded the
+operators that cause most of the trouble — a service one source splits across
+several `route_id`s sharing a number is linked to *itself* in the first pass, so
+it was no longer unpaired and the pass never saw it. It now runs over whole
+connected components, confined to components whose routes all come from one
+source (precisely the ones that would otherwise be reported as exclusive), so
+those multi-registration branded services are candidates.
+
+**The pairs counted above are therefore the residual**, not the whole naming
+problem: services the improved matching still fails to link, because their stop
+sets overlap by less than the 80% it asks for.
 
 Among the services **both** sources carry, how closely do they agree on the
 number of journeys?
@@ -527,46 +565,120 @@ shared_tbl <- shared |>
 knitr::kable(shared_tbl, format.args = list(big.mark = ","), row.names = FALSE)
 ```
 
-In the four autumn windows (2022–2025) most shared services agree *exactly*:
-the modal TNDS ÷ BODS GTFS journey-count ratio is 1.00 and around 60% of
-services are identical. **The February 2026 window is the exception**, and the
-reason is not a converter disagreement about school terms but the age of the
-TNDS snapshot relative to the window.
+#### The age of a snapshot relative to its window
 
-A TNDS snapshot carries the registration that is operative *at the snapshot
-date*. The BODS change archive also carries future-dated files, so it holds the
-successor timetable where TNDS does not. Any window extending weeks past a TNDS
-snapshot therefore understates TNDS, and it does so lumpily, because operators
-re-register around school terms. Measured on the rebuilt 2026 feed
-(snapshot 2026-02-04, window 2026-02-09 to 2026-03-08):
+Where the agreement on shared services is weaker, the usual reason is not a
+converter disagreement about school terms but the age of the snapshot relative
+to the counting window.
 
-- Of 1,384,215 TNDS bus trips, **335,493 (24.2%) sit on calendars that expire
-  before the feed's own end date**, and they average **2.14 runs** in the window
-  against **8.17** for trips that survive to it.
-- The expiry is concentrated on two dates: **172,345 trips end Saturday
-  2026-02-14** and **72,373 end Saturday 2026-02-21** — the Saturdays either
-  side of English school half-term (16–20 February 2026).
-- TNDS counts about **9.29 M** bus journeys in the window. Had nothing expired
-  early it would count roughly **11.66 M, or 25% more**. Early expiry alone
-  costs some **2.19 M journeys**, which is larger than the entire 1.36 M
-  journey gap to BODS GTFS: run the full window and TNDS would *exceed* it.
+A TransXChange snapshot carries the registration that is operative *at the
+snapshot date* and nothing beyond it. The BODS change archive also holds
+future-dated files, so it carries the successor timetable where a TNDS snapshot
+does not. Any window extending weeks past a snapshot therefore understates the
+source, and it does so lumpily, because operators re-register together — around
+school terms above all. This is measured directly for every year and source:
+the share of each feed's bus trips whose calendar ends before the **horizon**
+— the earlier of the window end and the feed's own last date — and how often
+those trips run compared with the ones that last to it. Measuring against the
+horizon rather than the window end keeps the two effects apart: a feed trimmed
+to a span that stops short of the window would otherwise report every one of
+its trips as expiring, which says nothing about the timetable.
 
-A second, smaller effect compounds it. `convert_tnds_snapshot()` trims each
-region to the snapshot date ±31 days, so this feed ends on **2026-03-07** while
-its counting window runs to **2026-03-08**. The window's last day is empty in
-TNDS by construction, costing a further **0.18 M journeys**.
+```{r expiry-table, results="asis"}
+exp_all <- across_years(function(c) c$expiry)
+exp_all$source <- src_labels[exp_all$source]
+knitr::kable(
+  data.frame(Year = exp_all$year, Source = exp_all$source,
+             `Window ends` = exp_all$window_end,
+             `Feed ends` = exp_all$feed_end,
+             Horizon = exp_all$horizon,
+             # fmt(), not format.args: a round count such as 1000000 is printed
+             # by kable as 1e+06 whatever big.mark says
+             `Bus trips` = fmt(exp_all$bus_trips),
+             `Ending early` = pct(exp_all$share_ending_early),
+             `Runs, early` = round(exp_all$runs_mean_early, 2),
+             `Runs, lasting` = round(exp_all$runs_mean_full, 2),
+             `Journeys counted` = fmt(exp_all$runs_counted),
+             `If none expired` = fmt(exp_all$runs_if_full),
+             check.names = FALSE),
+  row.names = FALSE, align = c("l", "l", "l", "l", "l", "r", "r", "r", "r",
+                               "r", "r"))
+```
 
-(Trip and date counts here are exact counts from the feed's `calendar` and
-`trips` tables; the journey totals are rounded, because they depend on the
-run-counting convention and are quoted only to size the effect.)
+```{r expiry-text, results="asis"}
+ex_t <- exp_all[exp_all$source == src_labels[["tnds"]], ]
+ex_g <- exp_all[exp_all$source == src_labels[["bods_gtfs"]], ]
+worst <- ex_t[which.max(ex_t$share_ending_early), ]
+best <- ex_t[which.min(ex_t$share_ending_early), ]
+short <- exp_all[as.Date(exp_all$feed_end) < as.Date(exp_all$window_end), ]
 
-Neither effect is a converter bug, and neither should be read as TNDS carrying
-less service. The consequence for interpretation is that a TNDS figure measures
-**service as registered at the snapshot date**, not service operated across the
-window — so a TNDS snapshot should either be counted over a window inside its
-operative period, or reported with that caveat attached. It is also a reminder
-that the counting window, not only the source, affects how closely the sources
-agree.
+cat(sprintf(paste0(
+  "In TNDS the share of bus trips ending before the horizon ranges from ",
+  "**%s in %s** up to **%s in %s**. In that worst year they average %.2f runs ",
+  "against %.2f for the trips that last to the horizon, and scaling them up ",
+  "would lift the TNDS total from %s to about %s journeys — a shortfall of ",
+  "**%s**, against a measured gap to BODS GTFS of %s. "),
+  pct(best$share_ending_early), best$year,
+  pct(worst$share_ending_early), worst$year,
+  worst$runs_mean_early, worst$runs_mean_full,
+  fmt(worst$runs_counted), fmt(worst$runs_if_full),
+  fmt(worst$runs_if_full - worst$runs_counted),
+  fmt(abs(dec$gap_total[dec$year == worst$year]))))
+
+cat(sprintf(paste0(
+  "The expiry is concentrated on a few dates rather than spread through the ",
+  "window — in %s, %s — which is the signature of collective re-registration ",
+  "rather than of services being withdrawn one by one.\n\n"),
+  worst$year, worst$biggest_end_dates))
+
+cat(sprintf(paste0(
+  "The DfT's BODS GTFS is not immune to the same measure (%s-%s), which is ",
+  "worth knowing before reading it as the stable baseline, though it is a ",
+  "continuously updated feed rather than a dated registration snapshot, so the ",
+  "two are not measuring quite the same thing.\n\n"),
+  pct(min(ex_g$share_ending_early)), pct(max(ex_g$share_ending_early))))
+
+if (nrow(short) > 0) {
+  # Only TNDS is trimmed by this pipeline; a BODS feed ending short of its
+  # window is the publisher's own coverage, so the two must not be described
+  # with the same sentence.
+  s_tnds <- short[short$source == src_labels[["tnds"]], ]
+  s_other <- short[short$source != src_labels[["tnds"]], ]
+  if (nrow(s_tnds) > 0) {
+    cat(sprintf(paste0(
+      "A second effect compounds it where it applies. ",
+      "`convert_tnds_snapshot()` keeps only the snapshot date ±%d days, so a ",
+      "window reaching past that ends on days the feed cannot cover at all. ",
+      "That is the case for TNDS in %s.\n\n"),
+      tnds_trim_days(), paste(s_tnds$year, collapse = ", ")))
+  }
+  if (nrow(s_other) > 0) {
+    cat(sprintf(paste0(
+      "%s also end before their own window closes, which is the publisher's ",
+      "coverage rather than anything this pipeline does.\n\n"),
+      paste(sprintf("%s %s", s_other$year, s_other$source), collapse = ", ")))
+  }
+} else {
+  cat(sprintf(paste0(
+    "Every feed reaches at least as far as its own window, so none of the ",
+    "difference above is a conversion trim running out (TNDS is kept to the ",
+    "snapshot date ±%d days).\n\n"), tnds_trim_days()))
+}
+```
+
+(`If none expired` scales each early-ending trip's run count by the ratio of
+the horizon to the part of it the trip is available for. It assumes the expiring
+service would have continued at its own rate, so it is an upper bound quoted
+only to size the effect; the trip and date counts either side of it are exact
+counts from the feed's `calendar` and `trips` tables.)
+
+None of this is a converter bug, and none of it should be read as a source
+carrying less service. The consequence for interpretation is that a snapshot
+figure measures **service as registered at the snapshot date**, not service
+operated across the window — so a snapshot should either be counted over a
+window inside its operative period, or reported with that caveat attached. It is
+also a reminder that the counting window, not only the source, affects how
+closely the sources agree.
 
 ```{r shared-chart, fig.height=4.2}
 sh_plot <- shared |>
@@ -675,19 +787,22 @@ cat(sprintf(
          "the 28-day journey count to within 10%%.\n"),
   pct(min(shared$within10)), pct(max(shared$within10))))
 
-# The Feb 2026 window is the one that breaks the otherwise-exact agreement
-sh26 <- shared[shared$year == "2026", ]
-sh_aut <- shared[shared$year != "2026", ]
+# Which year agrees least on shared services, and how much of that year's
+# weakness the snapshot-age effect accounts for. Found from the data, not
+# assumed: the answer changed when the 2026 snapshot moved from February to July.
+sh_worst <- shared[which.min(shared$within2), ]
+sh_rest <- shared[shared$year != sh_worst$year, ]
+ex_worst <- exp_all[exp_all$source == src_labels[["tnds"]] &
+                      exp_all$year == sh_worst$year, ]
 cat(sprintf(
-  paste0("- The agreement on shared services is near-exact in the four ",
-         "autumn windows (median difference 0%%, %s-%s of services within 2%%) ",
-         "but not in the February 2026 window (median difference %s, only %s ",
-         "within 2%%). That window is measured against a snapshot whose ",
-         "registrations expire inside it: 24.2%% of TNDS bus trips sit on ",
-         "calendars ending before the feed does, costing roughly 2.19 M ",
-         "journeys — more than the whole gap to BODS GTFS.\n"),
-  pct(min(sh_aut$within2)), pct(max(sh_aut$within2)),
-  pct(sh26$median_diff), pct(sh26$within2)))
+  paste0("- Agreement on shared services is weakest in **%s** (median ",
+         "difference %s, %s of services within 2%%) against %s-%s within 2%% ",
+         "in the other years. In that window %s of TNDS bus trips sit on ",
+         "calendars ending before it does, which is the largest single ",
+         "identified contributor.\n"),
+  sh_worst$year, pct(sh_worst$median_diff), pct(sh_worst$within2),
+  pct(min(sh_rest$within2)), pct(max(sh_rest$within2)),
+  pct(ex_worst$share_ending_early)))
 
 cat(paste0("- The measured differences above are upper bounds on two counts: ",
            "route matching cannot link a service the two sources number ",
@@ -711,12 +826,22 @@ cat(paste0("- The measured differences above are upper bounds on two counts: ",
   Services can legitimately appear in one and not another (e.g. new
   operators publishing only to BODS; local services still only in local
   authority systems).
-- **Duplication handling.** The BODS change archive contains every revision
-  of every dataset; superseded revisions were dropped with
-  `UK2GTFS::txc_filter_files()` keeping the revision valid on the analysis
-  date. Residual duplication (the same service published by both an operator
-  and a local authority scheme) inflates counts in the TransXChange-derived
-  sources; the DfT GTFS pipeline applies its own de-duplication.
+- **Duplication, in every source.** The BODS change archive contains every
+  revision of every dataset; superseded revisions were dropped with
+  `UK2GTFS::txc_filter_files()`, keeping the revision valid on the analysis
+  date. Residual duplication — the same service published by both an operator
+  and a local authority scheme — inflates the TransXChange-derived sources, and
+  TNDS demonstrably publishes some services twice (see the duplicate-registration
+  table in `pdf_validation.md`).
+
+  It is **not** the case that the DfT's GTFS is free of this. Measured on the
+  July 2026 feed, 3.7% of its counted bus runs are the same journey on the same
+  day, concentrated on a minority of `route_id`s, some of which are duplicated
+  in their entirety; for First Bristol's 21 the duplication is the whole of its
+  disagreement with both TNDS and the published timetable.
+  `lsoa_disagreement.md` measures this for both sources. Treat every source as
+  capable of counting a bus twice, and note that this is one of the few
+  disagreements where an independent check can say which source is wrong.
 - **Conversion differences.** The TransXChange sources are converted with
   UK2GTFS (this pipeline), while BODS GTFS is converted by the DfT's ITO
   World pipeline. Differences in how each handles operating profiles, bank
@@ -727,9 +852,9 @@ cat(paste0("- The measured differences above are upper bounds on two counts: ",
   forward; the BODS change archive contains future-dated files, so it already
   holds the successor timetable. A counting window that reaches weeks past the
   TNDS snapshot therefore understates TNDS — sharply, where operators
-  re-register around school terms. This is the dominant effect in the February
-  2026 window and is measured above. It is not a defect in either source, but
-  it does mean the two columns answer slightly different questions.
+  re-register around school terms. The size of this is measured per year above.
+  It is not a defect in either source, but it does mean the two columns answer
+  slightly different questions.
 - **Coach coverage differs by design.** All sources distinguish coach (200)
   from local bus (3), but TNDS's coach data came from the separate NCSD
   archive, discontinued after February 2025 — so TNDS snapshots from 2025
@@ -750,11 +875,11 @@ cat(paste0("- The measured differences above are upper bounds on two counts: ",
   to a third of the journeys on "exclusive" services in every year of the
   series. The worked example tables should be read as leads to investigate, not
   as a certified list of gaps.
-- The stop-overlap fallback that exists for this case only rescues routes left
-  **completely unpaired** by the number match, so it cannot help a service that
-  a source splits across several route_ids under one number. Widening it to
-  operate on connected components rather than lone routes would close most of
-  the gap, at the cost of re-running the matching for every year.
+- The stop-overlap fallback for that case now operates on connected components
+  rather than lone routes, so it does reach a service one source splits across
+  several `route_id`s under a single number. It remains bounded by the 80%
+  overlap it requires: where one source omits a branch or a length of a route,
+  the overlap falls short and the pair is left unlinked.
 - Journey counts are the number of vehicle journeys operating in the
   28-day window under GTFS calendar semantics, including `calendar_dates`
   exceptions. They are not passenger-facing frequencies.

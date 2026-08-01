@@ -237,9 +237,34 @@ convert_bus_archive_year <- function(year, cal, naptan, cfg = load_cfg()) {
   write_repo_gtfs(merged, paste0("busarchive_", year, "_merged"))
 }
 
+#' How far either side of its snapshot date a TNDS conversion is kept
+#'
+#' The counting windows are 28 days, so 31 was enough for the comparison. It
+#' was not enough for validation: validation_windows() has a second window
+#' opening two weeks after the first so that a bank holiday falls inside it,
+#' which ends 42 days past the snapshot. With a 31-day trim the last 11 days of
+#' that window were empty in TNDS by construction, and every TNDS count in it
+#' came out at almost exactly 17/28 of the first window's - an artefact that
+#' made the two bank-holiday reference timetables (the Cardiff 62's "Sundays &
+#' public holidays" table, Kinchbus's "Sunday & Bank Holiday Monday" table)
+#' impossible to test against TNDS at all.
+#'
+#' 45 covers that window with a fortnight to spare. Widening only *adds*
+#' calendar coverage: every consumer re-trims to its own window before
+#' counting, so no figure inside a narrower window changes. The feed-level
+#' totals in the comparison report (routes, trips, calendar_end) do grow,
+#' because those are whole-feed counts rather than windowed ones.
+#'
+#' It does not make the extra fortnight as trustworthy as the rest. A snapshot
+#' carries the registration operative on the day it was taken, so service late
+#' in the window may have expired - which is a real property of the source,
+#' now measurable rather than masked by an empty tail. See
+#' window_expiry_stats().
+tnds_trim_days <- function() 45L
+
 #' Convert one TNDS snapshot (regional zips + NCSD coach archive) to GTFS
 #'
-#' Each regional zip is converted with caching, trimmed to +/- 31 days
+#' Each regional zip is converted with caching, trimmed to +/- tnds_trim_days()
 #' around the snapshot date, then merged. NCSD.zip (the national coach
 #' services database) is included where present; it is absent from TNDS
 #' snapshots after February 2025.
@@ -258,7 +283,9 @@ convert_tnds_snapshot <- function(snapshot, cal, naptan, cfg = load_cfg()) {
                        paste0(region, ".zip"))
     convert_txc_cached(z, cache, cal, naptan,
                        scotland = ifelse(region == "S", "yes", "no"),
-                       cfg = cfg, trim = c(snap_date - 31, snap_date + 31))
+                       cfg = cfg,
+                       trim = c(snap_date - tnds_trim_days(),
+                                snap_date + tnds_trim_days()))
   })
 
   merged <- UK2GTFS::gtfs_merge(gtfs_all, force = TRUE)

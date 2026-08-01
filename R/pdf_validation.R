@@ -31,6 +31,15 @@
 #'                     distinctive part of the name is enough and is preferred:
 #'                     NaPTAN writes Fife Leisure Park as plain "Leisure Park"
 #'                     and Costock Main Street as plain "Main Street".
+#'
+#' Where a `note` quotes a TNDS-versus-BODS-GTFS figure, that figure is the
+#' **selection rationale**: it comes from the February 2026 comparison window,
+#' which is what these routes were picked from, and not from the window this
+#' validation counts over. The comparison has since moved to the July snapshot
+#' and February was dropped (see comparison_snapshots()), so those numbers should
+#' be read as "this is why the route is here", never as a current measurement.
+#' The current measurement is the `Ratio` column of the validation report, which
+#' is computed from the feeds this function is run against.
 validation_routes <- function() {
   list(
     list(key = "279", short_name = "279", operator = "Arriva London",
@@ -49,7 +58,7 @@ validation_routes <- function() {
          combine = c(MTNt = "MT", FrNt = "Fr", SaNt = "Sa", SuNt = "Su"),
          note = paste("day and night schedules combine to one operating day;",
                       "these are the May 2026 contract schedules, so they",
-                      "match a current snapshot but not the February one")),
+                      "match the current snapshot this is counted against")),
     # TfL also issues route 69 as schooldays/school-holiday variants
     # (MoSc/MoHo, TWTSc/TWTHo, FrSc/FrHo) and as bank holiday, Good Friday,
     # Christmas Eve, Boxing Day and New Year schedules. None is wired in,
@@ -232,11 +241,15 @@ validation_routes <- function() {
          stop_regex = "^Channel View Road",
          stop_name_regex = "Channel View",
          directions = NULL,
-         note = paste("schooldays-only school service, one journey each way.",
-                      "The edition is from 2023, so a zero in the feeds may",
-                      "mean the service has gone rather than that the",
-                      "conversion lost it - and in a school-holiday window",
-                      "it should correctly not run at all")),
+         note = paste("schooldays-only school service, one journey each way,",
+                      "and it reads zero in both sources. That is the right",
+                      "answer, not a gap: the counting window is inside the",
+                      "summer holidays. The other reading - that the service",
+                      "has been withdrawn since the 2023 edition of this",
+                      "document - is ruled out, since bustimes.org still lists",
+                      "Cardiff Bus's 608 James Street to Fitzalan School as",
+                      "running (checked 2026-07-30). Keep it as the control",
+                      "for a school service correctly absent")),
 
     list(key = "CDF62", short_name = c("62", "63", "64"),
          operator = "Cardiff Bus|Bws Caerdydd",
@@ -290,8 +303,8 @@ validation_routes <- function() {
                       "slightly overstates Monday to Thursday. Carries a",
                       "Sunday & Bank Holiday Monday table")),
 
-    # Routes chosen from the 2026 comparison because TNDS and BODS GTFS
-    # disagree on them, so a document decides which is right. Three groups:
+    # Routes chosen from the February 2026 comparison because TNDS and BODS
+    # GTFS disagreed on them, so a document decides which is right. Three groups:
     # services TNDS carries and BODS GTFS does not (727, 59, 400), services
     # where TNDS is about twice BODS GTFS (125, 320, X38), and one where the
     # route number alone is ambiguous nationally (57/59/59a Barnsley, which is
@@ -304,27 +317,28 @@ validation_routes <- function() {
          # confine this with. Harmless here - "Stagecoach Bluebird" plus 727 is
          # already specific, unlike the bare "Stagecoach" patterns.
          directions = NULL,
-         note = paste("Aberdeen Airport - Stonehaven. TNDS carries this and",
-                      "BODS GTFS does not (4,439 journeys against 0 in the",
-                      "February window), so this tests whether that coverage",
-                      "is real. Counted at P&J Live Arena, which appears in",
-                      "both directions' tables; every time is explicit")),
+         note = paste("Aberdeen Airport - Stonehaven. Selected because TNDS",
+                      "carried it and BODS GTFS did not (4,439 journeys",
+                      "against 0), so this tests whether that coverage is",
+                      "real. Counted at P&J Live Arena, which appears in both",
+                      "directions' tables; every time is explicit")),
 
     list(key = "BB59", short_name = "59", operator = "Stagecoach Bluebird",
          format = "column", file = "0426 Service 59.pdf",
          stop_regex = "^Aberdeen Royal Infirmary",
          stop_name_regex = "Aberdeen Royal Infirmary",
          directions = NULL,
-         note = paste("Northfield - Balnagask, also TNDS-only (4,156 against",
-                      "0). Aberdeen Royal Infirmary is mid-route and appears",
-                      "in both directions")),
+         note = paste("Northfield - Balnagask, selected as also TNDS-only",
+                      "(4,156 against 0). Aberdeen Royal Infirmary is",
+                      "mid-route and appears in both directions")),
 
     list(key = "OX400", short_name = "400", operator = "Oxford Bus",
          format = "column", file = "400-timetable-20260222-8b0bfa70.pdf",
          stop_regex = "^Wheatley Ambrose Rise",
          stop_name_regex = "Ambrose Rise",
          directions = NULL,
-         note = paste("Thame - Oxford, TNDS-only (4,460 against 0). This",
+         note = paste("Thame - Oxford, selected as TNDS-only (4,460 against",
+                      "0). This",
                       "generator prints the row label to the *right* of the",
                       "times, which is why the label is matched with the",
                       "leading cells stripped")),
@@ -334,9 +348,9 @@ validation_routes <- function() {
          stop_regex = "^Bolton Interchange",
          stop_name_regex = "Bolton Interchange",
          directions = NULL,
-         note = paste("Preston - Bolton. TNDS reads 1.83x BODS GTFS (9,322",
-                      "against 5,091) with BODS TransXChange siding with",
-                      "GTFS, so TNDS is the one to doubt")),
+         note = paste("Preston - Bolton. Selected because TNDS read 1.83x",
+                      "BODS GTFS (9,322 against 5,091) with BODS TransXChange",
+                      "siding with GTFS, making TNDS the one to doubt")),
 
     # TNDS files this under "Arriva Merseyside" where the DfT's GTFS says
     # "Arriva North West", and holds it as three route_ids - St Helens Bus
@@ -358,8 +372,10 @@ validation_routes <- function() {
          # one and count_directions keeps only the 320's pages.
          directions = c(r20 = "^20 Earlestown", r320 = "^320 St Helens"),
          count_directions = "r320",
-         note = paste("St Helens - Wigan. TNDS reads 1.96x BODS GTFS (6,228",
-                      "against 3,176). Routes 20 and 320 are printed on",
+         note = paste("St Helens - Wigan. Selected because TNDS read 1.96x",
+                      "BODS GTFS (6,228 against 3,176), which the route table",
+                      "traces to TNDS holding three route_ids against one.",
+                      "Routes 20 and 320 are printed on",
                       "separate pages of one document; only the 320's pages",
                       "are counted. Saturday prints its row labels to the",
                       "right of the times")),
@@ -367,8 +383,8 @@ validation_routes <- function() {
     list(key = "TBX38", short_name = "X38", operator = "trentbarton|Trent Barton",
          format = "docx", file = "Trentbarton X38.docx",
          stop_regex = "^Derby, Victoria Street",
-         note = paste("Derby - Burton. TNDS reads 1.98x BODS GTFS (8,144",
-                      "against 4,116). From a Word extract, and the least",
+         note = paste("Derby - Burton. Selected because TNDS read 1.98x BODS",
+                      "GTFS (8,144 against 4,116). From a Word extract, and the least",
                       "trustworthy of this batch: reading it at Burton High",
                       "Street returns 4 journeys for a Saturday against 113",
                       "for a weekday, so the reader is not handling all",
@@ -427,7 +443,58 @@ validation_routes <- function() {
          directions = c(to_seton = "^26 Clerwood",
                         to_clerwood = "^26 Seton Sands"),
          note = paste("NOT USABLE YET, same reason as the 100. Saturday also",
-                      "runs over two pages as 'Saturdays continued'."))
+                      "runs over two pages as 'Saturdays continued'.")),
+
+    # Collected 2026-07-30 for the two ends of the zone-level disagreement in
+    # lsoa_disagreement.md: Birmingham, where TNDS reads about twice BODS GTFS
+    # on services both carry, and Bristol, where BODS GTFS reads several times
+    # TNDS. Both editions are current for the counting window.
+    #
+    # These are the documents that made tt_year_tokens() necessary: National
+    # Express prints "Monday to Friday ... From 19th July 2026" on one line,
+    # and the bare "2026" parsed as 20:26, so the row was read as data, no day
+    # heading was ever recognised and the whole document returned nothing.
+    list(key = "NX6", short_name = "6",
+         operator = "National Express|NX ?Bus|West Midlands",
+         format = "column", file = "nxbus_6.pdf",
+         stop_regex = "^Birmingham Moor St",
+         stop_name_regex = "Moor Street",
+         directions = NULL,
+         note = paste("Solihull - Birmingham, edition from 19 July 2026.",
+                      "Frequent-period block expanded. Counted at Birmingham",
+                      "Moor Street Queensway, the city end of the route")),
+
+    list(key = "NX50", short_name = "50",
+         operator = "National Express|NX ?Bus|West Midlands",
+         format = "column", file = "nxbus_50.pdf",
+         stop_regex = "^Birmingham Moor Street",
+         stop_name_regex = "Moor Street",
+         directions = NULL,
+         note = paste("Druids Heath - Birmingham, edition from 19 July 2026.",
+                      "Frequent-period block expanded")),
+
+    list(key = "BR43", short_name = "43", operator = "First",
+         format = "column", file = "Bristol 43.pdf",
+         stop_regex = "^City Centre, The Centre",
+         stop_name_regex = "The Centre",
+         directions = NULL,
+         note = paste("Imperial Park - Cadbury Heath via Bristol city centre.",
+                      "Every time explicit, nothing to expand. Counted at The",
+                      "Centre, which is inside the zones where BODS GTFS most",
+                      "exceeds TNDS")),
+
+    list(key = "BR24", short_name = "24", operator = "First",
+         format = "column", file = "Brisol 24--A4_timetable_Web_0.pdf",
+         stop_regex = "^City Centre",
+         stop_name_regex = "The Centre",
+         directions = NULL,
+         note = paste("Southmead Hospital - Ashton Gate via the city centre.",
+                      "Every time explicit"))
+    # Not wired in: 'Bristol 75 76.pdf' prints two routes in one table and the
+    # reader reads them as one (371 Monday-Friday journeys for what should be
+    # two services), so it needs routes_in_table and a header row the generator
+    # does not provide; 'Bristol service 1 2.pdf' and both 'Bristol M1' files
+    # return no rows at all, having no day-type heading the reader can find.
   )
 }
 

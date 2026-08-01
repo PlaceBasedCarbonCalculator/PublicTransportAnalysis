@@ -23,9 +23,23 @@ load_cfg <- function() {
 
     # Parallelism: passed to every UK2GTFS function with an ncores argument
     # (transxchange2gtfs, atoc2gtfs, gtfs_interpolate_times,
-    # gtfs_trips_per_zone, txc_filter_files)
+    # gtfs_trips_per_zone, txc_filter_files). Override per target with
+    # cfg_cores(); see there for why this default is not simply raised.
     ncores = 10
   )
+}
+
+#' The same configuration with a different worker count
+#'
+#' targets hashes the body of every global function a target reaches, and
+#' `load_cfg()` is reached by every conversion and every counting target, so
+#' editing `ncores` above would invalidate — and so re-run — conversions that
+#' are already built and correct. Passing `cfg = cfg_cores(n)` in a target's
+#' command changes that target alone, which is free when the target has to be
+#' rebuilt anyway. The machine has 36 cores.
+cfg_cores <- function(n, cfg = load_cfg()) {
+  cfg$ncores <- as.integer(n)
+  cfg
 }
 
 #' Study window: a 28-day period that always starts on a Monday

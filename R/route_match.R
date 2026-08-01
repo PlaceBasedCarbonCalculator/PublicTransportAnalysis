@@ -250,9 +250,14 @@ route_window_summary <- function(gtfs, win, keep_type = 3L) {
 #' missing-services half of decompose_difference() on both sides at once, so it
 #' reads as a coverage gap in each source rather than a naming difference.
 #'
-#' The second pass is confined to routes still in a component of one, which
-#' keeps the number-free join to a small fraction of the routes, and it asks a
-#' higher overlap, since stop sets alone are the whole of the evidence.
+#' The second pass is confined to connected components whose routes all come
+#' from one source - the ones that would otherwise be reported as exclusive to
+#' a source - which keeps the number-free join to a small fraction of the
+#' routes, and it asks a higher overlap, since stop sets alone are the whole of
+#' the evidence. An earlier version confined it to components of *one route*,
+#' which excluded the branded multi-registration operators it was written for:
+#' a service split across several route_ids under one number is linked to
+#' itself in the first pass and so was never a candidate.
 #'
 #' @param summaries named list of route_window_summary() results
 #' @param min_overlap minimum stop-set overlap coefficient to link two routes
@@ -304,26 +309,54 @@ match_route_services <- function(summaries, min_overlap = 0.5,
     igraph::components(g)$membership
   }
 
-  # Second pass on stop overlap alone, for routes the numbers failed to pair.
+  # Second pass on stop overlap alone, for what the numbers failed to pair.
+  #
+  # It runs over connected COMPONENTS, not lone routes. A service one source
+  # splits across several route_ids sharing a number is linked to *itself* in
+  # the first pass, so it is not a lone route, and the earlier lone-route
+  # version of this pass never saw exactly the case it was meant to rescue -
+  # the branded multi-registration operators, which are most of the problem.
+  #
+  # Only components whose routes all come from one source are candidates: a
+  # component that already spans sources needs no rescuing, and confining the
+  # number-free join to the single-source components keeps it small (they are a
+  # few thousand of the tens of thousands of routes) while covering exactly the
+  # routes that would otherwise be reported as exclusive to a source.
   memb <- build(edges)
-  csize <- table(memb)
-  lone <- names(memb)[csize[as.character(memb)] == 1L]
-  if (length(lone) > 1L) {
-    rl <- rs[node %in% lone, list(node, stop_id)]
-    data.table::setkey(rl, stop_id)
-    p2 <- rl[rl, on = "stop_id", allow.cartesian = TRUE, nomatch = 0L]
-    p2 <- p2[node < i.node, list(shared = .N), by = list(node, i.node)]
+  comp_of <- function(nodes) memb[nodes]
+  n_src <- meta[, list(comp = comp_of(node), source)][
+    , list(n_src = data.table::uniqueN(source)), by = comp]
+  cand <- n_src[n_src == 1L, comp]
+  if (length(cand) > 1L) {
+    cs <- unique(data.table::data.table(comp = comp_of(rs$node),
+                                        stop_id = rs$stop_id))
+    cs <- cs[comp %in% cand]
+    csizes <- cs[, list(n_stops = .N), by = comp]
+    data.table::setkey(cs, stop_id)
+    p2 <- cs[cs, on = "stop_id", allow.cartesian = TRUE, nomatch = 0L]
+    p2 <- p2[comp < i.comp, list(shared = .N), by = list(comp, i.comp)]
     if (nrow(p2) > 0) {
-      p2 <- merge(p2, sizes, by = "node")
+      p2 <- merge(p2, csizes, by = "comp")
       data.table::setnames(p2, "n_stops", "n_a")
-      p2 <- merge(p2, sizes, by.x = "i.node", by.y = "node")
+      p2 <- merge(p2, csizes, by.x = "i.comp", by.y = "comp")
       data.table::setnames(p2, "n_stops", "n_b")
       p2[, overlap := shared / pmin(n_a, n_b)]
-      extra <- p2[overlap >= min_overlap_unnumbered, list(node, i.node)]
+      extra <- p2[overlap >= min_overlap_unnumbered, list(comp, i.comp)]
       if (nrow(extra) > 0) {
+        # One representative node per component is enough: linking the
+        # representatives merges the whole components.
+        rep <- unique(data.table::data.table(comp = comp_of(meta$node),
+                                             node = meta$node))
+        rep <- rep[, list(node = node[1]), by = comp]
+        extra <- merge(extra, rep, by = "comp")
+        data.table::setnames(extra, "node", "node_a")
+        extra <- merge(extra, rep, by.x = "i.comp", by.y = "comp")
+        data.table::setnames(extra, "node", "node_b")
         message("Route matching: ", nrow(extra), " further link(s) from stop ",
-                "overlap alone, among ", length(lone), " unpaired routes")
-        edges <- data.table::rbindlist(list(edges, extra))
+                "overlap alone, among ", length(cand),
+                " single-source components")
+        edges <- data.table::rbindlist(list(
+          edges, extra[, list(node = node_a, i.node = node_b)]))
       }
     }
   }

@@ -17,11 +17,14 @@ Published timetables are easy to obtain for the current week and hard to
 obtain for the past, so this uses a **current snapshot** rather than one of
 the historic comparison snapshots.
 
-Two sources, not three. BODS TransXChange is excluded here: the multi-year
-comparison already establishes that a fraction of the operator-published
-files fail to convert, so it carries a coverage gap the other two do not, and
-checking it against the PDFs would re-measure that gap rather than say
-anything new about TNDS or the DfT's GTFS.
+Two sources, not three. BODS TransXChange is excluded here because it is not an
+independent answer to the question a document settles: it is the same
+operator-published data the DfT's GTFS is made from, differing mainly in which
+revision of each dataset survives de-duplication and in who converted it. What a
+PDF can adjudicate is TNDS against the DfT's rendering; adding a third column
+derived from the same upstream files as the second would not break a tie.
+Converting the 1.7 GB change archive also costs hours. The multi-year comparison
+covers all three; this does not.
 
 ```{r window}
 wins <- paste(names(v$window), vapply(v$window, function(x)
@@ -35,8 +38,7 @@ knitr::kable(w)
 
 The window opens on the first Monday on or after the extraction date. The
 DfT's GTFS carries no history — every calendar in it starts on the extraction
-date — so a window opening earlier would silently understate that source, as
-it did in the February 2026 comparison.
+date — so a window opening earlier would silently understate that source.
 
 ## Journeys per operating day, published against each source
 
@@ -133,7 +135,7 @@ knitr::kable(f)
 # rather than quoted ones: the trim overrun below is arithmetic, but how far it
 # bites depends on the snapshot, so it must not be hard-coded into the prose.
 wn <- names(v$window)
-trim_days <- 31L
+trim_days <- tnds_trim_days()
 snap <- as.Date(v$snapshot$snapshot_date)
 tnds_end <- snap + trim_days
 over <- as.integer(v$window[[wn[2]]]$enddate - tnds_end)
@@ -148,36 +150,355 @@ band <- d[source == "tnds" & ratio > 0.5, list(lo = min(ratio), hi = max(ratio),
 both_low <- intersect(d[source == "tnds" & ratio <= 0.5]$key,
                       d[source == "bods_gtfs" & ratio <= 0.5]$key)
 
-cat(sprintf(paste0(
-  "The two windows are **not** comparable for TNDS, and the table shows why. ",
-  "A TNDS snapshot is trimmed to the snapshot date plus or minus %d days by ",
-  "`convert_tnds_snapshot()`, so the %s feed ends on **%s** - %d days before ",
-  "the `%s` window closes on %s. Those %d days are empty in TNDS by ",
-  "construction, which predicts a second-window count of %d/28 = **%.3f** of ",
-  "a full one. Measured: the TNDS `%s` divided by `%s` ratio has a median of ",
-  "%.3f and sits between %.3f and %.3f for %d of the %d routes, against a ",
-  "median of %.3f for BODS GTFS. The apparent collapse of TNDS in the second ",
-  "window is therefore an artefact of the conversion trim, not a property of ",
-  "the source, and **the `%s` TNDS column must not be read as a service ",
-  "level**.\n\n"),
-  trim_days, format(snap), format(tnds_end), over, wn[2],
-  format(v$window[[wn[2]]]$enddate), over, 28L - over, (28 - over) / 28,
-  wn[2], wn[1], tn$med, band$lo, band$hi, band$n, tn$n, bg$med, wn[2]))
+if (over > 0) {
+  cat(sprintf(paste0(
+    "The two windows are **not** comparable for TNDS, and the table shows why. ",
+    "A TNDS snapshot is trimmed to the snapshot date plus or minus %d days by ",
+    "`convert_tnds_snapshot()`, so the %s feed ends on **%s** - %d days before ",
+    "the `%s` window closes on %s. Those %d days are empty in TNDS by ",
+    "construction, which predicts a second-window count of %d/28 = **%.3f** of ",
+    "a full one. Measured: the TNDS `%s` divided by `%s` ratio has a median of ",
+    "%.3f and sits between %.3f and %.3f for %d of the %d routes, against a ",
+    "median of %.3f for BODS GTFS. The apparent collapse of TNDS in the second ",
+    "window is therefore an artefact of the conversion trim, not a property of ",
+    "the source, and **the `%s` TNDS column must not be read as a service ",
+    "level**.\n\n"),
+    trim_days, format(snap), format(tnds_end), over, wn[2],
+    format(v$window[[wn[2]]]$enddate), over, 28L - over, (28 - over) / 28,
+    wn[2], wn[1], tn$med, band$lo, band$hi, band$n, tn$n, bg$med, wn[2]))
+} else {
+  # The trim used to be 31 days, which stopped 11 days short of this window and
+  # made every TNDS figure in it 17/28 of the first window's. tnds_trim_days()
+  # is now 45, so what remains here is the source, not the conversion.
+  cat(sprintf(paste0(
+    "Both windows are now inside what the conversion keeps. ",
+    "`convert_tnds_snapshot()` trims to the snapshot date plus or minus %d ",
+    "days, so the %s feed runs to **%s**, %d days past the close of the `%s` ",
+    "window on %s. An earlier 31-day trim stopped short of this window and ",
+    "made every TNDS count in it a fixed 17/28 of the first window's, which is ",
+    "no longer the case: the TNDS `%s` divided by `%s` ratio has a median of ",
+    "%.3f across %d routes against %.3f for BODS GTFS.\n\n"),
+    trim_days, format(snap), format(tnds_end), -over, wn[2],
+    format(v$window[[wn[2]]]$enddate), wn[2], wn[1], tn$med, tn$n, bg$med))
+
+  cat(paste0(
+    "What is left is a genuine property of a snapshot rather than of the ",
+    "conversion: the second window reaches six weeks past the extraction date, ",
+    "so a registration that expires in between is carried by the DfT's ",
+    "future-dated files and not by TNDS. Read the second window as *service as ",
+    "registered on the snapshot date, projected six weeks forward*, and see the ",
+    "snapshot-expiry section of `bus_source_comparison.md` for its size.\n\n"))
+}
 
 if (length(both_low)) {
   cat(sprintf(paste0(
-    "The exceptions are informative. %s fall below half in *both* sources by ",
-    "the same factor, so those are a real change in the timetable rather than ",
-    "the artefact. Both are First Glasgow, and the drop falls where a Scottish ",
-    "summer timetable would end.\n\n"),
+    "%s fall below half in *both* sources by the same factor, so those are a ",
+    "real change in the timetable rather than anything to do with the trim. ",
+    "Both are First Glasgow, and the drop falls where a Scottish summer ",
+    "timetable would end.\n\n"),
     paste0("`", both_low, "`", collapse = " and ")))
 }
 ```
 
-The bank-holiday references the second window was built for — the Cardiff 62's
+The second window exists for two bank-holiday references — the Cardiff 62's
 "Sundays & public holidays" table and Kinchbus's "Sunday & Bank Holiday
-Monday" table — therefore cannot be tested against TNDS until the conversion
-trim is widened past the end of that window.
+Monday" table. With the trim widened past the end of that window, both are
+testable against TNDS for the first time.
+
+### Coverage the DfT feed has since gained
+
+```{r regained, results = 'asis'}
+# Several routes were collected precisely because BODS GTFS carried none of
+# them - their notes record the February figure as "N against 0". Detect those
+# and ask what this snapshot says, rather than leaving the notes to imply a gap
+# that may have closed.
+w1 <- names(v$window)[1]
+# NOT a column called `key`: data.table() reads that as its key= argument and
+# the column vanishes
+notes <- data.table(route = vapply(v$routes, `[[`, "", "key"),
+                    note = vapply(v$routes, function(r)
+                      paste(r$note, collapse = " "), ""))
+was_zero <- notes[grepl("against 0\\b", note)]$route
+fz <- dcast(v$feeds[window == w1 & key %in% was_zero], key ~ source,
+            value.var = "runs")
+if (nrow(fz)) {
+  fz[, verdict := ifelse(bods_gtfs > 0, "now carried", "still absent")]
+  print(knitr::kable(
+    data.frame(Route = fz$key, TNDS = round(fz$tnds),
+               `BODS GTFS` = round(fz$bods_gtfs),
+               `Ratio` = ifelse(fz$bods_gtfs > 0,
+                                sprintf("%.2f", fz$tnds / fz$bods_gtfs), "—"),
+               Verdict = fz$verdict, check.names = FALSE),
+    row.names = FALSE, format.args = list(big.mark = ","),
+    caption = "Routes selected because BODS GTFS carried nothing for them"))
+  n_back <- sum(fz$bods_gtfs > 0)
+  if (n_back > 0) {
+    r <- fz$tnds[fz$bods_gtfs > 0] / fz$bods_gtfs[fz$bods_gtfs > 0]
+    level <- if (all(abs(r - 1) < 0.005)) "at exactly the TNDS level" else
+      sprintf("at %s of the TNDS level",
+              paste(sprintf("%.2f", r), collapse = ", "))
+    cat(sprintf(paste0(
+      "\n**%d of these %d routes are now in the DfT's GTFS, %s.** Each was ",
+      "collected because that feed carried nothing at all for it in February ",
+      "2026, so this is a coverage gap that has closed rather than persisted. ",
+      "Two things follow: the February figures inside the notes must not be ",
+      "read as current, and a coverage difference measured on one snapshot ",
+      "cannot be assumed to hold on another — which is a caution that applies ",
+      "to the year-by-year comparison as much as to this report.\n\n"),
+      n_back, nrow(fz), level))
+  }
+}
+```
+
+## Which source does the document agree with?
+
+The two tables above compare the sources with each other and with a single
+operating day. This one compares each source with the **document's own implied
+window total**: each printed day type multiplied by how many days of that type
+the window contains, summed. That is the measurement the rest of this report
+exists to make, and it says which source is right rather than only that they
+differ.
+
+Only the first window, and only routes whose printed tables cover a whole week
+(`MF`+`Sa`+`Su`, or `MT`+`Fr`+`Sa`+`Su`) — a route with no Sunday table cannot
+be compared against a feed total that includes Sundays. `SuBh` is counted as
+Sundays alone: the bank holiday it also covers falls in the second window.
+
+**Read the Edition column first.** A ratio away from 1 says something about a
+source only when the document describes the same service the snapshot holds.
+Operators leave superseded timetables on their websites, and several of these
+documents predate the snapshot by a year or more: where a stale document and
+both sources disagree by the same factor, the network changed, and neither
+source is at fault. The date is the printed validity statement from the first
+page ("From 31 August 2025", "Valid from Monday 24th November 2025"), or failing
+that an unambiguous `yyyymmdd` in the file name — a convention this set can
+check rather than assume, since the two Cardiff documents named `-20260719-`
+also print "19/07/2026" on the page. Blank means neither was found, or the
+document is a Word extract rather than a PDF.
+
+```{r published-vs-sources, results = 'asis'}
+wmain <- names(v$window)[1]
+w1 <- v$window[[wmain]]
+# Integer weekdays, not weekdays(): the names that function returns depend on
+# the locale, and this must not read differently on another machine.
+days <- tabulate(lubridate::wday(seq(w1$startdate, w1$enddate, by = 1),
+                                 week_start = 1), 7L)
+daytype_days <- list(MT = 1:4, Fr = 5L, MF = 1:5, Sa = 6L, Su = 7L, SuBh = 7L)
+
+p <- rbindlist(Filter(Negate(is.null), v$published), fill = TRUE)
+unknown <- setdiff(unique(p$daytype), names(daytype_days))
+if (length(unknown)) {
+  stop("Unmapped published day type(s): ", paste(unknown, collapse = ", "))
+}
+# Directions are separate printed tables of one day's service, so they add
+p <- p[, list(journeys = sum(journeys), reliable = all(reliable),
+              continuous = all(continuous | is.na(continuous))),
+       by = list(key, daytype)]
+p[, dcount := vapply(daytype, function(x) sum(days[daytype_days[[x]]]), 0)]
+
+per_route <- p[, list(expected = sum(journeys * dcount),
+                      days_covered = sum(dcount),
+                      reliable = all(reliable) && all(continuous)),
+               by = key]
+whole_week <- per_route[days_covered == sum(days)]
+
+fm <- dcast(v$feeds[window == wmain], key ~ source, value.var = "runs")
+sm <- dcast(v$feeds[window == wmain], key ~ source, value.var = "stop_matched")
+setnames(sm, setdiff(names(sm), "key"), paste0("sm_", setdiff(names(sm), "key")))
+cmp <- merge(merge(whole_week, fm, by = "key"), sm, by = "key")
+cmp[, r_tnds := tnds / expected]
+cmp[, r_bods := bods_gtfs / expected]
+
+# The printed validity date, from the first page of the document itself rather
+# than from the spec's free-text note, so it cannot drift out of step with the
+# file. Knitting happens with the working directory set to reports/.
+tt_dir <- if (dir.exists("../data/example_timetables")) {
+  "../data/example_timetables"
+} else "data/example_timetables"
+mon <- paste0("(?:January|February|March|April|May|June|July|August|",
+              "September|October|November|December)")
+edition_of <- function(files) {
+  d <- vapply(files, function(f) {
+    p <- file.path(tt_dir, f)
+    if (!file.exists(p) || !grepl("\\.pdf$", p, ignore.case = TRUE))
+      return(NA_real_)
+    tx <- try(pdftools::pdf_text(p)[1], silent = TRUE)
+    if (inherits(tx, "try-error")) return(NA_real_)
+    ln <- trimws(strsplit(tx, "\n")[[1]])
+    hd <- paste(utils::head(ln[nzchar(ln)], 4), collapse = " | ")
+    m <- regmatches(hd, regexpr(
+      sprintf("\\d{1,2}(?:st|nd|rd|th)? %s (?:19|20)\\d{2}", mon), hd,
+      perl = TRUE))
+    if (!length(m)) {
+      m <- regmatches(hd, regexpr("\\d{1,2}/\\d{1,2}/(?:19|20)\\d{2}", hd,
+                                  perl = TRUE))
+    }
+    if (!length(m)) {
+      # Several generators encode the valid-from date in the file name and print
+      # no date on the page. The convention is verifiable rather than assumed:
+      # the two Cardiff documents named ...-20260719-... also print "19/07/2026".
+      # Only the unambiguous 8-digit form is read; "r100-260222.pdf" could be
+      # either yymmdd or ddmmyy and is left blank.
+      fn <- regmatches(basename(f), regexpr("20\\d{6}", basename(f)))
+      if (length(fn)) {
+        d8 <- as.Date(fn[1], format = "%Y%m%d")
+        if (!is.na(d8)) return(as.numeric(d8))
+      }
+    }
+    if (!length(m)) return(NA_real_)
+    # strip the ordinal suffix only where it follows a digit: a blanket
+    # gsub("st","") turns "31st August" into "31 Augu"
+    as.numeric(lubridate::dmy(gsub("(\\d)(st|nd|rd|th)", "\\1", m[1])))
+  }, 0)
+  if (all(is.na(d))) NA_real_ else min(d, na.rm = TRUE)  # oldest part governs
+}
+ed <- vapply(v$routes, function(r) edition_of(r$file), 0)
+names(ed) <- vapply(v$routes, `[[`, "", "key")
+cmp[, edition := as.Date(ed[key], origin = "1970-01-01")]
+cmp[, months_old := round(as.numeric(w1$startdate - edition) / 30.44)]
+setorderv(cmp, "r_tnds")
+
+knitr::kable(
+  data.frame(Route = cmp$key,
+             Edition = ifelse(is.na(cmp$edition), "",
+                              format(cmp$edition, "%d %b %Y")),
+             `Months old` = ifelse(is.na(cmp$months_old), "",
+                                   as.character(cmp$months_old)),
+             `Document implies` = round(cmp$expected),
+             TNDS = round(cmp$tnds),
+             `TNDS ÷ doc` = sprintf("%.2f", cmp$r_tnds),
+             `BODS GTFS` = round(cmp$bods_gtfs),
+             `BODS ÷ doc` = sprintf("%.2f", cmp$r_bods),
+             Reliable = cmp$reliable,
+             `Stop matched` = cmp$sm_tnds & cmp$sm_bods_gtfs,
+             check.names = FALSE),
+  row.names = FALSE, format.args = list(big.mark = ","))
+```
+
+```{r published-vs-sources-text, results = 'asis'}
+ok <- cmp[reliable == TRUE]
+near <- function(r) sum(abs(r - 1) <= 0.10)
+cat(sprintf(paste0(
+  "Across the %d routes with a whole week of readable tables, TNDS is within ",
+  "10%% of the document for **%d** of them and the DfT's GTFS for **%d**. ",
+  "Median ratio to the document: TNDS %.2f, BODS GTFS %.2f.\n\n"),
+  nrow(ok), near(ok$r_tnds), near(ok$r_bods),
+  median(ok$r_tnds), median(ok$r_bods)))
+
+far_t <- ok[abs(r_tnds - 1) > 0.25][order(-abs(r_tnds - 1))]
+far_g <- ok[abs(r_bods - 1) > 0.25][order(-abs(r_bods - 1))]
+desc <- function(d, col) paste(sprintf("`%s` (%.2f)", d$key, d[[col]]),
+                               collapse = ", ")
+if (nrow(far_t)) {
+  cat(sprintf("Routes where **TNDS** is more than 25%% from the document: %s.\n\n",
+              desc(far_t, "r_tnds")))
+}
+if (nrow(far_g)) {
+  cat(sprintf(paste0("Routes where **BODS GTFS** is more than 25%% from the ",
+                     "document: %s.\n\n"), desc(far_g, "r_bods")))
+}
+
+# Both sources wrong by the SAME factor is a different diagnosis from either
+# source being wrong: two independently produced feeds do not err identically,
+# so what they share - the document - is the suspect. Two ways that happens, and
+# the edition date separates them: the document is out of date, or it is current
+# and being misread.
+agree_far <- ok[abs(r_tnds - r_bods) <= 0.1 & abs(r_tnds - 1) > 0.25]
+stale <- agree_far[!is.na(months_old) & months_old > 6]
+misread <- agree_far[is.na(months_old) | months_old <= 6]
+if (nrow(stale)) {
+  cat(sprintf(paste0(
+    "**Stale documents, not source problems:** %s. Both sources agree with ",
+    "*each other* to within 10%% and diverge from the document by the same ",
+    "factor, and each of these documents predates the snapshot by more than six ",
+    "months (%s). The service changed after the timetable was printed; neither ",
+    "feed is at fault.\n\n"),
+    desc(stale[order(-abs(r_tnds - 1))], "r_tnds"),
+    paste(sprintf("`%s` %d months", stale$key, stale$months_old),
+          collapse = ", ")))
+}
+if (nrow(misread)) {
+  cat(sprintf(paste0(
+    "**Read these as document-reading problems:** %s. The two sources agree ",
+    "with each other and diverge from the document by the same factor, but the ",
+    "document is current (or states no edition), so what to doubt is the ",
+    "reading of it. A ratio near 2.00 in this group is the signature of a table ",
+    "that prints one direction where the feeds count both.\n\n"),
+    desc(misread[order(-abs(r_tnds - 1))], "r_tnds")))
+}
+
+# Where the two sources disagree AND one of them matches the document, the
+# document has decided the case - which is the whole purpose of collecting it.
+decided <- ok[abs(r_tnds - r_bods) > 0.2 &
+                (abs(r_tnds - 1) <= 0.1 | abs(r_bods - 1) <= 0.1)]
+if (nrow(decided)) {
+  decided[, verdict := ifelse(abs(r_tnds - 1) <= 0.1, "TNDS", "BODS GTFS")]
+  cat("Cases the document settles:\n\n")
+  for (i in seq_len(nrow(decided))) {
+    d <- decided[i]
+    age <- if (is.na(d$months_old)) "edition not stated" else
+      sprintf("edition %s, %d months before the window",
+              format(d$edition, "%d %b %Y"), d$months_old)
+    cat(sprintf(paste0("* `%s` — the document implies %s journeys; TNDS %s ",
+                       "(%.2f), BODS GTFS %s (%.2f). **%s is right** (%s).\n"),
+                d$key, format(round(d$expected), big.mark = ","),
+                format(round(d$tnds), big.mark = ","), d$r_tnds,
+                format(round(d$bods_gtfs), big.mark = ","), d$r_bods,
+                d$verdict, age))
+  }
+  cat("\n")
+}
+```
+
+A ratio near 1.00 is strong evidence and a ratio far from it is a lead, not a
+verdict: the document may print a different edition from the one the snapshot
+carries, and `Reliable = FALSE` rows are excluded from the prose above precisely
+because their published figure cannot be trusted. `Stop matched = FALSE` means
+the reference stop was not found in one of the feeds, so the count is of every
+same-numbered route of a matching operator and will be too high.
+
+### The Bristol 21: what the DfT feed's excess actually is
+
+The clearest of these cases is worth following to its cause, because both
+sources match the reference stop, so nothing about the measurement is loose.
+
+*The figures in this subsection were measured directly on the DfT feed named in
+the table at the top of this report, over the first window, on 2026-07-30. They
+are quoted rather than computed here because this report is built from the
+route-level validation data and not from the feed itself; `lsoa_disagreement.md`
+computes the national duplication figure as part of its own pipeline, so that is
+the copy that stays current.*
+
+First Bristol's 21 is `route_id` 3700 in the DfT's GTFS. Over the first window
+that route_id carries **5,816 trip-days**. Reducing every trip to the set of
+(stop, departure time) pairs it makes, and counting distinct (journey, date)
+pairs rather than trips, leaves **3,296** — the other 2,520 are the same bus
+described twice on the same day. The document implies 3,296 and TNDS counts
+3,296.
+
+So the whole of the 1.76× excess is duplicate publication, and removing it
+reproduces the published timetable exactly. The same pattern, with the same
+numbers, appears on `route_id` 5320 (service 31), which suggests one duplicated
+dataset rather than a per-route accident.
+
+Duplication is not confined to those. Measured across the whole 2026-07-26 DfT
+feed over this window, **380,264 of 10,301,615 counted bus runs (3.69%)** are the
+same journey on the same day — 74,965 of them published under two different
+`route_id`s and 305,299 under one. It is concentrated rather than spread:
+several `route_id`s are duplicated in their entirety.
+
+A caution about how that is measured, because the obvious version of the test is
+wrong. Comparing trips by their (stop, time) signature alone, without regard to
+date, returns 41.5% of runs — more than ten times the real figure. GTFS models a
+school-term journey and its holiday twin as two trips with identical times and
+*complementary* calendars, which is correct modelling and not duplication. Only
+trips that run the same journey on the same **date** are counted here.
+
+The `279` row is not resolved by this. Its two Arriva London `route_id`s contain
+no same-day duplicates at all, and one of them (10984339, 8,284 runs) matches the
+document and TNDS exactly while the other adds 10,208 more. Since the reference
+stop is not found for that route in either feed, its counts include every
+same-numbered Arriva route, so the row cannot be pushed further here.
 
 ```{r stopmatch}
 sm <- dcast(v$feeds[window == names(v$window)[1]], key ~ source,
@@ -212,22 +533,42 @@ time) pairs, and those signatures compared across the route's TNDS `route_id`s
 | CDF62 | 3.86 | 3 | **0 of 147** | not duplication |
 
 For TBALL and TBX38 the TNDS excess is therefore an artefact of duplicate
-registration, and the exact ratios of 2.00 and 3.00 follow directly from it —
-TNDS is wrong and BODS GTFS is right. For SC125 and CDF62 the `route_id`s
-carry genuinely distinct trips, so their excess is a real disagreement that
-duplicate publication does not explain; SC125's ratio of exactly 2.00 with
-disjoint patterns points instead at the two sources modelling directions
-differently, which would need a direction-level breakdown to confirm and is
-not established here.
+registration: the exact ratios of 2.00 and 3.00 follow directly from publishing
+one timetable twice and one three times over, so **TNDS is overcounting them**.
+
+That is as far as the trip-pattern evidence goes, and it is worth being precise
+about what it does *not* establish. Compared with the documents in the section
+below, TBALL's doubled TNDS figure lands nearer the document (1.12) than BODS
+GTFS does (0.56), and TBX38 exceeds it in both sources. Two things make that row
+unsafe to adjudicate rather than a contradiction: the reference stop is not found
+in either feed for these routes, so both counts are of every same-numbered route
+of a matching operator, and both documents are Word extracts whose readers are
+the least trustworthy in the set (TBALL's Monday–Friday column includes
+Fridays-only journeys, so its implied total is itself an overestimate). The
+duplication in TNDS is established; that BODS GTFS is therefore *correct* for
+these two is not.
+
+For SC125 and CDF62 the `route_id`s carry genuinely distinct trips, so their
+excess is a real disagreement that duplicate publication does not explain. The
+documents settle CDF62 outright — TNDS reads 1.02 of the Cardiff 62's published
+timetable and BODS GTFS 0.26, so the missing service is in BODS GTFS, which is
+what England-only statutory coverage predicts for a Cardiff Bus service. SC125's
+ratio of exactly 2.00 with disjoint patterns is not settled: TNDS reads 2.28 of
+the document against BODS GTFS's 1.14, so on that evidence TNDS is the
+overcounting one, but the mechanism — two sources modelling directions
+differently is the obvious candidate — would need a direction-level breakdown to
+confirm and is not established here.
 
 ## Notes on each document
 
-Figures quoted *inside* these notes come from the February 2026 comparison that
-motivated each document's selection, not from this snapshot — the BB727 note
-says so explicitly, and the others share its origin. Where a note disagrees
-with the Window totals table above, the table is the measurement: the Wigan
-`AN320`, for instance, is noted as TNDS reading 1.96× BODS GTFS, but on this
-July snapshot the two sources agree exactly.
+Figures quoted *inside* these notes are **selection rationale**, not
+measurements: they come from the February 2026 comparison window that these
+documents were picked from. That window has since been dropped from the
+comparison (its TNDS side is distorted by registrations expiring inside it), and
+in any case it is not the window counted here. Where a note disagrees with the
+Window totals table above, **the table is the measurement** — the Wigan `AN320`
+is noted as TNDS reading 1.96× BODS GTFS, but on this July snapshot the two
+sources agree exactly.
 
 ```{r notes}
 n <- rbindlist(lapply(v$routes, function(r)
