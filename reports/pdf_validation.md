@@ -220,22 +220,22 @@ that in mind.
 |143    |main    |      5288| 5288|1.00  |
 |1_1A   |bankhol |      4347| 4347|1.00  |
 |1_1A   |main    |      4524| 4524|1.00  |
-|21     |bankhol |      6330| 3170|0.50  |
-|21     |main    |      5816| 3296|0.57  |
-|279    |bankhol |     18510| 8184|0.44  |
-|279    |main    |     18492| 8284|0.45  |
+|21     |bankhol |      3936| 3170|0.81  |
+|21     |main    |      3296| 3296|1.00  |
+|279    |bankhol |     14382| 8184|0.57  |
+|279    |main    |     14312| 8284|0.58  |
 |69     |bankhol |      6619| 6619|1.00  |
 |69     |main    |      6664| 6664|1.00  |
-|A1     |bankhol |      9463| 6659|0.70  |
-|A1     |main    |      7804| 6916|0.89  |
+|A1     |bankhol |      8575| 6659|0.78  |
+|A1     |main    |      6916| 6916|1.00  |
 |AN320  |bankhol |      2768| 2706|0.98  |
 |AN320  |main    |      2816| 2816|1.00  |
 |BB59   |bankhol |      2640| 2744|1.04  |
 |BB59   |main    |      2640| 2640|1.00  |
 |BB727  |bankhol |      3645| 3788|1.04  |
 |BB727  |main    |      3645| 3645|1.00  |
-|BR24   |bankhol |      6129| 3037|0.50  |
-|BR24   |main    |      5592| 3164|0.57  |
+|BR24   |bankhol |      5901| 3037|0.51  |
+|BR24   |main    |      5364| 3164|0.59  |
 |BR43   |bankhol |      2374| 1874|0.79  |
 |BR43   |main    |      1908| 1908|1.00  |
 |CDF1   |bankhol |       508|  508|1.00  |
@@ -256,10 +256,10 @@ that in mind.
 |L100   |main    |      8024| 8024|1.00  |
 |L26    |bankhol |      5460| 5460|1.00  |
 |L26    |main    |      5460| 5460|1.00  |
-|NX50   |bankhol |     15350| 8429|0.55  |
-|NX50   |main    |     15848| 8688|0.55  |
-|NX6    |bankhol |     10753| 5284|0.49  |
-|NX6    |main    |     11104| 5284|0.48  |
+|NX50   |bankhol |     15173| 8429|0.56  |
+|NX50   |main    |     15660| 8688|0.55  |
+|NX6    |bankhol |     10695| 5284|0.49  |
+|NX6    |main    |     11044| 5284|0.48  |
 |OX400  |bankhol |      4424| 4424|1.00  |
 |OX400  |main    |      4492| 4492|1.00  |
 |SC125  |bankhol |      4303| 8547|1.99  |
@@ -343,21 +343,21 @@ document is a Word extract rather than a PDF.
 |111   |            |           |            3,972| 3,900|0.98       |     3,900|0.98       |TRUE     |TRUE         |
 |143   |            |           |            5,376| 5,288|0.98       |     5,288|0.98       |TRUE     |TRUE         |
 |69    |            |           |            6,668| 6,664|1.00       |     6,664|1.00       |TRUE     |FALSE        |
-|21    |06 Apr 2026 |4          |            3,296| 3,296|1.00       |     5,816|1.76       |TRUE     |TRUE         |
-|279   |            |           |            8,284| 8,284|1.00       |    18,492|2.23       |TRUE     |FALSE        |
-|A1    |31 Aug 2025 |11         |            6,916| 6,916|1.00       |     7,804|1.13       |TRUE     |TRUE         |
+|21    |06 Apr 2026 |4          |            3,296| 3,296|1.00       |     3,296|1.00       |TRUE     |TRUE         |
+|279   |            |           |            8,284| 8,284|1.00       |    14,312|1.73       |TRUE     |FALSE        |
+|A1    |31 Aug 2025 |11         |            6,916| 6,916|1.00       |     6,916|1.00       |TRUE     |TRUE         |
 |KB9   |            |           |            1,352| 1,352|1.00       |     1,352|1.00       |TRUE     |TRUE         |
 |SY57  |            |           |            2,744| 2,744|1.00       |     2,744|1.00       |TRUE     |TRUE         |
 |BB727 |25 May 2026 |2          |            3,632| 3,645|1.00       |     3,645|1.00       |TRUE     |FALSE        |
 |CDF62 |12 Apr 2026 |3          |            1,980| 2,024|1.02       |       524|0.26       |TRUE     |TRUE         |
-|BR24  |03 Sep 2023 |35         |            3,048| 3,164|1.04       |     5,592|1.83       |TRUE     |TRUE         |
-|NX6   |19 Jul 2026 |0          |            5,012| 5,284|1.05       |    11,104|2.22       |TRUE     |TRUE         |
+|BR24  |03 Sep 2023 |35         |            3,048| 3,164|1.04       |     5,364|1.76       |TRUE     |TRUE         |
+|NX6   |19 Jul 2026 |0          |            5,012| 5,284|1.05       |    11,044|2.20       |TRUE     |TRUE         |
 |1_1A  |            |           |            4,256| 4,524|1.06       |     4,524|1.06       |TRUE     |TRUE         |
 |AN320 |19 Jul 2026 |0          |            2,556| 2,816|1.10       |     2,816|1.10       |TRUE     |FALSE        |
 |OX400 |22 Feb 2026 |5          |            3,940| 4,492|1.14       |     4,492|1.14       |TRUE     |TRUE         |
 |SF34  |19 Aug 2024 |23         |            1,160| 1,488|1.28       |     1,488|1.28       |TRUE     |TRUE         |
 |X85   |20 Apr 2025 |15         |            1,504| 2,027|1.35       |     2,027|1.35       |TRUE     |FALSE        |
-|NX50  |19 Jul 2026 |0          |            6,064| 8,688|1.43       |    15,848|2.61       |FALSE    |FALSE        |
+|NX50  |19 Jul 2026 |0          |            6,064| 8,688|1.43       |    15,660|2.58       |FALSE    |FALSE        |
 |F38   |15 Sep 2025 |10         |            1,524| 3,048|2.00       |     3,048|2.00       |TRUE     |TRUE         |
 |L26   |            |           |            2,576| 5,460|2.12       |     5,460|2.12       |FALSE    |FALSE        |
 |SFX24 |24 Nov 2025 |8          |              804| 1,740|2.16       |     1,740|2.16       |FALSE    |TRUE         |
@@ -365,11 +365,11 @@ document is a Word extract rather than a PDF.
 |TBX38 |            |           |            1,420| 5,360|3.77       |     2,680|1.89       |TRUE     |FALSE        |
 |L100  |            |           |              980| 8,024|8.19       |     8,024|8.19       |FALSE    |FALSE        |
 
-Across the 26 routes with a whole week of readable tables, TNDS is within 10% of the document for **14** of them and the DfT's GTFS for **8**. Median ratio to the document: TNDS 1.00, BODS GTFS 1.03.
+Across the 26 routes with a whole week of readable tables, TNDS is within 10% of the document for **14** of them and the DfT's GTFS for **10**. Median ratio to the document: TNDS 1.00, BODS GTFS 1.00.
 
 Routes where **TNDS** is more than 25% from the document: `TBX38` (3.77), `SC125` (2.28), `F38` (2.00), `BR43` (0.41), `TBALL` (0.56), `X85` (1.35), `G1` (0.69), `SF90` (0.72), `SF34` (1.28).
 
-Routes where **BODS GTFS** is more than 25% from the document: `279` (2.23), `NX6` (2.22), `F38` (2.00), `TBX38` (1.89), `BR24` (1.83), `21` (1.76), `CDF62` (0.26), `BR43` (0.41), `TBALL` (0.56), `X85` (1.35), `G1` (0.69), `SF90` (0.72), `SF34` (1.28).
+Routes where **BODS GTFS** is more than 25% from the document: `NX6` (2.20), `F38` (2.00), `TBX38` (1.89), `BR24` (1.76), `CDF62` (0.26), `279` (1.73), `BR43` (0.41), `TBALL` (0.56), `X85` (1.35), `G1` (0.69), `SF90` (0.72), `SF34` (1.28).
 
 **Stale documents, not source problems:** `F38` (2.00), `BR43` (0.41), `X85` (1.35), `G1` (0.69), `SF90` (0.72), `SF34` (1.28). Both sources agree with *each other* to within 10% and diverge from the document by the same factor, and each of these documents predates the snapshot by more than six months (`BR43` 11 months, `G1` 10 months, `SF90` 11 months, `SF34` 23 months, `X85` 15 months, `F38` 10 months). The service changed after the timetable was printed; neither feed is at fault.
 
@@ -377,11 +377,10 @@ Routes where **BODS GTFS** is more than 25% from the document: `279` (2.23), `NX
 
 Cases the document settles:
 
-* `21` — the document implies 3,296 journeys; TNDS 3,296 (1.00), BODS GTFS 5,816 (1.76). **TNDS is right** (edition 06 Apr 2026, 4 months before the window).
-* `279` — the document implies 8,284 journeys; TNDS 8,284 (1.00), BODS GTFS 18,492 (2.23). **TNDS is right** (edition not stated).
+* `279` — the document implies 8,284 journeys; TNDS 8,284 (1.00), BODS GTFS 14,312 (1.73). **TNDS is right** (edition not stated).
 * `CDF62` — the document implies 1,980 journeys; TNDS 2,024 (1.02), BODS GTFS 524 (0.26). **TNDS is right** (edition 12 Apr 2026, 3 months before the window).
-* `BR24` — the document implies 3,048 journeys; TNDS 3,164 (1.04), BODS GTFS 5,592 (1.83). **TNDS is right** (edition 03 Sep 2023, 35 months before the window).
-* `NX6` — the document implies 5,012 journeys; TNDS 5,284 (1.05), BODS GTFS 11,104 (2.22). **TNDS is right** (edition 19 Jul 2026, 0 months before the window).
+* `BR24` — the document implies 3,048 journeys; TNDS 3,164 (1.04), BODS GTFS 5,364 (1.76). **TNDS is right** (edition 03 Sep 2023, 35 months before the window).
+* `NX6` — the document implies 5,012 journeys; TNDS 5,284 (1.05), BODS GTFS 11,044 (2.20). **TNDS is right** (edition 19 Jul 2026, 0 months before the window).
 
 A ratio near 1.00 is strong evidence and a ratio far from it is a lead, not a
 verdict: the document may print a different edition from the one the snapshot
