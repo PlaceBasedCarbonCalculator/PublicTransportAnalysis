@@ -72,10 +72,15 @@ knitr::kable(snap, col.names = c("Year", "28-day counting window",
                                  "BODS GTFS snapshot"))
 ```
 
-Within a year all three sources are counted with
+Within a year all three sources are deduplicated with
+`UK2GTFS::gtfs_deduplicate()`, then counted with
 `UK2GTFS::gtfs_trips_per_zone()` over the **same 28-day window** and the
-**same widened LSOA zones**, so every difference below is a difference in the
-sources or their conversion, not in the counting method. Route types were
+**same plain LSOA21 / DZ22 boundaries**, so every difference below is a
+difference in the sources or their conversion, not in the counting method.
+(The published trips-per-zone outputs use zones widened for stop access.
+This comparison uses the unmodified boundaries: widened zones overlap, so one
+stop falls in several of them and a difference between two sources at that
+stop would be counted several times over.) Route types were
 harmonised to the set used throughout this analysis (0 tram, 1 metro, 2 rail,
 3 bus, 4 ferry, **200 coach**); coach is kept distinct from local bus in every
 source, and the headline bus comparisons are for `route_type == 3` only.
@@ -145,9 +150,10 @@ knitr::kable(stats[, c("year", "source", "agencies", "routes",
 ## National bus service totals
 
 Total counted bus (`route_type == 3`) departures from stops, summed over all
-zones (a departure serving stops in more than one zone is counted in each, so
-levels are comparable between sources but are not a national vehicle-trip
-count).
+zones. The plain boundaries tile the country, so each stop falls in one zone
+and a journey is counted once per zone it passes through — levels are
+comparable between sources but are still not a national vehicle-trip count,
+because a journey crossing several zones contributes to each.
 
 ```{r totals-table, results="asis"}
 tot <- across_years(function(c) {

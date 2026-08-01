@@ -10,14 +10,27 @@
 # is what produced the zone totals in the first place, so the per-route
 # figures here add up to the zone totals in the comparison output:
 #
-#  * a stop is joined to every zone whose (widened, overlapping) polygon
-#    contains it;
+#  * a stop is joined to every zone whose polygon contains it (with the plain
+#    boundaries this analysis uses, that is one zone per stop);
 #  * within a zone a trip counts ONCE however many of the zone's stops it
 #    calls at (internal_trips_per_zone() de-duplicates on trip_id);
 #  * a stop-time with no departure time is dropped before that, because
 #    gtfs_trips_per_zone() drops rows whose time band is NA;
 #  * a trip's weight is the number of times it runs in the 28-day window,
 #    with frequency-based trips weighted by their implied departures.
+#
+# Everything here is measured on the DEDUPLICATED feed, like every other
+# count in the repo: the question is what disagreement is left between the
+# sources once neither is describing the same bus twice. The duplication
+# tables therefore no longer measure the sources as published - they measure
+# what UK2GTFS::gtfs_deduplicate() deliberately left behind. It removes a copy
+# only when the whole itinerary matches, the route agrees and the dates are
+# redundant, whereas zone_duplicate_runs() and feed_duplicate_runs() ask only
+# whether two trips are indistinguishable on the day. What they now report is
+# the gap between those two tests: partial calendar overlaps, and copies
+# published under different route numbers or operators. Any zone where that
+# residual is large is a zone whose remaining gap is still a counting
+# artefact rather than a difference in service.
 
 #' Total bus runs per zone in one comparison source result
 #'
@@ -57,7 +70,8 @@ feed_stops_in_zones <- function(gtfs, zones) {
 #' @param zones zone polygons in 4326 with a `zone_id` column, already
 #'   subset to the zones of interest
 #' @param win study window
-#' @return list(by_route = zone x route runs, stops = stops in those zones)
+#' @return list(by_route = zone x route runs, stops = stops in those zones,
+#'   dup = duplicate runs per zone)
 zone_route_runs <- function(gtfs, zones, win) {
   gtfs$routes$route_type <- map_route_type_simple(gtfs$routes$route_type)
   gtfs <- UK2GTFS::gtfs_trim_dates(gtfs, startdate = win$startdate,

@@ -224,16 +224,16 @@ that in mind.
 |21     |main    |      5816| 3296|0.57  |
 |279    |bankhol |     18510| 8184|0.44  |
 |279    |main    |     18492| 8284|0.45  |
-|69     |bankhol |      6619| 6623|1.00  |
-|69     |main    |      6664| 6668|1.00  |
+|69     |bankhol |      6619| 6619|1.00  |
+|69     |main    |      6664| 6664|1.00  |
 |A1     |bankhol |      9463| 6659|0.70  |
 |A1     |main    |      7804| 6916|0.89  |
 |AN320  |bankhol |      2768| 2706|0.98  |
 |AN320  |main    |      2816| 2816|1.00  |
 |BB59   |bankhol |      2640| 2744|1.04  |
 |BB59   |main    |      2640| 2640|1.00  |
-|BB727  |bankhol |      3649| 3792|1.04  |
-|BB727  |main    |      3649| 3649|1.00  |
+|BB727  |bankhol |      3645| 3788|1.04  |
+|BB727  |main    |      3645| 3645|1.00  |
 |BR24   |bankhol |      6129| 3037|0.50  |
 |BR24   |main    |      5592| 3164|0.57  |
 |BR43   |bankhol |      2374| 1874|0.79  |
@@ -264,24 +264,24 @@ that in mind.
 |OX400  |main    |      4492| 4492|1.00  |
 |SC125  |bankhol |      4303| 8547|1.99  |
 |SC125  |main    |      4428| 8856|2.00  |
-|SF2A   |bankhol |       956| 1000|1.05  |
-|SF2A   |main    |       956| 1000|1.05  |
-|SF34   |bankhol |      2400| 2628|1.09  |
-|SF34   |main    |      2400| 2628|1.09  |
-|SF90   |bankhol |      1688| 1688|1.00  |
-|SF90   |main    |      1688| 1688|1.00  |
-|SFX24  |bankhol |      2764| 2764|1.00  |
-|SFX24  |main    |      2764| 2764|1.00  |
+|SF2A   |bankhol |       572|  572|1.00  |
+|SF2A   |main    |       572|  572|1.00  |
+|SF34   |bankhol |      1488| 1488|1.00  |
+|SF34   |main    |      1488| 1488|1.00  |
+|SF90   |bankhol |      1048| 1048|1.00  |
+|SF90   |main    |      1048| 1048|1.00  |
+|SFX24  |bankhol |      1740| 1740|1.00  |
+|SFX24  |main    |      1740| 1740|1.00  |
 |SY57   |bankhol |      2679| 2679|1.00  |
 |SY57   |main    |      2744| 2744|1.00  |
-|TBALL  |bankhol |      2050| 4262|2.08  |
-|TBALL  |main    |      2092| 4184|2.00  |
-|TBX38  |bankhol |      2612| 8008|3.07  |
-|TBX38  |main    |      2680| 8040|3.00  |
+|TBALL  |bankhol |      2050| 2131|1.04  |
+|TBALL  |main    |      2092| 2092|1.00  |
+|TBX38  |bankhol |      2612| 5292|2.03  |
+|TBX38  |main    |      2680| 5360|2.00  |
 |X85    |bankhol |       672|  672|1.00  |
 |X85    |main    |      2027| 2027|1.00  |
 
-Both windows are now inside what the conversion keeps. `convert_tnds_snapshot()` trims to the snapshot date plus or minus 45 days, so the 2026-07-26 feed runs to **2026-09-09**, 3 days past the close of the `bankhol` window on 2026-09-06. An earlier 31-day trim stopped short of this window and made every TNDS count in it a fixed 17/28 of the first window's, which is no longer the case: the TNDS `bankhol` divided by `main` ratio has a median of 0.988 across 33 routes against 1.000 for BODS GTFS.
+Both windows are now inside what the conversion keeps. `convert_tnds_snapshot()` trims to the snapshot date plus or minus 45 days, so the 2026-07-26 feed runs to **2026-09-09**, 3 days past the close of the `bankhol` window on 2026-09-06. An earlier 31-day trim stopped short of this window and made every TNDS count in it a fixed 17/28 of the first window's, which is no longer the case: the TNDS `bankhol` divided by `main` ratio has a median of 0.987 across 33 routes against 1.000 for BODS GTFS.
 
 What is left is a genuine property of a snapshot rather than of the conversion: the second window reaches six weeks past the extraction date, so a registration that expires in between is carried by the DfT's future-dated files and not by TNDS. Read the second window as *service as registered on the snapshot date, projected six weeks forward*, and see the snapshot-expiry section of `bus_source_comparison.md` for its size.
 
@@ -300,7 +300,7 @@ Table: Routes selected because BODS GTFS carried nothing for them
 |Route |  TNDS| BODS GTFS|Ratio |Verdict     |
 |:-----|-----:|---------:|:-----|:-----------|
 |BB59  | 2,640|     2,640|1.00  |now carried |
-|BB727 | 3,649|     3,649|1.00  |now carried |
+|BB727 | 3,645|     3,645|1.00  |now carried |
 |OX400 | 4,492|     4,492|1.00  |now carried |
 
 **3 of these 3 routes are now in the DfT's GTFS, at exactly the TNDS level.** Each was collected because that feed carried nothing at all for it in February 2026, so this is a coverage gap that has closed rather than persisted. Two things follow: the February figures inside the notes must not be read as current, and a coverage difference measured on one snapshot cannot be assumed to hold on another — which is a caution that applies to the year-by-year comparison as much as to this report.
@@ -335,43 +335,45 @@ document is a Word extract rather than a PDF.
 |Route |Edition     |Months old | Document implies|  TNDS|TNDS ÷ doc | BODS GTFS|BODS ÷ doc |Reliable |Stop matched |
 |:-----|:-----------|:----------|----------------:|-----:|:----------|---------:|:----------|:--------|:------------|
 |BR43  |31 Aug 2025 |11         |            4,704| 1,908|0.41       |     1,908|0.41       |TRUE     |TRUE         |
+|TBALL |            |           |            3,740| 2,092|0.56       |     2,092|0.56       |TRUE     |FALSE        |
 |G1    |28 Sep 2025 |10         |            4,908| 3,394|0.69       |     3,394|0.69       |TRUE     |FALSE        |
+|SF90  |18 Aug 2025 |11         |            1,464| 1,048|0.72       |     1,048|0.72       |TRUE     |TRUE         |
 |BB59  |25 May 2026 |2          |            3,412| 2,640|0.77       |     2,640|0.77       |TRUE     |TRUE         |
 |CDF24 |19 Jul 2026 |0          |              684|   664|0.97       |       664|0.97       |TRUE     |TRUE         |
 |111   |            |           |            3,972| 3,900|0.98       |     3,900|0.98       |TRUE     |TRUE         |
 |143   |            |           |            5,376| 5,288|0.98       |     5,288|0.98       |TRUE     |TRUE         |
+|69    |            |           |            6,668| 6,664|1.00       |     6,664|1.00       |TRUE     |FALSE        |
 |21    |06 Apr 2026 |4          |            3,296| 3,296|1.00       |     5,816|1.76       |TRUE     |TRUE         |
 |279   |            |           |            8,284| 8,284|1.00       |    18,492|2.23       |TRUE     |FALSE        |
-|69    |            |           |            6,668| 6,668|1.00       |     6,664|1.00       |TRUE     |FALSE        |
 |A1    |31 Aug 2025 |11         |            6,916| 6,916|1.00       |     7,804|1.13       |TRUE     |TRUE         |
 |KB9   |            |           |            1,352| 1,352|1.00       |     1,352|1.00       |TRUE     |TRUE         |
 |SY57  |            |           |            2,744| 2,744|1.00       |     2,744|1.00       |TRUE     |TRUE         |
-|BB727 |25 May 2026 |2          |            3,632| 3,649|1.00       |     3,649|1.00       |TRUE     |FALSE        |
+|BB727 |25 May 2026 |2          |            3,632| 3,645|1.00       |     3,645|1.00       |TRUE     |FALSE        |
 |CDF62 |12 Apr 2026 |3          |            1,980| 2,024|1.02       |       524|0.26       |TRUE     |TRUE         |
 |BR24  |03 Sep 2023 |35         |            3,048| 3,164|1.04       |     5,592|1.83       |TRUE     |TRUE         |
 |NX6   |19 Jul 2026 |0          |            5,012| 5,284|1.05       |    11,104|2.22       |TRUE     |TRUE         |
 |1_1A  |            |           |            4,256| 4,524|1.06       |     4,524|1.06       |TRUE     |TRUE         |
 |AN320 |19 Jul 2026 |0          |            2,556| 2,816|1.10       |     2,816|1.10       |TRUE     |FALSE        |
-|TBALL |            |           |            3,740| 4,184|1.12       |     2,092|0.56       |TRUE     |FALSE        |
 |OX400 |22 Feb 2026 |5          |            3,940| 4,492|1.14       |     4,492|1.14       |TRUE     |TRUE         |
-|SF90  |18 Aug 2025 |11         |            1,464| 1,688|1.15       |     1,688|1.15       |TRUE     |TRUE         |
+|SF34  |19 Aug 2024 |23         |            1,160| 1,488|1.28       |     1,488|1.28       |TRUE     |TRUE         |
 |X85   |20 Apr 2025 |15         |            1,504| 2,027|1.35       |     2,027|1.35       |TRUE     |FALSE        |
 |NX50  |19 Jul 2026 |0          |            6,064| 8,688|1.43       |    15,848|2.61       |FALSE    |FALSE        |
 |F38   |15 Sep 2025 |10         |            1,524| 3,048|2.00       |     3,048|2.00       |TRUE     |TRUE         |
 |L26   |            |           |            2,576| 5,460|2.12       |     5,460|2.12       |FALSE    |FALSE        |
-|SF34  |19 Aug 2024 |23         |            1,160| 2,628|2.27       |     2,400|2.07       |TRUE     |TRUE         |
+|SFX24 |24 Nov 2025 |8          |              804| 1,740|2.16       |     1,740|2.16       |FALSE    |TRUE         |
 |SC125 |            |           |            3,888| 8,856|2.28       |     4,428|1.14       |TRUE     |TRUE         |
-|SFX24 |24 Nov 2025 |8          |              804| 2,764|3.44       |     2,764|3.44       |FALSE    |TRUE         |
-|TBX38 |            |           |            1,420| 8,040|5.66       |     2,680|1.89       |TRUE     |FALSE        |
+|TBX38 |            |           |            1,420| 5,360|3.77       |     2,680|1.89       |TRUE     |FALSE        |
 |L100  |            |           |              980| 8,024|8.19       |     8,024|8.19       |FALSE    |FALSE        |
 
-Across the 26 routes with a whole week of readable tables, TNDS is within 10% of the document for **14** of them and the DfT's GTFS for **8**. Median ratio to the document: TNDS 1.01, BODS GTFS 1.08.
+Across the 26 routes with a whole week of readable tables, TNDS is within 10% of the document for **14** of them and the DfT's GTFS for **8**. Median ratio to the document: TNDS 1.00, BODS GTFS 1.03.
 
-Routes where **TNDS** is more than 25% from the document: `TBX38` (5.66), `SC125` (2.28), `SF34` (2.27), `F38` (2.00), `BR43` (0.41), `X85` (1.35), `G1` (0.69).
+Routes where **TNDS** is more than 25% from the document: `TBX38` (3.77), `SC125` (2.28), `F38` (2.00), `BR43` (0.41), `TBALL` (0.56), `X85` (1.35), `G1` (0.69), `SF90` (0.72), `SF34` (1.28).
 
-Routes where **BODS GTFS** is more than 25% from the document: `279` (2.23), `NX6` (2.22), `SF34` (2.07), `F38` (2.00), `TBX38` (1.89), `BR24` (1.83), `21` (1.76), `CDF62` (0.26), `BR43` (0.41), `TBALL` (0.56), `X85` (1.35), `G1` (0.69).
+Routes where **BODS GTFS** is more than 25% from the document: `279` (2.23), `NX6` (2.22), `F38` (2.00), `TBX38` (1.89), `BR24` (1.83), `21` (1.76), `CDF62` (0.26), `BR43` (0.41), `TBALL` (0.56), `X85` (1.35), `G1` (0.69), `SF90` (0.72), `SF34` (1.28).
 
-**Stale documents, not source problems:** `F38` (2.00), `BR43` (0.41), `X85` (1.35), `G1` (0.69). Both sources agree with *each other* to within 10% and diverge from the document by the same factor, and each of these documents predates the snapshot by more than six months (`BR43` 11 months, `G1` 10 months, `X85` 15 months, `F38` 10 months). The service changed after the timetable was printed; neither feed is at fault.
+**Stale documents, not source problems:** `F38` (2.00), `BR43` (0.41), `X85` (1.35), `G1` (0.69), `SF90` (0.72), `SF34` (1.28). Both sources agree with *each other* to within 10% and diverge from the document by the same factor, and each of these documents predates the snapshot by more than six months (`BR43` 11 months, `G1` 10 months, `SF90` 11 months, `SF34` 23 months, `X85` 15 months, `F38` 10 months). The service changed after the timetable was printed; neither feed is at fault.
+
+**Read these as document-reading problems:** `TBALL` (0.56). The two sources agree with each other and diverge from the document by the same factor, but the document is current (or states no edition), so what to doubt is the reading of it. A ratio near 2.00 in this group is the signature of a table that prints one direction where the feeds count both.
 
 Cases the document settles:
 

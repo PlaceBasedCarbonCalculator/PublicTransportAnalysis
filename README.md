@@ -48,14 +48,24 @@ timetable sources:
    below), so all years benefit from the same, current converter — the
    pre-converted GTFS on the data drive, produced by older UK2GTFS
    versions, is not reused.
-2. **Count trips per zone** with `UK2GTFS::gtfs_trips_per_zone()`: stops are
+2. **Remove duplicated journeys** with `UK2GTFS::gtfs_deduplicate()`, applied
+   to every feed of every source and year as it is read for counting
+   (`read_feed()`). Feeds assembled from many publishers, or from several
+   revisions of one publisher's data, describe the same vehicle journey
+   twice — 3.7% of the DfT BODS GTFS bus runs and 2.6% of TNDS's (see
+   `reports/lsoa_disagreement.md`). That is a property of the feed, not of
+   the road, and it inflates every count made from it. A copy is removed only
+   where the whole itinerary matches (stops, arrival and departure times,
+   boarding rules), the route agrees, and every date it runs is also run by
+   the copy kept, so no date loses service.
+3. **Count trips per zone** with `UK2GTFS::gtfs_trips_per_zone()`: stops are
    spatially joined to zones, each service's runs per weekday within the
    study window are counted (applying `calendar_dates` exceptions with
    proper GTFS semantics), each stop-time is bucketed into a time band by
    departure hour, and results are aggregated to zone × mode × day × band.
    For feeds with `frequencies.txt` (BODS GTFS), every departure implied by
    a frequency window is counted in its own time band.
-3. **Combine bus and rail** feeds for a year by summing the per-zone counts
+4. **Combine bus and rail** feeds for a year by summing the per-zone counts
    (2023 first takes the element-wise maximum of a spring and an autumn bus
    snapshot, because school-term services differ between terms).
 
@@ -74,6 +84,16 @@ The zone file is cached at `input/GB_LSOA_2021_22_full_or_500mBuff.Rds`
 from PlaceBasedCarbonCalculator inputs by `R/zones.R::build_zones()`). The
 stop-to-zone join runs with `sf_use_s2(FALSE)` (planar geometry), matching
 how all published outputs were produced.
+
+**The source-comparison and zone-gap analyses use the plain boundaries
+instead** (`input/GB_LSOA_2021_22_plain.Rds`, cached by
+`R/zones.R::ensure_plain_zones()` from the same PlaceBasedCarbonCalculator
+build input the widened zones are derived from). Widening makes the zones
+overlap, so one stop falls in several and a disagreement between two sources
+at that stop is counted several times over. Those analyses ask how far two
+sources differ, not what a resident can reach; unmodified boundaries tile the
+country, so each stop lands in exactly one zone and each difference is counted
+once. Both versions cover the same 43,064 areas with the same codes.
 
 ### Study windows
 

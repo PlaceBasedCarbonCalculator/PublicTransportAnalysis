@@ -9,7 +9,7 @@ gtfs/
 
 # Main outputs are large binary files; copy to ../inputdata/pt_frequency for
 # the build pipeline rather than committing
-data/*.Rds
+# data/*.Rds
 
 # Logs
 logs/

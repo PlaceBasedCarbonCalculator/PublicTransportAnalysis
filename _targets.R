@@ -12,6 +12,12 @@
 # BODS GTFS, which is used as supplied — it is an independently converted
 # source in its own right.
 #
+# Between conversion and counting every feed passes through
+# UK2GTFS::gtfs_deduplicate(), which removes journeys the feed describes more
+# than once. It is applied in read_feed(), so it covers the feeds this
+# pipeline converts and the BODS GTFS it does not, without a target of its
+# own.
+#
 # Run with run.R or targets::tar_make(). The conversions take days of
 # compute in total; targets caches every step and the multi-file
 # conversions also cache per file (gtfs/cache/), so interrupted runs resume.
@@ -47,13 +53,14 @@ comparison_targets <- unlist(lapply(comparison_years(), function(y) {
 
   per_source <- lapply(comparison_sources(), function(s) {
     dep <- feed_target[[s]]
-    args <- list(quote(comparison_source_result), y, s, quote(zones_file))
+    args <- list(quote(comparison_source_result), y, s, quote(plain_zones_file))
     if (!is.na(dep)) args <- c(args, list(as.name(dep)))
-    # 30 workers for the two sources whose feeds are being reconverted, and so
-    # have to be recounted anyway. The bods_gtfs results are already built:
-    # changing their command would throw away five hours of counting for
-    # nothing (see cfg_cores() for why the config default is left alone).
-    if (s != "bods_gtfs") args <- c(args, list(cfg = quote(cfg_cores(30))))
+    # 30 workers throughout. bods_gtfs used to be left on the config default
+    # to protect an already-built result, but deduplication and the move to
+    # plain boundaries invalidate all three sources alike, so there is nothing
+    # left to protect (see cfg_cores() for why the default itself is not
+    # raised).
+    args <- c(args, list(cfg = quote(cfg_cores(30))))
     tar_target_raw(sprintf("cmp_%s_%s", ys, s), as.call(args))
   })
 
@@ -78,8 +85,16 @@ comparison_report_target <- tar_target_raw(
   format = "file")
 
 list(
-  # Zone polygons: LSOA21 (E&W) / DZ22 (Scotland), widened for stop access
+  # Zone polygons: LSOA21 (E&W) / DZ22 (Scotland).
+  #
+  # The published trips-per-zone outputs use the widened zones - the measure
+  # is the service a resident can reach, so a stop just outside a small urban
+  # LSOA has to count. The source comparison and the zone-level gap analysis
+  # use the plain boundaries instead: widened zones overlap, so one stop falls
+  # in several and a disagreement between two sources at that stop is counted
+  # several times over. See R/zones.R.
   tar_target(zones_file, ensure_zones(load_cfg()), format = "file"),
+  tar_target(plain_zones_file, ensure_plain_zones(load_cfg()), format = "file"),
 
   # Shared conversion inputs. cue never: a fresh NaPTAN/bank-holiday download
   # must not invalidate (and so force reconversion of) every timetable; use
@@ -192,8 +207,8 @@ list(
   tar_target(tnds_20260726, convert_tnds_snapshot("20260726", txc_cal, naptan),
              format = "file"),
 
-  tar_target(pdf_validation, validate_published_timetables(
-    zones_file, tnds_20260726), format = "file"),
+  tar_target(pdf_validation, validate_published_timetables(tnds_20260726),
+             format = "file"),
   tar_target(pdf_validation_report, render_validation_report(pdf_validation),
              format = "file"),
 
@@ -206,7 +221,7 @@ list(
   # down to the LSOA/Data Zone and names the routes responsible. It reuses the
   # two comparison_source_result() objects of the current year rather than
   # recounting, so the figures are the same ones the comparison reports.
-  tar_target(lsoa_gap, lsoa_gap_analysis(comparison_2026, zones_file,
+  tar_target(lsoa_gap, lsoa_gap_analysis(comparison_2026, plain_zones_file,
                                          cmp_2026_tnds, cmp_2026_bods_gtfs),
              format = "file"),
   tar_target(lsoa_gap_report, render_lsoa_gap_report(lsoa_gap),

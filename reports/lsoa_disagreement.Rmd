@@ -64,9 +64,13 @@ practical question: **for which individual LSOAs (Data Zones in Scotland) does
 the choice between TNDS and the DfT's BODS GTFS change the answer most, and
 which bus routes are responsible?**
 
-Both sources are the **`r g$year`** snapshot, counted over the same 28-day
-window (**`r g$window$startdate` to `r g$window$enddate`**) and the same widened
-zone polygons as every other figure in this analysis:
+Both sources are the **`r g$year`** snapshot, deduplicated with
+`UK2GTFS::gtfs_deduplicate()` so that neither describes the same bus twice,
+and counted over the same 28-day window (**`r g$window$startdate` to
+`r g$window$enddate`**) on the **plain LSOA21 / DZ22 boundaries**. The
+published trips-per-zone outputs use zones widened for stop access; this
+report does not, because widened zones overlap and a disagreement at a stop
+in several of them would be counted several times over:
 
 - TNDS (TransXChange), converted with `UK2GTFS::transxchange2gtfs()`:
   `r basename(g$snapshot$tnds)`
@@ -329,17 +333,27 @@ cat(sprintf(paste0(
   nrow(top), fmt(sp$only_tnds), fmt(-sp$only_bods), fmt(sp$freq)))
 ```
 
-## Is either source counting the same bus twice?
+## Is either source still counting the same bus twice?
 
 A zone's total can be inflated without any extra service existing, if the feed
-publishes one journey more than once. This tests for it directly: within each
-zone, a journey is identified by the (stop, departure time) pairs it makes at
-that zone's stops, and two trips with the same route number, the same signature
-and the same operating **date** are the same bus counted twice.
+publishes one journey more than once. Both feeds have already been through
+`UK2GTFS::gtfs_deduplicate()`, so what follows measures what that deliberately
+left behind, not the sources as published.
 
-The date matters. GTFS models a school-term journey and its holiday twin as two
-trips with identical times and complementary calendars, which is correct
-modelling; a test that ignored dates would call every one of those a duplicate.
+The test used here is the looser of the two: within each zone a journey is
+identified by the (stop, departure time) pairs it makes at that zone's stops,
+and two trips with the same route number, the same signature and the same
+operating **date** are the same bus counted twice. Removal is stricter than
+that — it needs the whole itinerary to match, the route and trip attributes to
+agree, and every date of the copy removed to be covered by the copy kept.
+Anything reported below therefore falls in the gap between the two: copies that
+overlap in the window only partly, or that one source publishes under a
+different route number or operator.
+
+The date matters to both. GTFS models a school-term journey and its holiday
+twin as two trips with identical times and complementary calendars, which is
+correct modelling; a test that ignored dates would call every one of those a
+duplicate.
 
 ```{r duplication-national, results="asis"}
 dn <- as.data.table(g$duplication_national)
@@ -356,14 +370,14 @@ if (nrow(dn)) {
                Share = pct(dn$share_duplicate),
                check.names = FALSE),
     row.names = FALSE, align = c("l", "r", "r", "r", "r", "r"),
-    caption = "Whole-feed duplicate journeys, by source"))
+    caption = "Whole-feed duplicate journeys remaining, by source"))
   worse <- dn$source[which.max(dn$share_duplicate)]
   cat(sprintf(paste0(
-    "\nNationally, **%s** of counted runs in %s are the same journey twice on ",
-    "one day, against %s in the other source. Across the whole feed a journey ",
-    "is its entire itinerary, which is a stricter test than the zone-level one ",
-    "below: inside a zone only the part of the trip that touches the zone's ",
-    "stops can be compared.\n\n"),
+    "\nNationally, **%s** of the counted runs still left in %s are the same ",
+    "journey twice on one day, against %s in the other source. Across the ",
+    "whole feed a journey is its entire itinerary, which is a stricter test ",
+    "than the zone-level one below: inside a zone only the part of the trip ",
+    "that touches the zone's stops can be compared.\n\n"),
     pct(max(dn$share_duplicate)), src_lab[worse],
     pct(min(dn$share_duplicate))))
 }
@@ -380,9 +394,10 @@ if (all(c("dup_runs_tnds", "dup_runs_bods_gtfs") %in% names(top))) {
   dd[, share_g := ifelse(trip_days_bods_gtfs > 0,
                          dup_runs_bods_gtfs / trip_days_bods_gtfs, NA)]
   cat(sprintf(paste0(
-    "Across the %d zones investigated, duplicate runs account for a median of ",
-    "**%s** of TNDS's counted trip-days and **%s** of the DfT GTFS's. ",
-    "Totals: %s of %s TNDS trip-days and %s of %s BODS GTFS trip-days.\n\n"),
+    "Across the %d zones investigated, the duplicate runs still present ",
+    "account for a median of **%s** of TNDS's counted trip-days and **%s** of ",
+    "the DfT GTFS's. Totals: %s of %s TNDS trip-days and %s of %s BODS GTFS ",
+    "trip-days.\n\n"),
     nrow(dd), pct(median(dd$share_t, na.rm = TRUE)),
     pct(median(dd$share_g, na.rm = TRUE)),
     fmt(sum(dd$dup_runs_tnds)), fmt(sum(dd$trip_days_tnds)),
@@ -399,13 +414,15 @@ if (all(c("dup_runs_tnds", "dup_runs_bods_gtfs") %in% names(top))) {
                `BODS duplicate` = pct(dd$share_g)[1:min(12, nrow(dd))],
                check.names = FALSE),
     row.names = FALSE, format.args = list(big.mark = ","),
-    caption = "Zones with the largest share of duplicated runs in BODS GTFS"))
+    caption = "Zones with the largest share of duplicated runs remaining in BODS GTFS"))
 
   cat(paste0("\nA duplicate here is a statement about the feed, not about the ",
              "road: two identical journeys on one day is one bus described ",
-             "twice. Where a source's excess over the other is close to its ",
-             "duplicate share, that is the explanation for the zone's gap; ",
-             "where it is not, the gap is real service one source lacks.\n"))
+             "twice. These are the ones deduplication would not remove without ",
+             "risking real service, so where a source's remaining excess over ",
+             "the other is close to its remaining duplicate share, the zone's ",
+             "gap is still an artefact of the feed; where it is not, the gap ",
+             "is real service one source lacks.\n"))
 } else {
   cat("No duplication measurements in this analysis output.\n")
 }
@@ -516,13 +533,14 @@ The zone-level pattern is the national pattern concentrated:
   code — the matching links them on stop pattern alone, and only for
   single-source groups. Any pair it still fails to link is counted as exclusive
   to each source, which inflates both "only in" columns at once.
-- **Duplicate publication.** Measured above, and it works in both directions:
-  a source that describes one bus twice reports twice the service. This is one
-  of the few causes on this list that an outside check can settle, and where a
-  published timetable has been brought to bear it has settled it — First
-  Bristol's 21 is counted 5,816 times in the DfT's GTFS, of which 3,296 are
-  distinct journeys, which is exactly what both TNDS and the operator's own
-  timetable say (see `pdf_validation.md`).
+- **Duplicate publication that survives removal.** Measured above, and it works
+  in both directions: a source that describes one bus twice reports twice the
+  service. Most of it is now removed before counting, but `gtfs_deduplicate()`
+  keeps any copy whose dates are not fully covered by the copy kept, or whose
+  route number or operator differs — so what is left still moves a zone's
+  total. This is one of the few causes on this list that an outside check can
+  settle, and where a published timetable has been brought to bear it has
+  settled it (see `pdf_validation.md`).
 
 ### Caveats
 

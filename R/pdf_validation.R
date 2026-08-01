@@ -694,7 +694,13 @@ feed_route_departures <- function(gtfs, short_name, operator, win,
 #' Check every route with a published timetable against validation_sources()
 #'
 #' Writes data/pdf_validation.Rds and returns its path.
-validate_published_timetables <- function(zones_path, ..., cfg = load_cfg()) {
+#'
+#' The comparison is route-based, not zone-based: a published timetable names
+#' a route and a stop, so no zone polygons are involved.
+#'
+#' @param ... feed targets, taken for the dependency only; the snapshot the
+#'   validation reads is named by validation_snapshot().
+validate_published_timetables <- function(..., cfg = load_cfg()) {
   spec <- validation_snapshot()
   wins <- lapply(validation_windows(), study_window)
   for (nm in names(wins))
