@@ -35,9 +35,16 @@ departing after midnight (GTFS times ≥ 24:00) count as Night.
 These files are consumed by `../build/R/public_transport_frequency.R` (the
 `pt_frequency` target): copy them to `../inputdata/pt_frequency/`.
 
-A secondary output is a three-way comparison of the October 2025 bus
-timetable sources:
-[reports/bus_source_comparison_2025.md](reports/bus_source_comparison_2025.md).
+There are also three analysis reports, all rebuilt by the pipeline:
+
+- [reports/bus_source_comparison.md](reports/bus_source_comparison.md) — a
+  three-way comparison of the bus timetable sources (TNDS, BODS
+  TransXChange, BODS GTFS), one snapshot per year for 2022–2026.
+- [reports/pdf_validation.md](reports/pdf_validation.md) — the sources checked
+  against operators' own published timetables, which is the only evidence that
+  says which of them is *right* rather than only that they differ.
+- [reports/lsoa_disagreement.md](reports/lsoa_disagreement.md) — where TNDS
+  and BODS GTFS disagree most, zone by zone, and the routes responsible.
 
 ## Method
 
@@ -52,12 +59,25 @@ timetable sources:
    to every feed of every source and year as it is read for counting
    (`read_feed()`). Feeds assembled from many publishers, or from several
    revisions of one publisher's data, describe the same vehicle journey
-   twice — 3.7% of the DfT BODS GTFS bus runs and 2.6% of TNDS's (see
-   `reports/lsoa_disagreement.md`). That is a property of the feed, not of
-   the road, and it inflates every count made from it. A copy is removed only
-   where the whole itinerary matches (stops, arrival and departure times,
-   boarding rules), the route agrees, and every date it runs is also run by
-   the copy kept, so no date loses service.
+   twice. That is a property of the feed, not of the road, and it inflates
+   every count made from it. A copy is removed only where the whole itinerary
+   matches (stops, arrival and departure times, boarding rules), the route and
+   operator agree, and every date it runs is also run by the copy kept, so no
+   date loses service. On the July 2026 DfT BODS GTFS snapshot this removes
+   5.2% of the feed's trips.
+
+   Two of the function's defaults were chosen from evidence and are worth
+   knowing about, because the stricter alternatives keyed identity on fields
+   that say nothing about the road. `match_block = FALSE` ignores `block_id`,
+   which the DfT's GTFS fills with a hash generated per dataset revision, so
+   two copies of one journey never agree on it. `match_operator = "name"`
+   groups routes by the operator's name rather than its `agency_id`, because
+   one operator is regularly filed under several agency records — Arriva
+   London North appears as both `OP401`/`ARVA` and `OP16197`/`ALNO`. With the
+   strict settings, First Bristol's 21 stayed at 5,816 journeys over four
+   weeks against the 3,296 its operator prints; with the defaults it lands on
+   3,296 exactly, as does the A1 at 6,916. See
+   [reports/pdf_validation.md](reports/pdf_validation.md).
 3. **Count trips per zone** with `UK2GTFS::gtfs_trips_per_zone()`: stops are
    spatially joined to zones, each service's runs per weekday within the
    study window are counted (applying `calendar_dates` exceptions with
@@ -65,9 +85,11 @@ timetable sources:
    departure hour, and results are aggregated to zone × mode × day × band.
    For feeds with `frequencies.txt` (BODS GTFS), every departure implied by
    a frequency window is counted in its own time band.
-4. **Combine bus and rail** feeds for a year by summing the per-zone counts
-   (2023 first takes the element-wise maximum of a spring and an autumn bus
-   snapshot, because school-term services differ between terms).
+4. **Combine the feeds** of a year by summing the per-zone counts: bus with
+   rail, and for 2024 and 2025 the two bus feeds (BODS GTFS and this
+   pipeline's own TNDS conversion) with each other. Each feed is counted over
+   its own Monday-aligned window, taken from its own snapshot date, so the two
+   bus feeds of a year need not share a window.
 
 ### Zones
 
@@ -114,14 +136,17 @@ comparable across years and the `tph_*` normalisation exact.
 | 2020 | TNDS | 2020-06-29 – 2020-07-26 | ATOC | 2020-11-23 – 2020-12-20 |
 | 2021 | TNDS | 2021-10-11 – 2021-11-07 | ATOC | 2021-10-04 – 2021-10-31 |
 | 2022 | TNDS | 2022-10-31 – 2022-11-27 | ATOC | 2022-10-31 – 2022-11-27 |
-| 2023 | TNDS, max(spring, autumn) | 2023-05-01 – 2023-05-28 and 2023-10-30 – 2023-11-26 | ATOC | 2023-05-01 – 2023-05-28 |
-| 2024 | BODS GTFS | 2024-10-07 – 2024-11-03 | ATOC | 2024-09-30 – 2024-10-27 |
-| 2025 | BODS GTFS | 2025-10-06 – 2025-11-02 | **Rail Data Portal** | 2025-10-06 – 2025-11-02 |
+| 2023 | TNDS (November snapshot) | 2023-10-30 – 2023-11-26 | ATOC | 2023-10-30 – 2023-11-26 |
+| 2024 | BODS GTFS **+** TNDS | 2024-10-07 – 2024-11-03 (BODS), 2024-09-30 – 2024-10-27 (TNDS) | ATOC | 2024-09-30 – 2024-10-27 |
+| 2025 | BODS GTFS **+** TNDS | 2025-10-06 – 2025-11-02 (BODS), 2025-09-29 – 2025-10-26 (TNDS) | **Rail Data Portal** | 2025-10-06 – 2025-11-02 |
 
 October is the preferred analysis month (a "normal" school-term month); the
 exceptions (2018/2020/2023 bus, some rail snapshots) are where no October
 snapshot was archived. The 2020 window falls between COVID lockdowns and
 reflects substantially reduced timetables.
+
+2023 has two archived TNDS snapshots. The November one is used alone; the
+spring snapshot is dropped rather than combined with it.
 
 ### Conversions performed by this pipeline
 
@@ -137,19 +162,26 @@ results are cached under `gtfs/cache/` so interrupted runs resume):
   so the merged feed exactly tiles the Monday-aligned study window. A
   static 2013–2018 bank-holiday table (cross-checked against UK2GTFS's
   `historic_bank_holidays`) extends the gov.uk calendar back over this era.
-- **TNDS snapshots 2018–2023 and October 2025** — the 11 regional zips
-  *plus the NCSD national coach archive* via `transxchange2gtfs()`
-  (Scottish bank holidays for `S.zip`), trimmed to ±31 days around the
-  snapshot and merged.
+- **TNDS snapshots 2018–2025, plus July 2026** — the 11 regional zips
+  *plus the NCSD national coach archive* where it exists, via
+  `transxchange2gtfs()` (Scottish bank holidays for `S.zip`), trimmed to ±45
+  days around the snapshot and merged. The trim is ±45 rather than ±31
+  because the validation report's second counting window ends 42 days past
+  its snapshot: a 31-day trim cut the last 11 days off it and made every TNDS
+  count in that window a fixed fraction of the first window's. Widening the
+  trim only *adds* calendar coverage — every consumer re-trims to its own
+  window before counting. The July 2026 snapshot is shared between the
+  validation report and the comparison's 2026 year.
 - **Rail 2018–2024** — the raw ATOC CIF snapshots via `atoc2gtfs()`.
 - **Rail October 2025** — from the National Rail Data Portal
   (`RailDataPortal/20251006/timetable.zip`), the successor to the ATOC data
   feed, converted with `atoc2gtfs()` (the current UK2GTFS handles the
   portal's newer CIF flavour).
-- **BODS TransXChange October 2025** — converted for the source-comparison
-  report; the BODS change archive is de-duplicated with
-  `filter_duplicate_files` (keeping the dataset revisions valid on
-  2025-10-06).
+- **BODS TransXChange 2022–2026** — one change archive per comparison year,
+  converted for the source-comparison report. Each archive holds every
+  revision of every dataset, so superseded revisions are dropped with
+  `txc_filter_files()`/`filter_duplicate_files`, keeping the revision valid on
+  that year's analysis date.
 
 Every TransXChange/NPTDR conversion gets the same post-treatment:
 `gtfs_clean()`, known-bad stop coordinates patched from
@@ -170,9 +202,11 @@ External inputs expected (configure in `R/config.R`, or set `UK2GTFS_DATA`):
 - `../../ITSleeds/TransportBlackspots` or `../build` — only for the zone
   polygons (copied/rebuilt once into `input/`).
 
-The pipeline is resumable (`_targets/` caches every step) and takes many
-hours end-to-end: the year counts are ~20–60 min each and the two
-TransXChange conversions for the comparison are the slowest steps.
+The pipeline is resumable (`_targets/` caches every step, and the multi-file
+conversions also cache per file under `gtfs/cache/`, so an interrupted run
+resumes). It takes days of compute end to end: the year counts are ~20–60 min
+each, the comparison counts a national feed 15 times over, and the
+TransXChange conversions are the slowest steps of all.
 
 ## Changes from TransportBlackspots
 
@@ -222,16 +256,20 @@ The differences are deliberate:
    departure is now counted in its correct time band.
 8. **Extended to 2025**, with rail from the new National Rail Data Portal
    (the ATOC feed this analysis previously used was retired).
-9. **Only the Carbon & Place outputs.** The FOE-specific downstream analysis
-   (blackspot classification, quintiles, maps, xlsx exports) stays in
-   TransportBlackspots; this repo produces just the per-year frequency
-   files, plus the source-comparison report.
+9. **Deduplication before counting** (UK2GTFS `gtfs_deduplicate()`, August
+   2026). No previous version of this analysis removed journeys a feed
+   describes more than once, so every published figure counts some buses
+   twice. See *Method* step 2.
+10. **Only the Carbon & Place outputs.** The FOE-specific downstream analysis
+    (blackspot classification, quintiles, maps, xlsx exports) stays in
+    TransportBlackspots; this repo produces just the per-year frequency
+    files, plus the three analysis reports listed under *Outputs*.
 
 Two further UK2GTFS bugs were found and fixed while building this pipeline
 (July 2026): `gtfs_merge()` corrupted the S4 Period time columns produced by
 `gtfs_read()` (making feeds read from disk unmergeable), and `gtfs_read()`
 mistyped `frequencies.txt` and numeric-looking id columns. Regression tests
-are in `../UK2GTFS/tests/testthat/test_bug_fixes.R`.
+are in `../../ITSleeds/UK2GTFS/tests/testthat/test_bug_fixes.R`.
 
 If you need to compare against the old outputs: the published files
 correspond to pre-July-2026 UK2GTFS conversions and counting, month-based
@@ -249,18 +287,20 @@ are invisible.
 |-----|--------|-------------|
 | 2004–2011 | **NPTDR** (National Public Transport Data Repository), annual October snapshots | Data quality varies by year and region; some rail/metro/tram included but coverage of non-bus modes is inconsistent; some stops have missing/bad coordinates (dropped or patched); 2012–2013 do not exist (the programme was discontinued, later replaced by TNDS archiving). |
 | 2014–2017 | **Bus Archive** TNDS weekly snapshots | Essentially no rail, tram or metro — bus (`route_type == 3`) is the only mode with a continuous series across this gap. Weekly snapshots must be stitched; snapshot dates are Tuesdays. |
-| 2018–2023 | **TNDS** (Traveline National Dataset) | Bus/coach/ferry/tram but no heavy rail (added separately from ATOC). Coach comes from the separate NCSD archive, **discontinued after February 2025**. Compiled from local authority systems; late-notice operator changes can lag. From ~2021 TNDS England content is itself increasingly derived from BODS. Not every year has an October snapshot archived (2018: May; 2020: July). |
+| 2018–2025 | **TNDS** (Traveline National Dataset) | Bus/coach/ferry/tram but no heavy rail (added separately from ATOC). Coach comes from the separate NCSD archive, **discontinued after February 2025**. Compiled from local authority systems; late-notice operator changes can lag. From ~2021 TNDS England content is itself increasingly derived from BODS. Not every year has an October snapshot archived (2018: May; 2020: July). A snapshot holds the registration operative on the day it was taken and carries nothing forward, so a window reaching weeks past it understates TNDS wherever a registration expires in between. |
 | 2018–2024 rail | **ATOC / Rail Delivery Group CIF** | London Underground is *not* in the CIF feed; metro coverage relies on TNDS/BODS. Includes some rail-replacement and ship services (recoded appropriately by UK2GTFS). |
-| 2024–2025 | **BODS GTFS** (DfT's GTFS rendering of the Bus Open Data Service) | Statutory coverage is *English local bus services only*: Scottish and Welsh coverage is partial (voluntary/cross-border publication, Traveline Cymru uploads) — treat Scottish/Welsh 2024–2025 levels and trends with caution. Uses extended route types (e.g. 200 coach), harmonised where this analysis needs it. Includes `frequencies.txt`-based services. |
+| 2024–2025 | **BODS GTFS** (DfT's GTFS rendering of the Bus Open Data Service), summed with TNDS | Statutory coverage is *English local bus services only*: Scottish and Welsh coverage is partial (voluntary/cross-border publication, Traveline Cymru uploads) — treat Scottish/Welsh 2024–2025 levels and trends with caution. Uses extended route types (e.g. 200 coach), harmonised where this analysis needs it. Includes `frequencies.txt`-based services. Carries more duplicate journeys than TNDS: 5.2% of its trips on the July 2026 snapshot, removed before counting. |
 | 2025 rail | **National Rail Data Portal CIF** | Successor to the ATOC feed; newer CIF flavour (RSPS5046). Same scope caveats as ATOC (no London Underground). |
 
 Further caveats:
 
 - **The 2017 → 2018 transition mixes sources** (Bus Archive → TNDS) and
-  **2023 → 2024 switches bus source entirely** (TNDS → BODS GTFS). The
-  source-comparison report quantifies the TNDS/BODS difference at a point in
-  time where all sources exist; read cross-boundary trends with that
-  context.
+  **2024 adds a second bus source** (BODS GTFS, summed with TNDS). The
+  source-comparison report quantifies the TNDS/BODS difference for every year
+  in which all three sources exist; read cross-boundary trends with that
+  context. The two sources disagree at zone level far more than their national
+  totals suggest, because disagreements in opposite directions cancel — see
+  the zone-level report.
 - **2020 reflects COVID-era timetables**, and its bus and rail windows are
   five months apart.
 - **A few stops fall outside all zones** (mostly offshore/erroneous
@@ -277,14 +317,20 @@ Further caveats:
 ## Repo layout
 
 ```
-_targets.R        pipeline definition (all targets)
-R/config.R        paths, study-window rule, year/source table
-R/zones.R         zone polygon construction
-R/convert.R       UK2GTFS conversions (Bus Archive merges, RDP rail, TXC)
-R/frequency.R     per-year trips-per-zone computation
-R/comparison.R    October 2025 three-source bus comparison
-reports/          comparison report (Rmd + rendered md)
-data/             outputs (gitignored; copy to ../inputdata/pt_frequency)
-gtfs/             GTFS built by this pipeline (gitignored)
-input/            cached zone polygons (gitignored)
+_targets.R          pipeline definition (all targets)
+run.R               convenience wrapper for targets::tar_make()
+R/config.R          paths, study-window rule, year/source table
+R/zones.R           zone polygons: widened for counting, plain for comparison
+R/convert.R         UK2GTFS conversions (Bus Archive merges, RDP rail, TXC)
+R/frequency.R       feed reading + deduplication, per-year trips-per-zone
+R/comparison.R      three-source bus comparison, 2022-2026
+R/route_match.R     matching a service across sources by number and stops
+R/lsoa_gap.R        zone-level TNDS vs BODS GTFS disagreement
+R/pdf_timetable.R   reading journey times out of published PDF/Word timetables
+R/pdf_validation.R  checking each source against those published timetables
+reports/            the three reports (Rmd sources + rendered md + figures)
+scripts/            one-off analyses, not part of the pipeline
+data/               outputs (gitignored; copy to ../inputdata/pt_frequency)
+gtfs/               GTFS built by this pipeline (gitignored)
+input/              cached zone polygons (gitignored)
 ```
