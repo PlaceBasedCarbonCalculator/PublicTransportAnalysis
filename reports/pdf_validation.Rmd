@@ -427,6 +427,36 @@ if (nrow(misread)) {
     desc(misread[order(-abs(r_tnds - 1))], "r_tnds")))
 }
 
+# The doubling group. One route reading 2x is a lead; several, on current
+# editions, with the reference stop matched in both feeds, is a finding - and
+# it is the same shape as the zone-level gap in lsoa_disagreement.md, so the
+# two analyses are seeing one mechanism from opposite ends.
+dbl <- ok[!is.na(months_old) & months_old <= 6 & stop_matched &
+            r_bods >= 1.5 & r_tnds <= 1.5 & r_bods / r_tnds >= 1.4]
+if (nrow(dbl)) {
+  data.table::setorderv(dbl, "r_bods", -1L)
+  cat(sprintf(paste0(
+    "**The doubling group.** %s route%s here %s a current edition (six ",
+    "months old or less), the reference stop found in both feeds, and the ",
+    "DfT's GTFS reading at least half again the document while TNDS stays ",
+    "near it. Median ratio to the document across them: TNDS %.2f, BODS GTFS ",
+    "%.2f. A single route at 2x is a lead; this many, on documents the ",
+    "operators published for the week being counted, is the same overcounting ",
+    "the zone-level analysis finds from the other direction.\n\n"),
+    nrow(dbl), if (nrow(dbl) == 1) "" else "s",
+    if (nrow(dbl) == 1) "has" else "have",
+    stats::median(dbl$r_tnds), stats::median(dbl$r_bods)))
+  for (i in seq_len(nrow(dbl))) {
+    d <- dbl[i]
+    cat(sprintf(paste0("* `%s` — document %s; TNDS %s (%.2f), BODS GTFS %s ",
+                       "(%.2f).\n"),
+                d$key, format(round(d$expected), big.mark = ","),
+                format(round(d$tnds), big.mark = ","), d$r_tnds,
+                format(round(d$bods_gtfs), big.mark = ","), d$r_bods))
+  }
+  cat("\n")
+}
+
 # Where the two sources disagree AND one of them matches the document, the
 # document has decided the case - which is the whole purpose of collecting it.
 decided <- ok[abs(r_tnds - r_bods) > 0.2 &

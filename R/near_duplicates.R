@@ -229,6 +229,12 @@ near_duplicates_one_key <- function(trips0, routes, pat, st, mask, keycol,
 
   b <- set$bands
   pairs[, band := cut(maxdiff, b$breaks, b$labels)]
+  # Both trips of a pair share an rkey and rkey contains route_type, so one
+  # lookup gives the pair's mode unambiguously. The split matters more than it
+  # looks: read across all modes together, the two populations appear to cross
+  # over between one and two minutes, and that turns out to be the Underground
+  # and the trams talking over the buses.
+  pairs[, route_type := trips$route_type[ia]]
   # every band is present in the output even when empty, so the report can
   # index them by name without checking first
   counts <- pairs[!is.na(band), list(.N), by = list(band, same_route)]
@@ -241,54 +247,81 @@ near_duplicates_one_key <- function(trips0, routes, pat, st, mask, keycol,
   data.table::setnames(bands, c("FALSE", "TRUE"),
                        c("cross_route", "within_route"), skip_absent = TRUE)
 
+  # the same bands, per mode, which is the cut the recommendation turns on
+  bands_mode <- pairs[!is.na(band),
+                      list(cross_pairs = sum(!same_route),
+                           within_pairs = sum(same_route)),
+                      by = list(route_type, band)]
+  data.table::setorderv(bands_mode, c("route_type", "band"))
+  bands_mode[, ratio := cross_pairs / pmax(within_pairs, 1)]
+
   cum <- data.table::rbindlist(lapply(set$tolerances, function(t) {
     x <- pairs[!same_route & maxdiff <= t]
     y <- pairs[same_route == TRUE & maxdiff <= t]
+    xb <- x[route_type == "3"]
+    yb <- y[route_type == "3"]
     data.table::data.table(
       tolerance = t,
       cross_pairs = nrow(x),
       cross_trips = data.table::uniqueN(c(x$ia, x$ib)),
       within_pairs = nrow(y),
-      within_trips = data.table::uniqueN(c(y$ia, y$ib)))
+      within_trips = data.table::uniqueN(c(y$ia, y$ib)),
+      bus_cross_pairs = nrow(xb),
+      bus_cross_trips = data.table::uniqueN(c(xb$ia, xb$ib)),
+      bus_within_pairs = nrow(yb),
+      bus_within_trips = data.table::uniqueN(c(yb$ia, yb$ib)))
   }))
   cum[, cross_pct := 100 * cross_trips / n_exact]
   cum[, extra_trips := cross_trips - cross_trips[tolerance == 0L]]
+  cum[, bus_extra_trips := bus_cross_trips - bus_cross_trips[tolerance == 0L]]
 
   list(n_groups = data.table::uniqueN(trips$grp),
        n_candidate_pairs = n_candidate, truncated = truncated,
-       bands = bands, cumulative = cum,
+       bands = bands, bands_mode = bands_mode, cumulative = cum,
        services = near_duplicate_services(pairs, trips, labels))
 }
 
 #' The services a tolerant rule would act on, and those it would risk
 #'
-#' Three lists, all keyed on the service rather than the pair: what a one
-#' minute rule would newly act on, what widening to two minutes would add, and
+#' Three lists, all keyed on the service rather than the pair: what a two
+#' minute rule would newly act on, what widening to five minutes would add, and
 #' the within-route pairs that widening would admit - the false positives, if
-#' they are false positives.
+#' they are false positives. Each carries the mode, because the mode is what
+#' decides whether the tolerance is defensible.
 #' @noRd
 near_duplicate_services <- function(pairs, trips, labels) {
+  mode_name <- c(`0` = "tram", `1` = "metro", `2` = "rail", `3` = "bus",
+                 `4` = "ferry", `6` = "cable", `11` = "trolleybus",
+                 `200` = "coach")
   named <- function(p) {
     if (!nrow(p)) {
       return(data.table::data.table(operator = character(0),
-                                    line = character(0), routes = integer(0),
-                                    trips = integer(0)))
+                                    line = character(0), mode = character(0),
+                                    routes = integer(0), trips = integer(0)))
     }
     inv <- unique(data.table::rbindlist(list(p[, list(idx = ia)],
                                              p[, list(idx = ib)])))
-    inv <- merge(inv, trips[, list(idx, route_id, rkey, op, route_short_name)],
-                 by = "idx")
+    inv <- merge(inv, trips[, list(idx, route_id, rkey, op, route_type,
+                                   route_short_name)], by = "idx")
     out <- inv[, list(routes = data.table::uniqueN(route_id), trips = .N),
-               by = list(op, line = route_short_name)][order(-trips)]
+               by = list(op, line = route_short_name, route_type)][order(-trips)]
     out[, operator := labels$label[match(op, labels$op)]]
-    out[, op := NULL]
-    out[, list(operator, line, routes, trips)]
+    # a route with no public number is not a broken row, it is how the
+    # Underground and the tram networks are published
+    out[is.na(line) | !nzchar(line), line := "(unnumbered)"]
+    out[, mode := ifelse(is.na(mode_name[route_type]), route_type,
+                         mode_name[route_type])]
+    out[, list(operator, line, mode, routes, trips)]
   }
+  # 120 seconds rather than 60: on buses the two populations do not separate
+  # until well past two minutes (see bands_mode), and the apparent crossover at
+  # one minute is the rail-like modes, not the buses.
   list(
-    at_60 = named(pairs[!same_route & maxdiff > 0 & maxdiff <= 60]),
-    added_60_to_120 = named(pairs[!same_route & maxdiff > 60 & maxdiff <= 120]),
-    risked_60_to_120 = named(pairs[same_route == TRUE & maxdiff > 60 &
-                                     maxdiff <= 120]))
+    at_120 = named(pairs[!same_route & maxdiff > 0 & maxdiff <= 120]),
+    added_120_to_300 = named(pairs[!same_route & maxdiff > 120 &
+                                     maxdiff <= 300]),
+    risked_120_to_300 = named(pairs[same_route == TRUE & maxdiff > 120 &
+                                      maxdiff <= 300]))
 }
 
 #' Knit the near-duplicate report to markdown

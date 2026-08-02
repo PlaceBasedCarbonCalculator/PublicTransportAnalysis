@@ -71,11 +71,30 @@ is held as two `route_id`s of 371 trips each:
 
 Between those 742 trips there is **not one pair with identical times on a
 shared day**. Pair them on their stop sequence instead and 230 pairs sit within
-one minute of each other at every stop, and 358 within two minutes. The service
-is one bus route, counted twice, and the exact matcher cannot touch it — nor,
-as it happens, can any operator-identity fix, because `SCCU` and `SCMY` are
-genuinely different companies (`Stagecoach (North West) Ltd` and `Ribble Motor
-Services Ltd`) that happen to have the same corporate parent.
+one minute of each other at every stop, and 358 within two minutes — so a
+two-minute rule reaches the whole of it and a one-minute rule reaches two
+thirds. The service is one bus route, counted twice, and the exact matcher
+cannot touch it.
+
+**And the rule this report ends up recommending would not fix it.** That is
+worth stating at the top rather than burying, because the 125 is the case that
+raised the question. Every test here begins by requiring the two trips to
+belong to the same operator, as `gtfs_deduplicate()` does, and these two do
+not: `SCCU` and `SCMY` are genuinely different companies — `Stagecoach (North
+West) Ltd` and `Ribble Motor Services Ltd` — that happen to share a corporate
+parent, and Traveline's register says exactly that. Only matching at group
+level would join them, and "Stagecoach" as a group is 94 operator codes
+including Bluebird and London. So the 125 is not merely missed by the exact
+matcher; it is outside the scan below, and the numbers in this report do not
+include it.
+
+Dropping the operator condition altogether — matching on stop sequence and
+times alone — is the obvious way to reach it, and is the experiment this
+report does not run. Two operators filing the identical stop sequence within
+two minutes of each other on the same day is nearly always one service
+registered twice, but "nearly always" is not a measurement, and competing
+services over a shared corridor are the counter-example that would have to be
+counted first.
 
 ## How often it happens
 
@@ -162,40 +181,67 @@ for (s in names(nd$sources)) {
 Read the last column as the cost. The middle columns are what the rule would
 buy.
 
-```{r verdict, results="asis"}
-b <- band_all[source == "tnds" & key == "name"]
-r60 <- b[band == "1-60s"]
-r120 <- b[band == "61-120s"]
-cat(sprintf(paste0(
-  "In TNDS the crossover is sharp and it is between one and two minutes. Of ",
-  "the pairs first admitted at **one minute**, %s are across two `route_id`s ",
-  "against %s within one - about %s to one in favour of the reading that they ",
-  "are duplicates. Widen to **two minutes** and that inverts: the next band ",
-  "admits %s cross-route pairs against %s within-route ones. The marginal ",
-  "pair beyond a minute is several times more likely to be a genuine close ",
-  "headway than a duplicate registration.\n\n"),
-  fmt(r60$cross_route), fmt(r60$within_route),
-  round(r60$cross_route / max(r60$within_route, 1)),
-  fmt(r120$cross_route), fmt(r120$within_route)))
+### Read that table by mode, or it will mislead you
 
-g <- band_all[source == "bods_gtfs" & key == "name"]
-if (nrow(g)) {
-  g0 <- g[band == "exactly 0"]; g60 <- g[band == "1-60s"]
+Taken as printed above, the TNDS table looks as though the two populations
+cross over between one and two minutes, and that reading is wrong. It is the
+rail-like modes talking over the buses. Nearly every pair in the "exactly 0"
+band is a London Underground journey, and the explosion of within-route pairs
+at two minutes is the trams and the Underground, where trains genuinely do run
+a minute apart. The buses are a quiet minority inside the same numbers.
+
+```{r bymode, results="asis"}
+bm <- rbindlist(lapply(names(nd$sources), function(s) {
+  x <- as.data.table(nd$sources[[s]]$keys$name$bands_mode)
+  x[, source := s][]
+}), fill = TRUE)
+mode_name <- c(`0` = "tram", `1` = "metro", `2` = "rail", `3` = "bus",
+               `4` = "ferry", `6` = "cable", `11` = "trolleybus",
+               `200` = "coach")
+bm[, mode := ifelse(is.na(mode_name[route_type]), route_type,
+                    mode_name[route_type])]
+for (s in names(nd$sources)) {
+  d <- bm[source == s & route_type == "3"]
+  if (!nrow(d)) next
+  cat("\n**", src_label[[s]], ", buses only (`route_type` 3)**\n\n", sep = "")
+  print(knitr::kable(
+    data.frame(`Widest difference` = as.character(d$band),
+               `Across route_ids` = fmt(d$cross_pairs),
+               `Within one route_id` = fmt(d$within_pairs),
+               `Ratio` = round(d$ratio, 1), check.names = FALSE),
+    align = "lrrr"))
+  cat("\n")
+}
+```
+
+```{r verdictmode, results="asis"}
+tb <- bm[source == "tnds" & route_type == "3"]
+gb <- bm[source == "bods_gtfs" & route_type == "3"]
+r <- function(d, bd) d[band == bd]
+cat(sprintf(paste0(
+  "On TNDS buses the discrimination is strong and it **stays** strong well ",
+  "past two minutes: %s to one in the first minute, %s to one in the second, ",
+  "%s to one in the third. It does not collapse until the 181-300 second ",
+  "band, where it falls to %s to one. The crossover for buses is therefore ",
+  "somewhere between three and five minutes, not between one and two.\n\n"),
+  round(r(tb, "1-60s")$ratio, 1), round(r(tb, "61-120s")$ratio, 1),
+  round(r(tb, "121-180s")$ratio, 1), round(r(tb, "181-300s")$ratio, 1)))
+
+if (nrow(gb)) {
   cat(sprintf(paste0(
-    "The DfT's GTFS does not behave the same way, and this is the single most ",
-    "important qualification in this report. There the within-route ",
-    "population dominates from the very first band: %s pairs sit at exactly ",
-    "zero difference within one `route_id` against %s across two, and at one ",
-    "minute it is %s within against %s across. The `route_id` split, which ",
-    "on TNDS separates the two populations cleanly, barely separates them at ",
-    "all here. Part of that is structural - the DfT assigns one `route_id` ",
-    "per registration, so a duplicate registration is less likely to show up ",
+    "The DfT's GTFS does not behave this way, and that is the single most ",
+    "important qualification in this report. Restricted to buses in exactly ",
+    "the same way, its ratios never reach one: %s in the first minute, %s in ",
+    "the second, %s in the third. The `route_id` split, which separates the ",
+    "two populations cleanly on TNDS, does not separate them here at any ",
+    "tolerance. Part of that is structural - the DfT assigns one `route_id` ",
+    "per registration, so a duplicate registration is less likely to appear ",
     "as two ids - and part of it is that the feed carries the whole of ",
-    "London, where buses genuinely do run a minute apart. Whatever the ",
-    "cause, a tolerant rule tuned on TNDS should not be turned loose on this ",
-    "feed on the strength of that tuning.\n"),
-    fmt(g0$within_route), fmt(g0$cross_route),
-    fmt(g60$within_route), fmt(g60$cross_route)))
+    "London, where buses really do run a minute apart. Whatever the cause, a ",
+    "tolerance tuned on TNDS must not be turned loose on this feed on the ",
+    "strength of that tuning.\n"),
+    round(r(gb, "1-60s")$ratio, 2), round(r(gb, "61-120s")$ratio, 2),
+    round(r(gb, "121-180s")$ratio, 2)))
 }
 ```
 
@@ -216,40 +262,58 @@ change only one:
 5. **Only across two `route_id`s.** New, and the condition that makes the
    tolerance affordable at all. Two trips of the *same* `route_id` a minute
    apart are two buses; the numbers above are what says so.
+6. **Buses only.** Also new, and not a detail. Every mode that runs at
+   headways comparable to the tolerance — the Underground, the trams, the DLR
+   — has to be out, because on those a tolerance cannot tell a duplicate
+   registration from the next train. Restricting to `route_type == 3` is the
+   blunt version; testing the pattern's own minimum headway against the
+   tolerance would be the principled one.
 
-with the tolerance set at **60 seconds**, and applied to TNDS only until the
+with the tolerance set at **120 seconds**, and applied to TNDS only until the
 DfT feed has been looked at service by service.
 
 ### What it would and would not fix
 
 ```{r fixes, results="asis"}
-s60 <- as.data.table(get("tnds", "name")$services$at_60)
+s <- as.data.table(get("tnds", "name")$services$at_120)
+bus <- s[mode == "bus"]
 cat(sprintf(paste0(
-  "A 60-second rule on TNDS would act on **%s services** and **%s trips**, ",
-  "%s of the feed. That is a narrow intervention: the problem is not spread ",
-  "thinly across the country, it is concentrated in a few dozen services ",
-  "where it is severe.\n\n"),
-  fmt(nrow(s60)), fmt(sum(s60$trips)),
-  pct(100 * sum(s60$trips) / nd$sources$tnds$n_exact)))
-if (nrow(s60)) {
-  print(knitr::kable(head(s60[order(-trips)], 20), align = "llrr",
-                     col.names = c("Operator", "Line", "route_ids", "Trips")))
+  "A 120-second rule on TNDS buses would act on **%s services** and **%s ",
+  "trips**, %s of the feed. That is a narrow intervention: the problem is ",
+  "not spread thinly across the country, it is concentrated in a few dozen ",
+  "services where it is severe. The %s non-bus services the same rule would ",
+  "have caught are listed after it, and are exactly what condition 6 exists ",
+  "to exclude.\n\n"),
+  fmt(nrow(bus)), fmt(sum(bus$trips)),
+  pct(100 * sum(bus$trips) / nd$sources$tnds$n_exact),
+  fmt(nrow(s) - nrow(bus))))
+if (nrow(bus)) {
+  print(knitr::kable(head(bus[order(-trips)], 20), align = "lllrr",
+                     col.names = c("Operator", "Line", "Mode", "route_ids",
+                                   "Trips")))
+}
+cat("\nAnd the non-bus services the mode condition removes:\n\n")
+nb <- s[mode != "bus"]
+if (nrow(nb)) {
+  print(knitr::kable(head(nb[order(-trips)], 10), align = "lllrr",
+                     col.names = c("Operator", "Line", "Mode", "route_ids",
+                                   "Trips")))
 }
 ```
 
 ```{r widen, results="asis"}
-add <- as.data.table(get("tnds", "name")$services$added_60_to_120)
-risk <- as.data.table(get("tnds", "name")$services$risked_60_to_120)
-cat("\nWidening to two minutes would add these services -\n\n")
+add <- as.data.table(get("tnds", "name")$services$added_120_to_300)[mode == "bus"]
+risk <- as.data.table(get("tnds", "name")$services$risked_120_to_300)[mode == "bus"]
+cat("\nWidening from two minutes to five would add these bus services -\n\n")
 if (nrow(add)) print(knitr::kable(head(add[order(-trips)], 10),
-                                  align = "llrr",
-                                  col.names = c("Operator", "Line", "route_ids",
-                                                "Trips")))
-cat("\n- at the price of admitting these within-route pairs, which the same",
-    "rule cannot distinguish:\n\n")
+                                  align = "lllrr",
+                                  col.names = c("Operator", "Line", "Mode",
+                                                "route_ids", "Trips")))
+cat("\n- at the price of admitting these within-route bus pairs, which the",
+    "same rule cannot distinguish, and which outnumber them:\n\n")
 if (nrow(risk)) print(knitr::kable(head(risk[order(-trips)], 10),
-                                   align = "llrr",
-                                   col.names = c("Operator", "Line",
+                                   align = "lllrr",
+                                   col.names = c("Operator", "Line", "Mode",
                                                  "route_ids", "Trips")))
 ```
 
@@ -270,7 +334,7 @@ grouping operators by the feed's own `agency_name` and once by the register's
 operator identity.
 
 ```{r keys, results="asis"}
-k <- cum_all[tolerance %in% c(0L, 60L, 120L)]
+k <- cum_all[tolerance %in% c(0L, 120L, 300L)]
 k[, Source := src_label[source]]
 k[, Key := c(name = "agency_name", noc = "NOC operator identity")[key]]
 print(knitr::kable(
@@ -297,8 +361,27 @@ knitr::kable(ka, align = "lrrr",
 The two changes are **multiplicative, not additive**. Resolving operator
 identity buys almost nothing on its own, as the table above shows: the copies
 it newly joins do not have identical times, so they still fail the exact test.
-It only pays once a tolerance exists — and the tolerance only reaches the
-Stagecoach London family once the operator identity is resolved.
+It only pays once a tolerance exists — and then it pays modestly, reaching a
+handful more Stagecoach London services (372, 215, 498, 397) that the feed's
+own names keep apart.
+
+It can also go the other way, and should. On the DfT's GTFS the register
+*declines* a merge that the plain name match makes, because six separate
+companies in that feed all trade as "Bee Network" and a shared brand is not a
+shared operator. That is the difference showing in the table above as a small
+negative.
+
+**It does not reach the 20 and the 275**, which is worth saying because they
+are the routes that raised the question. Their two registrations differ in
+*where the bus goes* as well as in when: over the counting window the 20
+survives as `route_id` 2396 (328 trips, 101 stops) against 8686 (459 trips, 101
+stops) with 99 stops in common and two different on each side, and the 275 as
+2367 (384 trips, 91 stops) against 8704 (384 trips, 98 stops). Pair them on an
+identical stop sequence and there is not one candidate pair on any shared day.
+Reaching those would need a matcher that accepted one itinerary as a
+sub-sequence of the other, which is a much larger change and a much riskier
+one: a short working and a full-length journey over the same corridor are two
+buses, not one described twice.
 
 ## Risks, stated plainly
 
@@ -309,20 +392,24 @@ most of these out, and it is a convention rather than a guarantee: an operator
 free to file two registrations for one service is equally free to file one
 registration for two buses.
 
-**High-frequency and rail-like services are where it breaks.** In TNDS the
-within-route pairs that a two-minute rule would admit are dominated by a
-handful of services running every minute or two — in this snapshot the Heathrow
-Air Rail Link and London Underground lines account for most of them. Those are
-exactly the services where a tolerance comparable to the headway is
-indefensible. A rule that additionally refused to act where the pattern's own
-minimum headway is less than twice the tolerance would remove most of this
-risk, at the cost of another parameter.
+**High-frequency and rail-like services are where it breaks, and they will
+hide in a national statistic.** The within-route pairs a wide rule would admit
+are dominated by a handful of services running every minute or two — in this
+snapshot the Heathrow Air-Rail Link, the Underground lines and Metrolink
+account for most of them. Read across all modes at once those services do not
+merely add noise, they *reverse the conclusion*: they put the apparent
+crossover at one to two minutes when the buses' own crossover is at three to
+five. Restricting to `route_type == 3` fixes it here. The principled version
+is to refuse to act where the pattern's own minimum headway is less than twice
+the tolerance, which would also catch a bus route running every ninety
+seconds.
 
 **The discriminator is weaker on some feeds than others**, and how much weaker
-is not knowable without measuring that feed. On TNDS the cross-route and
-within-route populations separate at a minute; on the DfT's GTFS they overlap
-from zero. A tolerance is therefore a per-feed judgement, not a setting that
-can be defended once and reused.
+is not knowable without measuring that feed. On TNDS buses the cross-route and
+within-route populations separate by more than ten to one and stay separated
+past two minutes; on the DfT's GTFS, restricted the same way, they never
+separate at all. A tolerance is a per-feed judgement, not a setting that can
+be defended once and reused.
 
 **The measurement here is an upper bound on what could be removed.** A pair is
 counted when the two trips share *one* operating day; `gtfs_deduplicate()`
@@ -332,11 +419,18 @@ matcher has already run: those pairs have identical departure times but differ
 in arrival times, in boarding codes, in a trip attribute, or in their
 calendars, and most of them should not be removed.
 
-**The tolerance is not a truth.** Sixty seconds is where the evidence stops
-supporting the removal, not a property of the road. It leaves real duplication
-behind — it catches 230 of the 125's 358 near-duplicate pairs and none of its
-cross-subsidiary registration problem — and the right response to that is a
-published timetable, not a wider tolerance.
+**The tolerance is not a truth.** Two minutes is where the evidence for buses
+in this feed stops being one-sided, not a property of the road.
+
+**And it leaves the two cases that raised the question unfixed.** The
+Preston–Bolton 125 is blocked by the operator condition, since its two
+registrations belong to two different Stagecoach companies. The London 20 and
+275 are blocked by the stop-sequence condition, since their copies run over
+slightly different stop lists. Both would need a *looser* rule than the one
+recommended here — dropping the operator test in the first case, accepting a
+sub-sequence in the second — and neither loosening has been measured. The
+right response to what is left is a published timetable, not a wider
+tolerance chosen to make a particular route come out right.
 
 ## Recommendation
 
@@ -344,12 +438,20 @@ Do not widen the default. `gtfs_deduplicate()` should stay exact, because
 exactness is what makes it safe to run on every feed unattended.
 
 ```{r recommend, results="asis"}
-e <- tol_row("tnds", "name", 60L)
+d <- cum_all[source == "tnds" & key == "name" & tolerance == 120L]
+b <- bm[source == "tnds" & route_type == "3"]
 cat(sprintf(paste0(
-  "Add the tolerance as an opt-in, at 60 seconds, restricted to pairs across ",
-  "two `route_id`s, and report what it removed rather than removing it ",
-  "silently. On TNDS that is a %s correction (%s trips) concentrated in a few ",
-  "dozen services - small nationally, decisive for the zones those services ",
-  "serve, and too uncertain to apply without someone looking at the list.\n"),
-  pct(100 * e$extra_trips / nd$sources$tnds$n_exact), fmt(e$extra_trips)))
+  "Add the tolerance as an opt-in, at **120 seconds**, restricted to buses ",
+  "and to pairs across two `route_id`s, and have it report what it removed ",
+  "rather than remove it silently. On TNDS that is %s trips over %s bus ",
+  "pairs, %s of the feed, concentrated in a few dozen services - small ",
+  "nationally, decisive for the zones those services serve, and too ",
+  "uncertain to apply without someone reading the list first.\n\n"),
+  fmt(d$bus_cross_trips), fmt(d$bus_cross_pairs),
+  pct(100 * d$bus_cross_trips / nd$sources$tnds$n_exact)))
+cat(paste(
+  "Do not enable it on the DfT's GTFS on this evidence. Whatever duplication",
+  "of this kind that feed contains is not separable from its genuine",
+  "high-frequency service by any tolerance tested here, and a rule that",
+  "cannot tell them apart would delete real buses.\n"))
 ```
