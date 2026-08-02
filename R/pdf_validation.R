@@ -489,12 +489,133 @@ validation_routes <- function() {
          stop_name_regex = "The Centre",
          directions = NULL,
          note = paste("Southmead Hospital - Ashton Gate via the city centre.",
-                      "Every time explicit"))
-    # Not wired in: 'Bristol 75 76.pdf' prints two routes in one table and the
-    # reader reads them as one (371 Monday-Friday journeys for what should be
-    # two services), so it needs routes_in_table and a header row the generator
+                      "Every time explicit")),
+
+    # Collected 2026-08-02 from the ranked list of unexplained gaps. The West
+    # Midlands pair extends the 6 and 50: all four are services both sources
+    # carry where BODS GTFS reads roughly twice TNDS, so they test one
+    # mechanism repeatedly rather than four mechanisms once.
+    list(key = "NX14", short_name = "14",
+         operator = "National Express|NX ?Bus|West Midlands",
+         format = "column", file = "nxbus_14.pdf",
+         stop_regex = "^Chelmsley Interchange",
+         stop_name_regex = "Chelmsley Interchange",
+         directions = NULL,
+         note = paste("Chelmsley Wood - Birmingham, edition from 19 July 2026.",
+                      "TNDS 21,760 against BODS GTFS 40,384 over the July",
+                      "window. Counted at Chelmsley Interchange, the outer",
+                      "terminus, which is the first row outbound and the last",
+                      "row inbound, so both directions are counted",
+                      "as the other West Midlands entries do")),
+
+    list(key = "NX74", short_name = "74",
+         operator = "National Express|NX ?Bus|West Midlands",
+         format = "column", file = "nxbus_74.pdf",
+         stop_regex = "^West Bromwich Bus Station \\(dep\\)",
+         stop_name_regex = "West Bromwich Bus Station",
+         directions = NULL,
+         note = paste("Dudley - Birmingham, edition from 19 July 2026. TNDS",
+                      "33,012 against BODS GTFS 56,900. Counted at West",
+                      "Bromwich Bus Station, which the document prints twice",
+                      "on every page as an arrival and a departure row; only",
+                      "the departure row is matched, or every journey would",
+                      "be counted twice. Carries a Friday-only marker the",
+                      "reader does not separate, so the Monday-Friday figure",
+                      "is the Friday service level")),
+
+    # Portsmouth. The city's route 1 and route 3 are both about 2.5x higher in
+    # BODS GTFS than in TNDS (1: 8,240 against 20,948; 3: 8,296 against
+    # 21,332), the same shape as the West Midlands gap in a different region
+    # and a different operator, which is what makes them worth having.
+    list(key = "PO3", short_name = "3", operator = "First",
+         format = "column", file = "Porstmouth timetable_3.pdf",
+         # Both directions print the stop as an arrival and a departure row,
+         # and only the inbound tags it "[F]", so the pattern is anchored on
+         # the name and left open in the middle.
+         stop_regex = "^The Hard/Gunwharf.*dep",
+         stop_name_regex = "The Hard Interchange",
+         directions = NULL,
+         note = paste("Fareham - Southsea, valid from 01/08/2026 so current",
+                      "for the window. SATURDAY ONLY: this Portsmouth City",
+                      "Council document runs to ten pages and every one of",
+                      "them is the Saturday service, so it tests one day type",
+                      "and says nothing about the other two. Every time is",
+                      "explicit, nothing to expand")),
+
+    list(key = "PO1", short_name = "1", operator = "First",
+         format = "column", file = "Service 1 from 1 August 2021.pdf",
+         stop_regex = "^The Hard/Gunwharf",
+         stop_name_regex = "The Hard Interchange",
+         directions = NULL,
+         note = paste("The Hard - South Parade Pier. STALE EDITION: the file",
+                      "was created 2021-07-27 and no later one was found, so",
+                      "it is five years older than the snapshot and cannot",
+                      "settle the exact level. It is kept because the gap it",
+                      "is being asked about is a factor of 2.5, which five",
+                      "years of service change in one city is unlikely to",
+                      "account for, and because the two directions are",
+                      "printed in one table without a direction heading - the",
+                      "stop order simply reverses - so departures at The Hard",
+                      "are counted across both. Minutes-past-the-hour",
+                      "abbreviation, times written with colons")),
+
+    list(key = "X30", short_name = "X30", operator = "First|Airlink",
+         format = "column",
+         file = paste("Airlink X30 Southend - Stansted Airport -",
+                      "Bus times from 31st May 2026 - V2.pdf"),
+         stop_regex = "^Southend Travel Centre",
+         stop_name_regex = "Southend Travel Centre",
+         directions = c(to_stansted = "to Stansted Airport",
+                        to_southend = "^Stansted Airport to"),
+         note = paste("Southend - Chelmsford - Stansted Airport, valid from",
+                      "31 May 2026. TNDS 1,605 against BODS GTFS 15,689, the",
+                      "largest ratio in the Essex group at 9.8x. Two",
+                      "warnings. The Monday-Friday table prints a school-days",
+                      "block and a school-holidays block side by side on the",
+                      "same text rows, and the reader sums them, so that",
+                      "figure is an upper bound of roughly the two added",
+                      "together; the counting window is school holidays, so",
+                      "the true weekday figure is the lower of the two.",
+                      "Saturday and Sunday are unaffected. Second, this",
+                      "generator kerns some times into separate digits",
+                      "('1 1 3 5' for 1135), which the reader cannot see as",
+                      "times; Southend Travel Centre is used as the reference",
+                      "row precisely because it is the one row that reads",
+                      "cleanly in both directions"))
+
+    # Not wired in.
+    #
+    # 'Bristol 75 76.pdf' prints two routes in one table and the reader reads
+    # them as one (371 Monday-Friday journeys for what should be two
+    # services), so it needs routes_in_table and a header row the generator
     # does not provide; 'Bristol service 1 2.pdf' and both 'Bristol M1' files
     # return no rows at all, having no day-type heading the reader can find.
+    #
+    # 'nxbus_50-1.pdf' is a second download of the same route 50 edition
+    # already wired in as NX50; the two files differ only in the "Downloaded
+    # on" line their generator stamps.
+    #
+    # 'Metrobus 10-timetable-20250201-f7aeb443.pdf' has no text layer on any
+    # page - it is artwork - so nothing can be read from it at all. This is
+    # the Kinchbus situation, and the fix is the same: a Word or HTML extract
+    # of the same timetable. Worth chasing, because Crawley's route 10 is the
+    # cleanest kind of disagreement in the whole set - TNDS carries 0 journeys
+    # against 14,344 in BODS GTFS, so a document showing any service at all
+    # settles it.
+    #
+    # The six Chelmsford "C" timetables (C1, C2, C5, C8, C9, C10) are a
+    # different layout from anything the reader handles, not a harder case of
+    # the same one. Their generator prints stop names ROTATED 90 degrees as
+    # column headings and puts one journey per ROW - the transpose of every
+    # other document here, which puts one stop per row and one journey per
+    # column. Read as horizontal text the headings come out as loose
+    # characters ("lm m lm m ls ls le le"), there is no row label to anchor
+    # stop_regex on, and two directions are printed side by side on the same
+    # rows. Reading them needs a reader that groups tokens into columns by x
+    # and treats a row as a journey, plus rotation-aware header reconstruction
+    # from pdf_data()'s coordinates. That is worth building: these six are the
+    # largest BODS-over-TNDS ratios found anywhere (C10 is 907 against 12,765,
+    # 14x), and no other document in the set covers Essex.
   )
 }
 

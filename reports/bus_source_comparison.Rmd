@@ -155,6 +155,16 @@ and a journey is counted once per zone it passes through — levels are
 comparable between sources but are still not a national vehicle-trip count,
 because a journey crossing several zones contributes to each.
 
+> **These levels are not comparable with versions of this report published
+> before August 2026.** Earlier editions counted over the *widened* zones the
+> published trips-per-zone outputs use, and those overlap: a stop falls in 2.6
+> of them on average, so one bus was counted in every overlapping zone it
+> passed through and the national totals were about 2.3 times the figures
+> below. Nothing was lost in the change — only 186 of 318,931 stops fall
+> outside all plain zones — and the *relative* differences between sources,
+> which is what this report is for, barely moved. Compare ratios and per-zone
+> agreement across editions, never levels.
+
 ```{r totals-table, results="asis"}
 tot <- across_years(function(c) {
   c$bands |> group_by(source) |> summarise(runs = sum(runs), .groups = "drop")
@@ -832,22 +842,30 @@ cat(paste0("- The measured differences above are upper bounds on two counts: ",
   Services can legitimately appear in one and not another (e.g. new
   operators publishing only to BODS; local services still only in local
   authority systems).
-- **Duplication, in every source.** The BODS change archive contains every
-  revision of every dataset; superseded revisions were dropped with
-  `UK2GTFS::txc_filter_files()`, keeping the revision valid on the analysis
-  date. Residual duplication — the same service published by both an operator
-  and a local authority scheme — inflates the TransXChange-derived sources, and
-  TNDS demonstrably publishes some services twice (see the duplicate-registration
-  table in `pdf_validation.md`).
+- **Duplication, in every source — now removed before counting.** The BODS
+  change archive contains every revision of every dataset; superseded revisions
+  are dropped with `UK2GTFS::txc_filter_files()`, keeping the revision valid on
+  the analysis date. Beyond that, every feed of every source passes through
+  `UK2GTFS::gtfs_deduplicate()` before it is counted, which removes a journey
+  the feed describes twice on the same day. On the July 2026 snapshots that is
+  5.2% of the DfT GTFS's trips and 2.5% of TNDS's.
 
-  It is **not** the case that the DfT's GTFS is free of this. Measured on the
-  July 2026 feed, 3.7% of its counted bus runs are the same journey on the same
-  day, concentrated on a minority of `route_id`s, some of which are duplicated
-  in their entirety; for First Bristol's 21 the duplication is the whole of its
-  disagreement with both TNDS and the published timetable.
-  `lsoa_disagreement.md` measures this for both sources. Treat every source as
-  capable of counting a bus twice, and note that this is one of the few
-  disagreements where an independent check can say which source is wrong.
+  Two of that function's settings had to be loosened before it worked on these
+  feeds, and both are worth knowing when reading any figure here. It originally
+  required `block_id` to agree, but the DfT's GTFS fills `block_id` with a hash
+  generated per dataset revision, so two copies of one journey never agreed and
+  none were removed; and it grouped routes by `agency_id`, but one operator is
+  regularly filed under several agency records — Arriva London North is both
+  `OP401`/`ARVA` and `OP16197`/`ALNO` — which split duplicate journeys into
+  different groups. With both loosened, First Bristol's 21 and A1 land exactly
+  on their published timetables and exactly on TNDS.
+
+  What is left is small but not zero: 0.8% of the DfT GTFS's counted runs and
+  0.0% of TNDS's are still the same journey twice on a day, because removal is
+  deliberately stricter than detection. `lsoa_disagreement.md` measures the
+  residual for both sources. Treat every source as capable of counting a bus
+  twice, and note that this is one of the few disagreements where an
+  independent check can say which source is wrong.
 - **Conversion differences.** The TransXChange sources are converted with
   UK2GTFS (this pipeline), while BODS GTFS is converted by the DfT's ITO
   World pipeline. Differences in how each handles operating profiles, bank

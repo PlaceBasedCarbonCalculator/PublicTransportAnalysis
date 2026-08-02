@@ -35,7 +35,7 @@ departing after midnight (GTFS times ≥ 24:00) count as Night.
 These files are consumed by `../build/R/public_transport_frequency.R` (the
 `pt_frequency` target): copy them to `../inputdata/pt_frequency/`.
 
-There are also three analysis reports, all rebuilt by the pipeline:
+There are also four analysis reports, all rebuilt by the pipeline:
 
 - [reports/bus_source_comparison.md](reports/bus_source_comparison.md) — a
   three-way comparison of the bus timetable sources (TNDS, BODS
@@ -45,6 +45,10 @@ There are also three analysis reports, all rebuilt by the pipeline:
   says which of them is *right* rather than only that they differ.
 - [reports/lsoa_disagreement.md](reports/lsoa_disagreement.md) — where TNDS
   and BODS GTFS disagree most, zone by zone, and the routes responsible.
+- [reports/near_duplicate_journeys.md](reports/near_duplicate_journeys.md) —
+  the duplication deduplication cannot see: one service registered twice from
+  two working timetables a minute apart. How common it is, what tolerance
+  would catch it, and why that tolerance is not safe as a default.
 
 ## Method
 
@@ -328,7 +332,8 @@ R/route_match.R     matching a service across sources by number and stops
 R/lsoa_gap.R        zone-level TNDS vs BODS GTFS disagreement
 R/pdf_timetable.R   reading journey times out of published PDF/Word timetables
 R/pdf_validation.R  checking each source against those published timetables
-reports/            the three reports (Rmd sources + rendered md + figures)
+R/near_duplicates.R the duplication exact matching cannot see, and its cost
+reports/            the four reports (Rmd sources + rendered md + figures)
 scripts/            one-off analyses, not part of the pipeline
 data/               outputs (gitignored; copy to ../inputdata/pt_frequency)
 gtfs/               GTFS built by this pipeline (gitignored)

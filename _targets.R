@@ -102,6 +102,13 @@ list(
   tar_target(txc_cal, txc_calendar(), cue = tar_cue(mode = "never")),
   tar_target(naptan, UK2GTFS::get_naptan(), cue = tar_cue(mode = "never")),
 
+  # Traveline's National Operator Codes register: which company each operator
+  # code and each operator name belongs to. Used by the near-duplicate analysis
+  # to recognise one operator filed under two agency records. cue never for the
+  # same reason as the two above - it is a live download, and a routine refresh
+  # of it must not invalidate an analysis that is already built.
+  tar_target(noc, UK2GTFS::get_noc(), cue = tar_cue(mode = "never")),
+
   # --- Conversions from raw data ---
 
   # NPTDR ATCO-CIF October archives (bus, coach, ferry, some rail/metro)
@@ -225,5 +232,18 @@ list(
                                          cmp_2026_tnds, cmp_2026_bods_gtfs),
              format = "file"),
   tar_target(lsoa_gap_report, render_lsoa_gap_report(lsoa_gap),
-             format = "file")
+             format = "file"),
+
+  # --- Near-duplicate journeys ---
+  #
+  # gtfs_deduplicate() matches itineraries exactly, so it cannot see a service
+  # registered twice from two working timetables a minute apart. This measures
+  # how much of that each source carries and what a time-tolerant rule would
+  # cost in false positives. It reads the same two validation feeds and, like
+  # the validation, is a route-level analysis with no zone polygons in it.
+  tar_target(near_duplicates,
+             near_duplicate_analysis(tnds_20260726, noc = noc),
+             format = "file"),
+  tar_target(near_duplicates_report,
+             render_near_duplicate_report(near_duplicates), format = "file")
 )

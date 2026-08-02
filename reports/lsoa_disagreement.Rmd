@@ -509,8 +509,34 @@ cat("- Disagreement by country:",
 
 ### Why these particular zones
 
-The zone-level pattern is the national pattern concentrated:
+The zone-level pattern is the national pattern concentrated. The causes below
+are ordered by how much of the remaining gap each accounts for, and the first
+three were each traced to a named service rather than inferred.
 
+- **Mode classification, not missing service.** The largest single "only in
+  TNDS" entry in the whole analysis is the Nottingham tram: TNDS files
+  Nottingham Express Transit ("Clifton/Toton – Phoenix Park/Hucknall", agency
+  `NEXT`) as `route_type = 3`, a *bus*, while the DfT's GTFS carries trams as
+  `route_type = 0`. This analysis counts buses, so every one of its 144,488
+  runs is credited to TNDS alone — more than twenty times the next largest
+  TNDS-only service, and the whole of the Nottingham cluster in the table
+  above, including the zone whose locality is "Highbury Vale Tram Stop".
+  Nothing is missing from either feed. TNDS codes trams correctly elsewhere
+  (79 `route_type = 0` routes, Metrolink and Tramlink among them), so this is
+  specific to NET.
+- **Duplicate publication in TNDS that no signature test can see.** A run of
+  services read *exactly* twice in TNDS what they read in the DfT's GTFS —
+  ratio 0.50 to two decimal places on the Debden–Walthamstow 20, the 275, the
+  Preston–Bolton 125, the Wrexham–Chester 1 and 4, the Derby X38 and others.
+  The mechanism was measured on the Preston–Bolton 125: TNDS holds it under two
+  `route_id`s of 371 trips each, and **not one pair of them is a same-day
+  duplicate under any signature** — whole itinerary, stop and departure time,
+  or stop alone. The two registrations describe the same service at times that
+  differ, so no signature test can match them and `gtfs_deduplicate()` is right
+  to keep both. Its published timetable settles which source is wrong: TNDS
+  reads 2.28 of the document, the DfT's GTFS 1.14. Whether every route in this
+  group shares that mechanism is inferred from the exact factor of two, not
+  separately measured.
 - **Country coverage.** BODS is a statutory requirement for English local bus
   services only. Scottish and Welsh services reach it only where an operator
   crosses the border or publishes voluntarily, so Welsh and Scottish zones
@@ -547,10 +573,14 @@ The zone-level pattern is the national pattern concentrated:
 - The unit is trip-runs touching a zone, not passenger-facing frequency. A
   zone crossed by a busy corridor scores highly whether or not the service is
   useful to people living there.
-- Zones are the widened LSOA/Data Zone polygons used throughout this analysis
-  (small LSOAs unioned with a 500 m buffer of their population-weighted
-  centroid, then buffered 100 m). They overlap, so a stop can count in more
-  than one zone and the zone totals do not sum to a national trip count.
+- Zones are the **plain** LSOA21 / DZ22 boundaries, not the widened polygons
+  the published trips-per-zone outputs use. They tile the country, so each stop
+  falls in exactly one zone and each disagreement is counted once. Levels here
+  are therefore about 2.3 times lower than in editions of this report published
+  before August 2026, which used the widened zones — a stop falls in 2.6 of
+  those on average. Only 186 of 318,931 stops fall outside all plain zones.
+  Totals still do not sum to a national trip count, because a journey crossing
+  several zones contributes to each.
 - The service groupings come from the same route matching the comparison report
   uses, with the same limitations: a wrong pairing shows up here as a spurious
   frequency difference, and a failed pairing as a service missing from both

@@ -457,48 +457,48 @@ because their published figure cannot be trusted. `Stop matched = FALSE` means
 the reference stop was not found in one of the feeds, so the count is of every
 same-numbered route of a matching operator and will be too high.
 
-### The Bristol 21: what the DfT feed's excess actually is
+### The Bristol 21: the case that set the deduplication defaults
 
-The clearest of these cases is worth following to its cause, because both
-sources match the reference stop, so nothing about the measurement is loose.
+This subsection describes the state of the DfT feed **as published**. Every
+figure in the tables above is counted after `UK2GTFS::gtfs_deduplicate()` has
+run, so what follows is the problem that stage exists to solve, not a defect in
+the numbers reported here.
 
-*The figures in this subsection were measured directly on the DfT feed named in
-the table at the top of this report, over the first window, on 2026-07-30. They
-are quoted rather than computed here because this report is built from the
-route-level validation data and not from the feed itself; `lsoa_disagreement.md`
-computes the national duplication figure as part of its own pipeline, so that is
-the copy that stays current.*
+*Measured directly on the DfT feed named at the top of this report, over the
+first window, on 2026-07-30. The figures are quoted rather than computed here
+because this report is built from the route-level validation data and not from
+the feed itself; `lsoa_disagreement.md` computes the national duplication
+figure as part of its own pipeline, so that is the copy that stays current.*
 
-First Bristol's 21 is `route_id` 3700 in the DfT's GTFS. Over the first window
-that route_id carries **5,816 trip-days**. Reducing every trip to the set of
-(stop, departure time) pairs it makes, and counting distinct (journey, date)
-pairs rather than trips, leaves **3,296** — the other 2,520 are the same bus
-described twice on the same day. The document implies 3,296 and TNDS counts
-3,296.
+First Bristol's 21 is `route_id` 3700 in the DfT's GTFS. As published, over the
+first window, that route_id carried **5,816 trip-days**. Reducing every trip to
+the set of (stop, departure time) pairs it makes, and counting distinct
+(journey, date) pairs rather than trips, leaves **3,296** — the other 2,520 are
+the same bus described twice on the same day. The document implies 3,296 and
+TNDS counts 3,296. The same pattern, with the same numbers, appears on
+`route_id` 5320 (service 31), which points to one duplicated dataset rather than
+a per-route accident.
 
-So the whole of the 1.76× excess is duplicate publication, and removing it
-reproduces the published timetable exactly. The same pattern, with the same
-numbers, appears on `route_id` 5320 (service 31), which suggests one duplicated
-dataset rather than a per-route accident.
+The 21 is also the route that settled two of `gtfs_deduplicate()`'s defaults.
+With `match_block = TRUE` it stayed at 5,816, because the DfT fills `block_id`
+with a hash generated per dataset revision and no two copies of a journey ever
+agree on it; ignoring `block_id` lands the 21 on 3,296 exactly, and First
+Bristol's A1 on 6,916 against a published 6,916. `match_operator = "name"`
+settled the 279, whose copies sit under two agency records for one company.
+Together they took the national removal rate on this feed from 3.2% to 5.2%.
 
 Duplication is not confined to those. Measured across the whole 2026-07-26 DfT
-feed over this window, **380,264 of 10,301,615 counted bus runs (3.69%)** are the
-same journey on the same day — 74,965 of them published under two different
-`route_id`s and 305,299 under one. It is concentrated rather than spread:
-several `route_id`s are duplicated in their entirety.
+feed over this window, before deduplication, the same-journey-same-day rate is
+several per cent of counted bus runs, concentrated rather than spread: several
+`route_id`s are duplicated in their entirety. `lsoa_disagreement.md` carries the
+current figure.
 
 A caution about how that is measured, because the obvious version of the test is
 wrong. Comparing trips by their (stop, time) signature alone, without regard to
 date, returns 41.5% of runs — more than ten times the real figure. GTFS models a
 school-term journey and its holiday twin as two trips with identical times and
 *complementary* calendars, which is correct modelling and not duplication. Only
-trips that run the same journey on the same **date** are counted here.
-
-The `279` row is not resolved by this. Its two Arriva London `route_id`s contain
-no same-day duplicates at all, and one of them (10984339, 8,284 runs) matches the
-document and TNDS exactly while the other adds 10,208 more. Since the reference
-stop is not found for that route in either feed, its counts include every
-same-numbered Arriva route, so the row cannot be pushed further here.
+trips that run the same journey on the same **date** are counted.
 
 ```{r stopmatch}
 sm <- dcast(v$feeds[window == names(v$window)[1]], key ~ source,
@@ -529,12 +529,28 @@ time) pairs, and those signatures compared across the route's TNDS `route_id`s
 |:------|------------:|-----------------:|:---------------------------------|:--------|
 | TBALL | 2.00 | 2 | **148 of 148** | the same timetable published twice |
 | TBX38 | 3.00 | 6 | **363 of 688**, as three identical pairs | three registrations, each published twice |
-| SC125 | 2.00 | 2 | **0 of 731** | not duplication |
+| SC125 | 2.00 | 2 | **0 of 731** | duplication the exact test cannot see |
 | CDF62 | 3.86 | 3 | **0 of 147** | not duplication |
 
 For TBALL and TBX38 the TNDS excess is therefore an artefact of duplicate
 registration: the exact ratios of 2.00 and 3.00 follow directly from publishing
 one timetable twice and one three times over, so **TNDS is overcounting them**.
+
+The SC125 row needs correcting, and the correction is the reason
+`near_duplicate_journeys.md` exists. "0 of 731" is what the exact test found and
+it is accurate, but the conclusion drawn from it — that the 125 is not
+duplicated — was wrong. Pair the two `route_id`s on their **stop sequence**
+instead of on stops-and-times, and 230 pairs of trips run the same stops on the
+same day within one minute of each other at every call, 358 within two minutes.
+The service is registered twice by two Stagecoach subsidiaries, `SCCU`
+(Stagecoach North West) and `SCMY` (Stagecoach Cumbria and Lancashire), and the
+two registrations were written from different working timetables, so not one
+journey matches exactly. TBX38 has the same thing on top of its exact
+duplication: pairing its six `route_id`s the same way finds 254 pairs at zero
+difference and a further 238 within a minute, so the exact test catches part of
+its duplication and leaves the rest. See `near_duplicate_journeys.md` for how
+common this is nationally and why the tolerance that would catch it cannot
+safely be made the default.
 
 That is as far as the trip-pattern evidence goes, and it is worth being precise
 about what it does *not* establish. Compared with the documents in the section
@@ -548,16 +564,13 @@ Fridays-only journeys, so its implied total is itself an overestimate). The
 duplication in TNDS is established; that BODS GTFS is therefore *correct* for
 these two is not.
 
-For SC125 and CDF62 the `route_id`s carry genuinely distinct trips, so their
-excess is a real disagreement that duplicate publication does not explain. The
-documents settle CDF62 outright — TNDS reads 1.02 of the Cardiff 62's published
-timetable and BODS GTFS 0.26, so the missing service is in BODS GTFS, which is
-what England-only statutory coverage predicts for a Cardiff Bus service. SC125's
-ratio of exactly 2.00 with disjoint patterns is not settled: TNDS reads 2.28 of
-the document against BODS GTFS's 1.14, so on that evidence TNDS is the
-overcounting one, but the mechanism — two sources modelling directions
-differently is the obvious candidate — would need a direction-level breakdown to
-confirm and is not established here.
+CDF62 is the one of the four whose `route_id`s really do carry distinct trips,
+and the documents settle it outright — TNDS reads 1.02 of the Cardiff 62's
+published timetable and BODS GTFS 0.26, so the missing service is in BODS GTFS,
+which is what England-only statutory coverage predicts for a Cardiff Bus
+service. SC125 is settled the other way and by the same evidence: TNDS reads
+2.28 of the document against BODS GTFS's 1.14, exactly what a service counted
+twice looks like, and the near-duplicate pairing above supplies the mechanism.
 
 ## Notes on each document
 
