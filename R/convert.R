@@ -139,15 +139,24 @@ post_convert <- function(gtfs, ncores) {
 #' Converts src_zip to GTFS and writes it to cache_zip; if cache_zip already
 #' exists the conversion is skipped. Returns the feed read back from the
 #' cache, optionally trimmed.
+#'
+#' filter_duplicate_files drops superseded versions of a service before
+#' conversion and reconciles registrations whose operating periods overlap;
+#' filter_date is the reference date deciding which version is operative.
 convert_txc_cached <- function(src_zip, cache_zip, cal, naptan, scotland,
-                               cfg, trim = NULL) {
+                               cfg, trim = NULL,
+                               filter_duplicate_files = FALSE,
+                               filter_date = Sys.Date()) {
   if (!file.exists(cache_zip)) {
     message("Converting ", src_zip)
     gtfs <- UK2GTFS::transxchange2gtfs(src_zip, silent = TRUE, cal = cal,
                                        naptan = naptan,
                                        ncores = cfg$ncores,
                                        scotland = scotland,
-                                       try_mode = TRUE, force_merge = TRUE)
+                                       try_mode = TRUE, force_merge = TRUE,
+                                       filter_duplicate_files =
+                                         filter_duplicate_files,
+                                       filter_date = filter_date)
     gtfs <- post_convert(gtfs, cfg$ncores)
     dir.create(dirname(cache_zip), showWarnings = FALSE, recursive = TRUE)
     write_repo_gtfs(gtfs, gsub("\\.zip$", "", basename(cache_zip)),
@@ -268,6 +277,16 @@ tnds_trim_days <- function() 45L
 #' around the snapshot date, then merged. NCSD.zip (the national coach
 #' services database) is included where present; it is absent from TNDS
 #' snapshots after February 2025.
+#'
+#' Conversion filters duplicate files, with the snapshot date as the reference
+#' date. TNDS is a current-data download rather than a change archive, so the
+#' revision rules rarely fire; what does fire is the overlap reconciliation.
+#' TNDS carries a service and its own successor registration at the same time,
+#' both declaring periods that overlap, because publishers issue the successor
+#' without closing the predecessor - Transport for London mints a new
+#' ServiceCode each time, so the two are invisible to any check keyed on the
+#' code. Converting both makes one bus into two near-identical journeys a few
+#' minutes apart. See reports/near_duplicate_journeys.md.
 convert_tnds_snapshot <- function(snapshot, cal, naptan, cfg = load_cfg()) {
   src <- file.path(cfg$data_root, "TransXChange", paste0("data_", snapshot))
   zips <- list.files(src, pattern = "\\.zip$", full.names = TRUE)
@@ -285,7 +304,9 @@ convert_tnds_snapshot <- function(snapshot, cal, naptan, cfg = load_cfg()) {
                        scotland = ifelse(region == "S", "yes", "no"),
                        cfg = cfg,
                        trim = c(snap_date - tnds_trim_days(),
-                                snap_date + tnds_trim_days()))
+                                snap_date + tnds_trim_days()),
+                       filter_duplicate_files = TRUE,
+                       filter_date = snap_date)
   })
 
   merged <- UK2GTFS::gtfs_merge(gtfs_all, force = TRUE)

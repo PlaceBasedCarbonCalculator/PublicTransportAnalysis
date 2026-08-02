@@ -427,32 +427,59 @@ if (nrow(misread)) {
     desc(misread[order(-abs(r_tnds - 1))], "r_tnds")))
 }
 
-# The doubling group. One route reading 2x is a lead; several, on current
-# editions, with the reference stop matched in both feeds, is a finding - and
-# it is the same shape as the zone-level gap in lsoa_disagreement.md, so the
-# two analyses are seeing one mechanism from opposite ends.
-dbl <- ok[!is.na(months_old) & months_old <= 6 & stop_matched &
-            r_bods >= 1.5 & r_tnds <= 1.5 & r_bods / r_tnds >= 1.4]
+# The doubling group: BODS GTFS half again the document or more while TNDS
+# stays near it. The shape is the same as the zone-level gap in
+# lsoa_disagreement.md, so the two analyses are seeing one mechanism from
+# opposite ends. Graded rather than pooled - a route only carries full weight
+# if the document is current, the week is complete AND the reference stop was
+# found in both feeds, and lumping the weaker rows in with those would
+# overstate how much of this rests on evidence that can bear it.
+shape <- cmp[sm_tnds & sm_bods_gtfs & r_bods >= 1.5 & r_tnds <= 1.5 &
+               r_bods / r_tnds >= 1.4]
+shape[, core := reliable & !is.na(months_old) & months_old <= 6]
+data.table::setorderv(shape, c("core", "r_bods"), c(-1L, -1L))
+dbl <- shape[core == TRUE]
+sup <- shape[core == FALSE]
+row_line <- function(d, why = NULL) {
+  cat(sprintf("* `%s` — document %s; TNDS %s (%.2f), BODS GTFS %s (%.2f)%s.\n",
+              d$key, format(round(d$expected), big.mark = ","),
+              format(round(d$tnds), big.mark = ","), d$r_tnds,
+              format(round(d$bods_gtfs), big.mark = ","), d$r_bods,
+              if (is.null(why)) "" else paste0(" — ", why)))
+}
 if (nrow(dbl)) {
-  data.table::setorderv(dbl, "r_bods", -1L)
   cat(sprintf(paste0(
-    "**The doubling group.** %s route%s here %s a current edition (six ",
-    "months old or less), the reference stop found in both feeds, and the ",
+    "**The doubling group.** %d route%s clear%s every bar at once: an edition ",
+    "printed for the week being counted (six months old or less), a complete ",
+    "week of readable tables, the reference stop found in both feeds, and the ",
     "DfT's GTFS reading at least half again the document while TNDS stays ",
-    "near it. Median ratio to the document across them: TNDS %.2f, BODS GTFS ",
-    "%.2f. A single route at 2x is a lead; this many, on documents the ",
-    "operators published for the week being counted, is the same overcounting ",
-    "the zone-level analysis finds from the other direction.\n\n"),
+    "near it.\n\n"),
     nrow(dbl), if (nrow(dbl) == 1) "" else "s",
-    if (nrow(dbl) == 1) "has" else "have",
-    stats::median(dbl$r_tnds), stats::median(dbl$r_bods)))
-  for (i in seq_len(nrow(dbl))) {
-    d <- dbl[i]
-    cat(sprintf(paste0("* `%s` — document %s; TNDS %s (%.2f), BODS GTFS %s ",
-                       "(%.2f).\n"),
-                d$key, format(round(d$expected), big.mark = ","),
-                format(round(d$tnds), big.mark = ","), d$r_tnds,
-                format(round(d$bods_gtfs), big.mark = ","), d$r_bods))
+    if (nrow(dbl) == 1) "s" else ""))
+  for (i in seq_len(nrow(dbl))) row_line(dbl[i])
+  cat("\n")
+}
+if (nrow(sup)) {
+  cat(sprintf(paste0(
+    "%s route%s show%s the same shape on weaker evidence. %s not ",
+    "independent confirmation - each fails a bar the group above clears - but ",
+    "%s fails a *different* bar, and a reading error in the DfT's feed is a ",
+    "simpler explanation of all %d than %d unrelated faults that happen to ",
+    "point the same way.\n\n"),
+    nrow(sup), if (nrow(sup) == 1) "" else "s",
+    if (nrow(sup) == 1) "s" else "",
+    if (nrow(sup) == 1) "It is" else "They are",
+    if (nrow(sup) == 1) "it" else "each",
+    nrow(sup) + nrow(dbl), nrow(sup)))
+  for (i in seq_len(nrow(sup))) {
+    d <- sup[i]
+    row_line(d, if (!d$reliable) {
+      "the week of tables is incomplete"
+    } else if (is.na(d$months_old)) {
+      "the document states no edition"
+    } else {
+      sprintf("the document is %d months old", d$months_old)
+    })
   }
   cat("\n")
 }

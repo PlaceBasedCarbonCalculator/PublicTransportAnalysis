@@ -405,6 +405,17 @@ Routes where **BODS GTFS** is more than 25% from the document: `X30` (3.00), `PO
 
 **Read these as document-reading problems:** `TBALL` (0.56). The two sources agree with each other and diverge from the document by the same factor, but the document is current (or states no edition), so what to doubt is the reading of it. A ratio near 2.00 in this group is the signature of a table that prints one direction where the feeds count both.
 
+**The doubling group.** 2 routes clear every bar at once: an edition printed for the week being counted (six months old or less), a complete week of readable tables, the reference stop found in both feeds, and the DfT's GTFS reading at least half again the document while TNDS stays near it.
+
+* `NX6` — document 5,012; TNDS 5,284 (1.05), BODS GTFS 11,044 (2.20).
+* `NX14` — document 5,000; TNDS 5,440 (1.09), BODS GTFS 10,096 (2.02).
+
+3 routes show the same shape on weaker evidence. They are not independent confirmation - each fails a bar the group above clears - but each fails a *different* bar, and a reading error in the DfT's feed is a simpler explanation of all 5 than 3 unrelated faults that happen to point the same way.
+
+* `PO1` — document 3,792; TNDS 4,120 (1.09), BODS GTFS 10,538 (2.78) — the document states no edition.
+* `NX74` — document 7,304; TNDS 10,900 (1.49), BODS GTFS 18,540 (2.54) — the week of tables is incomplete.
+* `BR24` — document 3,048; TNDS 3,164 (1.04), BODS GTFS 5,364 (1.76) — the document is 35 months old.
+
 Cases the document settles:
 
 * `279` — the document implies 8,284 journeys; TNDS 8,284 (1.00), BODS GTFS 14,312 (1.73). **TNDS is right** (edition not stated).
