@@ -524,6 +524,24 @@ by_runs <- sort(by_runs, decreasing = TRUE)
 ex <- which(longer & grepl("[a-z]", nm_t) & m_all$ratio >= 0.95)
 ex <- ex[order(-m_all$tnds[ex])][seq_len(min(3, length(ex)))]
 
+# Usually the operator with the most pairs and the one with the most journeys
+# differ - the pairs are a long tail of tiny school services while the journeys
+# sit on a few large ones - but they can be the same operator, and then a
+# "while" contrast reads as though two operators were named.
+top_pairs <- names(ops)[1]
+top_runs  <- names(by_runs)[1]
+tail_txt <- if (identical(top_pairs, top_runs)) {
+  sprintf(paste0("**%s** contributes both the most pairs (%d) and ",
+                 "the most journeys (%s of %s)"),
+          top_pairs, as.integer(ops[1]), fmt(by_runs[1]),
+          fmt(sum(m_all$tnds)))
+} else {
+  sprintf(paste0("**%s** contributes the most pairs (%d) while ",
+                 "**%s** contributes the most journeys (%s of %s)"),
+          top_pairs, as.integer(ops[1]), top_runs, fmt(by_runs[1]),
+          fmt(sum(m_all$tnds)))
+}
+
 cat(sprintf(paste0(
   "Two naming habits produce these pairs, and they carry very different ",
   "weight. In %s, TNDS holds the longer name in %d pairs and the shorter one ",
@@ -531,12 +549,10 @@ cat(sprintf(paste0(
   "or local variant against a bare code - %s, each agreeing on journeys to ",
   "within 5%%. The other is school-service prefixes and suffixes ",
   "(`S458`/`458`, `807D`/`808`), a long tail of tiny services: it is why ",
-  "**%s** contributes the most pairs (%d) while **%s** contributes the most ",
-  "journeys (%s of %s).\n\n"),
+  "%s.\n\n"),
   latest, sum(longer), sum(shorter), sum(!nzchar(nm_t)),
   paste0("`", nm_t[ex], "`/`", nm_g[ex], "`", collapse = ", "),
-  names(ops)[1], as.integer(ops[1]),
-  names(by_runs)[1], fmt(by_runs[1]), fmt(sum(m_all$tnds))))
+  tail_txt))
 ```
 
 One caveat on reading the table: where an operator runs many routes between
@@ -848,7 +864,17 @@ cat(paste0("- The measured differences above are upper bounds on two counts: ",
   the analysis date. Beyond that, every feed of every source passes through
   `UK2GTFS::gtfs_deduplicate()` before it is counted, which removes a journey
   the feed describes twice on the same day. On the July 2026 snapshots that is
-  5.2% of the DfT GTFS's trips and 2.5% of TNDS's.
+  5.2% of the DfT GTFS's trips and 1.6% of TNDS's.
+
+<!-- Those two rates are measured, not derived from any target, so they go
+     stale when a feed is reconverted. To re-measure: read each July 2026 feed
+     exactly as read_feed() does (gtfs_read, drop shapes, drop stops with no
+     stop_lon, gtfs_clean) and compare nrow(trips) before and after
+     gtfs_deduplicate(). Last measured 2026-08-08 on the reconverted feeds:
+     TNDS 23,711 of 1,483,772 (1.6%); DfT GTFS 77,151 of 1,469,864 (5.2%),
+     against 47,242 (3.2%) with match_block = TRUE and
+     match_operator = "agency_id". -->
+
 
   Two of that function's settings had to be loosened before it worked on these
   feeds, and both are worth knowing when reading any figure here. It originally

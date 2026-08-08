@@ -286,7 +286,7 @@ Table: Largest services counted as exclusive to both sources at once, 2026
 |East Beach           |Leigh-on-Sea Railway Station |99          |         1,008|99OT             |              1,008|Ensign Bus           |
 |Woodthorpe Shops     |Woodthorpe Shops             |12          |           824|Y12              |                824|East Yorkshire       |
 
-Two naming habits produce these pairs, and they carry very different weight. In 2026, TNDS holds the longer name in 10 pairs and the shorter one in 12, with 5 carrying no number at all. One habit is a marketing name or local variant against a bare code - `one`/`1`, `mln`/`RM`, `sky`/`SN`, each agreeing on journeys to within 5%. The other is school-service prefixes and suffixes (`S458`/`458`, `807D`/`808`), a long tail of tiny services: it is why **trentbarton** contributes the most pairs (8) while **trentbarton** contributes the most journeys (20,008 of 33,940).
+Two naming habits produce these pairs, and they carry very different weight. In 2026, TNDS holds the longer name in 10 pairs and the shorter one in 12, with 5 carrying no number at all. One habit is a marketing name or local variant against a bare code - `one`/`1`, `mln`/`RM`, `sky`/`SN`, each agreeing on journeys to within 5%. The other is school-service prefixes and suffixes (`S458`/`458`, `807D`/`808`), a long tail of tiny services: it is why **trentbarton** contributes both the most pairs (8) and the most journeys (20,008 of 33,940).
 
 One caveat on reading the table: where an operator runs many routes between
 the same pair of generic terminals, the *aggregate* is sound but an individual
@@ -474,7 +474,17 @@ Table: Largest journey-count disagreements on services both sources carry, 2026
   the analysis date. Beyond that, every feed of every source passes through
   `UK2GTFS::gtfs_deduplicate()` before it is counted, which removes a journey
   the feed describes twice on the same day. On the July 2026 snapshots that is
-  5.2% of the DfT GTFS's trips and 2.5% of TNDS's.
+  5.2% of the DfT GTFS's trips and 1.6% of TNDS's.
+
+<!-- Those two rates are measured, not derived from any target, so they go
+     stale when a feed is reconverted. To re-measure: read each July 2026 feed
+     exactly as read_feed() does (gtfs_read, drop shapes, drop stops with no
+     stop_lon, gtfs_clean) and compare nrow(trips) before and after
+     gtfs_deduplicate(). Last measured 2026-08-08 on the reconverted feeds:
+     TNDS 23,711 of 1,483,772 (1.6%); DfT GTFS 77,151 of 1,469,864 (5.2%),
+     against 47,242 (3.2%) with match_block = TRUE and
+     match_operator = "agency_id". -->
+
 
   Two of that function's settings had to be loosened before it worked on these
   feeds, and both are worth knowing when reading any figure here. It originally
