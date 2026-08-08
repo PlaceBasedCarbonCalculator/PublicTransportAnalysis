@@ -34,18 +34,18 @@ band and does not weight weekdays, so it is a plain total.
 
 |Measure                                         |       Value|
 |:-----------------------------------------------|-----------:|
-|Zones with counted bus service in either source |      40,822|
-|Total bus trip-runs, TNDS                       | 194,435,628|
+|Zones with counted bus service in either source |      40,819|
+|Total bus trip-runs, TNDS                       | 191,138,742|
 |Total bus trip-runs, BODS GTFS                  | 203,021,824|
-|Zones where TNDS counts more                    |      10,866|
-|Zones where BODS GTFS counts more               |      10,019|
-|Zones where the two agree exactly               |      19,937|
-|Zones with service in TNDS only                 |         298|
-|Zones with service in BODS GTFS only            |         127|
+|Zones where TNDS counts more                    |       9,823|
+|Zones where BODS GTFS counts more               |      11,743|
+|Zones where the two agree exactly               |      19,253|
+|Zones with service in TNDS only                 |         294|
+|Zones with service in BODS GTFS only            |         262|
 
-Nationally TNDS counts 194,435,628 bus trip-runs against BODS GTFS's 203,021,824, so BODS GTFS is the higher of the two by 8,586,196 (-4.2% of the BODS GTFS total). The direction is not uniform: BODS GTFS is the higher source in 10,019 zones and TNDS in 10,866, so the national total is a partial cancellation of disagreements pointing opposite ways.
+Nationally TNDS counts 191,138,742 bus trip-runs against BODS GTFS's 203,021,824, so BODS GTFS is the higher of the two by 11,883,082 (-5.9% of the BODS GTFS total). The direction is not uniform: BODS GTFS is the higher source in 11,743 zones and TNDS in 9,823, so the national total is a partial cancellation of disagreements pointing opposite ways.
 
-At zone level the two agree exactly in only 19,937 of 40,822 zones (48.8%), and in **425 zones** one source shows a bus service where the other shows none at all — 298 in TNDS only, 127 in BODS GTFS only. Those are the zones where the choice of source is not a matter of degree.
+At zone level the two agree exactly in only 19,253 of 40,819 zones (47.2%), and in **556 zones** one source shows a bus service where the other shows none at all — 294 in TNDS only, 262 in BODS GTFS only. Those are the zones where the choice of source is not a matter of degree.
 
 ![plot of chunk gap-dist](figures/lsoagap-gap-dist-1.png)
 
@@ -66,15 +66,15 @@ each gridline is ten times the last, in both directions from zero:
 
 ![plot of chunk gap-curve-log](figures/lsoagap-gap-curve-log-1.png)
 
-Summed over every zone, the two sources differ by **18,741,514 trip-runs** in absolute terms, against **8,586,196** between the national totals — the difference between those two figures is disagreement that cancels between zones pointing opposite ways. Of the absolute total, the worst **1%** of zones carry **24.9%** and the worst **10%** carry **79.0%**.
+Summed over every zone, the two sources differ by **20,559,612 trip-runs** in absolute terms, against **11,883,082** between the national totals — the difference between those two figures is disagreement that cancels between zones pointing opposite ways. Of the absolute total, the worst **1%** of zones carry **22.8%** and the worst **10%** carry **76.2%**.
 
-By size of difference: **4,668 zones** differ by 1,000 trip-runs or more (11.4% of all zones), **7,705** by between 100 and 1,000, **8,512** by between 1 and 100, and **19,937** agree exactly. A zone differing by 100 trip-runs over 28 days is under four departures a day; one differing by 1,000 is thirty-six.
+By size of difference: **5,186 zones** differ by 1,000 trip-runs or more (12.7% of all zones), **8,382** by between 100 and 1,000, **7,998** by between 1 and 100, and **19,253** agree exactly. A zone differing by 100 trip-runs over 28 days is under four departures a day; one differing by 1,000 is thirty-six.
 
-The curve is not symmetric. It crosses zero at rank **10,867 of 40,822**, 26.6% of the way along, and the two ends are of very different size: the highest zone is **+18,886** and the lowest **-74,064**, so the drop on the right is about 4 times the rise on the left. BODS GTFS counts more service than TNDS in more zones and by a wider margin.
+The curve is not symmetric. It crosses zero at rank **9,824 of 40,819**, 24.1% of the way along, and the two ends are of very different size: the highest zone is **+18,886** and the lowest **-74,064**, so the drop on the right is about 4 times the rise on the left. BODS GTFS counts more service than TNDS in more zones and by a wider margin.
 
-The left-hand side is not one country's story either way. Of the **10,866 zones** where TNDS counts more, the split by country is 10,165 England, 388 Wales, 313 Scotland; but among the worst **1%** of that side it is 95 England, 11 Wales, 3 Scotland. England leads on both counts here, though that is a property of this snapshot rather than of the sources: on the February 2026 feeds the extremes were mostly Scottish. The top-ten tables below rank by size, so they show only the second of those two answers.
+The left-hand side is not one country's story either way. Of the **9,823 zones** where TNDS counts more, the split by country is 9,173 England, 353 Wales, 297 Scotland; but among the worst **1%** of that side it is 84 England, 11 Wales, 4 Scotland. England leads on both counts here, though that is a property of this snapshot rather than of the sources: on the February 2026 feeds the extremes were mostly Scottish. The top-ten tables below rank by size, so they show only the second of those two answers.
 
-So the answer to "a few extreme zones or many moderate ones" is both, and the two facts have to be held together: the tail is heavy enough that a tenth of zones account for 79.0% of all disagreement, yet **11.4% of zones** differ by more than thirty-six departures a day, which is not a rounding error in any of them. The choice of source changes the answer over most of the country, and changes it drastically in a small part of it.
+So the answer to "a few extreme zones or many moderate ones" is both, and the two facts have to be held together: the tail is heavy enough that a tenth of zones account for 76.2% of all disagreement, yet **12.7% of zones** differ by more than thirty-six departures a day, which is not a rounding error in any of them. The choice of source changes the answer over most of the country, and changes it drastically in a small part of it.
 
 ## The zones that disagree most
 
@@ -95,23 +95,23 @@ route-level section below therefore takes one zone per locality.
 ### Zones where TNDS counts substantially more service
 
 
-|Zone      |Locality                   |Country  |    TNDS| BODS GTFS| Difference| Only TNDS| Only BODS| Frequency|
-|:---------|:--------------------------|:--------|-------:|---------:|----------:|---------:|---------:|---------:|
-|E01004513 |Mapleton Road (SW18)       |England  |  25,028|     6,142|     18,886|    18,876|         0|        10|
-|E01035506 |Victoria Centre            |England  |  79,236|    63,524|     15,712|    16,160|      -241|      -207|
-|E01033400 |Nottingham Railway Station |England  |  85,620|    70,413|     15,207|    13,896|       -38|     1,349|
-|E01035376 |Chester Bus Interchange    |England  |  47,676|    33,580|     14,096|         0|       -40|    14,136|
-|E01013842 |Bobbers Mill Road          |England  |  14,128|       222|     13,906|    13,896|         0|        10|
-|E01013846 |ASDA                       |England  |  14,128|       222|     13,906|    13,896|         0|        10|
-|E01013816 |Canning Circus             |England  |  39,500|    25,794|     13,706|    13,896|       -24|      -166|
-|E01013870 |Crossgate Drive            |England  |  18,800|     5,184|     13,616|    13,616|         0|         0|
-|E01013815 |Forest P&R                 |England  |  34,924|    21,346|     13,578|    13,896|      -278|       -40|
-|E01013829 |Highbury Vale Tram Stop    |England  |  18,344|     4,776|     13,568|    13,568|         0|         0|
-|E01013832 |Bar Lane                   |England  |  22,216|     8,648|     13,568|    13,568|         0|         0|
-|E01032896 |New Street                 |England  |  33,997|    20,756|     13,241|     2,048|         0|    11,193|
-|S01014636 |Salisbury Place            |Scotland |  28,240|    15,236|     13,004|         0|         0|    13,004|
-|E01004397 |Walthamstow Bus Station    |England  | 111,252|   101,004|     10,248|        60|         0|    10,188|
-|E01028378 |Nottingham Road            |England  |  13,768|     4,016|      9,752|     8,000|         0|     1,752|
+|Zone      |Locality                       |Country  |    TNDS| BODS GTFS| Difference| Only TNDS| Only BODS| Frequency|
+|:---------|:------------------------------|:--------|-------:|---------:|----------:|---------:|---------:|---------:|
+|E01004513 |Mapleton Road (SW18)           |England  |  25,028|     6,142|     18,886|    18,876|         0|        10|
+|E01032896 |New Street                     |England  |  33,997|    20,756|     13,241|     2,048|         0|    11,193|
+|S01014636 |Salisbury Place                |Scotland |  28,240|    15,236|     13,004|         0|         0|    13,004|
+|E01035376 |Chester Bus Interchange        |England  |  44,728|    33,580|     11,148|         0|       -40|    11,188|
+|E01004397 |Walthamstow Bus Station        |England  | 111,252|   101,004|     10,248|        60|         0|    10,188|
+|E01035378 |Grosvenor Street               |England  |  19,468|    11,252|      8,216|         0|         0|     8,216|
+|E01033223 |Bus Station                    |England  |  69,044|    61,043|      8,001|     2,644|       -96|     5,453|
+|E01021782 |Loughton Station               |England  |  19,972|    12,052|      7,920|        40|         0|     7,880|
+|E01003750 |Chingford Lane (IG8)           |England  |  23,772|    16,182|      7,590|       280|         0|     7,310|
+|S01016759 |Co-op Supermarket              |Scotland |  10,272|     2,710|      7,562|     6,423|         0|     1,139|
+|E01003670 |St Aubyns School               |England  |  19,308|    11,768|      7,540|       240|         0|     7,300|
+|E01024940 |Bus Station                    |England  |  19,908|    12,368|      7,540|     1,444|        -8|     6,104|
+|E01004377 |Chelmsford Rd /Woodford New Rd |England  |  18,016|    10,484|      7,532|       240|         0|     7,292|
+|E01002218 |Alexandra Avenue (HA2)         |England  |  25,380|    17,939|      7,441|         0|         0|     7,441|
+|E01021766 |Audleigh Place                 |England  |  13,304|     6,712|      6,592|         0|         0|     6,592|
 
 ### Zones where BODS GTFS counts substantially more service
 
@@ -119,22 +119,22 @@ route-level section below therefore takes one zone per locality.
 |Zone      |Locality                  |Country |    TNDS| BODS GTFS| Difference| Only TNDS| Only BODS| Frequency|
 |:---------|:-------------------------|:-------|-------:|---------:|----------:|---------:|---------:|---------:|
 |E01033620 |Church Centre             |England | 134,556|   208,620|    -74,064|         0|         0|   -74,064|
-|E01034091 |Bus Station               |England |  11,487|    66,571|    -55,084|       501|      -288|   -55,297|
+|E01034091 |Bus Station               |England |  10,995|    66,571|    -55,576|       501|    -3,578|   -52,499|
 |E01033617 |Albert Street             |England | 100,336|   151,028|    -50,692|         0|         0|   -50,692|
-|E01034092 |Cathedral                 |England |  12,062|    60,111|    -48,049|       498|      -212|   -48,335|
-|E01033415 |Friar Street              |England |  25,438|    71,384|    -45,946|     1,544|         0|   -47,490|
-|E01033140 |Parkway                   |England |  10,125|    52,895|    -42,770|       309|      -180|   -42,899|
+|E01034092 |Cathedral                 |England |  11,837|    60,111|    -48,274|       498|      -212|   -48,560|
+|E01033415 |Friar Street              |England |  24,918|    71,384|    -46,466|     1,544|         0|   -48,010|
+|E01033140 |Parkway                   |England |   9,668|    52,895|    -43,227|       309|      -180|   -43,356|
 |E01033561 |Moor St Selfridges        |England |  81,536|   122,344|    -40,808|         0|         0|   -40,808|
 |E01033615 |Markets                   |England |  65,888|   100,304|    -34,416|         0|         0|   -34,416|
-|E01034313 |Wolverhampton Bus Station |England |  68,433|   100,521|    -32,088|         0|         0|   -32,088|
-|E01010102 |West Bromwich Bus Station |England |  60,804|    88,662|    -27,858|     2,168|         0|   -30,026|
+|E01034313 |Wolverhampton Bus Station |England |  67,926|   100,521|    -32,595|         0|         0|   -32,595|
+|E01010102 |West Bromwich Bus Station |England |  60,306|    88,662|    -28,356|     2,168|         0|   -30,524|
 |E01002968 |Cromwell Road Bus Station |England |  94,740|   122,222|    -27,482|        40|         0|   -27,522|
-|E01033420 |Kings Road                |England |  10,074|    35,836|    -25,762|        20|         0|   -25,782|
+|E01031585 |Bus Station               |England |   7,228|    33,548|    -26,320|         0|   -26,532|       212|
+|E01033420 |Kings Road                |England |   9,814|    35,836|    -26,022|        20|         0|   -26,042|
 |E01017032 |City Shops South          |England |  32,139|    56,709|    -24,570|     1,296|         0|   -25,866|
 |E01010125 |Chelmsley Interchange     |England |  33,288|    57,456|    -24,168|         0|       -32|   -24,136|
-|E01020554 |Kings Statue              |England |   5,427|    28,832|    -23,405|         0|         0|   -23,405|
 
-Across the 60 zones investigated in detail, the differences come to 217,051 trip-runs on services only TNDS carries, 71,694 on services only BODS GTFS carries, and a net -710,766 from services both carry at different frequencies. Missing services, not frequency differences, dominate.
+Across the 60 zones investigated in detail, the differences come to 74,163 trip-runs on services only TNDS carries, 78,597 on services only BODS GTFS carries, and a net -660,999 from services both carry at different frequencies. Missing services, not frequency differences, dominate.
 
 ## Is either source still counting the same bus twice?
 
@@ -163,31 +163,31 @@ Table: Whole-feed duplicate journeys remaining, by source
 
 |Source              | Bus trips| Distinct journeys|  Trip-days| Duplicate runs| Share|
 |:-------------------|---------:|-----------------:|----------:|--------------:|-----:|
-|TNDS (TransXChange) | 1,122,820|           841,519|  9,575,862|          2,976|  0.0%|
+|TNDS (TransXChange) | 1,102,686|           826,884|  9,401,680|          2,896|  0.0%|
 |BODS (GTFS)         | 1,128,176|           861,410| 10,000,181|         78,830|  0.8%|
 
 Nationally, **0.8%** of the counted runs still left in BODS (GTFS) are the same journey twice on one day, against 0.0% in the other source. Across the whole feed a journey is its entire itinerary, which is a stricter test than the zone-level one below: inside a zone only the part of the trip that touches the zone's stops can be compared.
 
-Across the 60 zones investigated, the duplicate runs still present account for a median of **0.0%** of TNDS's counted trip-days and **0.5%** of the DfT GTFS's. Totals: 15,027 of 2,153,239 TNDS trip-days and 286,263 of 2,718,132 BODS GTFS trip-days.
+Across the 60 zones investigated, the duplicate runs still present account for a median of **0.0%** of TNDS's counted trip-days and **1.7%** of the DfT GTFS's. Totals: 17,737 of 1,940,181 TNDS trip-days and 288,370 of 2,605,098 BODS GTFS trip-days.
 
 
 
 Table: Zones with the largest share of duplicated runs remaining in BODS GTFS
 
-|Zone      |Locality             | TNDS trip-days|TNDS duplicate | BODS trip-days|BODS duplicate |
-|:---------|:--------------------|--------------:|:--------------|--------------:|:--------------|
-|E01021587 |Skerry Rise          |          2,725|0.0%           |         23,483|41.3%          |
-|E01021592 |Cockney Corner       |          2,874|0.0%           |         25,882|39.2%          |
-|E01021542 |Hospital             |          3,554|0.0%           |         21,746|38.2%          |
-|E01021543 |Erick Avenue         |          2,474|0.0%           |         20,658|37.6%          |
-|E01033140 |Parkway              |         10,125|0.0%           |         52,895|36.9%          |
-|E01034091 |Bus Station          |         11,487|0.1%           |         66,571|36.2%          |
-|E01034092 |Cathedral            |         12,062|0.0%           |         60,111|33.3%          |
-|E01030751 |Sunbury Cross        |         14,772|0.0%           |         35,696|30.2%          |
-|E01020554 |Kings Statue         |          5,427|0.0%           |         28,832|27.1%          |
-|E01034290 |High Street          |         17,220|0.0%           |         36,449|20.5%          |
-|E01017034 |The Hard Interchange |         27,337|0.0%           |         49,932|17.9%          |
-|E01033620 |Church Centre        |        134,556|0.6%           |        208,620|16.1%          |
+|Zone      |Locality       | TNDS trip-days|TNDS duplicate | BODS trip-days|BODS duplicate |
+|:---------|:--------------|--------------:|:--------------|--------------:|:--------------|
+|E01001843 |Moulins Road   |          6,044|0.0%           |              0|NA%            |
+|E01013509 |Sunny Grove    |          5,284|0.0%           |              0|NA%            |
+|E01021587 |Skerry Rise    |          2,502|0.0%           |         23,483|41.3%          |
+|E01021592 |Cockney Corner |          2,874|0.0%           |         25,882|39.2%          |
+|E01021542 |Hospital       |          3,331|0.0%           |         21,746|38.2%          |
+|E01021543 |Erick Avenue   |          2,251|0.0%           |         20,658|37.6%          |
+|E01033140 |Parkway        |          9,668|0.0%           |         52,895|36.9%          |
+|E01034091 |Bus Station    |         10,995|0.1%           |         66,571|36.2%          |
+|E01034092 |Cathedral      |         11,837|0.0%           |         60,111|33.3%          |
+|E01030751 |Sunbury Cross  |         14,772|0.0%           |         35,696|30.2%          |
+|E01020554 |Kings Statue   |          5,427|0.0%           |         28,832|27.1%          |
+|E01034290 |High Street    |         16,004|0.0%           |         36,449|20.5%          |
 
 A duplicate here is a statement about the feed, not about the road: two identical journeys on one day is one bus described twice. These are the ones deduplication would not remove without risking real service, so where a source's remaining excess over the other is close to its remaining duplicate share, the zone's gap is still an artefact of the feed; where it is not, the gap is real service one source lacks.
 
@@ -217,45 +217,45 @@ TNDS 25,028 trip-runs, BODS GTFS 6,142, difference **18,886**. 3 stops in the zo
 |N44     |Aldwych / Bush House - Sutton Station / The Qu |   280|       270|         10|both, different frequency |
 
 
-### E01035506 — Victoria Centre (England)
+### E01032896 — New Street (England)
 
-TNDS 79,236 trip-runs, BODS GTFS 63,524, difference **15,712**. 24 stops in the zone; 2 services only in TNDS, 1 only in BODS GTFS, 54 in both.
-
-
-
-|Service |Description                           |   TNDS| BODS GTFS| Difference|Cause                     |
-|:-------|:-------------------------------------|------:|---------:|----------:|:-------------------------|
-|TRAM    |Clifton/Toton - Phoenix Park/Hucknall | 13,896|         0|     13,896|only in TNDS              |
-|mln     |Nottingham - Bingham                  |  2,264|         0|      2,264|only in TNDS              |
-|L14     |                                      |      0|       241|       -241|only in BODS GTFS         |
-|34C     |                                      |    640|       868|       -228|both, different frequency |
-|L2      |Nottingham - Assarts Farm             |    388|       367|         21|both, different frequency |
-|6       |                                      |  3,084|     3,084|          0|both, different frequency |
-|43      |                                      |  4,488|     4,488|          0|both, different frequency |
-|77      |                                      |  2,204|     2,204|          0|both, different frequency |
-
-
-### E01033400 — Nottingham Railway Station (England)
-
-TNDS 85,620 trip-runs, BODS GTFS 70,413, difference **15,207**. 51 stops in the zone; 1 services only in TNDS, 1 only in BODS GTFS, 62 in both.
+TNDS 33,997 trip-runs, BODS GTFS 20,756, difference **13,241**. 27 stops in the zone; 7 services only in TNDS, 0 only in BODS GTFS, 28 in both.
 
 
 
-|Service |Description                           |   TNDS| BODS GTFS| Difference|Cause                     |
-|:-------|:-------------------------------------|------:|---------:|----------:|:-------------------------|
-|TRAM    |Clifton/Toton - Phoenix Park/Hucknall | 13,896|         0|     13,896|only in TNDS              |
-|skye    |Nottingham - East Midlands Airport    |  3,504|     1,752|      1,752|both, different frequency |
-|34C     |                                      |  1,240|     1,696|       -456|both, different frequency |
-|KC      |                                      |  1,416|     1,456|        -40|both, different frequency |
-|5       |                                      |      0|        38|        -38|only in BODS GTFS         |
-|18      |Nottingham - Stapleford/Wollaton      |    744|       712|         32|both, different frequency |
-|L2      |Nottingham - Assarts Farm             |    388|       367|         21|both, different frequency |
-|18a     |Nottingham - Stapleford/Wollaton      |    336|       322|         14|both, different frequency |
+|Service |Description                      |  TNDS| BODS GTFS| Difference|Cause                     |
+|:-------|:--------------------------------|-----:|---------:|----------:|:-------------------------|
+|X38     |High Street - Corporation Street | 8,184|     4,092|      4,092|both, different frequency |
+|vil     |Derby - Burton upon Trent        | 1,648|         0|      1,648|only in TNDS              |
+|9       |New Street - Terminal Building   | 3,008|     1,504|      1,504|both, different frequency |
+|8       |Burton - Swadlincote             | 2,552|     1,276|      1,276|both, different frequency |
+|21      |New Street - Pingle School       | 1,976|       988|        988|both, different frequency |
+|V3      |High Street - Bus Station        | 1,824|       912|        912|both, different frequency |
+|401     |Bus Station - New Street         | 1,984|     1,152|        832|both, different frequency |
+|2       |New Street - Sussex Road         | 1,140|       560|        580|both, different frequency |
+
+
+### S01014636 — Salisbury Place (Scotland)
+
+TNDS 28,240 trip-runs, BODS GTFS 15,236, difference **13,004**. 5 stops in the zone; 0 services only in TNDS, 0 only in BODS GTFS, 14 in both.
+
+
+
+|Service |Description                                    |  TNDS| BODS GTFS| Difference|Cause                     |
+|:-------|:----------------------------------------------|-----:|---------:|----------:|:-------------------------|
+|3       |Mayfield - Wester Hailes Clovenstone           | 4,212|     2,100|      2,112|both, different frequency |
+|31      |Rosewell or Bonnyrigg - East Craigs            | 4,096|     2,048|      2,048|both, different frequency |
+|37      |Silverknowes - Easter Bush or Penicuik Deanbur | 3,504|     1,792|      1,712|both, different frequency |
+|7       |Newhaven - Edinburgh Royal Infirmary           | 2,940|     1,464|      1,476|both, different frequency |
+|29      |Silverknowes - Gorebridge Birkenside           | 2,728|     1,344|      1,384|both, different frequency |
+|49      |Fort Kinnaird - Edinburgh Royal Infirmary      | 2,660|     1,284|      1,376|both, different frequency |
+|8       |Muirhouse - Edinburgh Royal Infirmary          | 2,488|     1,220|      1,268|both, different frequency |
+|47      |Cammo - Penicuik Ladywood                      | 2,280|     1,144|      1,136|both, different frequency |
 
 
 ### E01035376 — Chester Bus Interchange (England)
 
-TNDS 47,676 trip-runs, BODS GTFS 33,580, difference **14,096**. 26 stops in the zone; 2 services only in TNDS, 1 only in BODS GTFS, 46 in both.
+TNDS 44,728 trip-runs, BODS GTFS 33,580, difference **11,148**. 26 stops in the zone; 1 services only in TNDS, 1 only in BODS GTFS, 46 in both.
 
 
 
@@ -264,23 +264,29 @@ TNDS 47,676 trip-runs, BODS GTFS 33,580, difference **14,096**. 26 stops in the 
 |10      |Bus Interchange - Quay Shopping Centre         | 5,304|     2,652|      2,652|both, different frequency |
 |1       |Wrexham Bus Station 7 - Chester Railway Statio | 3,008|     1,504|      1,504|both, different frequency |
 |11      |Chester Bus Interchange - Holywell Bus Station | 2,800|     1,400|      1,400|both, different frequency |
-|PR2     |Boughton Heath Park & Ride - Boughton Heath Pa | 2,408|     1,204|      1,204|both, different frequency |
 |4       |Chester Railway Station - Bus Station 5        | 2,304|     1,152|      1,152|both, different frequency |
-|PR3     |Upton Park & Ride - Upton Park & Ride          | 1,912|       956|        956|both, different frequency |
 |PR1     |Chester Bus Interchange - Wrexham Road, Park & | 1,832|       916|        916|both, different frequency |
 |41      |Bus Interchange - Whitchurch Bus Station       | 1,216|       608|        608|both, different frequency |
+|X4      |Chester Railway Station - Bus Station 5        | 1,200|       600|        600|both, different frequency |
+|T8      |Corwen Interchange - Chester Railway Station S | 1,056|       468|        588|both, different frequency |
 
 
-### E01013842 — Bobbers Mill Road (England)
+### E01004397 — Walthamstow Bus Station (England)
 
-TNDS 14,128 trip-runs, BODS GTFS 222, difference **13,906**. 6 stops in the zone; 1 services only in TNDS, 0 only in BODS GTFS, 1 in both.
+TNDS 111,252 trip-runs, BODS GTFS 101,004, difference **10,248**. 13 stops in the zone; 1 services only in TNDS, 0 only in BODS GTFS, 21 in both.
 
 
 
-|Service |Description                           |   TNDS| BODS GTFS| Difference|Cause                     |
-|:-------|:-------------------------------------|------:|---------:|----------:|:-------------------------|
-|TRAM    |Clifton/Toton - Phoenix Park/Hucknall | 13,896|         0|     13,896|only in TNDS              |
-|L14     |Nottingham - Bulwell                  |    232|       222|         10|both, different frequency |
+|Service |Description                                    |  TNDS| BODS GTFS| Difference|Cause                     |
+|:-------|:----------------------------------------------|-----:|---------:|----------:|:-------------------------|
+|275     |Walthamstow Bus Station - Barkingside Tesco    | 7,840|     3,960|      3,880|both, different frequency |
+|20      |Debden - Walthamstow                           | 6,804|     3,392|      3,412|both, different frequency |
+|215     |Lee Valley Campsite - Walthamstow Bus Station  | 5,640|     2,820|      2,820|both, different frequency |
+|675     |St James Street Station - Broadmead Road (IG8) |    60|         0|         60|only in TNDS              |
+|N38     |Walthamstow Bus Station - Victoria Bus Station |   940|       909|         31|both, different frequency |
+|N26     |Victoria Station - Chingford Station           |   644|       621|         23|both, different frequency |
+|N73     |Great Titchfield Street / Oxford Circus Statio |   776|       754|         22|both, different frequency |
+|55      |                                               | 6,740|     6,740|          0|both, different frequency |
 
 
 ### E01033620 — Church Centre (England)
@@ -303,20 +309,20 @@ TNDS 134,556 trip-runs, BODS GTFS 208,620, difference **-74,064**. 42 stops in t
 
 ### E01034091 — Bus Station (England)
 
-TNDS 11,487 trip-runs, BODS GTFS 66,571, difference **-55,084**. 13 stops in the zone; 7 services only in TNDS, 3 only in BODS GTFS, 40 in both.
+TNDS 10,995 trip-runs, BODS GTFS 66,571, difference **-55,576**. 13 stops in the zone; 7 services only in TNDS, 4 only in BODS GTFS, 40 in both.
 
 
 
 |Service |Description | TNDS| BODS GTFS| Difference|Cause                     |
 |:-------|:-----------|----:|---------:|----------:|:-------------------------|
 |C1      |            |  817|     8,575|     -7,758|both, different frequency |
-|X30     |            |  498|     6,764|     -6,266|both, different frequency |
 |C2      |            |  617|     6,675|     -6,058|both, different frequency |
 |C10     |            |  364|     4,740|     -4,376|both, different frequency |
 |C5      |            |  517|     4,843|     -4,326|both, different frequency |
 |C3      |            |  348|     3,948|     -3,600|both, different frequency |
+|X30     |            |    0|     3,290|     -3,290|only in BODS GTFS         |
+|X30     |            |  231|     3,474|     -3,243|both, different frequency |
 |C8      |            |  276|     3,444|     -3,168|both, different frequency |
-|C9      |            |  286|     3,042|     -2,756|both, different frequency |
 
 
 ### E01033617 — Albert Street (England)
@@ -339,7 +345,7 @@ TNDS 100,336 trip-runs, BODS GTFS 151,028, difference **-50,692**. 26 stops in t
 
 ### E01034092 — Cathedral (England)
 
-TNDS 12,062 trip-runs, BODS GTFS 60,111, difference **-48,049**. 13 stops in the zone; 4 services only in TNDS, 3 only in BODS GTFS, 41 in both.
+TNDS 11,837 trip-runs, BODS GTFS 60,111, difference **-48,274**. 13 stops in the zone; 4 services only in TNDS, 3 only in BODS GTFS, 41 in both.
 
 
 
@@ -349,7 +355,7 @@ TNDS 12,062 trip-runs, BODS GTFS 60,111, difference **-48,049**. 13 stops in the
 |C5      |            |  517|     5,755|     -5,238|both, different frequency |
 |C2      |            |  570|     5,146|     -4,576|both, different frequency |
 |C9      |            |  286|     4,290|     -4,004|both, different frequency |
-|C7      |            |  192|     3,324|     -3,132|both, different frequency |
+|C7      |            |  171|     3,324|     -3,153|both, different frequency |
 |C8      |            |  248|     3,372|     -3,124|both, different frequency |
 |C10     |            |  364|     3,444|     -3,080|both, different frequency |
 |C3      |            |  342|     3,246|     -2,904|both, different frequency |
@@ -357,7 +363,7 @@ TNDS 12,062 trip-runs, BODS GTFS 60,111, difference **-48,049**. 13 stops in the
 
 ### E01033415 — Friar Street (England)
 
-TNDS 25,438 trip-runs, BODS GTFS 71,384, difference **-45,946**. 47 stops in the zone; 6 services only in TNDS, 0 only in BODS GTFS, 48 in both.
+TNDS 24,918 trip-runs, BODS GTFS 71,384, difference **-46,466**. 47 stops in the zone; 7 services only in TNDS, 0 only in BODS GTFS, 48 in both.
 
 
 
@@ -375,13 +381,40 @@ TNDS 25,438 trip-runs, BODS GTFS 71,384, difference **-45,946**. 47 stops in the
 ## Interpretation
 
 - The largest single-zone disagreement is E01033620 (Church Centre), where the two sources differ by 74,064 trip-runs over the four weeks — 35.5% of the larger of the two figures.
-- Within the zones investigated, 22.9% of the difference (by trip-runs) is services one source carries and the other does not at all, against 77.1% from differing frequencies on shared services.
-- Disagreement by country: England 61.1% of zones; Scotland 7.9% of zones; Wales 30.0% of zones 
+- Within the zones investigated, 13.2% of the difference (by trip-runs) is services one source carries and the other does not at all, against 86.8% from differing frequencies on shared services.
+- 2 of the 60 zones investigated have **no counted bus service at all** in one of the two sources. For those zones the choice of source is not a matter of degree: one says the zone has a bus service and the other says it has none.
+- Disagreement by country: England 62.5% of zones; Wales 36.4% of zones; Scotland 9.5% of zones 
 
 ### Why these particular zones
 
-The zone-level pattern is the national pattern concentrated:
+The zone-level pattern is the national pattern concentrated. The causes below
+are ordered by how much of the remaining gap each accounts for, and the first
+three were each traced to a named service rather than inferred.
 
+- **Mode classification, not missing service.** The largest single "only in
+  TNDS" entry in the whole analysis is the Nottingham tram: TNDS files
+  Nottingham Express Transit ("Clifton/Toton – Phoenix Park/Hucknall", agency
+  `NEXT`) as `route_type = 3`, a *bus*, while the DfT's GTFS carries trams as
+  `route_type = 0`. This analysis counts buses, so every one of its 144,488
+  runs is credited to TNDS alone — more than twenty times the next largest
+  TNDS-only service, and the whole of the Nottingham cluster in the table
+  above, including the zone whose locality is "Highbury Vale Tram Stop".
+  Nothing is missing from either feed. TNDS codes trams correctly elsewhere
+  (79 `route_type = 0` routes, Metrolink and Tramlink among them), so this is
+  specific to NET.
+- **Duplicate publication in TNDS that no signature test can see.** A run of
+  services read *exactly* twice in TNDS what they read in the DfT's GTFS —
+  ratio 0.50 to two decimal places on the Debden–Walthamstow 20, the 275, the
+  Preston–Bolton 125, the Wrexham–Chester 1 and 4, the Derby X38 and others.
+  The mechanism was measured on the Preston–Bolton 125: TNDS holds it under two
+  `route_id`s of 371 trips each, and **not one pair of them is a same-day
+  duplicate under any signature** — whole itinerary, stop and departure time,
+  or stop alone. The two registrations describe the same service at times that
+  differ, so no signature test can match them and `gtfs_deduplicate()` is right
+  to keep both. Its published timetable settles which source is wrong: TNDS
+  reads 2.28 of the document, the DfT's GTFS 1.14. Whether every route in this
+  group shares that mechanism is inferred from the exact factor of two, not
+  separately measured.
 - **Country coverage.** BODS is a statutory requirement for English local bus
   services only. Scottish and Welsh services reach it only where an operator
   crosses the border or publishes voluntarily, so Welsh and Scottish zones
@@ -418,10 +451,14 @@ The zone-level pattern is the national pattern concentrated:
 - The unit is trip-runs touching a zone, not passenger-facing frequency. A
   zone crossed by a busy corridor scores highly whether or not the service is
   useful to people living there.
-- Zones are the widened LSOA/Data Zone polygons used throughout this analysis
-  (small LSOAs unioned with a 500 m buffer of their population-weighted
-  centroid, then buffered 100 m). They overlap, so a stop can count in more
-  than one zone and the zone totals do not sum to a national trip count.
+- Zones are the **plain** LSOA21 / DZ22 boundaries, not the widened polygons
+  the published trips-per-zone outputs use. They tile the country, so each stop
+  falls in exactly one zone and each disagreement is counted once. Levels here
+  are therefore about 2.3 times lower than in editions of this report published
+  before August 2026, which used the widened zones — a stop falls in 2.6 of
+  those on average. Only 186 of 318,931 stops fall outside all plain zones.
+  Totals still do not sum to a national trip count, because a journey crossing
+  several zones contributes to each.
 - The service groupings come from the same route matching the comparison report
   uses, with the same limitations: a wrong pairing shows up here as a spurious
   frequency difference, and a failed pairing as a service missing from both
