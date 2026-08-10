@@ -26,8 +26,8 @@ drawn from. Two individual claims in the report do not survive: London's
 "almost constant level of bus provision" becomes a modest fall, and the naming
 of the worst-hit local authorities changes substantially.
 
-Along the way this turned up a defect in the current pipeline's 2024 and 2025
-outputs, described in section 7.
+Along the way this turned up two defects in the pipeline's recent years, both
+since fixed, described in section 7.
 
 ## What is being compared
 
@@ -493,14 +493,65 @@ Table: Change 2006-08 to 2023, with and without the published cleaning step
 |Rural                  |                -54%|               -30%|              -49%|             -28%|
 |Urban (outside London) |                -50%|               -36%|              -47%|             -33%|
 
-### The conversion: the rest of it
+### Deduplication and conversion: measured separately
 
-What remains is the timetable conversion, and it is much the largest term. The
-rebuilt pipeline re-converts every source from the raw archives with the
-current UK2GTFS, which applies GTFS `calendar_dates` exception semantics
-correctly, de-duplicates exceptions when feeds are merged, and fixes a series
-of TransXChange and CIF import faults. The size of the effect by era is in
-section 1; the regional unevenness is in section 2.
+The rest divides into two things that can be measured apart, and they turn out
+to matter in completely different eras.
+
+**What the feeds say.** The previous pipeline did not reconvert its sources: it
+counted GTFS feeds converted in June-July 2023 (NPTDR) and November 2023
+(TransXChange) and kept on the data drive. Applying one identical piece of
+GTFS arithmetic to the old feed and the new one - how many departures does
+each describe inside the same 28-day window? - isolates what reconversion
+changed, with no counting code and no spatial join involved.
+
+**What deduplication removes.** This repo's `read_feed()` runs
+`UK2GTFS::gtfs_deduplicate()` between cleaning and counting. That function was
+added to UK2GTFS on 2026-08-01, months after the previous outputs were built,
+and TransportBlackspots went straight from `gtfs_clean()` to
+`gtfs_trips_per_zone()`. It removes a journey only where the whole itinerary
+matches another and every date it runs is also run by the copy kept.
+
+
+Table: Rebuilt as a share of previous, split into its parts
+
+| Year|Source | Conversion| Deduplication| Both together| Observed| Unexplained|
+|----:|:------|----------:|-------------:|-------------:|--------:|-----------:|
+| 2006|NPTDR  |      0.996|         0.716|         0.714|    0.689|       0.966|
+| 2018|TNDS   |      0.948|         0.992|         0.940|    0.942|       1.002|
+| 2023|TNDS   |      0.910|         0.992|         0.903|    0.841|       0.931|
+
+Deduplication is measured on the feed for the year shown except 2018, which
+takes the 2023 TNDS rate; deduplication removes 0.71% of trips in the 2024
+snapshot and 0.71% in the 2023 one, so the TNDS rate is stable.
+
+Read across the rows:
+
+- **2006 is deduplication, and almost nothing else.** The two conversions of
+  the NPTDR archive describe the same service to within half a percent. What
+  changed is that duplicate journeys stopped being counted:
+  28.4%
+  of scheduled departures in the 2006 feed are a journey the archive describes
+  more than once. NPTDR is assembled per administrative area and files a
+  service in every area it touches - the 2006 archive has nine overlapping
+  ATCO-CIF files - so this is duplication in the source, not in the converter.
+- **2018 is the conversion, and almost nothing else.** Deduplication removes
+  under 1% of a TNDS feed. The
+  5.2% fall is the
+  TransXChange converter, and conversion and deduplication together predict
+  the observed figure almost exactly.
+- **2023 is the conversion plus the end-point definition.** The conversion
+  accounts for 9.0%; the
+  remaining 6.9% is mostly the
+  previous run taking the element-wise maximum of a spring and an autumn
+  snapshot as its 2023 figure, which the feed comparison above cannot see
+  because it uses the autumn feed alone.
+
+So the two eras moved for unrelated reasons. The TransXChange work shows up
+where you would expect it, in the TransXChange years, at 5-9%. The much larger
+fall in the NPTDR years is deduplication of an archive that files the same bus
+several times over — and because the published baseline is 2006-08, it is that
+duplication, not the conversion, that the published decline was measured from.
 
 Two further differences between the runs are worth separating out because they
 are method, not conversion:
@@ -519,20 +570,50 @@ are method, not conversion:
   does mean the two runs are averaging over slightly different stretches of the
   timetable.
 
-**Which run is closer to the truth is not settled here.** The validation work
-in this repo — `reports/route_279_pdf_validation.md`,
+**Which run is closer to the truth is not fully settled here.** The validation
+work in this repo — `reports/route_279_pdf_validation.md`,
 `reports/route_validation_69_A1_142.md`, `reports/pdf_validation.md` — checks
-converted timetables against operators' own published schedules, but only for
-the 2026 snapshot. Nothing in this repo independently validates the NPTDR or
-Bus Archive conversions, and those are precisely the years that move. Given
-that the baseline period is where the two pipelines disagree most and where
-neither has been checked against ground truth, the honest position is that the
-size of the published decline rests on the weakest part of the evidence.
+converted timetables against operators' own published schedules, and confirms
+the deduplication settings on modern feeds: with them the DfT feed's First
+Bristol 21 lands on exactly the 3,296 journeys its operator prints, and without
+them on 5,816. That is direct evidence that removing these duplicates is right.
 
-## 7. A defect in the 2024 and 2025 outputs
+It is evidence about BODS feeds in 2026, though, not about NPTDR in 2006. The
+2006 duplication is far larger than anything seen in a modern feed, and no
+NPTDR-era route has been checked against a published timetable. The mechanism
+is credible and the direction is almost certainly right — an archive compiled
+per administrative area really does list a cross-boundary service more than
+once — but the exact size of the correction to the 2006-08 baseline, and so
+the exact size of the decline, rests on a step that has not been validated on
+the data it is being applied to. Checking a sample of NPTDR-era routes against
+operator timetables is the single most valuable piece of follow-up work.
 
-The rebuilt pipeline has 2024 and 2025, which the published report did not.
-They cannot be used as they stand.
+## 7. Two defects found and fixed on the way
+
+### 2024 and 2025 counted nearly every bus twice
+
+The rebuilt pipeline has 2024 and 2025, which the published report did not. As
+originally built they showed scheduled service per neighbourhood roughly
+doubling between 2023 and 2024 and staying there — not a change in bus
+provision. `year_sources()` in `R/config.R` gave those two years **two** bus
+feeds:
+
+```
+bus = list(feed("OpenBusData/GTFS/<date>/itm_all_gtfs.zip", ...),
+           feed("gtfs/tnds_<date>_merged.zip", ...))
+```
+
+and `sum_feeds()` in `R/frequency.R` adds their counts. The BODS national GTFS
+feed and the TNDS TransXChange conversion both cover the whole Great Britain
+bus network — that overlap is the entire subject of
+`reports/bus_source_comparison.md` — so nearly every journey was counted twice.
+Deduplication could not catch it: `read_feed()` deduplicates within a feed, not
+across two.
+
+Those years now take local bus from TNDS alone, like 2018-2023 (coach comes
+from a separate source, below), and have been recounted. Every year from 2004
+to 2023 always drew its bus service from a single feed, so nothing else in this
+report was affected.
 
 
 | Year| Trips per hour|
@@ -540,34 +621,48 @@ They cannot be used as they stand.
 | 2021|          22.29|
 | 2022|          21.92|
 | 2023|          21.39|
-| 2024|          43.84|
-| 2025|          44.34|
+| 2024|          21.87|
+| 2025|          22.09|
 
-Scheduled service per neighbourhood roughly doubles between 2023 and 2024 and
-stays there. That is not a change in bus provision. In `R/config.R`,
-`year_sources()` gives 2024 and 2025 **two** bus feeds:
+### Coach disappears from TNDS after 2024
 
-```
-bus = list(feed("OpenBusData/GTFS/<date>/itm_all_gtfs.zip", ...),
-           feed("gtfs/tnds_<date>_merged.zip", ...))
-```
+TNDS carries national coach services in a separate NCSD archive inside each
+snapshot. That archive is present up to February 2025 and gone from August 2025
+onward, and the coach content of the converted feeds goes with it.
 
-and `sum_feeds()` in `R/frequency.R` adds them together. The BODS national GTFS
-feed and the TNDS TransXChange conversion both cover the whole Great Britain
-bus network — that overlap is the entire subject of
-`reports/bus_source_comparison.md` — so nearly every journey is counted twice.
-Every year from 2004 to 2023 draws its bus service from a single feed, so the
-comparison in this report is unaffected.
 
-This also reaches beyond this repo: the Carbon & Place `pt_frequency` target in
-`../build/R/public_transport_frequency.R` reads these files for 2004-2025, so
-its 2024 and 2025 columns carry the same doubling.
+|Snapshot                 | Coach routes| Coach journeys| Share of road service|
+|:------------------------|------------:|--------------:|---------------------:|
+|tnds_20221102_merged.zip |          209|           8211|                 0.61%|
+|tnds_20231101_merged.zip |          253|           8245|                 0.69%|
+|tnds_20241004_merged.zip |          208|           8383|                 0.66%|
+|tnds_20251003_merged.zip |           22|           2857|                 0.22%|
+|tnds_20260204_merged.zip |           20|           2132|                 0.15%|
+|tnds_20260726_merged.zip |            6|            558|                 0.04%|
 
-Fixing it means choosing one source for those years, or merging the two feeds
-with journey-level de-duplication rather than summing their counts. The route
-validation already in this repo is directly relevant to that choice: it found
-BODS GTFS carrying some London timetables more than twice over while TNDS
-matched the operators' published schedules exactly.
+What survives in October 2025 is local and regional operators — Ember, Berrys,
+Green Line, Centaur, Redwing. The national network is simply absent. Left
+alone this would show up as a real-looking decline in road service of a few
+tenths of a percent, for a reason that is purely archival.
+
+BODS publishes that national network as a standalone Coach dataset in
+TransXChange, on the same dates as the bus feeds. Converted and trimmed to the
+window the pipeline keeps, the October 2025 snapshot gives 292 coach routes and
+11,269 journeys — National Express 207, Flixbus 61, Scottish Citylink 17,
+Park's of Hamilton 3, Megabus 2 — and the October 2024 one 278 routes and
+16,595 journeys. None of those operators appear in the TNDS snapshots at all:
+the "National Express" in TNDS is National Express West Midlands and Coventry,
+which are local bus operations. The two sources are genuinely disjoint, which
+is what makes it safe to sum them when summing two overlapping feeds is exactly
+what caused the defect above.
+
+From 2024 the pipeline therefore takes coach from BODS and drops route type 200
+from the TNDS feed, so coach comes from one source per year. That places the
+source break at 2023/24 rather than letting coach fade out across 2025 and
+2026. Coach is well under 1% of scheduled service throughout, so this changes
+no conclusion in this report; it matters because
+`../build/R/public_transport_frequency.R` folds coach into bus, where a
+vanishing source would read as a falling one.
 
 ## Conclusions
 
@@ -594,14 +689,19 @@ matched the operators' published schedules exactly.
    authority-level rankings are not stable enough to carry the weight the
    published Table 4 put on them.
 
-5. **Most of the difference sits in the pre-2018 archives**, which is also
-   where neither pipeline has been validated against published timetables.
-   That is the obvious next piece of work: check a sample of NPTDR-era routes
-   against operator timetables the way the 2026 routes have been, and settle
-   which conversion is right.
+5. **The baseline years and the end-point years moved for different reasons.**
+   The TransXChange conversion work accounts for a 5-9% fall in the years drawn
+   from TransXChange. The much larger fall in the 2004-2011 baseline is
+   deduplication — 28% of the departures in the 2006 archive are a journey it
+   describes more than once, because NPTDR is compiled per administrative area
+   and lists a cross-boundary service in each. The published decline was
+   measured from a baseline inflated by that duplication.
 
-6. **The 2024 and 2025 outputs need fixing before use**, in this repo and in
-   the Carbon & Place build that consumes them.
+6. **The NPTDR-era deduplication is the one step still unvalidated on its own
+   data.** It is validated on modern feeds against printed timetables, and the
+   mechanism is credible, but no NPTDR-era route has been checked. Doing so
+   would settle how much of the published decline was real. That is the obvious
+   next piece of work.
 
 ## Caveats
 
@@ -618,8 +718,13 @@ matched the operators' published schedules exactly.
 ## Reproducing this
 
 ```
-Rscript scripts/foe_comparison/run_foe_comparison.R   # ~1 hour
+Rscript scripts/foe_comparison/run_foe_comparison.R        # ~1 hour
 Rscript scripts/foe_comparison/add_raw_trends.R
+# the measurements behind section 6
+Rscript scripts/foe_comparison/compare_feed_service_days.R  # 2006 2008 2010 2018 2023
+Rscript scripts/foe_comparison/dedup_rate.R                 # one feed per run
+Rscript scripts/foe_comparison/coach_coverage.R
+Rscript scripts/foe_comparison/explore_bods_coach.R 20251006
 cd reports && Rscript -e 'knitr::knit("foe_bus_decline_comparison.Rmd", "foe_bus_decline_comparison.md")'
 ```
 
