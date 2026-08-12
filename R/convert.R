@@ -176,6 +176,46 @@ convert_txc_cached <- function(src_zip, cache_zip, cal, naptan, scotland,
   gtfs
 }
 
+#' Convert a BODS Coach snapshot (national coach network)
+#'
+#' TNDS distributes national coach services in a separate NCSD archive inside
+#' each snapshot. That archive is present up to data_20250207 and gone from
+#' data_20250816 onward, and the coach content of the converted TNDS feeds
+#' collapses with it: 208 routes in the October 2024 snapshot, 22 in October
+#' 2025, 6 in July 2026. What survives in 2025 is local and regional operators
+#' (Ember, Berrys, Green Line, Centaur, Redwing); the national network -
+#' National Express, Flixbus, Scottish Citylink, Megabus - is simply absent.
+#'
+#' BODS publishes that national network as a standalone Coach dataset, in
+#' TransXChange 2.4, on the same dates as the bus feeds. The October 2025
+#' snapshot converts to 292 routes and 12,170 journeys: National Express 207,
+#' Flixbus 61, Scottish Citylink 17, Park's of Hamilton 3, Megabus 2.
+#'
+#' From 2024 this is the coach source for the pipeline, and route type 200 is
+#' dropped from the TNDS feed for those years (see `year_sources()`), so coach
+#' comes from one place per year rather than two.
+#'
+#' Do not read the agency names literally. In the October 2024 feed the
+#' National Express operator record (`agency_id` NATX) carries the trading
+#' name "Dublin Express", so 186 routes appear under that name; they are
+#' ordinary GB services (London-Penzance, Birmingham-Heathrow, London-Derby)
+#' and only 6 journeys of 15,823 run wholly in the Republic of Ireland, whose
+#' stops fall outside every GB zone and are dropped by the zone join.
+convert_bods_coach <- function(snapshot, cal, naptan, cfg = load_cfg()) {
+  src <- file.path(cfg$data_root, "OpenBusData/Coach", snapshot, "TxC-2.4.zip")
+  cache <- file.path(cfg$gtfs_dir, "cache",
+                     paste0("bods_coach_", snapshot, ".zip"))
+  snap_date <- lubridate::ymd(snapshot)
+  # The feed is GB-wide - National Express and Flixbus alongside Scottish
+  # Citylink - so which bank holidays apply has to be decided per file, not
+  # per feed. "auto" is the only correct setting here (and the argument is a
+  # character: "yes", "no" or "auto", never a logical).
+  gtfs <- convert_txc_cached(src, cache, cal, naptan, scotland = "auto",
+                             cfg = cfg,
+                             trim = c(snap_date - 31, snap_date + 31))
+  write_repo_gtfs(gtfs, paste0("bods_coach_", snapshot))
+}
+
 #' Convert one NPTDR year (2004-2011) from the raw October archive
 #'
 #' NPTDR is ATCO-CIF; nptdr2gtfs() handles the archive zip directly and uses

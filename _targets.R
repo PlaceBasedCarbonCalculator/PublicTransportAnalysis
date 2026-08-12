@@ -140,6 +140,12 @@ list(
   tar_target(tnds_20241004, convert_tnds_snapshot("20241004", txc_cal, naptan), format = "file"),
   tar_target(tnds_20251003, convert_tnds_snapshot("20251003", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
 
+  # Coach from 2024: the BODS Coach dataset, because TNDS stops carrying the
+  # national coach network (see convert_bods_coach()). Small archives, so the
+  # default worker count is plenty.
+  tar_target(bods_coach_2024, convert_bods_coach("20241007", txc_cal, naptan), format = "file"),
+  tar_target(bods_coach_2025, convert_bods_coach("20251006", txc_cal, naptan), format = "file"),
+
   # Rail: ATOC CIF (2018-2024), then the National Rail Data Portal (2025)
   tar_target(rail_2018, convert_atoc_date("2018-10-16"), format = "file"),
   tar_target(rail_2019, convert_atoc_date("2019-08-31"), format = "file"),
@@ -172,8 +178,8 @@ list(
   # wider worker count too; 2004-2021 keep theirs, being already built.
   tar_target(trips_2022, run_year(2022, zones_file, tnds_20221102, rail_2022, cfg = cfg_cores(30)), format = "file"),
   tar_target(trips_2023, run_year(2023, zones_file, tnds_20231101, rail_2023, cfg = cfg_cores(30)), format = "file"),
-  tar_target(trips_2024, run_year(2024, zones_file, tnds_20241004, rail_2024, cfg = cfg_cores(30)), format = "file"),
-  tar_target(trips_2025, run_year(2025, zones_file, tnds_20251003, rail_rdp_2025, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2024, run_year(2024, zones_file, tnds_20241004, bods_coach_2024, rail_2024, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2025, run_year(2025, zones_file, tnds_20251003, bods_coach_2025, rail_rdp_2025, cfg = cfg_cores(30)), format = "file"),
 
   # --- Bus source comparison, 2022-2026: TNDS TransXChange vs BODS
   # --- TransXChange vs BODS GTFS, each year counted over one shared
