@@ -57,6 +57,14 @@ read_feed <- function(path, cfg = load_cfg(), deduplicate = TRUE) {
 }
 
 #' Count trips per zone for one feed over its 28-day Monday window
+#'
+#' `feed$drop_route_types` removes modes this feed should not contribute,
+#' which is how a year takes bus from one source and coach from another
+#' without counting coach twice. It is applied to the counted result, one row
+#' per zone and route type, rather than to the feed: dropping routes from the
+#' GTFS object means row-subsetting `stop_times`, and its arrival and
+#' departure columns are lubridate Periods, which a data.table row subset
+#' silently corrupts.
 feed_trips <- function(feed, zones, cfg = load_cfg()) {
   win <- study_window(feed$ref)
   message("Feed ", feed$path, ": window ", win$startdate, " to ", win$enddate)
@@ -65,7 +73,14 @@ feed_trips <- function(feed, zones, cfg = load_cfg()) {
                                       startdate = win$startdate,
                                       enddate = win$enddate,
                                       ncores = cfg$ncores)
-  as.data.frame(res)
+  res <- as.data.frame(res)
+  if (!is.null(feed$drop_route_types)) {
+    dropped <- sum(res$route_type %in% feed$drop_route_types)
+    message("  dropping ", dropped, " zone rows of route type ",
+            paste(feed$drop_route_types, collapse = ", "))
+    res <- res[!res$route_type %in% feed$drop_route_types, ]
+  }
+  res
 }
 
 #' Sum several trips-per-zone tables (e.g. bus + rail) per zone and mode

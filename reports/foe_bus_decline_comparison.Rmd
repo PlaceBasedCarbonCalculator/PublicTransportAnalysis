@@ -1,0 +1,837 @@
+# Have the Friends of the Earth bus-decline findings changed?
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      results = "asis", fig.path = "figures/foe-", dpi = 110,
+                      fig.width = 9, fig.height = 5)
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(knitr)
+
+source("../scripts/foe_comparison/foe_published.R")
+res <- readRDS("../data/foe_comparison.Rds")
+# Measurements that split the gap between the two pipelines into its parts
+dedup_rate <- readRDS("../data/dedup_rate.Rds")
+feed_days <- readRDS("../data/feed_service_days.Rds")
+
+# Categorical palette shared with the other reports in this folder, so the
+# same source keeps the same colour throughout. Validated for lightness band,
+# chroma floor and adjacent-pair separation under protan, deutan and tritan
+# simulation. Contrast against the page is below 3:1, so every chart is
+# printed next to the table of its own numbers and no series is identified by
+# colour alone.
+pal <- c("Published (2023)"  = "#eda100",
+         "Previous pipeline" = "#2a78d6",
+         "Rebuilt pipeline"  = "#1baf7a",
+         "Rebuilt, 2024-25"  = "#d94f70")
+
+era_pal <- c("NPTDR (2004-11)"       = "#2a78d6",
+             "Bus Archive (2014-17)" = "#1baf7a",
+             "TNDS (2018-23)"        = "#eda100")
+
+theme_report <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        legend.position = "top",
+        legend.title = element_blank(),
+        plot.title.position = "plot")
+
+pct <- function(x, digits = 0) ifelse(is.na(x), "-",
+                                      sprintf(paste0("%.", digits, "f%%"), 100 * x))
+num <- function(x, digits = 1) ifelse(is.na(x), "-",
+                                      formatC(x, format = "f", digits = digits))
+pp <- function(x) ifelse(is.na(x), "-", sprintf("%+.1f", 100 * x))
+
+DAY <- "tph_daytime_avg"
+daytime <- function(tbl) tbl[tbl$period_name == DAY, ]
+
+era_of <- function(y) ifelse(y <= 2011, "NPTDR (2004-11)",
+                      ifelse(y <= 2017, "Bus Archive (2014-17)", "TNDS (2018-23)"))
+```
+
+```{r headline-numbers}
+set_old <- daytime(res$settlement$old)
+set_new <- daytime(res$settlement$new)
+pull_set <- function(tbl, s, col) tbl[[col]][tbl$settlement == s]
+
+urban_old <- pull_set(set_old, "Urban (outside London)", "pct_0823")
+urban_new <- pull_set(set_new, "Urban (outside London)", "pct_0823")
+rural_old <- pull_set(set_old, "Rural", "pct_0823")
+rural_new <- pull_set(set_new, "Rural", "pct_0823")
+lon_off_old <- pull_set(set_old, "London: off tube", "pct_0823")
+lon_off_new <- pull_set(set_new, "London: off tube", "pct_0823")
+lon_on_old <- pull_set(set_old, "London: on tube", "pct_0823")
+lon_on_new <- pull_set(set_new, "London: on tube", "pct_0823")
+
+gb_old <- daytime(res$gb$old)
+gb_new <- daytime(res$gb$new)
+```
+
+## The question
+
+The 2023 Friends of the Earth report [*How Britain's bus services have
+drastically declined*](https://policy.friendsoftheearth.uk/insight/how-britains-bus-services-have-drastically-declined)
+was built on the timetable analysis in the
+[TransportBlackspots](https://github.com/ITSLeeds/TransportBlackspots) repo.
+This repo is a rewrite of that analysis, run after a long series of fixes to
+[UK2GTFS](https://github.com/ITSLeeds/UK2GTFS), the package that converts two
+decades of historic timetable formats into GTFS before anything is counted.
+
+Those fixes changed the numbers. The question is whether they changed the
+*findings*.
+
+**Short answer: the direction survives and the size does not.** Bus service
+outside London still fell heavily, rural areas still fell further than urban
+ones, and London is still an enormous outlier. But the rebuilt conversion cuts
+roughly 10 to 15 percentage points off the measured decline almost everywhere,
+because it counts far less service in the 2004-2011 archives the baseline is
+drawn from. Two individual claims in the report do not survive: London's
+"almost constant level of bus provision" becomes a modest fall, and the naming
+of the worst-hit local authorities changes substantially.
+
+Along the way this turned up two defects in the pipeline's recent years, both
+since fixed, described in section 7.
+
+## What is being compared
+
+Two runs of the same measure, over the same zones, with the same method:
+
+| | Timetable outputs | Built |
+|---|---|---|
+| **Previous pipeline** | `../inputdata/pt_frequency/` (byte-identical to the TransportBlackspots `data/` folder) | November 2025 |
+| **Rebuilt pipeline** | `data/` in this repo | August 2026 |
+
+Both are `trips_per_lsoa21_22_by_mode_<year>.Rds`: scheduled vehicle
+departures counted at the stops in each 2021 LSOA (2022 Data Zone in
+Scotland), by mode, day of week and time band.
+
+The analysis on top of them is a port of the published one, not a new one: the
+weekday means and the `tph_daytime_avg` weighting from
+`scripts/make-stats/combine_trips_per_lsoa.R`, the outlier-and-interpolation
+clean from `scripts/toby-analysis/final/clean-data.R`, and the
+population-weighted aggregation from
+`scripts/toby-analysis/final/weighted-regional-means.R`. Both series go through
+it identically, so a difference between the two columns is the timetable
+conversion and not the analysis.
+
+Four things to state before the numbers.
+
+**The port reproduces the published figures.** Running it over the previous
+pipeline's outputs recovers the published Table 3 to within a few percentage
+points (section 3). That is what licenses reading the rebuilt column as a
+change in the data rather than a change in the method.
+
+**Coach has been folded back into bus.** The rebuilt pipeline codes coach
+separately as GTFS extended route type 200; the previous one left coach inside
+route type 3. Both columns count 3 and 200 together. This turns out to matter
+very little either way (section 6).
+
+**The published regional tables were counted over whole local authority
+areas.** Published Tables 1 and 2 come from a `trips_per_la_by_mode` series
+this repo does not produce, and their trips-per-hour levels (London 509, the
+North East 276) are authority-wide totals. Only percentage changes are
+comparable for regions. Published Table 3 *is* per-neighbourhood, so it
+compares directly, levels and all.
+
+**The previous-pipeline column is not the published run.** It is the November
+2025 TransportBlackspots rerun on 2021 zones — the closest thing to the
+published analysis that exists on the same geography. The published figures
+came from an earlier run on 2011 zones.
+
+## 1. The national trend
+
+```{r trend-data}
+# Uncleaned, so both pipelines are on identical footing in every year: the
+# published cleaning step fits each neighbourhood's whole time series at once,
+# so a run ending in 2023 and one ending in 2025 disagree about 2010.
+trend <- bind_rows(
+  daytime(res$trends$old_gb_uncleaned) |> mutate(series = "Previous pipeline"),
+  daytime(res$trends$new_gb_uncleaned) |>
+    filter(year <= 2023) |> mutate(series = "Rebuilt pipeline")) |>
+  filter(!is.na(tph))
+```
+
+```{r trend-chart, fig.height=4.6}
+ggplot(trend, aes(year, tph, colour = series)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  scale_colour_manual(values = pal) +
+  scale_x_continuous(breaks = seq(2004, 2023, 3)) +
+  expand_limits(y = 0) +
+  labs(title = "Scheduled bus service per neighbourhood, Great Britain",
+       subtitle = "Population-weighted mean trips per hour, 06:00-22:00 across the week, before cleaning",
+       x = NULL, y = "Trips per hour") +
+  theme_report
+```
+
+```{r trend-table}
+res$zone_agreement |>
+  transmute(Year = year, `Zones matched` = zones,
+            `Previous` = round(old, 2), `Rebuilt` = round(new, 2),
+            `Rebuilt / previous` = round(ratio, 3),
+            `Zone correlation` = round(correlation, 3),
+            `Zone rank correlation` = round(spearman, 3)) |>
+  kable(align = "r")
+```
+
+The two curves have the same shape, and the correlation between the two runs
+across the tens of thousands of individual neighbourhoods never falls below
+`r round(min(res$zone_agreement$correlation), 2)` — the rebuild is not
+reshuffling *which* places have service. It is re-counting *how much*, and the
+size of that re-count depends heavily on the year.
+
+```{r ratio-chart, fig.height=4.2}
+ratio_df <- res$zone_agreement |>
+  mutate(era = factor(era_of(year), levels = names(era_pal)))
+
+ggplot(ratio_df, aes(year, ratio)) +
+  geom_hline(yintercept = 1, colour = "grey55", linewidth = 0.4) +
+  geom_line(colour = "grey70", linewidth = 0.6) +
+  geom_point(aes(colour = era), size = 3.2) +
+  scale_colour_manual(values = era_pal) +
+  scale_y_continuous(labels = scales::percent) +
+  scale_x_continuous(breaks = seq(2004, 2023, 3)) +
+  expand_limits(y = c(0.6, 1)) +
+  labs(title = "Rebuilt counts as a share of the previous pipeline's",
+       subtitle = "Same zones, same weighting, no cleaning. Colour marks the source archive behind each year",
+       x = NULL, y = "Rebuilt / previous") +
+  theme_report
+```
+
+This is the finding that drives everything else. The rebuilt pipeline counts:
+
+- about **`r pct(1 - mean(ratio_df$ratio[ratio_df$year <= 2011]))` less**
+  service across the NPTDR years, 2004-2011;
+- about **`r pct(1 - mean(ratio_df$ratio[ratio_df$year %in% 2014:2017]))` less**
+  across the Bus Archive years, 2014-2017;
+- about **`r pct(1 - mean(ratio_df$ratio[ratio_df$year >= 2018]))` less**
+  across the TNDS years, 2018-2023.
+
+The published baseline is the 2006-08 average and the published end point is
+2023. The baseline sits in the era the rebuild changed most and the end point
+in the era it changed least, so every decline measured between them gets
+smaller.
+
+## 2. By region
+
+```{r region-tables}
+reg <- function(tbl) daytime(tbl) |> select(region, pct_0823, pct_1023)
+
+region_cmp <- foe_region_workbook |>
+  select(region, published_0823 = pct_0823, published_1023 = pct_1023) |>
+  full_join(reg(res$region$old) |> rename(old_0823 = pct_0823, old_1023 = pct_1023),
+            by = "region") |>
+  full_join(reg(res$region$new) |> rename(new_0823 = pct_0823, new_1023 = pct_1023),
+            by = "region") |>
+  arrange(new_0823)
+
+region_cmp |>
+  transmute(Region = region,
+            `Published` = pct(published_0823),
+            `Previous` = pct(old_0823),
+            `Rebuilt` = pct(new_0823),
+            `Rebuilt - previous (pp)` = pp(new_0823 - old_0823)) |>
+  kable(align = "lrrrr",
+        caption = "Change in bus service, 2006-08 average to 2023")
+```
+
+```{r region-chart, fig.height=5.6}
+region_long <- region_cmp |>
+  select(region, `Published (2023)` = published_0823,
+         `Previous pipeline` = old_0823, `Rebuilt pipeline` = new_0823) |>
+  pivot_longer(-region, names_to = "series", values_to = "value") |>
+  filter(!is.na(value)) |>
+  mutate(region = factor(region, levels = rev(region_cmp$region)),
+         series = factor(series, levels = names(pal)))
+
+ggplot(region_long, aes(value, region, fill = series)) +
+  geom_col(position = position_dodge(width = 0.8), width = 0.72) +
+  geom_vline(xintercept = 0, colour = "grey40", linewidth = 0.4) +
+  scale_fill_manual(values = pal) +
+  scale_x_continuous(labels = scales::percent) +
+  labs(title = "Change in bus service by region, 2006-08 to 2023",
+       subtitle = "Published figures counted over whole authority areas; the other two per neighbourhood",
+       x = NULL, y = NULL) +
+  theme_report
+```
+
+```{r region-stats}
+outside_london <- region_cmp |> filter(region != "London")
+shift <- outside_london$new_0823 - outside_london$old_0823
+reg_rank_cor <- cor(outside_london$published_0823, outside_london$new_0823,
+                    method = "spearman")
+worst3_pub <- foe_region_workbook |> arrange(pct_0823) |> head(3) |> pull(region)
+worst3_new <- region_cmp |> arrange(new_0823) |> head(3) |> pull(region)
+```
+
+Every region outside London still shows a fall of at least
+`r pct(-max(outside_london$new_0823))`, so no region escapes the finding. But
+two things move.
+
+**Every regional decline is smaller**, by between `r pp(min(shift))` and
+`r pp(max(shift))` percentage points.
+
+**The ranking of regions changes materially.** The published worst three were
+`r paste(worst3_pub, collapse = ", ")`; in the rebuilt data they are
+`r paste(worst3_new, collapse = ", ")`. Scotland, the East Midlands and Wales
+all move towards the middle of the table, because they are the regions whose
+2004-2011 counts the rebuild cuts hardest. The rank correlation between the
+published regional ordering and the rebuilt one is
+`r round(reg_rank_cor, 2)` across the ten regions outside London — the
+"savage cuts everywhere except London" conclusion is unaffected, but which
+region was worst hit is not a claim this data supports any more.
+
+```{r region-year-ratio}
+o_reg <- daytime(res$trends$old_region_uncleaned) |> select(region, year, old = tph)
+n_reg <- daytime(res$trends$new_region_uncleaned) |> select(region, year, new = tph)
+
+inner_join(o_reg, n_reg, by = c("region", "year")) |>
+  mutate(ratio = round(new / old, 2)) |>
+  select(region, year, ratio) |>
+  pivot_wider(names_from = year, values_from = ratio) |>
+  rename(Region = region) |>
+  kable(align = c("l", rep("r", 18)),
+        caption = "Rebuilt counts as a share of the previous pipeline's, by region and year")
+```
+
+The regional detail shows the re-count is not uniform. Scotland and the East
+Midlands lose around 40% of their 2005-2011 counts, while Yorkshire and the
+North West lose 13-16%. In the TNDS years most regions sit at 0.9 or above.
+Whatever the conversion fixes did, they did it unevenly across the historic
+archives, which is why the ranking of regions moves as well as the level.
+
+```{r region-2010}
+region_cmp |>
+  transmute(Region = region,
+            `Published` = pct(published_1023),
+            `Previous` = pct(old_1023),
+            `Rebuilt` = pct(new_1023),
+            `Rebuilt - previous (pp)` = pp(new_1023 - old_1023)) |>
+  arrange(Region) |>
+  kable(align = "lrrrr", caption = "Change in bus service, 2010 to 2023")
+```
+
+## 3. London, urban and rural
+
+This is the published Table 3, and it is measured on the same geography as the
+rebuild, so levels compare directly and not just changes.
+
+```{r settlement-table}
+set_lookup <- c("London: off tube" = "London: not near Underground stations",
+                "London: on tube" = "London: near Underground stations",
+                "Rural" = "Outside London: rural",
+                "Urban (outside London)" = "Outside London: urban")
+
+settle_wide <- bind_rows(
+  set_old |> mutate(series = "prev"),
+  set_new |> mutate(series = "reb")) |>
+  mutate(location = set_lookup[settlement]) |>
+  select(location, series, base_2006_08, y_final, pct_0823) |>
+  pivot_longer(c(base_2006_08, y_final, pct_0823)) |>
+  pivot_wider(names_from = c(series, name), values_from = value)
+
+foe_table3 |>
+  left_join(settle_wide, by = "location") |>
+  transmute(Location = location,
+            `Pub. 2006-08` = num(tph_2006_08),
+            `Pub. 2023` = num(tph_2023),
+            `Pub. change` = pct(pct_change / 100),
+            `Prev. 2006-08` = num(prev_base_2006_08),
+            `Prev. 2023` = num(prev_y_final),
+            `Prev. change` = pct(prev_pct_0823),
+            `Reb. 2006-08` = num(reb_base_2006_08),
+            `Reb. 2023` = num(reb_y_final),
+            `Reb. change` = pct(reb_pct_0823)) |>
+  kable(align = "lrrrrrrrrr")
+```
+
+The three published columns and the three previous-pipeline columns agree
+closely — `r pct(rural_old)` against a published `r pct(foe_headlines$rural_pct/100)`
+for rural, `r pct(urban_old)` against `r pct(foe_headlines$urban_outside_london_pct/100)`
+for urban outside London, `r pct(lon_off_old)` against +14% for London away
+from the Underground. The port is faithful.
+
+The rebuilt column is a different picture in two ways.
+
+**The falls are smaller.** Rural `r pct(rural_new)` rather than
+`r pct(rural_old)`; urban outside London `r pct(urban_new)` rather than
+`r pct(urban_old)`. Rural service still falls further than urban service, so
+the relative claim holds, but the gap between them narrows.
+
+**London no longer holds level.** The published finding was that London bus
+provision was "almost constant", up 14% away from the Underground and down 6%
+near it. The rebuilt data puts those at `r pct(lon_off_new)` and
+`r pct(lon_on_new)`. That reverses the sign of the headline London claim. It
+does *not* reverse the comparison that the report actually rests on: London
+neighbourhoods still have four times the service of other urban ones and
+eighteen times that of rural ones, and they still fell far less than anywhere
+else.
+
+```{r settlement-trend, fig.height=5.4}
+set_trend <- bind_rows(
+  daytime(res$trends$old_settlement_uncleaned) |> mutate(series = "Previous pipeline"),
+  daytime(res$trends$new_settlement_uncleaned) |>
+    filter(year <= 2023) |> mutate(series = "Rebuilt pipeline")) |>
+  filter(!is.na(settlement), !is.na(tph))
+
+ggplot(set_trend, aes(year, tph, colour = series)) +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 1.5) +
+  facet_wrap(~settlement, scales = "free_y") +
+  scale_colour_manual(values = pal) +
+  scale_x_continuous(breaks = seq(2005, 2023, 6)) +
+  expand_limits(y = 0) +
+  labs(title = "Bus service by settlement type",
+       subtitle = "Population-weighted mean trips per hour per neighbourhood, before cleaning",
+       x = NULL, y = "Trips per hour") +
+  theme_report
+```
+
+```{r settlement-trend-table}
+set_trend |>
+  select(settlement, year, series, tph) |>
+  pivot_wider(names_from = series, values_from = tph) |>
+  mutate(Ratio = round(`Rebuilt pipeline` / `Previous pipeline`, 3),
+         across(c(`Previous pipeline`, `Rebuilt pipeline`), \(x) round(x, 2))) |>
+  arrange(settlement, year) |>
+  rename(Settlement = settlement, Year = year) |>
+  kable(align = "lrrrr")
+```
+
+Both series show the same two well-known holes: London is largely missing
+before 2007 and again across the 2014-2017 Bus Archive years, which is exactly
+what the published methodology warned about and imputed around. Those holes sit
+between the baseline and the end point, so they shape the middle of the trend
+lines without driving the headline changes.
+
+## 4. The worst-hit local authorities
+
+The published Table 4 named Hart, Fenland and Broxtowe as the three worst-hit
+authorities. Those figures were counted over whole authority areas and these
+are population-weighted neighbourhood means, so the levels differ; what matters
+is whether the same places come out on top.
+
+```{r la-tables}
+la_old <- daytime(res$la$old) |> select(la_code, la_name, old_pct = pct_0823)
+la_new <- daytime(res$la$new) |> select(la_code, la_name, new_pct = pct_0823,
+                                        new_base = base_2006_08, new_final = y_final)
+la_region <- res$lookup |> distinct(la_code, region)
+
+la_cmp <- inner_join(la_old, la_new, by = c("la_code", "la_name")) |>
+  left_join(la_region, by = "la_code") |>
+  mutate(old_rank = rank(old_pct), new_rank = rank(new_pct))
+
+top20_new <- la_cmp |> arrange(new_pct) |> head(20) |> pull(la_name)
+top20_old <- la_cmp |> arrange(old_pct) |> head(20) |> pull(la_name)
+overlap_new_pub <- length(intersect(top20_new, foe_table4$la_name))
+overlap_old_pub <- length(intersect(top20_old, foe_table4$la_name))
+overlap_old_new <- length(intersect(top20_new, top20_old))
+rank_cor <- cor(la_cmp$old_pct, la_cmp$new_pct, method = "spearman")
+
+la_cmp |>
+  arrange(new_pct) |>
+  head(20) |>
+  transmute(`Local authority` = la_name, Region = region,
+            `2006-08` = num(new_base), `2023` = num(new_final),
+            `Rebuilt change` = pct(new_pct, 1),
+            `Previous change` = pct(old_pct, 1),
+            `Rank, rebuilt` = new_rank, `Rank, previous` = old_rank) |>
+  kable(align = "llrrrrrr",
+        caption = "The twenty largest proportional falls in the rebuilt data")
+```
+
+This is where the rebuild bites hardest. Of the twenty authorities the report
+named, `r overlap_old_pub` are in the previous pipeline's worst twenty but only
+`r overlap_new_pub` are in the rebuilt one's. The two pipelines agree with each
+other on just `r overlap_old_new` of twenty. Across all `r nrow(la_cmp)`
+authorities the rank correlation is `r round(rank_cor, 2)` — strong enough that
+the broad geography is stable, far too weak to support naming individual
+places.
+
+```{r la-scatter, fig.height=5.2}
+ggplot(la_cmp, aes(old_pct, new_pct)) +
+  geom_abline(slope = 1, intercept = 0, colour = "grey55", linewidth = 0.4) +
+  geom_point(colour = pal[["Rebuilt pipeline"]], alpha = 0.5, size = 1.9) +
+  scale_x_continuous(labels = scales::percent) +
+  scale_y_continuous(labels = scales::percent) +
+  labs(title = "Change 2006-08 to 2023 for each local authority",
+       subtitle = "Points on the grey line are unchanged by the rebuild; points above it fell less than previously thought",
+       x = "Previous pipeline", y = "Rebuilt pipeline") +
+  theme_report
+```
+
+```{r la-movers}
+la_cmp |>
+  mutate(diff = new_pct - old_pct) |>
+  arrange(diff) |>
+  slice(c(1:10, (n() - 9):n())) |>
+  transmute(`Local authority` = la_name, Region = region,
+            `Previous change` = pct(old_pct, 1),
+            `Rebuilt change` = pct(new_pct, 1),
+            `Difference (pp)` = pp(diff),
+            Direction = ifelse(diff < 0, "Bigger fall in rebuilt data",
+                               "Smaller fall in rebuilt data")) |>
+  kable(align = "llrrrl",
+        caption = "The authorities the rebuild moves most")
+```
+
+The largest movers in one direction are almost all London boroughs, which the
+rebuild takes from strong growth to roughly flat. In the other direction they
+are authorities in the East of England, the South East and the East Midlands,
+whose 2006-08 counts the rebuilt NPTDR conversion cuts hardest.
+
+## 5. The London Sunday night comparison
+
+The report's most quoted single statistic: of the 317 local authorities outside
+London, only 59 had a weekday morning peak more frequent than the average
+London Sunday night.
+
+```{r sunday-night}
+beat_count <- function(la_tbl, threshold) {
+  la_tbl |>
+    filter(period_name == "tph_weekday_Morning_Peak") |>
+    left_join(la_region, by = "la_code") |>
+    filter(region != "London") |>
+    summarise(n_las = n(), n_beat = sum(y_final > threshold))
+}
+thr <- function(nm) res$region[[nm]] |>
+  filter(period_name == "tph_Sun_Night", region == "London") |> pull(y_final)
+
+beat_old <- beat_count(res$la$old, thr("old"))
+beat_new <- beat_count(res$la$new, thr("new"))
+
+tibble::tibble(
+  Series = c("Published (2023)", "Previous pipeline", "Rebuilt pipeline"),
+  `London Sunday night, trips per hour` = c(NA, round(thr("old"), 2), round(thr("new"), 2)),
+  `Authorities outside London` = c(foe_headlines$las_outside_london,
+                                   beat_old$n_las, beat_new$n_las),
+  `Of which beat it at weekday morning peak` =
+    c(foe_headlines$las_beating_london_sunday_night, beat_old$n_beat, beat_new$n_beat)) |>
+  kable(align = "lrrr")
+```
+
+Neither pipeline reproduces the published count of 59, because the published
+version counted over whole authority areas rather than per neighbourhood and
+the authority list has changed since 2023. On this measure both pipelines are
+*harsher* than the published figure. The finding is unaffected by the rebuild:
+the overwhelming majority of authorities outside London have a weekday morning
+peak worse than a London Sunday night.
+
+## 6. Where the difference comes from
+
+### Coach reclassification: almost none of it
+
+```{r coach}
+res$coach_effect |>
+  transmute(Year = year,
+            `Bus and coach` = round(with_coach, 2),
+            `Bus only` = round(bus_only, 2),
+            `Coach share` = pct(coach_share, 2)) |>
+  kable(align = "r")
+```
+
+Coach is under 1% of scheduled service in every year, and because both columns
+in this report include it, it cancels out entirely. It matters only for anyone
+using the rebuilt outputs with `route_type == 3` alone, who would understate
+service by the amounts above.
+
+### The cleaning step: real, but not the explanation
+
+```{r cleaning}
+res$cleaning_effect |>
+  mutate(series = recode(series, old = "prev", new = "reb")) |>
+  select(series, year, pct_outlier, pct_interpolated) |>
+  pivot_wider(names_from = series, values_from = c(pct_outlier, pct_interpolated)) |>
+  transmute(Year = year,
+            `Outliers replaced, previous` = pct(pct_outlier_prev, 1),
+            `Outliers replaced, rebuilt` = pct(pct_outlier_reb, 1),
+            `Interpolated, previous` = pct(pct_interpolated_prev, 1),
+            `Interpolated, rebuilt` = pct(pct_interpolated_reb, 1)) |>
+  kable(align = "r")
+```
+
+The published method blanks any pre-2020 value more than one standard deviation
+below its own neighbourhood's mean, and any pre-2010 value below half that
+neighbourhood's peak, then interpolates the gaps. Both rules are one-sided and
+apply only to early years, so they can only raise the 2006-08 baseline — and
+every decline in the report is measured from that baseline. In the three
+baseline years a sixth to a quarter of all neighbourhood-years are interpolated
+rather than observed, in both pipelines.
+
+Turning the cleaning off moves the headline numbers by a few percentage points
+but does not change the comparison between the two pipelines:
+
+```{r raw-vs-clean}
+bind_rows(
+  daytime(res$settlement$old_raw) |> mutate(series = "Previous, uncleaned"),
+  daytime(res$settlement$new_raw) |> mutate(series = "Rebuilt, uncleaned"),
+  set_old |> mutate(series = "Previous, cleaned"),
+  set_new |> mutate(series = "Rebuilt, cleaned")) |>
+  select(settlement, series, pct_0823) |>
+  pivot_wider(names_from = series, values_from = pct_0823) |>
+  mutate(across(-settlement, \(x) pct(x))) |>
+  rename(Settlement = settlement) |>
+  kable(align = "lrrrr",
+        caption = "Change 2006-08 to 2023, with and without the published cleaning step")
+```
+
+### Deduplication and conversion: measured separately
+
+The rest divides into two things that can be measured apart, and they turn out
+to matter in completely different eras.
+
+**What the feeds say.** The previous pipeline did not reconvert its sources: it
+counted GTFS feeds converted in June-July 2023 (NPTDR) and November 2023
+(TransXChange) and kept on the data drive. Applying one identical piece of
+GTFS arithmetic to the old feed and the new one - how many departures does
+each describe inside the same 28-day window? - isolates what reconversion
+changed, with no counting code and no spatial join involved.
+
+**What deduplication removes.** This repo's `read_feed()` runs
+`UK2GTFS::gtfs_deduplicate()` between cleaning and counting. That function was
+added to UK2GTFS on 2026-08-01, months after the previous outputs were built,
+and TransportBlackspots went straight from `gtfs_clean()` to
+`gtfs_trips_per_zone()`. It removes a journey only where the whole itinerary
+matches another and every date it runs is also run by the copy kept.
+
+```{r decomposition}
+# 2018 has no deduplication measurement of its own and borrows the 2023 TNDS
+# rate; the rate is stable across TNDS snapshots (0.71% of trips in both the
+# 2023 and the 2024 one), and it is small enough that the choice cannot move
+# the row.
+dedup_for <- c(`2006` = "nptdr_2006.zip",
+               `2018` = "tnds_20231101_merged.zip",
+               `2023` = "tnds_20231101_merged.zip")
+
+decomp <- data.frame(year = c(2006, 2018, 2023)) |>
+  left_join(feed_days |> select(year, conversion = departure_ratio), by = "year") |>
+  left_join(res$zone_agreement |> select(year, observed = ratio), by = "year") |>
+  mutate(feed = dedup_for[as.character(year)]) |>
+  left_join(dedup_rate |> select(feed, calls_removed_pct), by = "feed") |>
+  mutate(dedup = 1 - calls_removed_pct,
+         predicted = conversion * dedup,
+         residual = observed / predicted)
+
+decomp |>
+  transmute(Year = year,
+            Source = c("NPTDR", "TNDS", "TNDS"),
+            `Conversion` = num(conversion, 3),
+            `Deduplication` = num(dedup, 3),
+            `Both together` = num(predicted, 3),
+            `Observed` = num(observed, 3),
+            `Unexplained` = num(residual, 3)) |>
+  kable(align = "rlrrrrr",
+        caption = "Rebuilt as a share of previous, split into its parts")
+```
+
+Deduplication is measured on the feed for the year shown except 2018, which
+takes the 2023 TNDS rate; deduplication removes 0.71% of trips in the 2024
+snapshot and 0.71% in the 2023 one, so the TNDS rate is stable.
+
+Read across the rows:
+
+- **2006 is deduplication, and almost nothing else.** The two conversions of
+  the NPTDR archive describe the same service to within half a percent. What
+  changed is that duplicate journeys stopped being counted:
+  `r pct(dedup_rate$calls_removed_pct[dedup_rate$feed == "nptdr_2006.zip"], 1)`
+  of scheduled departures in the 2006 feed are a journey the archive describes
+  more than once. NPTDR is assembled per administrative area and files a
+  service in every area it touches - the 2006 archive has nine overlapping
+  ATCO-CIF files - so this is duplication in the source, not in the converter.
+- **2018 is the conversion, and almost nothing else.** Deduplication removes
+  under 1% of a TNDS feed. The
+  `r pct(1 - decomp$conversion[decomp$year == 2018], 1)` fall is the
+  TransXChange converter, and conversion and deduplication together predict
+  the observed figure almost exactly.
+- **2023 is the conversion plus the end-point definition.** The conversion
+  accounts for `r pct(1 - decomp$conversion[decomp$year == 2023], 1)`; the
+  remaining `r pct(1 - decomp$residual[decomp$year == 2023], 1)` is mostly the
+  previous run taking the element-wise maximum of a spring and an autumn
+  snapshot as its 2023 figure, which the feed comparison above cannot see
+  because it uses the autumn feed alone.
+
+So the two eras moved for unrelated reasons. The TransXChange work shows up
+where you would expect it, in the TransXChange years, at 5-9%. The much larger
+fall in the NPTDR years is deduplication of an archive that files the same bus
+several times over — and because the published baseline is 2006-08, it is that
+duplication, not the conversion, that the published decline was measured from.
+
+Two further differences between the runs are worth separating out because they
+are method, not conversion:
+
+- **The 2023 end point is defined differently.** The previous run took the
+  element-wise maximum of a spring and an autumn snapshot; the rebuilt run uses
+  the November snapshot alone. Taking a maximum over two snapshots biases the
+  end point upward, so this difference makes the *previous* pipeline's 2023
+  decline look smaller than it otherwise would, partly offsetting the baseline
+  effect that runs the other way.
+- **The counting windows differ in the early years.** The previous outputs use
+  calendar-month windows in several years (2005, 2006, 2007 and 2011 contain
+  five Mondays rather than four); the rebuilt outputs are 28-day
+  Monday-aligned throughout. Because trips per hour is normalised by the actual
+  number of each weekday in the window, this does not bias the measure, but it
+  does mean the two runs are averaging over slightly different stretches of the
+  timetable.
+
+**Which run is closer to the truth is not fully settled here.** The validation
+work in this repo — `reports/route_279_pdf_validation.md`,
+`reports/route_validation_69_A1_142.md`, `reports/pdf_validation.md` — checks
+converted timetables against operators' own published schedules, and confirms
+the deduplication settings on modern feeds: with them the DfT feed's First
+Bristol 21 lands on exactly the 3,296 journeys its operator prints, and without
+them on 5,816. That is direct evidence that removing these duplicates is right.
+
+It is evidence about BODS feeds in 2026, though, not about NPTDR in 2006. The
+2006 duplication is far larger than anything seen in a modern feed, and no
+NPTDR-era route has been checked against a published timetable. The mechanism
+is credible and the direction is almost certainly right — an archive compiled
+per administrative area really does list a cross-boundary service more than
+once — but the exact size of the correction to the 2006-08 baseline, and so
+the exact size of the decline, rests on a step that has not been validated on
+the data it is being applied to. Checking a sample of NPTDR-era routes against
+operator timetables is the single most valuable piece of follow-up work.
+
+## 7. Two defects found and fixed on the way
+
+### 2024 and 2025 counted nearly every bus twice
+
+The rebuilt pipeline has 2024 and 2025, which the published report did not. As
+originally built they showed scheduled service per neighbourhood roughly
+doubling between 2023 and 2024 and staying there — not a change in bus
+provision. `year_sources()` in `R/config.R` gave those two years **two** bus
+feeds:
+
+```
+bus = list(feed("OpenBusData/GTFS/<date>/itm_all_gtfs.zip", ...),
+           feed("gtfs/tnds_<date>_merged.zip", ...))
+```
+
+and `sum_feeds()` in `R/frequency.R` adds their counts. The BODS national GTFS
+feed and the TNDS TransXChange conversion both cover the whole Great Britain
+bus network — that overlap is the entire subject of
+`reports/bus_source_comparison.md` — so nearly every journey was counted twice.
+Deduplication could not catch it: `read_feed()` deduplicates within a feed, not
+across two.
+
+Those years now take local bus from TNDS alone, like 2018-2023 (coach comes
+from a separate source, below), and have been recounted. Every year from 2004
+to 2023 always drew its bus service from a single feed, so nothing else in this
+report was affected.
+
+```{r defect}
+daytime(res$trends$new_gb_uncleaned) |>
+  filter(year >= 2021) |>
+  transmute(Year = year, `Trips per hour` = round(tph, 2)) |>
+  kable(align = "r")
+```
+
+### Coach disappears from TNDS after 2024
+
+TNDS carries national coach services in a separate NCSD archive inside each
+snapshot. That archive is present up to February 2025 and gone from August 2025
+onward, and the coach content of the converted feeds goes with it.
+
+```{r coach-coverage}
+if (file.exists("../data/coach_coverage.Rds")) {
+  readRDS("../data/coach_coverage.Rds") |>
+    filter(grepl("^tnds_", feed), feed >= "tnds_2022") |>
+    transmute(Snapshot = feed, `Coach routes` = coach_routes,
+              `Coach journeys` = coach_trips,
+              `Share of road service` = pct(coach_share_trips, 2)) |>
+    kable(align = "lrrr")
+}
+```
+
+What survives in October 2025 is local and regional operators — Ember, Berrys,
+Green Line, Centaur, Redwing. The national network is simply absent. Left
+alone this would show up as a real-looking decline in road service of a few
+tenths of a percent, for a reason that is purely archival.
+
+BODS publishes that national network as a standalone Coach dataset in
+TransXChange, on the same dates as the bus feeds. Converted and trimmed to the
+window the pipeline keeps, the October 2025 snapshot gives 292 coach routes and
+11,269 journeys — National Express 207, Flixbus 61, Scottish Citylink 17,
+Park's of Hamilton 3, Megabus 2 — and the October 2024 one 278 routes and
+16,595 journeys. None of those operators appear in the TNDS snapshots at all:
+the "National Express" in TNDS is National Express West Midlands and Coventry,
+which are local bus operations. The two sources are genuinely disjoint, which
+is what makes it safe to sum them when summing two overlapping feeds is exactly
+what caused the defect above.
+
+From 2024 the pipeline therefore takes coach from BODS and drops route type 200
+from the TNDS feed, so coach comes from one source per year. That places the
+source break at 2023/24 rather than letting coach fade out across 2025 and
+2026. Coach is well under 1% of scheduled service throughout, so this changes
+no conclusion in this report; it matters because
+`../build/R/public_transport_frequency.R` folds coach into bus, where a
+vanishing source would read as a falling one.
+
+## Conclusions
+
+1. **The report's central findings hold.** Bus service outside London fell
+   heavily between 2006-08 and 2023, rural areas fell further than urban ones,
+   and London remains in a completely different position from the rest of the
+   country.
+
+2. **The magnitude does not hold.** The rebuilt conversion puts the fall in
+   urban areas outside London at `r pct(urban_new)` rather than
+   `r pct(urban_old)`, and rural at `r pct(rural_new)` rather than
+   `r pct(rural_old)`. "Roughly a third" is a better description than "roughly
+   a half". The published headline numbers of 48% and 52% should not be
+   repeated from this data without re-derivation.
+
+3. **The London claim reverses in sign.** "Almost constant level of bus
+   provision" becomes a fall of `r pct(lon_off_new)` away from the Underground
+   and `r pct(lon_on_new)` near it. The comparison between London and everywhere
+   else is untouched, and it is that comparison, not London's own trend, that
+   the report's argument depends on.
+
+4. **Individual local authorities should not be named from this data.** Only
+   `r overlap_old_new` of the worst-hit twenty survive the rebuild. The
+   authority-level rankings are not stable enough to carry the weight the
+   published Table 4 put on them.
+
+5. **The baseline years and the end-point years moved for different reasons.**
+   The TransXChange conversion work accounts for a 5-9% fall in the years drawn
+   from TransXChange. The much larger fall in the 2004-2011 baseline is
+   deduplication — 28% of the departures in the 2006 archive are a journey it
+   describes more than once, because NPTDR is compiled per administrative area
+   and lists a cross-boundary service in each. The published decline was
+   measured from a baseline inflated by that duplication.
+
+6. **The NPTDR-era deduplication is the one step still unvalidated on its own
+   data.** It is validated on modern feeds against printed timetables, and the
+   mechanism is credible, but no NPTDR-era route has been checked. Doing so
+   would settle how much of the published decline was real. That is the obvious
+   next piece of work.
+
+## Caveats
+
+- **Scheduled service, not service delivered.** Everything here comes from
+  published timetables. Cancellations and reliability are not in the data.
+- **The 2014-2017 years have known gaps**, London most of all. Both pipelines
+  have them and the published method interpolates across them.
+- **Regional levels are not comparable with the published ones**, only
+  percentage changes; the published regional series was counted over whole
+  authority areas.
+- **The previous-pipeline column is the November 2025 rerun**, not the run that
+  produced the published figures.
+
+## Reproducing this
+
+```
+Rscript scripts/foe_comparison/run_foe_comparison.R        # ~1 hour
+Rscript scripts/foe_comparison/add_raw_trends.R
+# the measurements behind section 6
+Rscript scripts/foe_comparison/compare_feed_service_days.R  # 2006 2008 2010 2018 2023
+Rscript scripts/foe_comparison/dedup_rate.R                 # one feed per run
+Rscript scripts/foe_comparison/coach_coverage.R
+Rscript scripts/foe_comparison/explore_bods_coach.R 20251006
+cd reports && Rscript -e 'knitr::knit("foe_bus_decline_comparison.Rmd", "foe_bus_decline_comparison.md")'
+```
+
+Standalone by design; none of it is part of the targets pipeline. Knitting from
+inside `reports/` keeps the figure links relative to it, and `knitr::knit`
+rather than `rmarkdown::render` avoids the pandoc dependency, matching the
+other reports in this folder.

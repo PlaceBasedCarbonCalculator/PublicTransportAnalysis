@@ -61,10 +61,19 @@ study_window <- function(ref) {
 #' feed or NULL (rail is only separately available from 2018; NPTDR includes
 #' some rail within the bus-era feeds).
 #'
+#' Only ever list more than one `bus` feed for a year when the feeds cover
+#' *disjoint* parts of the network. `sum_feeds()` adds their counts, and
+#' deduplication happens inside `read_feed()`, per feed — nothing downstream
+#' can tell that two feeds describe the same journey. Listing two national
+#' feeds together is what made the 2024 and 2025 outputs count nearly every
+#' bus journey twice.
+#'
 #' Paths are relative to `cfg$data_root` unless they start with "gtfs/", in
 #' which case they are feeds converted by this pipeline (see R/convert.R).
 year_sources <- function(cfg = load_cfg()) {
-  feed <- function(path, ref) list(path = path, ref = ref)
+  # `...` carries optional per-feed settings, currently only
+  # `drop_route_types` (see feed_trips())
+  feed <- function(path, ref, ...) c(list(path = path, ref = ref), list(...))
 
   spec <- list()
   # 2004-2011: NPTDR annual October snapshots (bus, coach, ferry, some
@@ -123,22 +132,50 @@ year_sources <- function(cfg = load_cfg()) {
     rail = feed("gtfs/rail_atoc_2023-11-01.zip", "2023-11-01")
   )
 
-  # 2024: Bus Open Data Service national GTFS + this pipeline's own TNDS
-  # conversion (summed), + ATOC rail.
+  # 2024: TNDS TransXChange (bus) + ATOC rail, on the same footing as
+  # 2018-2023.
+  #
+  # These two years used to list the BODS national GTFS feed *as well as* the
+  # TNDS conversion, and sum_feeds() added their counts. Both feeds carry the
+  # whole Great Britain bus network, so nearly every journey was counted twice
+  # and the outputs came out at roughly double 2023 (21.4 trips per hour per
+  # neighbourhood in 2023 against 43.8 in 2024). Deduplication in read_feed()
+  # cannot catch it: it runs within a feed, not across two.
+  #
+  # TNDS is the source kept because it is the one validated against operators'
+  # published schedules - reports/route_279_pdf_validation.md and
+  # reports/route_validation_69_A1_142.md found TNDS matching printed
+  # timetables journey-for-journey where BODS GTFS carried some of them more
+  # than twice over. Keeping TNDS also makes 2018-2025 one continuous
+  # single-source bus series. See reports/foe_bus_decline_comparison.md.
+  #
+  # From 2024 coach comes from the BODS Coach dataset instead of TNDS, and
+  # route type 200 is dropped from the TNDS feed so it is not counted twice.
+  # TNDS's NCSD coach archive disappears after February 2025 - 208 coach
+  # routes in October 2024, 22 in October 2025, 6 in July 2026 - and what
+  # survives is local operators, not the national network. Taking coach from
+  # BODS for every year it is available keeps one source per year and puts the
+  # break at 2023/24 rather than leaving coach to fade out. Unlike the two bus
+  # feeds these years used to carry, these two are disjoint: the BODS Coach
+  # feed is National Express, Flixbus, Scottish Citylink, Megabus and Park's
+  # of Hamilton, none of which appear in the TNDS snapshots (the "National
+  # Express" in TNDS is National Express West Midlands and Coventry, which are
+  # local bus). See scripts/foe_comparison/explore_bods_coach.R.
   spec[["2024"]] <- list(
     year = 2024,
-    bus = list(feed("OpenBusData/GTFS/20241007/itm_all_gtfs.zip", "2024-10-07"),
-               feed("gtfs/tnds_20241004_merged.zip", "2024-10-04")),
+    bus = list(feed("gtfs/tnds_20241004_merged.zip", "2024-10-04",
+                    drop_route_types = 200),
+               feed("gtfs/bods_coach_20241007.zip", "2024-10-07")),
     rail = feed("gtfs/rail_atoc_2024-10-05.zip", "2024-10-05")
   )
 
-  # 2025: BODS national GTFS + this pipeline's own TNDS conversion (summed),
-  # + rail from the National Rail Data Portal (new CIF source, converted by
-  # this pipeline with atoc2gtfs()).
+  # 2025: TNDS TransXChange (bus) + BODS Coach + rail from the National Rail
+  # Data Portal (new CIF source, converted by this pipeline with atoc2gtfs()).
   spec[["2025"]] <- list(
     year = 2025,
-    bus = list(feed("OpenBusData/GTFS/20251006/itm_all_gtfs.zip", "2025-10-06"),
-               feed("gtfs/tnds_20251003_merged.zip", "2025-10-03")),
+    bus = list(feed("gtfs/tnds_20251003_merged.zip", "2025-10-03",
+                    drop_route_types = 200),
+               feed("gtfs/bods_coach_20251006.zip", "2025-10-06")),
     rail = feed("gtfs/rail_rdp_20251006.zip", "2025-10-06")
   )
 
