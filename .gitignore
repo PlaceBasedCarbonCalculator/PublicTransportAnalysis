@@ -63,3 +63,6 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+# Backups of outputs taken before a rebuild (recoverable from git history)
+backups/

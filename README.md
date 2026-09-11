@@ -17,7 +17,8 @@ data/trips_per_lsoa21_22_by_mode_<year>.Rds        (2004-2011, 2014-2025)
 
 Each is a data frame keyed on `zone_id` (LSOA 2021 code for England & Wales,
 Data Zone 2022 for Scotland) × `route_type` (GTFS mode: 0 tram, 1 metro,
-2 rail, 3 bus, 4 ferry, **200 coach**, 1100 air), with 75 value columns:
+2 rail, 3 bus, 4 ferry, 6 aerial lift, **200 coach**, 1100 air), with 75 value
+columns:
 
 - `runs_<Day>_<Band>` — vehicle departures counted at stops in the zone over
   the 28-day study window (7 days × 5 time bands),
@@ -141,8 +142,8 @@ comparable across years and the `tph_*` normalisation exact.
 | 2021 | TNDS | 2021-10-11 – 2021-11-07 | ATOC | 2021-10-04 – 2021-10-31 |
 | 2022 | TNDS | 2022-10-31 – 2022-11-27 | ATOC | 2022-10-31 – 2022-11-27 |
 | 2023 | TNDS (November snapshot) | 2023-10-30 – 2023-11-26 | ATOC | 2023-10-30 – 2023-11-26 |
-| 2024 | BODS GTFS **+** TNDS | 2024-10-07 – 2024-11-03 (BODS), 2024-09-30 – 2024-10-27 (TNDS) | ATOC | 2024-09-30 – 2024-10-27 |
-| 2025 | BODS GTFS **+** TNDS | 2025-10-06 – 2025-11-02 (BODS), 2025-09-29 – 2025-10-26 (TNDS) | **Rail Data Portal** | 2025-10-06 – 2025-11-02 |
+| 2024 | TNDS **+** BODS Coach | 2024-09-30 – 2024-10-27 (TNDS), 2024-10-07 – 2024-11-03 (coach) | ATOC | 2024-09-30 – 2024-10-27 |
+| 2025 | TNDS **+** BODS Coach | 2025-09-29 – 2025-10-26 (TNDS), 2025-10-06 – 2025-11-02 (coach) | **Rail Data Portal** | 2025-10-06 – 2025-11-02 |
 
 October is the preferred analysis month (a "normal" school-term month); the
 exceptions (2018/2020/2023 bus, some rail snapshots) are where no October
@@ -292,14 +293,14 @@ are invisible.
 | 2004–2011 | **NPTDR** (National Public Transport Data Repository), annual October snapshots | Data quality varies by year and region; some rail/metro/tram included but coverage of non-bus modes is inconsistent; some stops have missing/bad coordinates (dropped or patched); 2012–2013 do not exist (the programme was discontinued, later replaced by TNDS archiving). |
 | 2014–2017 | **Bus Archive** TNDS weekly snapshots | Essentially no rail, tram or metro — bus (`route_type == 3`) is the only mode with a continuous series across this gap. Weekly snapshots must be stitched; snapshot dates are Tuesdays. |
 | 2018–2025 | **TNDS** (Traveline National Dataset) | Bus/coach/ferry/tram but no heavy rail (added separately from ATOC). Coach comes from the separate NCSD archive, **discontinued after February 2025**. Compiled from local authority systems; late-notice operator changes can lag. From ~2021 TNDS England content is itself increasingly derived from BODS. Not every year has an October snapshot archived (2018: May; 2020: July). A snapshot holds the registration operative on the day it was taken and carries nothing forward, so a window reaching weeks past it understates TNDS wherever a registration expires in between. |
-| 2018–2024 rail | **ATOC / Rail Delivery Group CIF** | London Underground is *not* in the CIF feed; metro coverage relies on TNDS/BODS. Includes some rail-replacement and ship services (recoded appropriately by UK2GTFS). |
-| 2024–2025 | **BODS GTFS** (DfT's GTFS rendering of the Bus Open Data Service), summed with TNDS | Statutory coverage is *English local bus services only*: Scottish and Welsh coverage is partial (voluntary/cross-border publication, Traveline Cymru uploads) — treat Scottish/Welsh 2024–2025 levels and trends with caution. Uses extended route types (e.g. 200 coach), harmonised where this analysis needs it. Includes `frequencies.txt`-based services. Carries more duplicate journeys than TNDS: 5.2% of its trips on the July 2026 snapshot, removed before counting. |
-| 2025 rail | **National Rail Data Portal CIF** | Successor to the ATOC feed; newer CIF flavour (RSPS5046). Same scope caveats as ATOC (no London Underground). |
+| 2018–2024 rail | **ATOC / Rail Delivery Group CIF** | Carries the London Underground (agency `LT`, 1,901–6,092 trips a year over 25 stations) and the Tyne and Wear Metro as well as heavy rail. TNDS carries both in full, so **route type 1 is dropped from this feed before counting**, or those stations would be counted twice. Includes some rail-replacement and ship services (recoded appropriately by UK2GTFS). |
+| 2024–2025 coach | **BODS Coach** (the Bus Open Data Service coach dataset), summed with TNDS bus | Statutory coverage is *English local bus services only*: Scottish and Welsh coverage is partial (voluntary/cross-border publication, Traveline Cymru uploads) — treat Scottish/Welsh 2024–2025 levels and trends with caution. Uses extended route types (e.g. 200 coach), harmonised where this analysis needs it. Includes `frequencies.txt`-based services. Carries more duplicate journeys than TNDS: 5.2% of its trips on the July 2026 snapshot, removed before counting. |
+| 2025 rail | **National Rail Data Portal CIF** | Successor to the ATOC feed; newer CIF flavour (RSPS5046). Same scope caveats as ATOC, including the Underground it carries and this pipeline drops. |
 
 Further caveats:
 
 - **The 2017 → 2018 transition mixes sources** (Bus Archive → TNDS) and
-  **2024 adds a second bus source** (BODS GTFS, summed with TNDS). The
+  **coach moves to BODS from 2024** (the NCSD archive fades out). The
   source-comparison report quantifies the TNDS/BODS difference for every year
   in which all three sources exist; read cross-boundary trends with that
   context. The two sources disagree at zone level far more than their national
@@ -317,6 +318,27 @@ Further caveats:
   source. Coach (200) coverage depends on the NCSD archive for TNDS years
   and on operator publication to BODS for 2024–2025; there is **no coach
   data at all in the October 2025 TNDS snapshot** (NCSD discontinued).
+
+### The metro series has era breaks
+
+The sources still differ in *coverage*, even though they no longer differ in
+how they name a mode. UK2GTFS applies one standard set of mode rules to every
+source (`UK2GTFS::standard_mode_overrides()`): heritage and minor railways are
+rail (2); the London Underground, the Tyne and Wear Metro, the Glasgow Subway
+and the Docklands Light Railway are metro (1); the airport people movers — the
+Birmingham Air-Rail Link, the Gatwick inter-terminal shuttle and the Luton
+DART — and the tramways are trams (0). The London cable car is the one system
+none of those describe, and takes the GTFS mode that does, aerial lift (6); it
+is the only source of `route_type = 6` in these outputs, about 1,000 trips a
+year in two zones, and it appears only from 2018. What is left is which systems
+each source contains at all. Measured from the converted feeds; see
+`reports/metro_duplicate_copies.md`.
+
+| Years | What metro actually is |
+|-------|------------------------|
+| 2004–2011 | NPTDR. The London Underground, the Tyne and Wear Metro, the Glasgow Subway and the DLR are all present from 2007; **2005 and 2006 hold no Underground and no DLR at all**. NPTDR files every tramway and every metro under one vehicle type and not consistently between years, so UK2GTFS applies one standard set of mode rules to it, the same rules it applies to every other source (`UK2GTFS::standard_mode_overrides()`). Without that correction the Underground sits in the **bus** totals in 2004 and Sheffield Supertram in most years. |
+| 2014–2017 | Bus Archive. **No London Underground whatsoever** – the metro series is Tyne and Wear only, about 172 zones against roughly 1,430 either side. This is a known and accepted gap in the source, not a decline: do not read a London metro trend across it. |
+| 2018–2025 | TNDS, with metro dropped from the rail feed so it is not counted twice. The same standard mode rules are applied here, so the DLR, the Glasgow Subway, the heritage railways and the airport people movers carry the same `route_type` as they do in the NPTDR years. |
 
 ## Repo layout
 

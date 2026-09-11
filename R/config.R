@@ -106,6 +106,17 @@ year_sources <- function(cfg = load_cfg()) {
   # ATOC CIF (rail), all converted from raw data by this pipeline. Snapshot
   # choice follows the TransportBlackspots analysis: October where
   # available, otherwise the nearest usable snapshot.
+  #
+  # Route type 1 (metro) is dropped from every rail feed. The CIF feeds carry
+  # the London Underground - agency LT, 1,901 to 6,092 trips a year at 25
+  # stations - and the Tyne and Wear Metro, and TNDS carries both in full, so
+  # summing the two feeds counts those stations twice. The stop ids cannot
+  # collide (TIPLOC in the CIF against ATCO in TNDS) so no deduplication could
+  # ever catch it, but stops are joined to zones by position, not by id.
+  # README.md used to say the Underground was not in the CIF feed; it is, in
+  # every year. TNDS is the copy kept because it carries the whole of both
+  # networks where the CIF carries the sections shared with the national
+  # railway. See reports/metro_duplicate_copies.md.
   tnds_years <- list(
     `2018` = c("20180515", "2018-10-16"),
     `2019` = c("20191008", "2019-08-31"),
@@ -121,7 +132,8 @@ year_sources <- function(cfg = load_cfg()) {
     spec[[y]] <- list(
       year = as.integer(y),
       bus = list(feed(sprintf("gtfs/tnds_%s_merged.zip", snap), snap_ref)),
-      rail = feed(sprintf("gtfs/rail_atoc_%s.zip", rail_date), rail_date)
+      rail = feed(sprintf("gtfs/rail_atoc_%s.zip", rail_date), rail_date,
+                  drop_route_types = 1)
     )
   }
   # 2023: November TNDS snapshot only (the fuller of the two available that
@@ -129,7 +141,8 @@ year_sources <- function(cfg = load_cfg()) {
   spec[["2023"]] <- list(
     year = 2023,
     bus = list(feed("gtfs/tnds_20231101_merged.zip", "2023-11-01")),
-    rail = feed("gtfs/rail_atoc_2023-11-01.zip", "2023-11-01")
+    rail = feed("gtfs/rail_atoc_2023-11-01.zip", "2023-11-01",
+                drop_route_types = 1)
   )
 
   # 2024: TNDS TransXChange (bus) + ATOC rail, on the same footing as
@@ -166,7 +179,8 @@ year_sources <- function(cfg = load_cfg()) {
     bus = list(feed("gtfs/tnds_20241004_merged.zip", "2024-10-04",
                     drop_route_types = 200),
                feed("gtfs/bods_coach_20241007.zip", "2024-10-07")),
-    rail = feed("gtfs/rail_atoc_2024-10-05.zip", "2024-10-05")
+    rail = feed("gtfs/rail_atoc_2024-10-05.zip", "2024-10-05",
+                drop_route_types = 1)
   )
 
   # 2025: TNDS TransXChange (bus) + BODS Coach + rail from the National Rail
@@ -176,7 +190,8 @@ year_sources <- function(cfg = load_cfg()) {
     bus = list(feed("gtfs/tnds_20251003_merged.zip", "2025-10-03",
                     drop_route_types = 200),
                feed("gtfs/bods_coach_20251006.zip", "2025-10-06")),
-    rail = feed("gtfs/rail_rdp_20251006.zip", "2025-10-06")
+    rail = feed("gtfs/rail_rdp_20251006.zip", "2025-10-06",
+                drop_route_types = 1)
   )
 
   spec
