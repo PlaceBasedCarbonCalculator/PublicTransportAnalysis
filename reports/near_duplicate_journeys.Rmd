@@ -269,6 +269,14 @@ change only one:
    blunt version; testing the pattern's own minimum headway against the
    tolerance would be the principled one.
 
+   Excluding those modes here is right, but for years it also meant nobody
+   looked at them at all, and three conversion defects lived in that gap — see
+   [`non_bus_modes.md`](non_bus_modes.md), which now covers them on every
+   build. Duplicate copies of fixed-track services are real and are handled by
+   `gtfs_deduplicate(fixed_track = )`, which matches on a journey's termini
+   rather than on a time tolerance; see
+   [`metro_duplicate_copies.md`](metro_duplicate_copies.md).
+
 with the tolerance set at **120 seconds**, and applied to TNDS only until the
 DfT feed has been looked at service by service.
 

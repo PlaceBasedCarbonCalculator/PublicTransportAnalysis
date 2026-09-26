@@ -1,0 +1,328 @@
+# Everything that is not a bus
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE,
+                      fig.path = "figures/nonbus-", dpi = 110,
+                      fig.width = 9, fig.height = 4.5)
+library(ggplot2)
+library(data.table)
+
+nb <- readRDS(audit_path)
+MODE_LABEL <- c(`0` = "tram", `1` = "metro", `2` = "rail", `3` = "bus",
+                `4` = "ferry", `6` = "aerial lift", `11` = "trolleybus",
+                `200` = "coach", `1100` = "air")
+lab <- function(x) MODE_LABEL[as.character(x)]
+fmt <- function(x) format(round(x), big.mark = ",", scientific = FALSE,
+                          trim = TRUE)
+kt <- function(x, ...) knitr::kable(x, format = "markdown", ...)
+```
+
+Bus is 97% of the journeys in this pipeline and the whole of the question the
+pipeline was built to answer, so every other validation stage here is
+hard-filtered to `route_type == 3` — `R/comparison.R:212`, `R/lsoa_gap.R:43`,
+`R/route_match.R:169` — and `reports/near_duplicate_journeys.md` scopes its
+deduplication rule to "buses only" on purpose.
+
+The cost of that became clear in September 2026, when three defects were found
+in quick succession. Two of them were invisible to a bus-only check by
+construction, and had been in the published outputs for months:
+
+1. **Duplicate published copies of Underground lines.** TfL files one line
+   into TNDS as several TransXChange documents with overlapping validity.
+   UK2GTFS blanked any `LineName` longer than six characters to pass a
+   validation check, and `gtfs_deduplicate()` keys an unnamed route on its own
+   `route_id` — so 93% of metro trips could not be grouped with their own
+   duplicates. Leytonstone read 96.8 trips per hour in 2021 against 55 in
+   neighbouring years.
+2. **`gtfs_merge()` numbered `file_id` per table**, so a feed with no
+   `calendar_dates` shifted every later feed's cancellations onto the
+   preceding feed's services. This one hit *bus* hardest, and was still missed,
+   because nothing compared a merged feed against the regions that went into
+   it.
+3. **The NAPTAN join ran after the mode rules**, silently disabling the
+   thirteen rules that identify a system by its stops' names. The Docklands
+   Light Railway came out as heavy rail in half the series.
+
+This report is the standing check for that blind spot. It is deliberately not
+"the same tests with a different filter": it asks the questions whose absence
+let those three through.
+
+Coach (`route_type` 200) is included even though it is a road mode. The
+sources disagree about where coach belongs, and `load_pt_frequency()` in the
+`build` repo folds it back into bus — so a defect in coach lands inside the
+bus figures, where no bus check will look for it.
+
+```{r scope, results='asis'}
+feeds <- as.data.table(nb$feeds)
+kt(feeds[, .(feeds = .N, years = uniqueN(year)), by = "side"],
+   caption = "Feeds audited")
+```
+
+## 1. Does every system carry the same mode in every feed?
+
+This is the test that found defect 3, and it is the one to run first after any
+change to a converter. A system is identified the way
+`UK2GTFS::standard_mode_overrides()` identifies it — at least 80% of a route's
+distinct stops matching that system's NAPTAN name pattern — and the route's
+*actual* `route_type` is reported beside it. Identification is by stop name
+rather than operator code because operator codes are not stable between
+archives: NPTDR reuses them across eras, and `CAB` means something different
+before the cable car opened in 2012.
+
+A system with more than one mode across the series means the published metro,
+tram and rail totals are not comparable between years.
+
+```{r consistency, results='asis'}
+mc <- as.data.table(nb$mode_consistency)
+kt(mc[, .(system = sys, modes, n_modes, feeds)],
+   caption = "Modes each system is given, across every feed")
+bad <- nb$inconsistent
+```
+
+```{r consistency_verdict, results='asis'}
+if (length(bad) == 0) {
+  cat("**", nrow(mc), " systems, every one of them consistent.**",
+      " No system is filed under two different modes anywhere in the series.\n",
+      sep = "")
+} else {
+  cat("**", length(bad), " system(s) carry more than one mode: ",
+      paste(bad, collapse = ", "), ".** The affected modes are not comparable ",
+      "across years until this is resolved.\n", sep = "")
+}
+```
+
+```{r consistency_detail, results='asis'}
+sysd <- as.data.table(nb$systems)
+if (length(bad) > 0) {
+  d <- sysd[sys %in% bad][order(sys, year)]
+  d[, mode := lab(route_type)]
+  print(kt(d[, c("sys", "year", "side", "mode", "routes", "trips"),
+             with = FALSE],
+           caption = "Detail for the inconsistent systems"))
+}
+```
+
+Trips per system and year, for the systems the mode rules name. Read down a
+column rather than across a row: a system's *mode* should never change, but its
+trip count reflects what the archive for that year happens to contain.
+
+```{r system_trips, results='asis'}
+w <- dcast(sysd[side == "bus"], sys ~ year, value.var = "trips",
+           fun.aggregate = function(x) sum(x, na.rm = TRUE), fill = 0)
+kt(w, caption = "Trips per system per year, bus-side feeds")
+```
+
+## 2. Is any line published as more than one live copy?
+
+The defect that started this work. For each line and each date inside the
+28-day counting window: how many journeys all live copies claim between them,
+against how many the single largest copy claims alone. The difference is
+service that exists only because the same timetable was published twice.
+
+Counting per date matters. A superseded copy with a short calendar is
+legitimate on the dates its replacement does not cover, and taking the largest
+copy rather than the first stops a genuine mid-window timetable change being
+scored as duplication. A feed-level count gets 2019 wrong in the other
+direction: that year's copies are cancelled by exception on weekdays but not
+on Saturdays, so a weekday-only check sees nothing at all.
+
+**Read `measurable` before `pct`.** The measure groups copies of a line by its
+name, so it assumes one `route_id` is one published timetable. That holds for
+TransXChange but not for ATCO-CIF: NPTDR gives every metro route a blank
+`route_long_name` and splits one line across hundreds of `route_id`s carrying a
+few trips each — 920 routes under 18 line codes in 2007, 136 of them District
+line. Grouping those by name reported 79% of Underground service as duplicated
+when none of it was. Unnamed routes are therefore keyed individually and can
+never be grouped, exactly as `gtfs_deduplicate()` treats them, and
+`measurable` reports how much of each mode's service sits on routes the measure
+can see. **`pct = 0` with `measurable = 0` means "cannot tell", not "no
+duplication".** The NPTDR years are almost entirely unmeasurable this way; what
+protects them is `gtfs_deduplicate()`'s exact-itinerary matching, which does not
+depend on names.
+
+```{r phantom, results='asis'}
+ph <- as.data.table(nb$phantom)
+if (nrow(ph) > 0) {
+  p <- ph[side == "bus", .(year, mode = lab(route_type), trip_days, phantom,
+                           pct, lines, lines_affected, measurable)]
+  print(kt(p[order(year, mode)],
+           caption = "Phantom trip-days by mode and year"))
+}
+```
+
+```{r phantom_chart, fig.height=4}
+if (nrow(ph) > 0) {
+  d <- ph[side == "bus" & trip_days > 0 & measurable > 0]
+  d[, mode := lab(route_type)]
+  ggplot(d, aes(year, pct, colour = mode)) +
+    geom_line(linewidth = 0.7) + geom_point(size = 1.4) +
+    labs(x = NULL, y = "% of trip-days that are a duplicate copy",
+         colour = NULL,
+         title = "Duplicate published copies, by mode",
+         subtitle = "Feeds where the measure can see anything at all") +
+    theme_minimal(base_size = 11)
+}
+```
+
+The lines carrying the most duplication, whatever mode they are in:
+
+```{r phantom_lines, results='asis'}
+pl <- as.data.table(nb$phantom_line)
+if (nrow(pl) > 0) {
+  top <- pl[side == "bus" & phantom > 0][order(-phantom)][1:min(25, .N)]
+  print(kt(top[, .(year, mode = lab(route_type), line, trip_days, phantom,
+                   pct)],
+           caption = "Most duplicated lines"))
+}
+```
+
+## 3. Which routes are exempt from deduplication?
+
+`route_short_name` is the field `gtfs_deduplicate()` groups candidate routes
+on. An unnamed route is keyed on its own `route_id`, so it can never share a
+group with its own duplicate — a blank name is an exemption from
+deduplication.
+
+**This table should be all zeros, and that is the test.** It is the direct
+regression check on the fix that stopped UK2GTFS deleting long line names:
+`transxchange_export.R` used to blank any `LineName` over six characters to
+pass a validation check, which removed `Central`, `Piccadilly` and
+`Bakerloo` while leaving `Circle` — the only named Underground route in the old
+feeds. Measured on `tnds_20211012` either side of the fix:
+
+| mode | trips on unnamed routes, before | after |
+|---|---|---|
+| metro | **93.5%** | 0% |
+| ferry | 48.2% | 0% |
+| tram | 28.8% | 0% |
+| rail | 11.5% | 0% |
+| bus | 0.6% | 0% |
+
+A non-zero cell below means the truncation has returned, and with it the
+exemption that let one Underground line be counted twice.
+
+```{r blank, results='asis'}
+bl <- as.data.table(nb$blank)
+if (nrow(bl) > 0) {
+  b <- bl[side == "bus", .(pct_trips = round(mean(pct_trips), 1)),
+          by = .(mode = lab(route_type), year)]
+  print(kt(dcast(b, mode ~ year, value.var = "pct_trips"),
+           caption = "% of trips on routes with no route_short_name"))
+}
+```
+
+## 4. Is the same service counted from two feeds at once?
+
+From 2018 each year sums a bus feed and a rail feed. `sum_feeds()` adds their
+counts, so any service in both is counted twice. Matching stop ids cannot
+detect it — TNDS uses ATCO codes and the rail CIF uses TIPLOCs — but the zone
+join is spatial, so a double count lands in whichever zone holds the station.
+
+Identification here is by `route_type` and **agency name**, not by stop-name
+pattern. The patterns in `standard_mode_overrides()` are NAPTAN names
+("Bank DLR Station"); the rail CIF names its stops from TIPLOCs and matches
+none of them, so a stop-pattern check on a rail feed finds nothing and cannot
+tell "no overlap" from "cannot see" — the first version of this section
+silently reported the former. The CIF does name its operators plainly, so that
+is what is used.
+
+`drop_route_types = 1` on the rail feed is the fix already in
+`year_sources()`; `dropped` records whether it was applied for that year.
+
+```{r cross, results='asis'}
+cs <- as.data.table(nb$cross_source)
+cs <- cs[!is.na(agency_id)]
+if (nrow(cs) == 0) {
+  cat("No rail feed in this build carries any tram or metro service.
+")
+} else {
+  cs[, mode := lab(route_type)]
+  print(kt(cs[order(year, -trips)][
+    , c("year", "agency_name", "mode", "routes", "trips", "dropped"),
+    with = FALSE],
+    caption = "Tram and metro service inside each year's rail feed"))
+  cat("
+**", nrow(cs[dropped == FALSE]),
+      " of ", nrow(cs),
+      " rows are NOT excluded by `drop_route_types`**",
+      if (nrow(cs[dropped == FALSE]) == 0)
+        " — every one of these is dropped before counting, so none is",
+      if (nrow(cs[dropped == FALSE]) == 0) " double counted." else ".",
+      "
+", sep = "")
+}
+```
+
+## 5. When is each mode actually in the series?
+
+Not a defect — a comparability trap, and the one most likely to mislead a
+reader of the published outputs. A mode that vanishes for a block of years, or
+moves by an order of magnitude between adjacent years, is showing which
+archive that year came from and not a change in service.
+
+```{r series, results='asis'}
+sr <- as.data.table(nb$series)
+s <- sr[route_type != 3L]
+w2 <- dcast(s, route_type ~ year, value.var = "tph",
+            fun.aggregate = function(x) round(sum(x, na.rm = TRUE)))
+w2[, mode := lab(route_type)]
+yr <- setdiff(names(w2), c("mode", "route_type"))
+kt(w2[, c("mode", yr), with = FALSE],
+   caption = "National afternoon-peak tph by mode and year (bus excluded)")
+```
+
+```{r series_chart, fig.height=5}
+s2 <- copy(s)
+s2[, mode := lab(route_type)]
+ggplot(s2[tph > 0], aes(year, tph, colour = mode)) +
+  geom_line(linewidth = 0.7) + geom_point(size = 1.3) +
+  scale_y_log10(labels = function(x) format(x, big.mark = ",",
+                                            scientific = FALSE, trim = TRUE)) +
+  labs(x = NULL, y = "national tph (log scale)", colour = NULL,
+       title = "Non-bus modes, 2004-2025",
+       subtitle = "Gaps and steps are archive changes, not service changes") +
+  theme_minimal(base_size = 11)
+```
+
+The breaks a reader needs to know about, each measured from the table above:
+
+- **2004** — the Underground is inside the *bus* totals. `nptdr.R` converts
+  that year with `clean_route_type(guess_bus = TRUE)`.
+- **2005–2006** — no Underground and no Docklands Light Railway at all.
+- **2012–2013** — no data of any kind; the archive does not exist.
+- **2014–2017** — the Bus Archive era. The metro series here is Tyne and Wear
+  and the Glasgow Subway, *except* 2016, which also carries 66 Underground
+  routes and 6,778 trips, and 2017, which carries a vestigial 4 routes and 8
+  trips. The same Glasgow Subway service is described as 64 routes in 2014,
+  128 in 2015 and 4 in 2016 and 2017, with 2014 holding half the journeys of
+  the other three years. None of that is a service change.
+- **2018 onwards** — TNDS plus the rail CIF, with the Underground and the DLR
+  both present and both metro.
+
+Because of the 2014–2017 block in particular, the metro series should not be
+read as a single continuous measure across 2004–2025.
+
+## 6. What this report does not cover
+
+- **No external validation of non-bus frequency.** The bus series has been
+  checked against operators' published timetables journey-for-journey
+  (`route_279_pdf_validation.md`, `route_validation_69_A1_142.md`). Nothing
+  equivalent exists for any fixed-track mode. The Leytonstone figure of
+  ~55 trips per hour is consistent across eight snapshots and plausible for
+  the Central line, but it has never been checked against a TfL timetable.
+- **Ferry and air are reported but not examined.** Both are small enough that
+  a defect in them would not move the published totals, and neither has a
+  duplicate-copy mechanism of the kind found in metro.
+- **Trolleybus (`route_type` 11) appears in no feed** in this series. It is
+  kept in the mode list so that a source which starts using it is noticed
+  rather than silently mapped elsewhere.
+- **The phantom measure is an estimate of duplication, not a correction.** It
+  says how much service is claimed more than once; it does not say which copy
+  a deduplicator should keep. `gtfs_deduplicate(fixed_track = )` does that,
+  and its own effect is reported in `metro_duplicate_copies.md`.
+
+```{r footer, results='asis'}
+cat("\n---\n\nGenerated ", format(nb$generated, "%Y-%m-%d %H:%M"),
+    " from `data/non_bus_audit.Rds` by the `non_bus_report` target.\n",
+    sep = "")
+```

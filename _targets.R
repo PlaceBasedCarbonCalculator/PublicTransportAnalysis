@@ -115,36 +115,36 @@ list(
   tar_target(nptdr_2004, convert_nptdr_year(2004, naptan), format = "file"),
   tar_target(nptdr_2005, convert_nptdr_year(2005, naptan), format = "file"),
   tar_target(nptdr_2006, convert_nptdr_year(2006, naptan), format = "file"),
-  tar_target(nptdr_2007, convert_nptdr_year(2007, naptan), format = "file"),
-  tar_target(nptdr_2008, convert_nptdr_year(2008, naptan), format = "file"),
-  tar_target(nptdr_2009, convert_nptdr_year(2009, naptan), format = "file"),
-  tar_target(nptdr_2010, convert_nptdr_year(2010, naptan), format = "file"),
-  tar_target(nptdr_2011, convert_nptdr_year(2011, naptan), format = "file"),
+  tar_target(nptdr_2007, convert_nptdr_year(2007, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(nptdr_2008, convert_nptdr_year(2008, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(nptdr_2009, convert_nptdr_year(2009, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(nptdr_2010, convert_nptdr_year(2010, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(nptdr_2011, convert_nptdr_year(2011, naptan, cfg = cfg_cores(30)), format = "file"),
 
   # Bus Archive weekly TransXChange snapshots, Monday-week trimmed + merged
-  tar_target(busarchive_2014, convert_bus_archive_year(2014, txc_cal, naptan), format = "file"),
-  tar_target(busarchive_2015, convert_bus_archive_year(2015, txc_cal, naptan), format = "file"),
-  tar_target(busarchive_2016, convert_bus_archive_year(2016, txc_cal, naptan), format = "file"),
-  tar_target(busarchive_2017, convert_bus_archive_year(2017, txc_cal, naptan), format = "file"),
+  tar_target(busarchive_2014, convert_bus_archive_year(2014, txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(busarchive_2015, convert_bus_archive_year(2015, txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(busarchive_2016, convert_bus_archive_year(2016, txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(busarchive_2017, convert_bus_archive_year(2017, txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
 
   # TNDS TransXChange snapshots (11 regions + NCSD coach where present)
-  tar_target(tnds_20180515, convert_tnds_snapshot("20180515", txc_cal, naptan), format = "file"),
-  tar_target(tnds_20191008, convert_tnds_snapshot("20191008", txc_cal, naptan), format = "file"),
-  tar_target(tnds_20200701, convert_tnds_snapshot("20200701", txc_cal, naptan), format = "file"),
-  tar_target(tnds_20211012, convert_tnds_snapshot("20211012", txc_cal, naptan), format = "file"),
+  tar_target(tnds_20180515, convert_tnds_snapshot("20180515", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(tnds_20191008, convert_tnds_snapshot("20191008", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(tnds_20200701, convert_tnds_snapshot("20200701", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(tnds_20211012, convert_tnds_snapshot("20211012", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
   # cfg_cores(30) on the three still to convert: the command of a target that
   # is already built (20241004, and 20260726 below) must not change, or it
   # would be converted again for no gain.
   tar_target(tnds_20221102, convert_tnds_snapshot("20221102", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
   tar_target(tnds_20231101, convert_tnds_snapshot("20231101", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
-  tar_target(tnds_20241004, convert_tnds_snapshot("20241004", txc_cal, naptan), format = "file"),
+  tar_target(tnds_20241004, convert_tnds_snapshot("20241004", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
   tar_target(tnds_20251003, convert_tnds_snapshot("20251003", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
 
   # Coach from 2024: the BODS Coach dataset, because TNDS stops carrying the
   # national coach network (see convert_bods_coach()). Small archives, so the
   # default worker count is plenty.
-  tar_target(bods_coach_2024, convert_bods_coach("20241007", txc_cal, naptan), format = "file"),
-  tar_target(bods_coach_2025, convert_bods_coach("20251006", txc_cal, naptan), format = "file"),
+  tar_target(bods_coach_2024, convert_bods_coach("20241007", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(bods_coach_2025, convert_bods_coach("20251006", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
 
   # Rail: ATOC CIF (2018-2024), then the National Rail Data Portal (2025)
   tar_target(rail_2018, convert_atoc_date("2018-10-16"), format = "file"),
@@ -161,19 +161,19 @@ list(
   tar_target(trips_2004, run_year(2004, zones_file, nptdr_2004), format = "file"),
   tar_target(trips_2005, run_year(2005, zones_file, nptdr_2005), format = "file"),
   tar_target(trips_2006, run_year(2006, zones_file, nptdr_2006), format = "file"),
-  tar_target(trips_2007, run_year(2007, zones_file, nptdr_2007), format = "file"),
-  tar_target(trips_2008, run_year(2008, zones_file, nptdr_2008), format = "file"),
-  tar_target(trips_2009, run_year(2009, zones_file, nptdr_2009), format = "file"),
-  tar_target(trips_2010, run_year(2010, zones_file, nptdr_2010), format = "file"),
-  tar_target(trips_2011, run_year(2011, zones_file, nptdr_2011), format = "file"),
-  tar_target(trips_2014, run_year(2014, zones_file, busarchive_2014), format = "file"),
-  tar_target(trips_2015, run_year(2015, zones_file, busarchive_2015), format = "file"),
-  tar_target(trips_2016, run_year(2016, zones_file, busarchive_2016), format = "file"),
-  tar_target(trips_2017, run_year(2017, zones_file, busarchive_2017), format = "file"),
-  tar_target(trips_2018, run_year(2018, zones_file, tnds_20180515, rail_2018), format = "file"),
-  tar_target(trips_2019, run_year(2019, zones_file, tnds_20191008, rail_2019), format = "file"),
-  tar_target(trips_2020, run_year(2020, zones_file, tnds_20200701, rail_2020), format = "file"),
-  tar_target(trips_2021, run_year(2021, zones_file, tnds_20211012, rail_2021), format = "file"),
+  tar_target(trips_2007, run_year(2007, zones_file, nptdr_2007, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2008, run_year(2008, zones_file, nptdr_2008, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2009, run_year(2009, zones_file, nptdr_2009, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2010, run_year(2010, zones_file, nptdr_2010, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2011, run_year(2011, zones_file, nptdr_2011, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2014, run_year(2014, zones_file, busarchive_2014, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2015, run_year(2015, zones_file, busarchive_2015, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2016, run_year(2016, zones_file, busarchive_2016, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2017, run_year(2017, zones_file, busarchive_2017, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2018, run_year(2018, zones_file, tnds_20180515, rail_2018, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2019, run_year(2019, zones_file, tnds_20191008, rail_2019, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2020, run_year(2020, zones_file, tnds_20200701, rail_2020, cfg = cfg_cores(30)), format = "file"),
+  tar_target(trips_2021, run_year(2021, zones_file, tnds_20211012, rail_2021, cfg = cfg_cores(30)), format = "file"),
   # 2022-2025 are being recounted on the reconverted feeds, so they take the
   # wider worker count too; 2004-2021 keep theirs, being already built.
   tar_target(trips_2022, run_year(2022, zones_file, tnds_20221102, rail_2022, cfg = cfg_cores(30)), format = "file"),
@@ -193,19 +193,24 @@ list(
   # folder, hence the explicit `archive`).
   tar_target(bods_txc_2022, convert_bods_txc("20221102", txc_cal, naptan,
                                              archive = "bodds_archive_20221102.zip",
-                                             filter_date = "2022-11-02"), format = "file"),
+                                             filter_date = "2022-11-02",
+                                             cfg = cfg_cores(30)), format = "file"),
   tar_target(bods_txc_2023, convert_bods_txc("20231101", txc_cal, naptan,
                                              archive = "bodds_archive_20231101.zip",
-                                             filter_date = "2023-11-01"), format = "file"),
+                                             filter_date = "2023-11-01",
+                                             cfg = cfg_cores(30)), format = "file"),
   tar_target(bods_txc_2024, convert_bods_txc("20241007", txc_cal, naptan,
                                              archive = "bodds_archive_20241006.zip",
-                                             filter_date = "2024-10-07"), format = "file"),
+                                             filter_date = "2024-10-07",
+                                             cfg = cfg_cores(30)), format = "file"),
   tar_target(bods_txc_2025, convert_bods_txc("20251006", txc_cal, naptan,
                                              archive = "bodds_archive_20251005.zip",
-                                             filter_date = "2025-10-06"), format = "file"),
+                                             filter_date = "2025-10-06",
+                                             cfg = cfg_cores(30)), format = "file"),
   tar_target(bods_txc_2026, convert_bods_txc("20260725", txc_cal, naptan,
                                              archive = "bodds_archive_20260725.zip",
-                                             filter_date = "2026-07-27"), format = "file"),
+                                             filter_date = "2026-07-27",
+                                             cfg = cfg_cores(30)), format = "file"),
 
   # --- Validation against published timetables ---
   #
@@ -217,7 +222,8 @@ list(
   #
   # TNDS and BODS GTFS only — see validation_sources() for why the BODS
   # TransXChange archive is not validated against the PDFs.
-  tar_target(tnds_20260726, convert_tnds_snapshot("20260726", txc_cal, naptan),
+  tar_target(tnds_20260726, convert_tnds_snapshot("20260726", txc_cal, naptan,
+                                                 cfg = cfg_cores(30)),
              format = "file"),
 
   tar_target(pdf_validation, validate_published_timetables(tnds_20260726),
@@ -251,5 +257,29 @@ list(
              near_duplicate_analysis(tnds_20260726, noc = noc),
              format = "file"),
   tar_target(near_duplicates_report,
-             render_near_duplicate_report(near_duplicates), format = "file")
+             render_near_duplicate_report(near_duplicates), format = "file"),
+
+  # Everything that is not a bus.
+  #
+  # Every other validation stage here filters to route_type == 3, and three
+  # defects lived in the other 3% because of it - duplicate published copies of
+  # Underground lines, gtfs_merge() misnumbering file_id, and the NAPTAN join
+  # running after the mode rules so that thirteen of eighteen rules silently
+  # matched nothing. Two of the three were invisible to a bus-only check by
+  # construction. See reports/non_bus_modes.md.
+  #
+  # It takes every feed as a dependency rather than naming one, so that a
+  # reconversion of any year re-runs the audit. That is the point: the mode
+  # inconsistency it catches is introduced by converter changes, which is
+  # exactly when nothing else would rebuild.
+  tar_target(non_bus, non_bus_analysis(c(
+    nptdr_2004, nptdr_2005, nptdr_2006, nptdr_2007, nptdr_2008, nptdr_2009,
+    nptdr_2010, nptdr_2011,
+    busarchive_2014, busarchive_2015, busarchive_2016, busarchive_2017,
+    tnds_20180515, tnds_20191008, tnds_20200701, tnds_20211012,
+    tnds_20221102, tnds_20231101, tnds_20241004, tnds_20251003,
+    bods_coach_2024, bods_coach_2025,
+    rail_2018, rail_2019, rail_2020, rail_2021, rail_2022, rail_2023,
+    rail_2024, rail_rdp_2025)), format = "file"),
+  tar_target(non_bus_report, render_non_bus_report(non_bus), format = "file")
 )

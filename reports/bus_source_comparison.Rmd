@@ -84,6 +84,8 @@ stop would be counted several times over.) Route types were
 harmonised to the set used throughout this analysis (0 tram, 1 metro, 2 rail,
 3 bus, 4 ferry, **200 coach**); coach is kept distinct from local bus in every
 source, and the headline bus comparisons are for `route_type == 3` only.
+Everything that is not a bus is covered separately, and for the whole series
+rather than these five years, in [`non_bus_modes.md`](non_bus_modes.md).
 
 ### Why the series starts in 2022, and not 2021
 
