@@ -63,8 +63,8 @@ counted first.
 
 |Source              | Published| In window| After exact dedup| Removed exactly|
 |:-------------------|---------:|---------:|-----------------:|---------------:|
-|TNDS (TransXChange) | 1,483,772| 1,213,891|         1,193,106|           1.71%|
-|BODS (GTFS)         | 1,469,864| 1,282,704|         1,208,307|           5.80%|
+|TNDS (TransXChange) | 1,475,566| 1,211,210|         1,185,335|           2.14%|
+|BODS (GTFS)         | 1,469,864| 1,282,704|         1,208,170|           5.81%|
 
 The table below counts **pairs of trips** by how far apart they are at their
 widest point, and splits them by whether the two trips share a `route_id`. That
@@ -84,14 +84,14 @@ says whether a given tolerance is discriminating or guessing.
 
 
 
-|Widest difference | Across route_ids| Within one route_id|  Ratio|
-|:-----------------|----------------:|-------------------:|------:|
-|exactly 0         |           13,294|                   4| 3323.5|
-|1-60s             |            1,009|                 134|    7.5|
-|61-120s           |              593|               5,134|    0.1|
-|121-180s          |              314|               3,081|    0.1|
-|181-300s          |              652|              15,298|    0.0|
-|301-600s          |           10,750|             179,715|    0.1|
+|Widest difference | Across route_ids| Within one route_id| Ratio|
+|:-----------------|----------------:|-------------------:|-----:|
+|exactly 0         |                3|                   4|   0.8|
+|1-60s             |              713|                 134|   5.3|
+|61-120s           |              500|               5,132|   0.1|
+|121-180s          |              271|               3,081|   0.1|
+|181-300s          |              405|              15,257|   0.0|
+|301-600s          |            1,085|             177,903|   0.0|
 
 
 **BODS (GTFS)**
@@ -101,11 +101,11 @@ says whether a given tolerance is discriminating or guessing.
 |Widest difference | Across route_ids| Within one route_id| Ratio|
 |:-----------------|----------------:|-------------------:|-----:|
 |exactly 0         |               37|               2,719|   0.0|
-|1-60s             |            3,067|               3,864|   0.8|
-|61-120s           |            1,509|               7,663|   0.2|
+|1-60s             |            2,947|               3,864|   0.8|
+|61-120s           |            1,502|               7,663|   0.2|
 |121-180s          |              993|               5,146|   0.2|
 |181-300s          |            2,137|              18,764|   0.1|
-|301-600s          |            8,201|             194,983|   0.0|
+|301-600s          |            8,123|             194,959|   0.0|
 
 ![plot of chunk crossover](figures/neardup-crossover-1.png)
 
@@ -118,13 +118,13 @@ says whether a given tolerance is discriminating or guessing.
 
 |Tolerance | Trips paired across route_ids| % of feed| Extra over exact match| Trips paired within one route_id|
 |:---------|-----------------------------:|---------:|----------------------:|--------------------------------:|
-|0s        |                        19,756|     1.66%|                      0|                                8|
-|30s       |                        19,924|     1.67%|                    168|                               14|
-|60s       |                        21,538|     1.81%|                  1,782|                              266|
-|90s       |                        22,036|     1.85%|                  2,280|                              270|
-|120s      |                        22,577|     1.89%|                  2,821|                            5,621|
-|180s      |                        23,112|     1.94%|                  3,356|                            9,495|
-|300s      |                        23,502|     1.97%|                  3,746|                           18,656|
+|0s        |                             6|     0.00%|                      0|                                8|
+|30s       |                           174|     0.01%|                    168|                               14|
+|60s       |                         1,413|     0.12%|                  1,407|                              266|
+|90s       |                         1,911|     0.16%|                  1,905|                              270|
+|120s      |                         2,382|     0.20%|                  2,376|                            5,617|
+|180s      |                         2,866|     0.24%|                  2,860|                            9,491|
+|300s      |                         3,240|     0.27%|                  3,234|                           18,575|
 
 
 **BODS (GTFS)**
@@ -134,12 +134,12 @@ says whether a given tolerance is discriminating or guessing.
 |Tolerance | Trips paired across route_ids| % of feed| Extra over exact match| Trips paired within one route_id|
 |:---------|-----------------------------:|---------:|----------------------:|--------------------------------:|
 |0s        |                            70|     0.01%|                      0|                            5,325|
-|30s       |                         3,836|     0.32%|                  3,766|                            5,757|
-|60s       |                         5,987|     0.50%|                  5,917|                           12,177|
-|90s       |                         6,407|     0.53%|                  6,337|                           12,430|
-|120s      |                         8,838|     0.73%|                  8,768|                           21,955|
-|180s      |                        10,715|     0.89%|                 10,645|                           29,250|
-|300s      |                        14,403|     1.19%|                 14,333|                           44,051|
+|30s       |                         3,803|     0.31%|                  3,733|                            5,757|
+|60s       |                         5,781|     0.48%|                  5,711|                           12,177|
+|90s       |                         6,201|     0.51%|                  6,131|                           12,430|
+|120s      |                         8,622|     0.71%|                  8,552|                           21,955|
+|180s      |                        10,499|     0.87%|                 10,429|                           29,250|
+|300s      |                        14,187|     1.17%|                 14,117|                           44,051|
 
 Read the last column as the cost. The middle columns are what the rule would
 buy.
@@ -161,11 +161,11 @@ a minute apart. The buses are a quiet minority inside the same numbers.
 |Widest difference | Across route_ids| Within one route_id| Ratio|
 |:-----------------|----------------:|-------------------:|-----:|
 |exactly 0         |                2|                   4|   0.5|
-|1-60s             |              649|                 134|   4.8|
-|61-120s           |              456|                 112|   4.1|
-|121-180s          |              262|                 130|   2.0|
-|181-300s          |              386|               3,265|   0.1|
-|301-600s          |              851|             127,600|   0.0|
+|1-60s             |              646|                 134|   4.8|
+|61-120s           |              456|                 110|   4.1|
+|121-180s          |              249|                 130|   1.9|
+|181-300s          |              384|               2,857|   0.1|
+|301-600s          |              851|             127,112|   0.0|
 
 
 **BODS (GTFS), buses only (`route_type` 3)**
@@ -181,7 +181,7 @@ a minute apart. The buses are a quiet minority inside the same numbers.
 |181-300s          |            1,927|               7,627|   0.3|
 |301-600s          |            6,520|             148,782|   0.0|
 
-On TNDS buses the discrimination is strong and it **stays** strong well past two minutes: 4.8 to one in the first minute, 4.1 to one in the second, 2 to one in the third. It does not collapse until the 181-300 second band, where it falls to 0.1 to one. The crossover for buses is therefore somewhere between three and five minutes, not between one and two.
+On TNDS buses the discrimination is strong and it **stays** strong well past two minutes: 4.8 to one in the first minute, 4.1 to one in the second, 1.9 to one in the third. It does not collapse until the 181-300 second band, where it falls to 0.1 to one. The crossover for buses is therefore somewhere between three and five minutes, not between one and two.
 
 The DfT's GTFS does not behave this way, and that is the single most important qualification in this report. Restricted to buses in exactly the same way, its ratios never reach one: 0.72 in the first minute, 0.46 in the second, 0.43 in the third. The `route_id` split, which separates the two populations cleanly on TNDS, does not separate them here at any tolerance. Part of that is structural - the DfT assigns one `route_id` per registration, so a duplicate registration is less likely to appear as two ids - and part of it is that the feed carries the whole of London, where buses really do run a minute apart. Whatever the cause, a tolerance tuned on TNDS must not be turned loose on this feed on the strength of that tuning.
 
@@ -209,12 +209,20 @@ change only one:
    blunt version; testing the pattern's own minimum headway against the
    tolerance would be the principled one.
 
+   Excluding those modes here is right, but for years it also meant nobody
+   looked at them at all, and three conversion defects lived in that gap — see
+   [`non_bus_modes.md`](non_bus_modes.md), which now covers them on every
+   build. Duplicate copies of fixed-track services are real and are handled by
+   `gtfs_deduplicate(fixed_track = )`, which matches on a journey's termini
+   rather than on a time tolerance; see
+   [`metro_duplicate_copies.md`](metro_duplicate_copies.md).
+
 with the tolerance set at **120 seconds**, and applied to TNDS only until the
 DfT feed has been looked at service by service.
 
 ### What it would and would not fix
 
-A 120-second rule on TNDS buses would act on **36 services** and **2,162 trips**, 0.18% of the feed. That is a narrow intervention: the problem is not spread thinly across the country, it is concentrated in a few dozen services where it is severe. The 2 non-bus services the same rule would have caught are listed after it, and are exactly what condition 6 exists to exclude.
+A 120-second rule on TNDS buses would act on **35 services** and **2,156 trips**, 0.18% of the feed. That is a narrow intervention: the problem is not spread thinly across the country, it is concentrated in a few dozen services where it is severe. The 3 non-bus services the same rule would have caught are listed after it, and are exactly what condition 6 exists to exclude.
 
 
 
@@ -247,8 +255,9 @@ And the non-bus services the mode condition removes:
 
 |Operator                |Line         |Mode  | route_ids| Trips|
 |:-----------------------|:------------|:-----|---------:|-----:|
-|London Underground      |(unnumbered) |metro |        11|   618|
-|Docklands Light Railway |DLR          |rail  |         2|   210|
+|London Underground      |Metropolitan |metro |         5|   187|
+|London Underground      |Piccadilly   |metro |         2|    23|
+|Docklands Light Railway |DLR          |metro |         2|    10|
 
 
 Widening from two minutes to five would add these bus services -
@@ -262,11 +271,11 @@ Widening from two minutes to five would add these bus services -
 |ARRIVA North East                     |X27  |bus  |         2|    46|
 |Arriva Cymru                          |11A  |bus  |         2|    44|
 |ARRIVA North East                     |X12  |bus  |         2|    38|
-|Stagecoach North West                 |51   |bus  |         2|    30|
 |LONDON GENERAL TRANSPORT SERVICES LTD |265  |bus  |         2|    20|
 |Arriva Midlands                       |158  |bus  |         2|    16|
 |Central Connect Transport Ltd         |33   |bus  |         2|     6|
 |ARRIVA North East                     |28A  |bus  |         2|     4|
+|Arriva                                |97A  |bus  |         2|     2|
 
 - at the price of admitting these within-route bus pairs, which the same rule cannot distinguish, and which outnumber them:
 
@@ -277,13 +286,13 @@ Widening from two minutes to five would add these bus services -
 |London Transit                 |18   |bus  |         1|   760|
 |METROLINE TRAVEL LIMITED       |W7   |bus  |         1|   526|
 |Replacement Service            |PL-6 |bus  |         2|   459|
-|Gatwick Interterminal Shuttle  |SHTL |bus  |         1|   410|
 |BLUE TRIANGLE BUSES LIMITED    |EL1  |bus  |         1|   384|
 |ARRIVA LONDON NORTH LIMITED    |38   |bus  |         1|   221|
 |National Express West Midlands |50   |bus  |         1|   209|
 |ARRIVA LONDON NORTH LIMITED    |29   |bus  |         1|   129|
 |Arriva                         |310  |bus  |         1|   128|
 |Arriva                         |SB1  |bus  |         1|   104|
+|ARRIVA LONDON SOUTH LIMITED    |137  |bus  |         1|    68|
 
 ## The other half of the problem: who counts as one operator
 
@@ -304,26 +313,26 @@ operator identity.
 
 |Source              |Operator key          |Tolerance | Trips paired across route_ids| % of feed|
 |:-------------------|:---------------------|:---------|-----------------------------:|---------:|
-|TNDS (TransXChange) |agency_name           |0s        |                        19,756|     1.66%|
-|TNDS (TransXChange) |agency_name           |120s      |                        22,577|     1.89%|
-|TNDS (TransXChange) |agency_name           |300s      |                        23,502|     1.97%|
-|TNDS (TransXChange) |NOC operator identity |0s        |                        19,756|     1.66%|
-|TNDS (TransXChange) |NOC operator identity |120s      |                        23,759|     1.99%|
-|TNDS (TransXChange) |NOC operator identity |300s      |                        24,978|     2.09%|
+|TNDS (TransXChange) |agency_name           |0s        |                             6|     0.00%|
+|TNDS (TransXChange) |agency_name           |120s      |                         2,382|     0.20%|
+|TNDS (TransXChange) |agency_name           |300s      |                         3,240|     0.27%|
+|TNDS (TransXChange) |NOC operator identity |0s        |                             6|     0.00%|
+|TNDS (TransXChange) |NOC operator identity |120s      |                         3,564|     0.30%|
+|TNDS (TransXChange) |NOC operator identity |300s      |                         4,716|     0.40%|
 |BODS (GTFS)         |agency_name           |0s        |                            70|     0.01%|
-|BODS (GTFS)         |agency_name           |120s      |                         8,838|     0.73%|
-|BODS (GTFS)         |agency_name           |300s      |                        14,403|     1.19%|
+|BODS (GTFS)         |agency_name           |120s      |                         8,622|     0.71%|
+|BODS (GTFS)         |agency_name           |300s      |                        14,187|     1.17%|
 |BODS (GTFS)         |NOC operator identity |0s        |                            70|     0.01%|
-|BODS (GTFS)         |NOC operator identity |120s      |                         8,680|     0.72%|
-|BODS (GTFS)         |NOC operator identity |300s      |                        14,085|     1.17%|
+|BODS (GTFS)         |NOC operator identity |120s      |                         8,464|     0.70%|
+|BODS (GTFS)         |NOC operator identity |300s      |                        13,869|     1.15%|
 
 
 Table: Exact deduplication under the two operator keys
 
 |Source              | Removed, agency_name| Removed, NOC identity| Difference|
 |:-------------------|--------------------:|---------------------:|----------:|
-|TNDS (TransXChange) |               20,785|                20,785|          0|
-|BODS (GTFS)         |               74,397|                74,387|        -10|
+|TNDS (TransXChange) |               25,875|                25,875|          0|
+|BODS (GTFS)         |               74,534|                74,524|        -10|
 
 The two changes are **multiplicative, not additive**. Resolving operator
 identity buys almost nothing on its own, as the table above shows: the copies
@@ -404,6 +413,6 @@ tolerance chosen to make a particular route come out right.
 Do not widen the default. `gtfs_deduplicate()` should stay exact, because
 exactness is what makes it safe to run on every feed unattended.
 
-Add the tolerance as an opt-in, at **120 seconds**, restricted to buses and to pairs across two `route_id`s, and have it report what it removed rather than remove it silently. On TNDS that is 2,166 trips over 1,107 bus pairs, 0.18% of the feed, concentrated in a few dozen services - small nationally, decisive for the zones those services serve, and too uncertain to apply without someone reading the list first.
+Add the tolerance as an opt-in, at **120 seconds**, restricted to buses and to pairs across two `route_id`s, and have it report what it removed rather than remove it silently. On TNDS that is 2,160 trips over 1,104 bus pairs, 0.18% of the feed, concentrated in a few dozen services - small nationally, decisive for the zones those services serve, and too uncertain to apply without someone reading the list first.
 
 Do not enable it on the DfT's GTFS on this evidence. Whatever duplication of this kind that feed contains is not separable from its genuine high-frequency service by any tolerance tested here, and a rule that cannot tell them apart would delete real buses.

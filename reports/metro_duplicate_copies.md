@@ -437,13 +437,21 @@ reading the converted feeds:
 |2004|London Underground is present but coded `route_type = 3` — **it is inside the bus totals**. `nptdr.R:778-784` converts with `clean_route_type(guess_bus = TRUE)`, so an unrecognised vehicle type becomes bus. The metro figures for this year are trams.|
 |2005–2006|No London Underground and no DLR at all. Metro is trams only.|
 |2007–2011|Full: LUL as metro, and **DLR as metro** (`route_type = 1`), plus tram operators.|
-|2014–2017|Bus Archive carries **no London Underground whatsoever**. The metro series is Tyne & Wear only: 172 zones and ~2,500 total tph against ~80,000 either side. E01004440 has no metro row in these years at all.|
+|2014–2017|Mostly Tyne & Wear and the Glasgow Subway: 172 zones and ~2,500 total tph against ~80,000 either side, and E01004440 has no metro row in any of these years. But **2016 is not empty of London Underground** — it carries 66 LUL routes and 6,778 trips, and 2017 carries a vestigial 4 routes and 8 trips. Those trips were previously counted as **bus**; the reattribution is exact, bus falling by the same 6,778. Only one stop in the 2016 archive is named "Underground Station", so the stop-name rules cannot see it — the operator-code rule on agency `LUL` is what finds it. The same Glasgow Subway service is also described as 64 routes in 2014, 128 in 2015 and 4 in 2016 and 2017, with 2014 holding half the journeys of the other three years.|
 |2018–2025|LUL as metro; **DLR as rail** (`route_type = 2`) — the opposite of 2007–2011.|
 
-So the metro series has a 97% hole in 2014–2017, a mode reclassification of the
-DLR at 2011/2018, and a mode misclassification of the Underground in 2004. A
-2004–2025 metro trend built from these files measures the sources, not the
-service.
+So the metro series has a near-total hole in 2014–2017, a mode
+reclassification of the DLR at 2011/2018, and a mode misclassification of the
+Underground in 2004. A 2004–2025 metro trend built from these files measures
+the sources, not the service.
+
+The 2014–2017 entry above was corrected in September 2026. It previously said
+the Bus Archive carries no London Underground whatsoever, which is true of 2014
+and 2015 and false of 2016 and 2017. The error came from checking the era at
+its endpoints rather than year by year, and it survived because those
+Underground trips were sitting in the bus totals where a metro check does not
+look for them. The unevenness in how the Glasgow Subway is described across the
+same four years was found the same way.
 
 Two of those three are now closed by Fix F, which gives every source one set
 of mode rules: the DLR is metro in both eras, and the 2004 Underground is out
@@ -678,8 +686,9 @@ years, and some of those codes carry ordinary bus routes as well.
 A route is reassigned only where at least 80% of its stops belong to one
 system, a threshold a bus passing a tram stop never reaches, and `LUL` is
 matched on its operator code as well because it runs nothing else and not all
-its stop names are marked. Measured on the archives: **87 London Underground
-routes move out of the bus totals in 2004**, and Manchester Metrolink, Midland
+its stop names are marked. Measured on the archives: **78 London Underground
+routes move out of the bus totals in 2004, but they carry only 596 trips**
+(see 6.5 — the 2004 archive barely holds the Underground at all), and Manchester Metrolink, Midland
 Metro, Sheffield Supertram, Nottingham Express Transit, Croydon Tramlink and
 the Blackpool Tramway all move from metro to tram across 2004–2011 —
 including Sheffield Supertram, which the source files as a *bus* in most years.
@@ -703,7 +712,7 @@ The sources needed it in different places. Measured on the feeds:
 |TNDS 2018|DLR 2–>1 (10,235 trips), Glasgow Subway 0–>1 (992), four heritage railways 0–>2|
 |TNDS 2021|DLR 2–>1 (6,375), Glasgow Subway 0–>1 (1,740), Gatwick 1–>0 (492), Emirates Air Line 2–>6 (834), two heritage railways–>2|
 |TNDS 2025|DLR 2–>1 (14,683), Luton DART 2–>0 (1,760), London Cable Car 2–>6 (1,016), Glasgow Subway 0–>1 (870), Gatwick 1–>0 (492), four heritage railways–>2|
-|NPTDR 2004–2011|87 Underground routes out of **bus**; six tramways and both people movers to tram; the DLR stays metro; eleven heritage railways to rail|
+|NPTDR 2004–2011|78 Underground routes out of **bus** in 2004, but only 596 trips (see 6.5); six tramways and both people movers to tram; the DLR stays metro; eleven heritage railways to rail|
 |Rail CIF|nothing — it carries only the Underground and the Tyne and Wear Metro, both already metro|
 |BODS Coach|nothing|
 
@@ -857,7 +866,29 @@ plainly: 172 zones and ~2,500 tph against ~1,430 zones and ~80,000 either side.
 This is an upper-bound estimate from the inflation rates, not a measured
 before-and-after. The measured figure needs the rebuild below.
 
-### 6.5 What is still not known
+### 6.5 The 2004 Underground correction is real but negligible
+
+This report claimed Fix F moves "87 London Underground routes out of the bus
+totals in 2004", which reads as though it repairs the 2004 metro series. It
+does not, and the rebuild showed why.
+
+|Archive|Stops named as Underground stations|`LUL` routes|`LUL` trips|
+|:---|---:|---:|---:|
+|NPTDR 2004|**5**|78|**596**|
+|NPTDR 2010|507|838|24,177|
+|NPTDR 2011|510|971|29,210|
+
+78 routes did move, so the claim is literally true, but they carry 596 trips
+against 24,177 in 2010. National metro for 2004 rose by 63 tph (1.4%) and bus
+fell by 48. **The 2004 NPTDR archive barely contains the London Underground at
+all**, and the stop-name rule cannot reach what is not there; the operator
+code is what caught these 78. So the era-break table in 4.2 stands as written:
+the 2004 metro figures are still essentially trams, before and after Fix F.
+
+Only the size of the correction was overstated; the direction and the
+mechanism were right.
+
+### 6.6 What is still not known
 
 * **A like-for-like Underground validation.** One line, one station, one
   published TfL timetable, compared departure by departure. 6.1 rules the spikes

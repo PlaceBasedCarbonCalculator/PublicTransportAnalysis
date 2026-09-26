@@ -34,18 +34,18 @@ band and does not weight weekdays, so it is a plain total.
 
 |Measure                                         |       Value|
 |:-----------------------------------------------|-----------:|
-|Zones with counted bus service in either source |      40,819|
-|Total bus trip-runs, TNDS                       | 191,138,742|
+|Zones with counted bus service in either source |      40,817|
+|Total bus trip-runs, TNDS                       | 190,990,151|
 |Total bus trip-runs, BODS GTFS                  | 203,021,824|
-|Zones where TNDS counts more                    |       9,823|
-|Zones where BODS GTFS counts more               |      11,743|
-|Zones where the two agree exactly               |      19,253|
-|Zones with service in TNDS only                 |         294|
-|Zones with service in BODS GTFS only            |         262|
+|Zones where TNDS counts more                    |       9,756|
+|Zones where BODS GTFS counts more               |      11,805|
+|Zones where the two agree exactly               |      19,256|
+|Zones with service in TNDS only                 |         293|
+|Zones with service in BODS GTFS only            |         261|
 
-Nationally TNDS counts 191,138,742 bus trip-runs against BODS GTFS's 203,021,824, so BODS GTFS is the higher of the two by 11,883,082 (-5.9% of the BODS GTFS total). The direction is not uniform: BODS GTFS is the higher source in 11,743 zones and TNDS in 9,823, so the national total is a partial cancellation of disagreements pointing opposite ways.
+Nationally TNDS counts 190,990,151 bus trip-runs against BODS GTFS's 203,021,824, so BODS GTFS is the higher of the two by 12,031,673 (-5.9% of the BODS GTFS total). The direction is not uniform: BODS GTFS is the higher source in 11,805 zones and TNDS in 9,756, so the national total is a partial cancellation of disagreements pointing opposite ways.
 
-At zone level the two agree exactly in only 19,253 of 40,819 zones (47.2%), and in **556 zones** one source shows a bus service where the other shows none at all — 294 in TNDS only, 262 in BODS GTFS only. Those are the zones where the choice of source is not a matter of degree.
+At zone level the two agree exactly in only 19,256 of 40,817 zones (47.2%), and in **554 zones** one source shows a bus service where the other shows none at all — 293 in TNDS only, 261 in BODS GTFS only. Those are the zones where the choice of source is not a matter of degree.
 
 ![plot of chunk gap-dist](figures/lsoagap-gap-dist-1.png)
 
@@ -66,15 +66,15 @@ each gridline is ten times the last, in both directions from zero:
 
 ![plot of chunk gap-curve-log](figures/lsoagap-gap-curve-log-1.png)
 
-Summed over every zone, the two sources differ by **20,559,612 trip-runs** in absolute terms, against **11,883,082** between the national totals — the difference between those two figures is disagreement that cancels between zones pointing opposite ways. Of the absolute total, the worst **1%** of zones carry **22.8%** and the worst **10%** carry **76.2%**.
+Summed over every zone, the two sources differ by **20,612,583 trip-runs** in absolute terms, against **12,031,673** between the national totals — the difference between those two figures is disagreement that cancels between zones pointing opposite ways. Of the absolute total, the worst **1%** of zones carry **22.8%** and the worst **10%** carry **76.1%**.
 
-By size of difference: **5,186 zones** differ by 1,000 trip-runs or more (12.7% of all zones), **8,382** by between 100 and 1,000, **7,998** by between 1 and 100, and **19,253** agree exactly. A zone differing by 100 trip-runs over 28 days is under four departures a day; one differing by 1,000 is thirty-six.
+By size of difference: **5,215 zones** differ by 1,000 trip-runs or more (12.8% of all zones), **8,343** by between 100 and 1,000, **8,003** by between 1 and 100, and **19,256** agree exactly. A zone differing by 100 trip-runs over 28 days is under four departures a day; one differing by 1,000 is thirty-six.
 
-The curve is not symmetric. It crosses zero at rank **9,824 of 40,819**, 24.1% of the way along, and the two ends are of very different size: the highest zone is **+18,886** and the lowest **-74,064**, so the drop on the right is about 4 times the rise on the left. BODS GTFS counts more service than TNDS in more zones and by a wider margin.
+The curve is not symmetric. It crosses zero at rank **9,757 of 40,817**, 23.9% of the way along, and the two ends are of very different size: the highest zone is **+18,886** and the lowest **-74,064**, so the drop on the right is about 4 times the rise on the left. BODS GTFS counts more service than TNDS in more zones and by a wider margin.
 
-The left-hand side is not one country's story either way. Of the **9,823 zones** where TNDS counts more, the split by country is 9,173 England, 353 Wales, 297 Scotland; but among the worst **1%** of that side it is 84 England, 11 Wales, 4 Scotland. England leads on both counts here, though that is a property of this snapshot rather than of the sources: on the February 2026 feeds the extremes were mostly Scottish. The top-ten tables below rank by size, so they show only the second of those two answers.
+The left-hand side is not one country's story either way. Of the **9,756 zones** where TNDS counts more, the split by country is 9,102 England, 357 Wales, 297 Scotland; but among the worst **1%** of that side it is 83 England, 11 Wales, 4 Scotland. England leads on both counts here, though that is a property of this snapshot rather than of the sources: on the February 2026 feeds the extremes were mostly Scottish. The top-ten tables below rank by size, so they show only the second of those two answers.
 
-So the answer to "a few extreme zones or many moderate ones" is both, and the two facts have to be held together: the tail is heavy enough that a tenth of zones account for 76.2% of all disagreement, yet **12.7% of zones** differ by more than thirty-six departures a day, which is not a rounding error in any of them. The choice of source changes the answer over most of the country, and changes it drastically in a small part of it.
+So the answer to "a few extreme zones or many moderate ones" is both, and the two facts have to be held together: the tail is heavy enough that a tenth of zones account for 76.1% of all disagreement, yet **12.8% of zones** differ by more than thirty-six departures a day, which is not a rounding error in any of them. The choice of source changes the answer over most of the country, and changes it drastically in a small part of it.
 
 ## The zones that disagree most
 
@@ -119,11 +119,11 @@ route-level section below therefore takes one zone per locality.
 |Zone      |Locality                  |Country |    TNDS| BODS GTFS| Difference| Only TNDS| Only BODS| Frequency|
 |:---------|:-------------------------|:-------|-------:|---------:|----------:|---------:|---------:|---------:|
 |E01033620 |Church Centre             |England | 134,556|   208,620|    -74,064|         0|         0|   -74,064|
-|E01034091 |Bus Station               |England |  10,995|    66,571|    -55,576|       501|    -3,578|   -52,499|
+|E01034091 |Bus Station               |England |  10,649|    66,571|    -55,922|       501|    -4,310|   -52,113|
 |E01033617 |Albert Street             |England | 100,336|   151,028|    -50,692|         0|         0|   -50,692|
-|E01034092 |Cathedral                 |England |  11,837|    60,111|    -48,274|       498|      -212|   -48,560|
+|E01034092 |Cathedral                 |England |  11,497|    60,111|    -48,614|       498|      -944|   -48,168|
 |E01033415 |Friar Street              |England |  24,918|    71,384|    -46,466|     1,544|         0|   -48,010|
-|E01033140 |Parkway                   |England |   9,668|    52,895|    -43,227|       309|      -180|   -43,356|
+|E01033140 |Parkway                   |England |   9,328|    52,895|    -43,567|       309|      -912|   -42,964|
 |E01033561 |Moor St Selfridges        |England |  81,536|   122,344|    -40,808|         0|         0|   -40,808|
 |E01033615 |Markets                   |England |  65,888|   100,304|    -34,416|         0|         0|   -34,416|
 |E01034313 |Wolverhampton Bus Station |England |  67,926|   100,521|    -32,595|         0|         0|   -32,595|
@@ -134,7 +134,7 @@ route-level section below therefore takes one zone per locality.
 |E01017032 |City Shops South          |England |  32,139|    56,709|    -24,570|     1,296|         0|   -25,866|
 |E01010125 |Chelmsley Interchange     |England |  33,288|    57,456|    -24,168|         0|       -32|   -24,136|
 
-Across the 60 zones investigated in detail, the differences come to 74,163 trip-runs on services only TNDS carries, 78,597 on services only BODS GTFS carries, and a net -660,999 from services both carry at different frequencies. Missing services, not frequency differences, dominate.
+Across the 60 zones investigated in detail, the differences come to 70,435 trip-runs on services only TNDS carries, 102,792 on services only BODS GTFS carries, and a net -640,533 from services both carry at different frequencies. Missing services, not frequency differences, dominate.
 
 ## Is either source still counting the same bus twice?
 
@@ -163,31 +163,31 @@ Table: Whole-feed duplicate journeys remaining, by source
 
 |Source              | Bus trips| Distinct journeys|  Trip-days| Duplicate runs| Share|
 |:-------------------|---------:|-----------------:|----------:|--------------:|-----:|
-|TNDS (TransXChange) | 1,102,686|           826,884|  9,401,680|          2,896|  0.0%|
+|TNDS (TransXChange) | 1,101,628|           825,987|  9,382,018|          2,896|  0.0%|
 |BODS (GTFS)         | 1,128,176|           861,410| 10,000,181|         78,830|  0.8%|
 
 Nationally, **0.8%** of the counted runs still left in BODS (GTFS) are the same journey twice on one day, against 0.0% in the other source. Across the whole feed a journey is its entire itinerary, which is a stricter test than the zone-level one below: inside a zone only the part of the trip that touches the zone's stops can be compared.
 
-Across the 60 zones investigated, the duplicate runs still present account for a median of **0.0%** of TNDS's counted trip-days and **1.7%** of the DfT GTFS's. Totals: 17,737 of 1,940,181 TNDS trip-days and 288,370 of 2,605,098 BODS GTFS trip-days.
+Across the 60 zones investigated, the duplicate runs still present account for a median of **0.0%** of TNDS's counted trip-days and **1.1%** of the DfT GTFS's. Totals: 21,961 of 1,901,514 TNDS trip-days and 280,448 of 2,573,888 BODS GTFS trip-days.
 
 
 
 Table: Zones with the largest share of duplicated runs remaining in BODS GTFS
 
-|Zone      |Locality       | TNDS trip-days|TNDS duplicate | BODS trip-days|BODS duplicate |
-|:---------|:--------------|--------------:|:--------------|--------------:|:--------------|
-|E01001843 |Moulins Road   |          6,044|0.0%           |              0|NA%            |
-|E01013509 |Sunny Grove    |          5,284|0.0%           |              0|NA%            |
-|E01021587 |Skerry Rise    |          2,502|0.0%           |         23,483|41.3%          |
-|E01021592 |Cockney Corner |          2,874|0.0%           |         25,882|39.2%          |
-|E01021542 |Hospital       |          3,331|0.0%           |         21,746|38.2%          |
-|E01021543 |Erick Avenue   |          2,251|0.0%           |         20,658|37.6%          |
-|E01033140 |Parkway        |          9,668|0.0%           |         52,895|36.9%          |
-|E01034091 |Bus Station    |         10,995|0.1%           |         66,571|36.2%          |
-|E01034092 |Cathedral      |         11,837|0.0%           |         60,111|33.3%          |
-|E01030751 |Sunbury Cross  |         14,772|0.0%           |         35,696|30.2%          |
-|E01020554 |Kings Statue   |          5,427|0.0%           |         28,832|27.1%          |
-|E01034290 |High Street    |         16,004|0.0%           |         36,449|20.5%          |
+|Zone      |Locality             | TNDS trip-days|TNDS duplicate | BODS trip-days|BODS duplicate |
+|:---------|:--------------------|--------------:|:--------------|--------------:|:--------------|
+|E01001843 |Moulins Road         |          6,044|0.0%           |              0|NA%            |
+|E01013509 |Sunny Grove          |          5,284|0.0%           |              0|NA%            |
+|E01021587 |Skerry Rise          |          2,496|0.0%           |         23,483|41.3%          |
+|E01021592 |Cockney Corner       |          2,868|0.0%           |         25,882|39.2%          |
+|E01021542 |Hospital             |          3,325|0.0%           |         21,746|38.2%          |
+|E01033140 |Parkway              |          9,328|0.0%           |         52,895|36.9%          |
+|E01034091 |Bus Station          |         10,649|0.1%           |         66,571|36.2%          |
+|E01034092 |Cathedral            |         11,497|0.0%           |         60,111|33.3%          |
+|E01030751 |Sunbury Cross        |         14,772|0.0%           |         35,696|30.2%          |
+|E01020554 |Kings Statue         |          5,427|0.0%           |         28,832|27.1%          |
+|E01034290 |High Street          |         16,004|0.0%           |         36,449|20.5%          |
+|E01017034 |The Hard Interchange |         27,337|0.0%           |         49,932|17.9%          |
 
 A duplicate here is a statement about the feed, not about the road: two identical journeys on one day is one bus described twice. These are the ones deduplication would not remove without risking real service, so where a source's remaining excess over the other is close to its remaining duplicate share, the zone's gap is still an artefact of the feed; where it is not, the gap is real service one source lacks.
 
@@ -309,7 +309,7 @@ TNDS 134,556 trip-runs, BODS GTFS 208,620, difference **-74,064**. 42 stops in t
 
 ### E01034091 — Bus Station (England)
 
-TNDS 10,995 trip-runs, BODS GTFS 66,571, difference **-55,576**. 13 stops in the zone; 7 services only in TNDS, 4 only in BODS GTFS, 40 in both.
+TNDS 10,649 trip-runs, BODS GTFS 66,571, difference **-55,922**. 13 stops in the zone; 7 services only in TNDS, 5 only in BODS GTFS, 39 in both.
 
 
 
@@ -345,7 +345,7 @@ TNDS 100,336 trip-runs, BODS GTFS 151,028, difference **-50,692**. 26 stops in t
 
 ### E01034092 — Cathedral (England)
 
-TNDS 11,837 trip-runs, BODS GTFS 60,111, difference **-48,274**. 13 stops in the zone; 4 services only in TNDS, 3 only in BODS GTFS, 41 in both.
+TNDS 11,497 trip-runs, BODS GTFS 60,111, difference **-48,614**. 13 stops in the zone; 4 services only in TNDS, 4 only in BODS GTFS, 40 in both.
 
 
 
@@ -381,9 +381,9 @@ TNDS 24,918 trip-runs, BODS GTFS 71,384, difference **-46,466**. 47 stops in the
 ## Interpretation
 
 - The largest single-zone disagreement is E01033620 (Church Centre), where the two sources differ by 74,064 trip-runs over the four weeks — 35.5% of the larger of the two figures.
-- Within the zones investigated, 13.2% of the difference (by trip-runs) is services one source carries and the other does not at all, against 86.8% from differing frequencies on shared services.
+- Within the zones investigated, 14.8% of the difference (by trip-runs) is services one source carries and the other does not at all, against 85.2% from differing frequencies on shared services.
 - 2 of the 60 zones investigated have **no counted bus service at all** in one of the two sources. For those zones the choice of source is not a matter of degree: one says the zone has a bus service and the other says it has none.
-- Disagreement by country: England 62.5% of zones; Wales 36.4% of zones; Scotland 9.5% of zones 
+- Disagreement by country: England 62.5% of zones; Wales 36.8% of zones; Scotland 9.5% of zones 
 
 ### Why these particular zones
 
