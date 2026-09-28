@@ -445,13 +445,21 @@ reclassification of the DLR at 2011/2018, and a mode misclassification of the
 Underground in 2004. A 2004–2025 metro trend built from these files measures
 the sources, not the service.
 
-The 2014–2017 entry above was corrected in September 2026. It previously said
-the Bus Archive carries no London Underground whatsoever, which is true of 2014
-and 2015 and false of 2016 and 2017. The error came from checking the era at
-its endpoints rather than year by year, and it survived because those
-Underground trips were sitting in the bus totals where a metro check does not
-look for them. The unevenness in how the Glasgow Subway is described across the
-same four years was found the same way.
+The 2014–2017 entry above was corrected in September 2026 and then corrected
+back. The original statement — that the Bus Archive carries no London
+Underground whatsoever — is right. The intervening version claimed 2016 and 2017
+carry 66 and 4 Underground routes; those routes exist and were indeed moved out
+of the bus totals, but agency `LUL` in the Bus Archive is **Lancashire United
+Ltd**, and they are buses around Preston and Burnley. The bus total falling by
+exactly as much as metro rose was read as confirmation, when it was the
+symptom. Both readings were checked against the same operator code and neither
+looked at the operator's name until later.
+
+The unevenness in how the Glasgow Subway is described across the same four
+years turned out not to be an archive quirk either: the Subway, the DLR and
+Sheffield Supertram are published twice from 2015 to 2023, once against
+station-level NAPTAN codes and once against platform codes, so every train is
+counted twice.
 
 Two of those three are now closed by Fix F, which gives every source one set
 of mode rules: the DLR is metro in both eras, and the 2004 Underground is out

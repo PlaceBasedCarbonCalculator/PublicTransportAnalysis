@@ -288,14 +288,37 @@ The breaks a reader needs to know about, each measured from the table above:
 
 - **2004** — the Underground is inside the *bus* totals. `nptdr.R` converts
   that year with `clean_route_type(guess_bus = TRUE)`.
+- **2004–2006** — four tram systems sat in the *metro* totals, because the
+  stop-name patterns were written from the 2006 and later archives and these
+  years name the same stops differently or not at all. Manchester Metrolink
+  (2004, 2005), Sheffield Supertram (2004–2006), Nottingham Express Transit
+  (2004) and the Blackpool Tramway (2005, 2006). Sheffield in 2005 and
+  Nottingham in 2004 are each split across metro *and* bus in the same archive,
+  with both halves calling at the same tram stops. Now corrected by rules keyed
+  directly on the operator codes in these specific archives, which is safe only
+  because NPTDR ended in 2011 and will not be republished. Blackpool needed no
+  correction in 2004, because the tramway is **not in that archive**: neither
+  terminus appears (no stop named "Fleetwood Ferry" or "Starr Gate", against 1
+  and 4 in 2005), no route calls predominantly at a tram stop, and the whole
+  Blackpool area carries 167 stops against 1,050 in 2005. That is a coverage
+  gap, not a misclassification, and it means the 2004 metro total was never
+  inflated by Blackpool.
 - **2005–2006** — no Underground and no Docklands Light Railway at all.
 - **2012–2013** — no data of any kind; the archive does not exist.
 - **2014–2017** — the Bus Archive era. The metro series here is Tyne and Wear
-  and the Glasgow Subway, *except* 2016, which also carries 66 Underground
-  routes and 6,778 trips, and 2017, which carries a vestigial 4 routes and 8
-  trips. The same Glasgow Subway service is described as 64 routes in 2014,
-  128 in 2015 and 4 in 2016 and 2017, with 2014 holding half the journeys of
-  the other three years. None of that is a service change.
+  and the Glasgow Subway, and no London Underground in any of the four years.
+  An earlier version of this report said 2016 carried 66 Underground routes and
+  6,778 trips: those routes exist, but agency `LUL` in that archive is
+  **Lancashire United Ltd**, not London Underground, and they are buses around
+  Preston and Burnley that the operator-code rule relabelled as metro. The
+  guard now in `apply_standard_modes()` stops that.
+- **2015–2023, all sources** — the Glasgow Subway, the Docklands Light Railway
+  and Sheffield Supertram are each published twice, once against station-level
+  NAPTAN codes and once against platform codes, so every train is counted
+  twice. It shows up as the Subway being 64 routes in 2014 and 128 in 2015, and
+  as a Glasgow zone reporting 720 tph where the true figure is 360. It stops in
+  2024 only because NAPTAN stopped issuing the station-level code. None of that
+  is a service change.
 - **2018 onwards** — TNDS plus the rail CIF, with the Underground and the DLR
   both present and both metro.
 

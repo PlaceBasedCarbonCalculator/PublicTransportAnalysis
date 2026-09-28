@@ -113,6 +113,33 @@ nb_clear <- function(feed, scratch = file.path(tempdir(), "non_bus")) {
 #' @param threshold share of a route's stops that must match
 #' @return a data.table of system, route_type, routes, trips, agencies
 nb_system_modes <- function(g, threshold = 0.8) {
+  h <- nb_attribute_routes(g, threshold)
+  if (is.null(h)) return(NULL)
+  h <- h[!is.na(sys)]
+  if (nrow(h) == 0) return(NULL)
+  h[, list(routes = .N, trips = sum(trips),
+           agencies = paste(sort(unique(agency_id)), collapse = "/")),
+    by = c("sys", "route_type")]
+}
+
+
+#' Which named system, if any, each route belongs to
+#'
+#' Split out of nb_system_modes() so that nb_unattributed() can ask the
+#' opposite question. The two together are the point: the consistency check
+#' can only speak about systems it recognises, and every defect found in
+#' September 2026 hid in the part it could not see - Manchester's trams in the
+#' 2004 and 2005 NPTDR archives, whose stops are suffixed "(Metrolink)" and not
+#' "(Manchester Metrolink)", and Lancashire United's buses in the 2016 Bus
+#' Archive, which the `LUL` operator rule relabelled as London Underground.
+#' Both were reported as "no inconsistency", because a system that cannot be
+#' identified cannot be caught disagreeing with itself.
+#'
+#' @param g tables from nb_read_tables()
+#' @param threshold share of a route's stops that must match
+#' @return a data.table of route_id, sys (NA where unattributed), route_type,
+#'   agency_id and trips, one row per route; NULL if the feed cannot be read
+nb_attribute_routes <- function(g, threshold = 0.8) {
   ov <- UK2GTFS::standard_mode_overrides()
   ov <- ov[!is.na(ov$stop_pattern) & nzchar(ov$stop_pattern), , drop = FALSE]
   if (is.null(g$stops) || is.null(g$stop_times) || nrow(g$stops) == 0) {
@@ -154,18 +181,186 @@ nb_system_modes <- function(g, threshold = 0.8) {
   n <- rs[, list(n = .N), by = "route_id"]
   h <- rs[!is.na(sys), list(n_hit = .N), by = c("route_id", "sys")]
   h <- merge(h, n, by = "route_id")[n_hit / n >= threshold]
-  if (nrow(h) == 0) return(NULL)
-  # where two systems both clear the threshold the closer match wins
-  h[, share := n_hit / n]
-  setorderv(h, c("route_id", "share"), c(1L, -1L))
-  h <- h[!duplicated(h$route_id)]
-  h <- merge(h, ro, by = "route_id")
+  if (nrow(h) > 0) {
+    # where two systems both clear the threshold the closer match wins
+    h[, share := n_hit / n]
+    setorderv(h, c("route_id", "share"), c(1L, -1L))
+    h <- h[!duplicated(h$route_id)]
+    h <- h[, list(route_id, sys)]
+  } else {
+    h <- data.table(route_id = character(), sys = character())
+  }
+
+  # every route, attributed or not. all.x so an unattributed route keeps a row
+  # with sys NA instead of vanishing - which is the whole point of splitting
+  # this out.
+  out <- merge(ro, h, by = "route_id", all.x = TRUE)
   nt <- tr[, list(trips = .N), by = "route_id"]
-  h <- merge(h, nt, by = "route_id", all.x = TRUE)
-  h[is.na(trips), trips := 0L]
-  h[, list(routes = .N, trips = sum(trips),
-           agencies = paste(sort(unique(agency_id)), collapse = "/")),
-    by = c("sys", "route_type")]
+  out <- merge(out, nt, by = "route_id", all.x = TRUE)
+  out[is.na(trips), trips := 0L]
+  out[]
+}
+
+
+#' Non-bus service that belongs to no system the patterns can name
+#'
+#' The mirror of nb_system_modes(), and the check that was missing. A feed can
+#' carry metro or tram service that no stop pattern recognises, and the
+#' consistency check is silent about it by construction: it compares the modes
+#' a named system holds across feeds, so service it cannot name contributes
+#' nothing to compare. Every mode defect found in September 2026 lived here.
+#'
+#' A large unattributed count is not automatically wrong - heritage railways,
+#' ferries and airport links are not all in the table - so this reports rather
+#' than judges. What it makes visible is a feed whose metro total is mostly
+#' unattributable, which is the signature of both known failure modes: a
+#' tramway whose stop names the patterns miss, and a bus operator whose code
+#' collided with a rule.
+#'
+#' @param g tables from nb_read_tables()
+#' @param threshold share of a route's stops that must match
+#' @return a data.table of route_type, routes, trips, attributed and
+#'   unattributed counts, the share unattributed, and the agencies involved
+nb_unattributed <- function(g, threshold = 0.8) {
+  h <- nb_attribute_routes(g, threshold)
+  if (is.null(h) || nrow(h) == 0) return(NULL)
+  h <- h[route_type %in% NON_BUS_TYPES]
+  if (nrow(h) == 0) return(NULL)
+  h[, list(
+    routes = .N,
+    trips = sum(trips),
+    routes_named = sum(!is.na(sys)),
+    trips_named = sum(trips[!is.na(sys)]),
+    trips_unnamed = sum(trips[is.na(sys)]),
+    pct_unnamed = round(100 * sum(trips[is.na(sys)]) / max(sum(trips), 1L), 1),
+    agencies_unnamed = paste(utils::head(sort(unique(agency_id[is.na(sys)])), 8),
+                             collapse = "/")),
+    by = "route_type"][order(-trips_unnamed)]
+}
+
+
+#' Stations carried at two NAPTAN granularities in one feed
+#'
+#' NAPTAN gives a metro station a station-level code and a code per platform -
+#' 9400ZZGLBUC, 9400ZZGLBUC1, 9400ZZGLBUC2 - and TNDS publishes some systems
+#' against both, so every train appears twice. The copies run at the same
+#' minutes and call at the same stations, differing only in the stop ids, so
+#' nothing keyed on stop_id can see them: not a duplicate-itinerary test, not
+#' a first-and-last-stop test, and not a count of trips, because the trips
+#' really are distinct rows.
+#'
+#' It doubled the Glasgow Subway from 2015 to 2023 - 748 weekday trips for a
+#' timetable of 374, and 720 tph at a Glasgow zone against a true 360 - and did
+#' the same to the Docklands Light Railway and Sheffield Supertram. It ends in
+#' 2024 because NAPTAN stopped issuing the station-level code, so in the
+#' published series it looks like a service change rather than a defect.
+#'
+#' A station-level id is identified the way UK2GTFS now identifies it: a stop
+#' whose id is another stop's id without its last character, both carrying the
+#' same name.
+#'
+#' @param g tables from nb_read_tables()
+#' @return a data.table of route_type, stations affected, and the trips
+#'   calling at a station-level code; NULL if the feed has none
+nb_station_platform <- function(g) {
+  if (is.null(g$stops) || is.null(g$stop_times) || nrow(g$stops) == 0) {
+    return(NULL)
+  }
+  sp <- unique(g$stops[, list(stop_id = as.character(stop_id),
+                              stop_name = as.character(stop_name))],
+               by = "stop_id")
+  sid <- sp$stop_id
+  parent <- substr(sid, 1L, nchar(sid) - 1L)
+  pos <- match(parent, sid)
+  ok <- grepl("^9400", sid) & grepl("[0-9]$", sid) & nchar(sid) > 1L & !is.na(pos)
+  idx <- which(ok)
+  if (length(idx) == 0) return(NULL)
+  keep <- !is.na(sp$stop_name[idx]) & !is.na(sp$stop_name[pos[idx]]) &
+    sp$stop_name[idx] == sp$stop_name[pos[idx]]
+  idx <- idx[keep]
+  if (length(idx) == 0) return(NULL)
+
+  parents <- unique(parent[idx])
+  st <- g$stop_times[, list(trip_id = as.character(trip_id),
+                            stop_id = as.character(stop_id))]
+  hit <- unique(st[stop_id %in% parents, list(trip_id)])
+  if (nrow(hit) == 0) return(NULL)
+  tr <- unique(g$trips[, list(trip_id = as.character(trip_id),
+                              route_id = as.character(route_id))],
+               by = "trip_id")
+  ro <- unique(g$routes[, list(route_id = as.character(route_id),
+                               route_type = as.integer(route_type))],
+               by = "route_id")
+  x <- merge(merge(hit, tr, by = "trip_id"), ro, by = "route_id")
+  n_par <- length(parents)
+  x[, list(stations = n_par, routes = uniqueN(route_id), trips = .N),
+    by = "route_type"][order(-trips)]
+}
+
+
+#' What each operator code the mode rules key on actually means in this feed
+#'
+#' `sources` keeps an operator rule away from a converter whose data cannot
+#' hold the system, but within one converter a code is still not unique. `LUL`
+#' is London Underground in TNDS and in NPTDR and Lancashire United Ltd in the
+#' 2016 and 2017 Bus Archive; both are TransXChange, so no `sources` value
+#' separates them, and the rule moved 66 Lancashire bus routes into the metro
+#' totals. UK2GTFS now refuses to fire such a rule unless the feed confirms it,
+#' and this is the check that shows whether it had to.
+#'
+#' @param g tables from nb_read_tables()
+#' @return a data.table of operator, system, the agency_name the code carries,
+#'   the routes it covers, and whether any of them call at a stop the rule's
+#'   own pattern matches
+nb_operator_names <- function(g) {
+  ov <- UK2GTFS::standard_mode_overrides()
+  ov <- ov[!is.na(ov$operator), , drop = FALSE]
+  if (nrow(ov) == 0 || is.null(g$routes) ||
+        !"agency_id" %in% names(g$routes)) {
+    return(NULL)
+  }
+  ro <- g$routes[, list(route_id = as.character(route_id),
+                        agency_id = toupper(trimws(as.character(agency_id))),
+                        route_type = as.integer(route_type))]
+  nm <- if (!is.null(g$agency) && all(c("agency_id", "agency_name") %in%
+                                        names(g$agency))) {
+    unique(data.table(
+      agency_id = toupper(trimws(as.character(g$agency$agency_id))),
+      agency_name = as.character(g$agency$agency_name)), by = "agency_id")
+  } else {
+    NULL
+  }
+
+  rows <- lapply(seq_len(nrow(ov)), function(i) {
+    code <- toupper(trimws(ov$operator[i]))
+    r <- ro[agency_id == code]
+    if (nrow(r) == 0) return(NULL)
+    confirms <- NA
+    if (!is.na(ov$stop_pattern[i]) && !is.null(g$stops) &&
+          !is.null(g$stop_times)) {
+      sp <- unique(g$stops[, list(stop_id = as.character(stop_id),
+                                  stop_name = as.character(stop_name))],
+                   by = "stop_id")
+      marked <- sp[grepl(ov$stop_pattern[i], stop_name, ignore.case = TRUE,
+                         useBytes = TRUE)]$stop_id
+      st <- g$stop_times[, list(trip_id = as.character(trip_id),
+                                stop_id = as.character(stop_id))]
+      tr <- unique(g$trips[, list(trip_id = as.character(trip_id),
+                                  route_id = as.character(route_id))],
+                   by = "trip_id")
+      t_hit <- unique(st[stop_id %in% marked, list(trip_id)])
+      r_hit <- unique(merge(t_hit, tr, by = "trip_id")$route_id)
+      confirms <- any(r$route_id %in% r_hit)
+    }
+    data.table(operator = code, sys = ov$system[i],
+               agency_name = if (is.null(nm)) NA_character_ else
+                 nm$agency_name[match(code, nm$agency_id)],
+               routes = nrow(r),
+               modes = paste(sort(unique(r$route_type)), collapse = "/"),
+               feed_confirms = confirms)
+  })
+  out <- rbindlist(rows, fill = TRUE)
+  if (nrow(out) == 0) NULL else out
 }
 
 
@@ -314,7 +509,7 @@ nb_audit_feed <- function(feed, ref, label) {
   }
   message("  ", label, " (", basename(feed), ")")
   g <- nb_read_tables(feed, c("routes", "trips", "calendar", "calendar_dates",
-                              "stops", "stop_times"),
+                              "stops", "stop_times", "agency"),
                       select = list(stop_times = c("trip_id", "stop_id",
                                                    "departure_time")))
   stamp <- function(x) {
@@ -325,6 +520,9 @@ nb_audit_feed <- function(feed, ref, label) {
   }
   out <- list(
     systems = stamp(nb_system_modes(g)),
+    unattributed = stamp(nb_unattributed(g)),
+    station_platform = stamp(nb_station_platform(g)),
+    operator_names = stamp(nb_operator_names(g)),
     phantom = stamp(nb_phantom(g, ref, by = "route_type")),
     phantom_line = stamp(nb_phantom(g, ref, by = "line")),
     blank = stamp(nb_blank_names(g)))
@@ -471,6 +669,9 @@ non_bus_analysis <- function(feed_paths = NULL, cfg = load_cfg()) {
           by = "label", all.x = TRUE)
   }
   res$systems <- pull("systems")
+  res$unattributed <- pull("unattributed")
+  res$station_platform <- pull("station_platform")
+  res$operator_names <- pull("operator_names")
   res$phantom <- pull("phantom")
   res$phantom_line <- pull("phantom_line")
   res$blank <- pull("blank")
@@ -489,6 +690,29 @@ non_bus_analysis <- function(feed_paths = NULL, cfg = load_cfg()) {
       n_modes = uniqueN(route_type), feeds = uniqueN(feed)), by = "sys"]
     res$mode_consistency <- chk[order(-n_modes, sys)]
     res$inconsistent <- chk[n_modes > 1]$sys
+  }
+
+  # The verdicts the consistency check cannot give. Each of these would have
+  # caught one of the three defects found in September 2026, and none of them
+  # depends on a system being nameable, which is what let all three through.
+  res$operator_collisions <- if (nrow(res$operator_names) > 0) {
+    res$operator_names[feed_confirms == FALSE][order(operator, feed)]
+  } else {
+    res$operator_names
+  }
+  res$platform_doubling <- if (nrow(res$station_platform) > 0) {
+    res$station_platform[order(-trips)]
+  } else {
+    res$station_platform
+  }
+  # a mode whose service is mostly unattributable in one feed and mostly
+  # attributable in the rest is the shape of a missed stop-name convention
+  res$unnamed_outliers <- if (nrow(res$unattributed) > 0) {
+    u <- copy(res$unattributed)
+    u[, typical := stats::median(pct_unnamed), by = "route_type"]
+    u[pct_unnamed - typical > 25][order(-pct_unnamed)]
+  } else {
+    res$unattributed
   }
 
   dir.create(cfg$out_dir, showWarnings = FALSE, recursive = TRUE)

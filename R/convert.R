@@ -222,7 +222,15 @@ convert_bods_coach <- function(snapshot, cal, naptan, cfg = load_cfg()) {
 #' the historic bank holiday and school term data shipped with UK2GTFS.
 convert_nptdr_year <- function(year, naptan, cfg = load_cfg()) {
   src <- file.path(cfg$data_root, "NPTDR", sprintf("October-%s.zip", year))
-  gtfs <- UK2GTFS::nptdr2gtfs(src, silent = TRUE, naptan = naptan)
+  # The year is passed rather than left to be parsed out of the file name.
+  # A few mode rules are gated on the archive year, because NPTDR reassigns
+  # its numeric operator codes between archives - `1129` is the Blackpool
+  # tramway plus a bus fleet in 2005 and a different bus operator in 2004 -
+  # and those rules switch themselves off rather than guess if the year is
+  # not known. Passing it here means a renamed source file cannot silently
+  # turn them off.
+  gtfs <- UK2GTFS::nptdr2gtfs(src, silent = TRUE, naptan = naptan,
+                              year = as.character(year))
   gtfs <- post_convert(gtfs, cfg$ncores)
   write_repo_gtfs(gtfs, paste0("nptdr_", year))
 }

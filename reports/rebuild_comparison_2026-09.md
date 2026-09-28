@@ -195,25 +195,71 @@ see [`non_bus_modes.md`](non_bus_modes.md).
 Everything above was expected. These were not, and each is stated with its
 size so a reader can judge it.
 
-**5.1 Bus Archive 2016 contains London Underground.** 66 routes and 6,778
-trips, previously counted as **bus**. Bus fell by exactly 6,778 trips, so the
-reattribution balances precisely. This is a correction, but it falsifies a
-claim in the previous version of `metro_duplicate_copies.md` that 2014–2017
-carries no Underground and the metro series in those years is Tyne and Wear
-only. True for 2014 and 2015; false for 2016, and 2017 carries a vestigial 4
-routes and 8 trips.
+**5.1 Bus Archive 2016 does not contain London Underground — it contains
+Lancashire United Ltd.** *This section replaces an earlier version of itself
+that got the finding backwards; the correction is recorded rather than quietly
+swapped, because the mistake is instructive.*
 
-Only **one stop** in the whole 2016 archive is named "Underground Station", so
-the stop-name rules cannot see it — the operator-code rule on agency `LUL` is
-what found it. Useful evidence that the two kinds of rule cover different
-gaps.
+66 routes and 6,778 trips moved out of **bus** and into **metro**, and bus fell
+by the matching 1,968 tph, so the reattribution balances. The earlier version
+read that balance as confirmation that the Underground had been found hiding in
+the bus totals. It is the opposite. Agency `LUL` in `busarchive_2016` carries
+`agency_name` **"Lancashire United Ltd"**, its route short names are `152`,
+`X41`, `6`, `7`, `22`, `SHS`, and its long names are of the form
+`Preston City Centre, Preston - Burnley`. They are buses in Lancashire, and the
+operator-code rule on `LUL` relabelled all 66 as metro. `busarchive_2017`
+carries 4 more routes and 8 trips of the same.
 
-**5.2 The Bus Archive metro block is internally uneven.** The same Glasgow
-Subway service is described as 64 routes in 2014, 128 in 2015, and 4 in 2016
-and 2017, and 2014 holds half the journeys of the other three years. This is a
-property of the archive, present before this work, and now visible because the
-system is identified by name. Consequence: **the metro series should not be
-read as one continuous measure across 2004–2025.**
+Not one of those 66 routes calls at a stop named "Underground Station", which
+is what makes the collision detectable, and is now the basis of the guard in
+`apply_standard_modes()`: an operator rule that also carries a stop pattern
+stands down unless at least one of that operator's routes calls at a stop the
+pattern matches. Measured across every feed, real Underground routes clear that
+test at 93.6–100%, so nothing that should fire stops firing.
+
+Consequences for this report: metro 2016 rises 2,545 → 9,391 tph and 172 → 500
+zones, of which roughly **+4,887 is correct** (Tyne and Wear Metro moving from
+tram to metro, which it should always have been) and **+1,968 is wrong**. The
+claim elsewhere in this report that no new issues were introduced does not hold
+for 2016 and 2017 metro. The `sources` column cannot fix this, because the Bus
+Archive and TNDS both run through the TransXChange converter.
+
+**5.2 The Glasgow Subway is published twice, at two NAPTAN granularities.**
+*Also a correction: an earlier version of this section noted the Subway being
+"64 routes in 2014, 128 in 2015" and set it aside as a property of the archive.
+It is a defect, and it reaches the published figures.*
+
+NAPTAN gives each Subway station a station-level code and a code per platform —
+`9400ZZGLBUC`, `9400ZZGLBUC1`, `9400ZZGLBUC2` — and the feeds from 2015 to 2023
+carry the timetable against both. In `tnds_20231101` the weekday service holds
+**748 trips for a timetable of 374**: 374 calling only at station-level codes,
+374 only at platform codes, none mixing. Trips `740135` and `740136` both leave
+Ibrox at 06:27 and call at the same fifteen stations in the same order,
+differing only in whether the ids carry the platform suffix.
+
+Published effect at Glasgow zone **S01016967**, metro, Wednesday afternoon
+peak:
+
+| Years | Subway stop records per station | tph |
+|---|---|---|
+| 2005–2014 | 1 | 360 |
+| **2015–2023** | **3** | **720** |
+| 2024–2025 | 2 | 360 |
+
+It ends in 2024 because NAPTAN stopped issuing the station-level code, so in
+the series it reads as a service change rather than a defect. The same
+mechanism affects the **Docklands Light Railway** and **Sheffield Supertram**;
+in `tnds_20231101` seventeen stations qualify, covering 2,188 metro trips and
+681 tram trips.
+
+Nothing keyed on `stop_id` can see this — not a duplicate-itinerary test, not a
+first-and-last-stop test, and not a count of trips, because the trips really
+are distinct rows. `gtfs_deduplicate()` now canonicalises a platform code to
+its station code when building the journey signature, and only when the feed
+holds both and they carry the same name.
+
+Consequence, unchanged from the earlier version and reinforced: **the metro
+series should not be read as one continuous measure across 2004–2025.**
 
 **5.3 The unzoned bucket grew in the NPTDR years.** Stops that fall outside
 every zone are carried as `zone_id = NA`. In 2004–2011 that bucket rose from
