@@ -351,6 +351,25 @@ nb_operator_names <- function(g) {
       t_hit <- unique(st[stop_id %in% marked, list(trip_id)])
       r_hit <- unique(merge(t_hit, tr, by = "trip_id")$route_id)
       confirms <- any(r$route_id %in% r_hit)
+
+      # The stops alone would report a collision that is not one. An archive
+      # can hold a system whose stops it never names: busarchive 2014 and 2015
+      # carry the Birmingham Air-Rail Link as BHX, correctly, with no stop
+      # named "Air-Rail Link" or "Skytrain" anywhere in the feed. The name the
+      # feed gives the operator settles it, and this has to agree with the
+      # guard in UK2GTFS::apply_standard_modes() or the audit contradicts the
+      # converter. Same rule: one name contains the other, and a name too
+      # short to identify anything does not count.
+      if (!isTRUE(confirms) && !is.null(nm)) {
+        this <- nm$agency_name[match(code, nm$agency_id)]
+        flat <- function(x) trimws(gsub("[^a-z0-9]+", " ", tolower(x)))
+        a <- flat(this)
+        s <- flat(ov$system[i])
+        if (!is.na(a) && nchar(a) >= 5L && nzchar(s) &&
+              (grepl(a, s, fixed = TRUE) || grepl(s, a, fixed = TRUE))) {
+          confirms <- TRUE
+        }
+      }
     }
     data.table(operator = code, sys = ov$system[i],
                agency_name = if (is.null(nm)) NA_character_ else

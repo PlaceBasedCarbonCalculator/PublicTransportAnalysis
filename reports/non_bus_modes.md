@@ -73,7 +73,7 @@ Table: Modes each system is given, across every feed
 |Glasgow Subway              |metro |       1|    19|
 |Heritage and minor railways |rail  |       1|    18|
 |London Underground          |metro |       1|    13|
-|Manchester Metrolink        |tram  |       1|    18|
+|Manchester Metrolink        |tram  |       1|    20|
 |Midland Metro               |tram  |       1|    19|
 |Nottingham Express Transit  |tram  |       1|    15|
 |Sheffield Supertram         |tram  |       1|     5|
@@ -90,22 +90,22 @@ trip count reflects what the archive for that year happens to contain.
 
 Table: Trips per system per year, bus-side feeds
 
-|sys                         | 2005| 2006|  2007|  2008|  2009|  2010|  2011|  2014|  2015|  2016|  2017|  2018|  2019|  2020|  2021|  2022|  2023|  2024|  2025|
-|:---------------------------|----:|----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|
-|Birmingham Air-Rail Link    |    0|    0|     0|     0|     0|     0|     0|     0|     0| 16234| 17480|  6239|  3747|  3747|  3747|  3747|  3747|  3786|  3786|
-|Blackpool Tramway           |    0|    0|   925|   966|  1139|   906|   368|  1568|  1410|  2588|  2580|   476|   568|     0|   744|   402|   402|   479|   740|
-|Croydon Tramlink            |    0|    0|  1518|  1789|  1709|  1734|  1747|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|
-|Docklands Light Railway     |    0|    0|  3541|  3628|  3586|  3763|  4149|     0|     0|     0|     0| 10235| 15573|  3684|  6375| 12270| 10709|  5014| 14683|
-|Edinburgh Trams             |    0|    0|     0|     0|     0|     0|     0|  2520|  2568|  2520|  2248|   562|   852|   152|   846|   830|   885|   885|   893|
-|Gatwick Airport shuttle     |    0|    0|     0|   492|     0|  1476|   492| 19008| 17040| 19008| 17040|  2460|  4260|  1968|   492|   492|   492|   492|   492|
-|Glasgow Subway              |  505|  505|   507|   498|   498|   498|   498|  1984|  3968|  3968|  3968|   992|   992|   992|  1740|  1740|  1740|   870|   870|
-|Heritage and minor railways |    0|   32|    26|    39|   169|   328|   115|   590|   841|   985|   671|   588|   322|   141|    28|   134|   138|   240|   320|
-|London Underground          |    0|    0| 25219| 24579| 24574| 24172| 29206|     0|     0|     0|     0| 81644| 84886| 65051| 45625| 67133| 79150| 55718| 62701|
-|Manchester Metrolink        |    0| 1914|  1911|  1356|  1675|  1920|  2693| 12077| 15764| 20180| 17644|  5902|  6561|  2902|  5221|  4033|  5683| 15225| 28648|
-|Midland Metro               |  705|  706|   706|   658|   658|   658|   658|  5216|  3428|  2862|  2996|  1037|   677|   522|   631|  2174|   622|   693|   718|
-|Nottingham Express Transit  |    0|    0|     0|     0|  1373|  1381|  1903| 14416| 14190| 19376| 17520|  4323|  4789|  3426|  3890|  3891|  4242|  5344|  3822|
-|Sheffield Supertram         |    0|    0|  2652|  2652|  2651|  2644|  2638|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|
-|Tyne and Wear Metro         |    0|    0|     0|     0|  1108|  1108|  1351|  4480|  6829|  5617|  4618|  3154|  3286|  4495|  2353|  4451|  3536|  1400|   938|
+|sys                         | 2004| 2005| 2006|  2007|  2008|  2009|  2010|  2011|  2014|  2015|  2016|  2017|  2018|  2019|  2020|  2021|  2022|  2023|  2024|  2025|
+|:---------------------------|----:|----:|----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|
+|Birmingham Air-Rail Link    |    0|    0|    0|     0|     0|     0|     0|     0|     0|     0| 16234| 17480|  6239|  3747|  3747|  3747|  3747|  3747|  3786|  3786|
+|Blackpool Tramway           |    0|    0|    0|   925|   966|  1139|   906|   368|  1568|  1410|  2588|  2580|   476|   568|     0|   744|   402|   402|   479|   740|
+|Croydon Tramlink            |    0|    0|    0|  1518|  1789|  1709|  1734|  1747|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|
+|Docklands Light Railway     |    0|    0|    0|  3541|  3628|  3586|  3763|  4149|     0|     0|     0|     0| 10235| 15573|  3684|  6375| 12270| 10709|  5014| 14683|
+|Edinburgh Trams             |    0|    0|    0|     0|     0|     0|     0|     0|  2520|  2568|  2520|  2248|   562|   852|   152|   846|   830|   885|   885|   893|
+|Gatwick Airport shuttle     |    0|    0|    0|     0|   492|     0|  1476|   492| 19008| 17040| 19008| 17040|  2460|  4260|  1968|   492|   492|   492|   492|   492|
+|Glasgow Subway              |    0|  505|  505|   507|   498|   498|   498|   498|  1984|  3968|  3968|  3968|   992|   992|   992|  1740|  1740|  1740|   870|   870|
+|Heritage and minor railways |    0|    0|   32|    26|    39|   169|   328|   115|   590|   841|   985|   671|   588|   322|   141|    28|   134|   138|   240|   320|
+|London Underground          |    0|    0|    0| 26272| 24579| 24574| 24172| 29206|     0|     0|     0|     0| 81644| 84886| 65051| 45625| 67133| 79150| 55718| 62701|
+|Manchester Metrolink        |  758|  236| 1914|  1911|  1356|  1675|  1920|  2693| 12077| 15764| 20180| 17644|  5902|  6561|  2902|  5221|  4033|  5683| 15225| 28648|
+|Midland Metro               |    0|  705|  706|   706|   658|   658|   658|   658|  5216|  3428|  2862|  2996|  1037|   677|   522|   631|  2174|   622|   693|   718|
+|Nottingham Express Transit  |    0|    0|    0|     0|     0|  1373|  1381|  1903| 14416| 14190| 19376| 17520|  4323|  4789|  3426|  3890|  3891|  4242|  5344|  3822|
+|Sheffield Supertram         |    0|    0|    0|  2652|  2652|  2651|  2644|  2638|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|
+|Tyne and Wear Metro         |    0|    0|    0|     0|     0|  1108|  1108|  1351|  4480|  6829|  5617|  4618|  3154|  3286|  4495|  2353|  4451|  3536|  1400|   938|
 
 ## 2. Is any line published as more than one live copy?
 
@@ -142,20 +142,21 @@ Table: Phantom trip-days by mode and year
 |----:|:-----------|---------:|-------:|----:|-----:|--------------:|----------:|
 | 2004|coach       |       160|       0|  0.0|     8|              0|        0.0|
 | 2004|ferry       |     30724|       0|  0.0|    33|              0|        0.0|
-| 2004|metro       |     62168|     144|  0.2|   161|              2|       10.7|
+| 2004|metro       |      6624|     144|  2.2|    74|              2|      100.0|
 | 2004|rail        |   2017361|     593|  0.0| 43396|             55|      100.0|
+| 2004|tram        |     64016|       0|  0.0|   107|              0|        0.0|
 | 2005|air         |     65980|       0|  0.0|  1033|              0|        0.0|
 | 2005|coach       |    301344|       0|  0.0|   908|              0|        0.0|
 | 2005|ferry       |     82144|       0|  0.0|   228|              0|        0.0|
-| 2005|metro       |     45016|       0|  0.0|    77|              0|        0.0|
+| 2005|metro       |      9640|       0|  0.0|     8|              0|        0.0|
 | 2005|rail        |   1451274|      24|  0.0| 44828|              2|      100.0|
-| 2005|tram        |     20332|       0|  0.0|    36|              0|        0.0|
+| 2005|tram        |     64016|       0|  0.0|   130|              0|        0.0|
 | 2006|air         |     19264|       0|  0.0|  1008|              0|        0.0|
 | 2006|coach       |    425904|       0|  0.0|  1575|              0|        0.0|
 | 2006|ferry       |    119243|       0|  0.0|   210|              0|        0.0|
-| 2006|metro       |     43081|       0|  0.0|   127|              0|        0.0|
+| 2006|metro       |     18985|       0|  0.0|    64|              0|        0.0|
 | 2006|rail        |   1458296|       0|  0.0| 46451|              0|      100.0|
-| 2006|tram        |     75012|       0|  0.0|    82|              0|        0.0|
+| 2006|tram        |     99108|       0|  0.0|   145|              0|        0.0|
 | 2007|air         |     20076|       0|  0.0|  1028|              0|        0.0|
 | 2007|coach       |    459921|       0|  0.0|  1874|              0|        0.0|
 | 2007|ferry       |    134876|       0|  0.0|   281|              0|        0.0|
@@ -328,7 +329,7 @@ Table: % of trips on routes with no route_short_name
 |ferry       |    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|
 |metro       |    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|
 |rail        |    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|
-|tram        |   NA|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|
+|tram        |    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|    0|
 
 ## 4. Is the same service counted from two feeds at once?
 
@@ -386,12 +387,12 @@ Table: National afternoon-peak tph by mode and year (bus excluded)
 
 |mode        |  2004|  2005|  2006|  2007|  2008|  2009|  2010|  2011| 2014| 2015|  2016|  2017|  2018|  2019|  2020|  2021|  2022|  2023|  2024|  2025|
 |:-----------|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|----:|----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|-----:|
-|tram        |     0|  1702|  3859|  8855|  8789|  7673|  8676|  9197| 8418| 8704| 10370| 10529| 13201| 13669|  9168| 12391| 11939| 13658| 14224| 14086|
-|metro       |  4566|  5838|  6072| 72129| 70073| 72304| 71349| 71698| 4978| 7425|  9391|  7250| 89509| 92759| 75096| 80906| 82273| 81476| 77388| 76933|
-|rail        | 48466| 51709| 52470| 52186| 52614| 53290| 58938| 59502|    6|   13|    20|    18| 63132| 64978| 58532| 58343| 61327| 62821| 62981| 63947|
-|ferry       |   142|   456|   615|  1108|  1470|  1276|  1296|  1247|  444|  767|   824|   862|  1680|  1585|  1041|  1462|  1290|  1243|  1336|  1244|
+|tram        |  4847|  5659|  5584|  8863|  8797|  7683|  8679|  9198| 8418| 8704| 10370| 10529| 13201| 13669|  9168| 12391| 11939| 13658| 14224| 14086|
+|metro       |    63|  2433|  4353| 72129| 70073| 72304| 71349| 71698| 4978| 7425|  9391|  7250| 89509| 92759| 75096| 80906| 82273| 81476| 77388| 76933|
+|rail        | 48486| 51686| 52445| 52161| 52589| 53265| 58917| 59481|    6|   13|    20|    18| 63132| 64978| 58532| 58343| 61327| 62821| 62981| 63947|
+|ferry       |   150|   462|   635|  1127|  1473|  1280|  1299|  1254|  444|  767|   824|   862|  1680|  1585|  1041|  1462|  1290|  1243|  1336|  1244|
 |aerial lift |     0|     0|     0|     0|     0|     0|     0|     0|    0|    0|     0|     0|   240|   240|   240|   240|   240|   240|   240|   240|
-|coach       |     0|  5402| 11405| 17377|  9175|  4377|  3907|  6079| 5132| 4966|  4756|  4304|  7617|  6788|  1334|  3815|  4249|  5248|  4366|  4254|
+|coach       |     0|  5434| 11433| 17431|  9173|  4375|  3902|  6074| 5132| 4966|  4756|  4304|  7617|  6788|  1334|  3815|  4249|  5248|  4366|  4254|
 |air         |     0|   174|    94|   117|   118|   148|     0|     0|    1|    0|     0|     0|     0|     0|     0|     0|     0|     0|     0|     0|
 
 ![plot of chunk series_chart](figures/nonbus-series_chart-1.png)
@@ -400,14 +401,37 @@ The breaks a reader needs to know about, each measured from the table above:
 
 - **2004** — the Underground is inside the *bus* totals. `nptdr.R` converts
   that year with `clean_route_type(guess_bus = TRUE)`.
+- **2004–2006** — four tram systems sat in the *metro* totals, because the
+  stop-name patterns were written from the 2006 and later archives and these
+  years name the same stops differently or not at all. Manchester Metrolink
+  (2004, 2005), Sheffield Supertram (2004–2006), Nottingham Express Transit
+  (2004) and the Blackpool Tramway (2005, 2006). Sheffield in 2005 and
+  Nottingham in 2004 are each split across metro *and* bus in the same archive,
+  with both halves calling at the same tram stops. Now corrected by rules keyed
+  directly on the operator codes in these specific archives, which is safe only
+  because NPTDR ended in 2011 and will not be republished. Blackpool needed no
+  correction in 2004, because the tramway is **not in that archive**: neither
+  terminus appears (no stop named "Fleetwood Ferry" or "Starr Gate", against 1
+  and 4 in 2005), no route calls predominantly at a tram stop, and the whole
+  Blackpool area carries 167 stops against 1,050 in 2005. That is a coverage
+  gap, not a misclassification, and it means the 2004 metro total was never
+  inflated by Blackpool.
 - **2005–2006** — no Underground and no Docklands Light Railway at all.
 - **2012–2013** — no data of any kind; the archive does not exist.
 - **2014–2017** — the Bus Archive era. The metro series here is Tyne and Wear
-  and the Glasgow Subway, *except* 2016, which also carries 66 Underground
-  routes and 6,778 trips, and 2017, which carries a vestigial 4 routes and 8
-  trips. The same Glasgow Subway service is described as 64 routes in 2014,
-  128 in 2015 and 4 in 2016 and 2017, with 2014 holding half the journeys of
-  the other three years. None of that is a service change.
+  and the Glasgow Subway, and no London Underground in any of the four years.
+  An earlier version of this report said 2016 carried 66 Underground routes and
+  6,778 trips: those routes exist, but agency `LUL` in that archive is
+  **Lancashire United Ltd**, not London Underground, and they are buses around
+  Preston and Burnley that the operator-code rule relabelled as metro. The
+  guard now in `apply_standard_modes()` stops that.
+- **2015–2023, all sources** — the Glasgow Subway, the Docklands Light Railway
+  and Sheffield Supertram are each published twice, once against station-level
+  NAPTAN codes and once against platform codes, so every train is counted
+  twice. It shows up as the Subway being 64 routes in 2014 and 128 in 2015, and
+  as a Glasgow zone reporting 720 tph where the true figure is 360. It stops in
+  2024 only because NAPTAN stopped issuing the station-level code. None of that
+  is a service change.
 - **2018 onwards** — TNDS plus the rail CIF, with the Underground and the DLR
   both present and both metro.
 
@@ -436,4 +460,4 @@ read as a single continuous measure across 2004–2025.
 
 ---
 
-Generated 2026-09-26 08:19 from `data/non_bus_audit.Rds` by the `non_bus_report` target.
+Generated 2026-09-29 06:44 from `data/non_bus_audit.Rds` by the `non_bus_report` target.
