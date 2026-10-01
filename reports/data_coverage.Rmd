@@ -41,6 +41,14 @@ puts it in the pipeline so it stays current. It is generated from the
 converted feeds themselves, so a reconversion re-measures it rather than
 leaving the assessment to drift away from the data.
 
+It also goes wider than the manual's grid in three ways. It covers **every
+mode**, not just bus, because bus is 97% of departures and a whole tram
+network could disappear without moving a figure. It gives the **2018–2025
+years their own section**, because that is one continuous TNDS series where
+coverage ought to be complete and anything flagged is worth chasing. And it
+is explicit about what the **"Great Britain" region** is, which is not a
+place.
+
 ## How coverage is measured
 
 The unit is the **ATCO administrative area**, not the region. A coverage gap
@@ -55,7 +63,8 @@ Three numbers are taken per area per year, because they fail differently:
 how many stops the feed **describes**, how many of those a vehicle actually
 **calls at**, and how many **departures** that amounts to. A feed can list an
 area's stops and run nothing from them, which a stop count alone scores as
-present. Departures is the measure used throughout.
+present. Departures is the measure used throughout, and it is split by
+`route_type` as well as by area, which is what the mode section uses.
 
 An area is judged against **its own usual level**, and on its **share of that
 year's departures** rather than the raw count. The eras are not on a common
@@ -74,9 +83,43 @@ archive all along under the old code. The test is whether the *region* grew
 when the area first appeared: a gap filling in adds the area's stops to its
 region, a re-coding only moves them within it.
 
-Only the **bus-side feeds** are measured. The rail CIF feeds are keyed on
-TIPLOC rather than ATCO, so the same join cannot be made; rail coverage is a
-separate question with a separate source.
+### "Great Britain" is not a region
+
+Eleven of the twelve regions in the grid are places: Scotland, Wales, London,
+the nine English regions. **"Great Britain" is not.** It is where the ATCO
+scheme puts the five *national* networks, whose stops are numbered once for
+the country instead of by the authority they stand in:
+
+```{r gbareas}
+gb <- unique(cov[region == "Great Britain",
+                 list(atco_code, name)])[order(atco_code)]
+gbs <- cov[region == "Great Britain",
+           list(years_present = sum(departures > 0),
+                peak_stops = max(stops)), by = "atco_code"]
+kt(merge(gb, gbs, by = "atco_code")[order(atco_code)],
+   col.names = c("ATCO", "network", "years with service", "most stops"))
+```
+
+A tram stop is `9400…`, a rail station `9100…`, a coach stop `900…`, whatever
+town it is in. So these five rows describe **modes, not geography**, and they
+behave differently from the other eleven for a reason that has nothing to do
+with coverage of the country: a national code appears when a source chooses
+to use it and vanishes when a source codes the same services locally instead.
+
+That is why the "Great Britain" row is the one that flickers. It is also why
+it is excluded from the maps — its polygons span the whole country, so
+drawing it would lay five national layers over every local area — and why
+the national networks are discussed under modes below rather than here.
+
+**Where a national network is missing, the service is usually not.** The
+clearest case is coach: `900` holds coach only in the NPTDR years, and from
+2014 the same coaches are in the archive under ordinary local area codes, or
+in the separate BODS Coach feed. The mode section is the place to read that;
+the geographic grid would call it a gap, and it is not one.
+
+Only the **bus-side feeds** are measured in this section. The rail CIF feeds
+are keyed on TIPLOC rather than ATCO, so the same join cannot be made — they
+are measured by position instead and reported under modes.
 
 One caution remains. The method cannot tell a missing file from a real
 collapse in service, so a `partial` year may be a genuine reduction — 2020 is
@@ -242,6 +285,116 @@ if (is.null(rc) || nrow(rc) == 0) {
 }
 ```
 
+## The modern era, 2018 to 2025
+
+Everything above is dominated by 2004. From 2018 the source is one
+continuous TNDS series and coverage should be complete, so anything flagged
+here is either a real reduction in service or a defect worth chasing. This
+section is the detail for those eight years.
+
+```{r modernsummary, results='asis'}
+modall <- cov[year >= 2018 & status != "present"]
+natcodes <- modall[region == "Great Britain"]
+mod <- modall[region != "Great Britain"]
+if (nrow(mod) == 0) {
+  cat("Every area is at its usual share in every year from 2018.\n")
+} else {
+  cat("Across the eight years there are ", nrow(mod),
+      " area-years below six tenths of normal, involving ",
+      uniqueN(mod$atco_code), " distinct areas.\n\n", sep = "")
+}
+if (nrow(natcodes) > 0) {
+  cat("The national codes (", paste(sort(unique(natcodes$name)),
+                                    collapse = ", "),
+      ") are left out of this section. They are modes rather than places and",
+      " their comings and goings are a question about sources, dealt with",
+      " under \"Great Britain is not a region\" above.\n\n", sep = "")
+}
+```
+
+Two patterns are worth separating before reading the table. **2020 is the
+pandemic**, and it accounts for a large share of the single-year entries —
+most of Wales appears once, in 2020, and nowhere else. **Neighbouring areas
+failing in the same years is the signature of a data problem**, because an
+upload, an operator or an authority's feed covers a contiguous patch, while
+a service reduction does not respect administrative borders so precisely.
+
+```{r modernrecur, results='asis'}
+if (nrow(mod) > 0) {
+  rec <- mod[, list(years = paste(sort(unique(year)), collapse = " "),
+                    n = uniqueN(year),
+                    worst = paste0(round(100 * min(index)), "%"),
+                    status = paste(sort(unique(status)), collapse = "/")),
+             by = c("region", "name", "atco_code")][order(-n, region, name)]
+  cat("**Areas flagged in more than one year** are the ones to look at: a ",
+      "single year can be a timetable change, a pattern is more likely to ",
+      "be the data.\n\n", sep = "")
+  print(kt(rec[n > 1], col.names = c("region", "area", "ATCO", "years",
+                                     "count", "lowest", "status")))
+  if (nrow(rec[n == 1]) > 0) {
+    cat("\nFlagged in a single year only:\n\n")
+    print(kt(rec[n == 1][, list(region, name, atco_code, years, worst)],
+             col.names = c("region", "area", "ATCO", "year", "share")))
+  }
+}
+```
+
+```{r moderncluster, results='asis'}
+if (nrow(mod) > 0) {
+  top <- rec[n >= 4]
+  if (nrow(top) > 0) {
+    cat("\n**The strongest candidates for a defect**, flagged in four or ",
+        "more of the eight years:\n\n", sep = "")
+    for (rg in unique(top$region)) {
+      t <- top[region == rg]
+      cat("- *", rg, "* — ", paste0(t$name, " (", t$n, " years, low ",
+                                    t$worst, ")", collapse = "; "),
+          "\n", sep = "")
+    }
+    cat("\nSeveral of those are adjacent pairs or blocks rather than ",
+        "isolated areas — Staffordshire with Stoke-on-Trent, Leicester with ",
+        "Leicestershire, and the four Berkshire authorities together — ",
+        "which is what makes them worth opening: a contiguous group of ",
+        "authorities short in the same set of years points at one upstream ",
+        "source, not at the bus networks themselves.\n", sep = "")
+  }
+}
+```
+
+```{r modernchart, fig.height=6}
+if (nrow(mod) > 0) {
+  # only the recurring ones: sixty-odd panels would be unreadable, and a
+  # single flagged year is usually 2020 or a timetable change
+  keep <- rec[n >= 3]$atco_code
+  d <- cov[atco_code %in% keep & year >= 2014]
+  d[, lab := paste0(name, " (", region, ")")]
+  ggplot(d, aes(year, index)) +
+    geom_hline(yintercept = 1, colour = "grey75", linetype = 2) +
+    geom_hline(yintercept = 0.6, colour = "#e8a33d", linetype = 3) +
+    geom_line(linewidth = 0.6, colour = "grey30") +
+    geom_point(aes(colour = status), size = 1.6) +
+    facet_wrap(~ lab, ncol = 3) +
+    scale_colour_manual(values = PAL, drop = FALSE, name = NULL) +
+    scale_x_continuous(breaks = seq(2014, 2024, by = 4)) +
+    labs(x = NULL, y = "share of the area's usual share",
+         title = "Areas flagged in three or more years from 2018, shown from 2014",
+         subtitle = "1.0 is the area's own median; dotted line is the 0.6 partial threshold") +
+    theme_minimal(base_size = 9) +
+    theme(legend.position = "bottom", panel.grid.minor = element_blank())
+}
+```
+
+```{r moderncaveat, results='asis'}
+if (nrow(mod) > 0) {
+  cat("Read these as questions, not findings. The measure compares an area ",
+      "against its own median over twenty years, so a network that has ",
+      "genuinely shrunk since 2004 sits below 1.0 for real reasons, and the ",
+      "2020 entries are the pandemic rather than a defect. What would ",
+      "indicate a data problem is a **step** - a year or two far below ",
+      "neighbours on either side - rather than a slope.\n", sep = "")
+}
+```
+
 ## Coverage in time
 
 ```{r natseries, fig.height=4}
@@ -293,6 +446,167 @@ ggplot(r, aes(year, departures / 1e6)) +
        subtitle = "red points mark a region below a quarter of its usual level") +
   theme_minimal(base_size = 10) +
   theme(panel.grid.minor = element_blank())
+```
+
+## Every mode, not just bus
+
+Everything above counts departures regardless of mode, which is reasonable
+because bus is about 97% of them — but it means a tram network could vanish
+without moving a single figure. This section separates them.
+
+Two sources, measured differently and kept apart. The **bus-side feeds**
+(NPTDR, Bus Archive, TNDS, BODS Coach) are not bus-only: NPTDR in particular
+carries rail, tram, metro, ferry, coach and air. The **rail CIF feeds**
+supply heavy rail from 2018 and are keyed on TIPLOC, so their stops are
+placed by coordinate rather than by code.
+
+```{r modetab}
+MODE <- c(`0` = "tram", `1` = "metro", `2` = "rail", `3` = "bus",
+          `4` = "ferry", `5` = "cable car", `6` = "aerial lift",
+          `7` = "funicular", `11` = "trolleybus", `200` = "coach",
+          `1100` = "air", `-1` = "(none given)")
+md <- copy(cv$modes)
+md[, mode := factor(MODE[as.character(route_type)],
+                    levels = unname(MODE))]
+w <- dcast(md[side == "bus"], mode ~ year, value.var = "departures",
+           fun.aggregate = sum, fill = 0)
+num <- setdiff(names(w), "mode")
+for (j in num) set(w, j = j, value = ifelse(w[[j]] == 0, "–",
+                                            fmt(w[[j]] / 1000)))
+kt(w[order(mode)], caption = NULL)
+```
+
+*Thousands of departures in each year's bus-side feeds, by mode. An en dash
+is a mode the year's feeds do not contain at all.*
+
+**Compare down a column, not across a row.** These are raw counts, and
+2014–2017 hold four weekly snapshots each, so their figures are about four
+times those of a comparable year — bus reads 231,572 in 2014 against 56,529
+in 2011 and 55,400 in 2018, and almost all of that is the merge, not the
+network. The chart below is on shares for that reason.
+
+```{r modechart, fig.height=5.5}
+p <- copy(cv$modes[side == "bus"])
+p[, tot := sum(departures), by = "year"]
+p[, pct := 100 * departures / tot]
+p <- p[route_type %in% c(0, 1, 2, 4, 6, 200, 1100)]
+p[, mode := MODE[as.character(route_type)]]
+ggplot(p, aes(year, pct)) +
+  geom_col(fill = "#8fb8de") +
+  facet_wrap(~ mode, scales = "free_y", ncol = 3) +
+  scale_x_continuous(breaks = seq(2005, 2025, by = 5)) +
+  labs(x = NULL, y = "% of that year's departures",
+       title = "The non-bus modes as a share of each year's bus-side feeds",
+       subtitle = "shares, not counts, so the four-snapshot Bus Archive years are comparable; bus itself is omitted at ~97%") +
+  theme_minimal(base_size = 10) +
+  theme(panel.grid.minor = element_blank())
+```
+
+```{r moderail, results='asis'}
+r <- cv$modes[side == "rail"]
+if (nrow(r) == 0) {
+  cat("No rail CIF feed was measured.\n")
+} else {
+  r[, mode := MODE[as.character(route_type)]]
+  rr <- dcast(r, mode ~ year, value.var = "departures",
+              fun.aggregate = sum, fill = 0)
+  for (j in setdiff(names(rr), "mode")) {
+    set(rr, j = j, value = ifelse(rr[[j]] == 0, "–", fmt(rr[[j]] / 1000)))
+  }
+  cat("### The rail CIF feeds\n\nThousands of departures, 2018 onwards.\n\n")
+  print(kt(rr))
+  cat("\nThese feeds are not purely rail. They carry **metro**, which the",
+      " pipeline drops (`drop_route_types = 1` in `year_sources()`) because",
+      " TNDS holds the Underground and the Tyne and Wear Metro in full and",
+      " summing both would count those stations twice; **bus**, which is",
+      " rail-replacement services; and a little **ferry**. What the pipeline",
+      " takes from them is the rail row.\n", sep = "")
+}
+```
+
+### What the mode table says about the series
+
+```{r modenotes, results='asis'}
+mb <- cv$modes[side == "bus"]
+# "present" has to mean more than a nonzero count: a mode can leave a
+# residue of a few dozen departures in a year that does not carry it, and
+# calling that presence turns the whole bullet into a falsehood
+sub_years <- function(rt, frac = 0.01) {
+  d <- mb[route_type == rt]
+  if (!nrow(d)) return(integer(0))
+  sort(d[departures >= frac * max(departures)]$year)
+}
+resid <- function(rt, frac = 0.01) {
+  d <- mb[route_type == rt]
+  d[departures > 0 & departures < frac * max(departures)][order(year)]
+}
+rng <- function(y) if (!length(y)) "never" else
+  paste0(min(y), "-", max(y), " (", length(y), " years)")
+rl <- mb[route_type == 2]
+rl_early <- rl[year <= 2011, round(mean(departures) / 1000)]
+rl_late <- rl[year >= 2014, round(mean(departures) / 1000)]
+cat("- **Rail all but disappears from these feeds after 2011**: the NPTDR",
+    " archives average ", fmt(rl_early), " thousand rail departures a year,",
+    " and from 2014 the bus-side feeds average ", fmt(rl_late),
+    " thousand. That is not a change in the railway. NPTDR was a",
+    " multi-modal archive; TransXChange is not, and from 2018 the pipeline",
+    " takes heavy rail from the CIF feeds instead. **The 2014-2017 years",
+    " have neither** - no NPTDR and no CIF - so those four years carry",
+    " essentially no rail at all.\n", sep = "")
+ar <- resid(1100); arsub <- sub_years(1100)
+cat("- **Air** is an NPTDR mode and only an NPTDR mode: it runs in ",
+    rng(arsub), sep = "")
+if (nrow(ar)) {
+  cat(", and the only trace of it anywhere else is ",
+      paste0(fmt(ar$departures), " departures in ", ar$year,
+             collapse = " and "), sep = "")
+}
+cat(". `load_pt_frequency()` in the build repo drops route type 1100",
+    " outright, so none of it reaches the published figures.\n", sep = "")
+
+co <- mb[route_type == 200][order(year)]
+cat("- **Coach is in every year, but 2004 has essentially none** — ",
+    fmt(co[year == min(year)]$departures), " departures against ",
+    fmt(co[year == 2005]$departures), " in 2005, which is why the published",
+    " 2004 coach figure is zero. Its ups and downs after that are source",
+    " changes rather than service: TNDS carried coach in its NCSD archive",
+    " until that disappeared after February 2025, and from 2024 coach comes",
+    " from the BODS Coach feed instead. The build repo folds coach back into",
+    " bus for exactly this reason.\n", sep = "")
+
+mt <- mb[route_type == 1][order(year)]
+cat("- **Metro steps twice, and neither step is a new railway**: ",
+    fmt(mt[year == 2006]$departures / 1000), "k departures in 2006 against ",
+    fmt(mt[year == 2007]$departures / 1000), "k in 2007, and ",
+    fmt(mt[year == 2017]$departures / 1000), "k in 2017 against ",
+    fmt(mt[year == 2018]$departures / 1000), "k in 2018. The first is NPTDR",
+    " beginning to carry the Underground, the second is the move to TNDS.",
+    " The Bus Archive years in between hold almost no metro, and what they",
+    " do hold is Tyne and Wear.\n", sep = "")
+cat("- Where a mode's row is thin rather than empty, treat it as a coverage",
+    " question and not a trend. The non-bus modes are small enough that one",
+    " operator's data arriving in a different format moves the whole row;",
+    " `reports/non_bus_modes.md` is the standing check on their identity.\n",
+    sep = "")
+```
+
+```{r modemaps, fig.height=7.5, fig.width=9}
+ma <- cv$mode_area[route_type %in% c(0, 1, 4)]
+if (nrow(ma) > 0) {
+  ma[, mode := MODE[as.character(route_type)]]
+  pres <- ma[departures > 0, list(areas = uniqueN(atco_code)),
+             by = c("year", "mode")]
+  ggplot(pres, aes(year, areas)) +
+    geom_col(fill = "#b9d4a8") +
+    facet_wrap(~ mode, ncol = 1, scales = "free_y") +
+    scale_x_continuous(breaks = cv$years) +
+    labs(x = NULL, y = "ATCO areas with any service",
+         title = "How many areas carry each fixed-track mode",
+         subtitle = "bus-side feeds; a step here is usually a mode rule or a source change, not a new system") +
+    theme_minimal(base_size = 10) +
+    theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
+          panel.grid.minor = element_blank())
+}
 ```
 
 ## Every gap, by area and year

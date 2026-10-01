@@ -14,6 +14,14 @@ puts it in the pipeline so it stays current. It is generated from the
 converted feeds themselves, so a reconversion re-measures it rather than
 leaving the assessment to drift away from the data.
 
+It also goes wider than the manual's grid in three ways. It covers **every
+mode**, not just bus, because bus is 97% of departures and a whole tram
+network could disappear without moving a figure. It gives the **2018–2025
+years their own section**, because that is one continuous TNDS series where
+coverage ought to be complete and anything flagged is worth chasing. And it
+is explicit about what the **"Great Britain" region** is, which is not a
+place.
+
 ## How coverage is measured
 
 The unit is the **ATCO administrative area**, not the region. A coverage gap
@@ -28,7 +36,8 @@ Three numbers are taken per area per year, because they fail differently:
 how many stops the feed **describes**, how many of those a vehicle actually
 **calls at**, and how many **departures** that amounts to. A feed can list an
 area's stops and run nothing from them, which a stop count alone scores as
-present. Departures is the measure used throughout.
+present. Departures is the measure used throughout, and it is split by
+`route_type` as well as by area, which is what the mode section uses.
 
 An area is judged against **its own usual level**, and on its **share of that
 year's departures** rather than the raw count. The eras are not on a common
@@ -47,9 +56,42 @@ archive all along under the old code. The test is whether the *region* grew
 when the area first appeared: a gap filling in adds the area's stops to its
 region, a re-coding only moves them within it.
 
-Only the **bus-side feeds** are measured. The rail CIF feeds are keyed on
-TIPLOC rather than ATCO, so the same join cannot be made; rail coverage is a
-separate question with a separate source.
+### "Great Britain" is not a region
+
+Eleven of the twelve regions in the grid are places: Scotland, Wales, London,
+the nine English regions. **"Great Britain" is not.** It is where the ATCO
+scheme puts the five *national* networks, whose stops are numbered once for
+the country instead of by the authority they stand in:
+
+
+|ATCO |network                   | years with service| most stops|
+|:----|:-------------------------|------------------:|----------:|
+|900  |National - National Coach |                  7|         33|
+|910  |National - National Rail  |                 20|       2578|
+|920  |National - National Air   |                  7|         59|
+|930  |National - National Ferry |                 20|        298|
+|940  |National - National Tram  |                 19|       1543|
+
+A tram stop is `9400…`, a rail station `9100…`, a coach stop `900…`, whatever
+town it is in. So these five rows describe **modes, not geography**, and they
+behave differently from the other eleven for a reason that has nothing to do
+with coverage of the country: a national code appears when a source chooses
+to use it and vanishes when a source codes the same services locally instead.
+
+That is why the "Great Britain" row is the one that flickers. It is also why
+it is excluded from the maps — its polygons span the whole country, so
+drawing it would lay five national layers over every local area — and why
+the national networks are discussed under modes below rather than here.
+
+**Where a national network is missing, the service is usually not.** The
+clearest case is coach: `900` holds coach only in the NPTDR years, and from
+2014 the same coaches are in the archive under ordinary local area codes, or
+in the separate BODS Coach feed. The mode section is the place to read that;
+the geographic grid would call it a gap, and it is not one.
+
+Only the **bus-side feeds** are measured in this section. The rail CIF feeds
+are keyed on TIPLOC rather than ATCO, so the same join cannot be made — they
+are measured by position instead and reported under modes.
 
 One caution remains. The method cannot tell a missing file from a real
 collapse in service, so a `partial` year may be a genuine reduction — 2020 is
@@ -200,6 +242,111 @@ These areas are missing from the early years because they did not exist yet as A
 |South East    |Central Bedfordshire      |021  |2004 2005 2006 2007 2008 |          2009|
 |North West    |Cheshire West and Chester |061  |2004 2005 2006 2007 2008 |          2009|
 
+## The modern era, 2018 to 2025
+
+Everything above is dominated by 2004. From 2018 the source is one
+continuous TNDS series and coverage should be complete, so anything flagged
+here is either a real reduction in service or a defect worth chasing. This
+section is the detail for those eight years.
+
+Across the eight years there are 119 area-years below six tenths of normal, involving 59 distinct areas.
+
+The national codes (National - National Air, National - National Coach, National - National Rail) are left out of this section. They are modes rather than places and their comings and goings are a question about sources, dealt with under "Great Britain is not a region" above.
+
+Two patterns are worth separating before reading the table. **2020 is the
+pandemic**, and it accounts for a large share of the single-year entries —
+most of Wales appears once, in 2020, and nowhere else. **Neighbouring areas
+failing in the same years is the signature of a data problem**, because an
+upload, an operator or an authority's feed covers a contiguous patch, while
+a service reduction does not respect administrative borders so precisely.
+
+**Areas flagged in more than one year** are the ones to look at: a single year can be a timetable change, a pattern is more likely to be the data.
+
+
+
+|region        |area                   |ATCO |years                              | count|lowest |status  |
+|:-------------|:----------------------|:----|:----------------------------------|-----:|:------|:-------|
+|West Midlands |Staffordshire          |380  |2018 2020 2021 2022 2023 2024 2025 |     7|46%    |partial |
+|West Midlands |Stoke-on-Trent         |389  |2018 2020 2021 2022 2023 2024 2025 |     7|33%    |partial |
+|East Midlands |Derbyshire             |100  |2021 2022 2023 2024 2025           |     5|45%    |partial |
+|South East    |Windsor and Maidenhead |036  |2021 2022 2023 2024 2025           |     5|27%    |partial |
+|East Midlands |Leicester              |269  |2021 2023 2024 2025                |     4|53%    |partial |
+|East Midlands |Leicestershire         |260  |2022 2023 2024 2025                |     4|49%    |partial |
+|North West    |Cheshire East          |060  |2018 2020 2022 2023                |     4|54%    |partial |
+|South East    |Reading                |039  |2021 2022 2023 2025                |     4|49%    |partial |
+|South East    |Slough                 |037  |2021 2022 2023 2025                |     4|40%    |partial |
+|South East    |West Berkshire         |030  |2021 2022 2023 2025                |     4|49%    |partial |
+|South East    |Wokingham              |035  |2021 2022 2023 2025                |     4|38%    |partial |
+|East Midlands |Nottingham             |339  |2022 2023 2025                     |     3|48%    |partial |
+|East Midlands |Nottinghamshire        |330  |2021 2022 2023                     |     3|49%    |partial |
+|Scotland      |Falkirk                |669  |2020 2024 2025                     |     3|40%    |partial |
+|Scotland      |West Lothian           |629  |2023 2024 2025                     |     3|44%    |partial |
+|Wales         |Bridgend               |551  |2020 2024 2025                     |     3|51%    |partial |
+|Wales         |Neath Port Talbot      |582  |2020 2024 2025                     |     3|48%    |partial |
+|West Midlands |Shropshire             |350  |2022 2023 2025                     |     3|55%    |partial |
+|East Midlands |Northamptonshire       |300  |2024 2025                          |     2|58%    |partial |
+|East Midlands |Rutland                |268  |2024 2025                          |     2|48%    |partial |
+|South East    |Southend-on-Sea        |158  |2023 2024                          |     2|56%    |partial |
+|South West    |Somerset               |360  |2019 2020                          |     2|46%    |partial |
+|Wales         |Newport                |531  |2020 2021                          |     2|32%    |partial |
+
+Flagged in a single year only:
+
+
+
+|region        |area                  |ATCO |year |share |
+|:-------------|:---------------------|:----|:----|:-----|
+|East Anglia   |Cambridgeshire        |050  |2022 |20%   |
+|East Midlands |Derby                 |109  |2020 |55%   |
+|East Midlands |Peterborough          |059  |2022 |7%    |
+|North West    |Warrington            |069  |2022 |56%   |
+|Scotland      |Aberdeenshire         |630  |2022 |58%   |
+|Scotland      |Angus                 |649  |2019 |59%   |
+|Scotland      |Argyll and Bute       |607  |2020 |60%   |
+|Scotland      |Clackmannanshire      |668  |2024 |54%   |
+|Scotland      |East Dunbartonshire   |611  |2025 |51%   |
+|Scotland      |Edinburgh             |620  |2020 |47%   |
+|Scotland      |Fife                  |650  |2020 |45%   |
+|South East    |Bedford               |020  |2025 |55%   |
+|South East    |West Sussex           |440  |2022 |58%   |
+|South West    |Bristol               |010  |2019 |56%   |
+|South West    |Dorset                |120  |2019 |45%   |
+|South West    |North Somerset        |019  |2020 |55%   |
+|South West    |Poole                 |128  |2019 |56%   |
+|South West    |South Gloucestershire |017  |2019 |59%   |
+|South West    |Torbay                |119  |2023 |13%   |
+|Wales         |Blaenau Gwent         |532  |2020 |49%   |
+|Wales         |Caerphilly            |554  |2020 |47%   |
+|Wales         |Cardiff               |571  |2020 |51%   |
+|Wales         |Ceredigion            |523  |2020 |48%   |
+|Wales         |Conwy                 |513  |2020 |49%   |
+|Wales         |Flintshire            |512  |2020 |55%   |
+|Wales         |Gwynedd               |540  |2020 |53%   |
+|Wales         |Isle of Anglesey      |541  |2025 |52%   |
+|Wales         |Merthyr Tydfil        |553  |2023 |37%   |
+|Wales         |Monmouthshire         |533  |2020 |54%   |
+|Wales         |Pembrokeshire         |521  |2020 |48%   |
+|Wales         |Rhondda Cynon Taff    |552  |2020 |57%   |
+|Wales         |Torfaen               |534  |2020 |46%   |
+|Wales         |Vale of Glamorgan     |572  |2020 |56%   |
+|West Midlands |Herefordshire         |209  |2020 |59%   |
+|West Midlands |Warwickshire          |420  |2022 |60%   |
+|Yorkshire     |Kingston upon Hull    |229  |2022 |35%   |
+
+
+**The strongest candidates for a defect**, flagged in four or more of the eight years:
+
+- *West Midlands* — Staffordshire (7 years, low 46%); Stoke-on-Trent (7 years, low 33%)
+- *East Midlands* — Derbyshire (5 years, low 45%); Leicester (4 years, low 53%); Leicestershire (4 years, low 49%)
+- *South East* — Windsor and Maidenhead (5 years, low 27%); Reading (4 years, low 49%); Slough (4 years, low 40%); West Berkshire (4 years, low 49%); Wokingham (4 years, low 38%)
+- *North West* — Cheshire East (4 years, low 54%)
+
+Several of those are adjacent pairs or blocks rather than isolated areas — Staffordshire with Stoke-on-Trent, Leicester with Leicestershire, and the four Berkshire authorities together — which is what makes them worth opening: a contiguous group of authorities short in the same set of years points at one upstream source, not at the bus networks themselves.
+
+![plot of chunk modernchart](figures/coverage-modernchart-1.png)
+
+Read these as questions, not findings. The measure compares an area against its own median over twenty years, so a network that has genuinely shrunk since 2004 sits below 1.0 for real reasons, and the 2020 entries are the pandemic rather than a defect. What would indicate a data problem is a **step** - a year or two far below neighbours on either side - rather than a slope.
+
 ## Coverage in time
 
 ![plot of chunk natseries](figures/coverage-natseries-1.png)
@@ -212,6 +359,66 @@ a snapshot happened to catch. It is here to be read against the grid above,
 not on its own.
 
 ![plot of chunk regseries](figures/coverage-regseries-1.png)
+
+## Every mode, not just bus
+
+Everything above counts departures regardless of mode, which is reasonable
+because bus is about 97% of them — but it means a tram network could vanish
+without moving a single figure. This section separates them.
+
+Two sources, measured differently and kept apart. The **bus-side feeds**
+(NPTDR, Bus Archive, TNDS, BODS Coach) are not bus-only: NPTDR in particular
+carries rail, tram, metro, ferry, coach and air. The **rail CIF feeds**
+supply heavy rail from 2018 and are keyed on TIPLOC, so their stops are
+placed by coordinate rather than by code.
+
+
+|mode        |2004   |2005   |2006   |2007   |2008   |2009   |2010   |2011   |2014    |2015    |2016    |2017    |2018   |2019   |2020   |2021   |2022   |2023   |2024   |2025   |
+|:-----------|:------|:------|:------|:------|:------|:------|:------|:------|:-------|:-------|:-------|:-------|:------|:------|:------|:------|:------|:------|:------|:------|
+|tram        |94     |156    |171    |239    |218    |217    |214    |200    |883     |1,043   |1,281   |1,217   |344    |364    |175    |287    |308    |375    |540    |788    |
+|metro       |2      |8      |43     |667    |645    |651    |650    |722    |191     |316     |262     |232     |2,271  |2,368  |1,718  |1,322  |2,048  |2,168  |1,562  |1,781  |
+|rail        |2,191  |1,647  |1,692  |1,604  |1,679  |1,741  |1,773  |1,832  |2       |3       |4       |4       |3      |1      |1      |0      |0      |1      |1      |1      |
+|bus         |26,003 |41,379 |45,257 |56,996 |59,733 |57,473 |61,744 |56,529 |231,572 |220,423 |215,754 |200,590 |55,400 |68,296 |37,486 |49,903 |55,022 |48,723 |52,054 |53,095 |
+|ferry       |5      |15     |23     |27     |32     |31     |32     |26     |58      |94      |90      |93      |34     |29     |19     |28     |31     |33     |33     |52     |
+|aerial lift |–      |–      |–      |–      |–      |–      |–      |–      |–       |–       |–       |–       |2      |2      |1      |2      |2      |2      |2      |2      |
+|coach       |0      |268    |508    |751    |393    |144    |133    |202    |621     |569     |574     |466     |176    |144    |16     |60     |78     |80     |191    |109    |
+|air         |–      |10     |4      |4      |4      |7      |–      |–      |0       |–       |–       |–       |–      |–      |–      |–      |–      |–      |–      |–      |
+
+*Thousands of departures in each year's bus-side feeds, by mode. An en dash
+is a mode the year's feeds do not contain at all.*
+
+**Compare down a column, not across a row.** These are raw counts, and
+2014–2017 hold four weekly snapshots each, so their figures are about four
+times those of a comparable year — bus reads 231,572 in 2014 against 56,529
+in 2011 and 55,400 in 2018, and almost all of that is the merge, not the
+network. The chart below is on shares for that reason.
+
+![plot of chunk modechart](figures/coverage-modechart-1.png)
+
+### The rail CIF feeds
+
+Thousands of departures, 2018 onwards.
+
+
+
+|mode  |2018  |2019  |2020  |2021  |2022  |2023  |2024  |2025  |
+|:-----|:-----|:-----|:-----|:-----|:-----|:-----|:-----|:-----|
+|bus   |256   |329   |126   |204   |265   |335   |426   |369   |
+|ferry |4     |2     |3     |2     |2     |2     |4     |2     |
+|metro |62    |43    |76    |33    |57    |54    |49    |53    |
+|rail  |3,720 |3,918 |3,158 |2,872 |3,270 |4,174 |5,232 |5,279 |
+
+These feeds are not purely rail. They carry **metro**, which the pipeline drops (`drop_route_types = 1` in `year_sources()`) because TNDS holds the Underground and the Tyne and Wear Metro in full and summing both would count those stations twice; **bus**, which is rail-replacement services; and a little **ferry**. What the pipeline takes from them is the rail row.
+
+### What the mode table says about the series
+
+- **Rail all but disappears from these feeds after 2011**: the NPTDR archives average 1,770 thousand rail departures a year, and from 2014 the bus-side feeds average 2 thousand. That is not a change in the railway. NPTDR was a multi-modal archive; TransXChange is not, and from 2018 the pipeline takes heavy rail from the CIF feeds instead. **The 2014-2017 years have neither** - no NPTDR and no CIF - so those four years carry essentially no rail at all.
+- **Air** is an NPTDR mode and only an NPTDR mode: it runs in 2005-2009 (5 years), and the only trace of it anywhere else is 48 departures in 2014. `load_pt_frequency()` in the build repo drops route type 1100 outright, so none of it reaches the published figures.
+- **Coach is in every year, but 2004 has essentially none** — 79 departures against 268,483 in 2005, which is why the published 2004 coach figure is zero. Its ups and downs after that are source changes rather than service: TNDS carried coach in its NCSD archive until that disappeared after February 2025, and from 2024 coach comes from the BODS Coach feed instead. The build repo folds coach back into bus for exactly this reason.
+- **Metro steps twice, and neither step is a new railway**: 43k departures in 2006 against 667k in 2007, and 232k in 2017 against 2,271k in 2018. The first is NPTDR beginning to carry the Underground, the second is the move to TNDS. The Bus Archive years in between hold almost no metro, and what they do hold is Tyne and Wear.
+- Where a mode's row is thin rather than empty, treat it as a coverage question and not a trend. The non-bus modes are small enough that one operator's data arriving in a different format moves the whole row; `reports/non_bus_modes.md` is the standing check on their identity.
+
+![plot of chunk modemaps](figures/coverage-modemaps-1.png)
 
 ## Every gap, by area and year
 
@@ -367,4 +574,4 @@ A stop id whose first three characters are not a known ATCO area code. These are
 
 ---
 
-Generated 2026-10-01 00:11 from 22 bus feeds covering 20 years.
+Generated 2026-10-01 08:20 from 22 bus feeds covering 20 years.

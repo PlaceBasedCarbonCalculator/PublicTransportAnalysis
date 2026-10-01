@@ -54,10 +54,10 @@ There are also six analysis reports, all rebuilt by the pipeline:
   ferry and coach, which every other stage here filters out. The standing
   check for the blind spot that let three mode defects through in 2026.
 - [reports/data_coverage.md](reports/data_coverage.md) — where and when the
-  archives actually have data, by ATCO administrative area and year, with
-  maps. The measured successor to the manual's hand-assessed coverage grid:
-  2004 is missing 34 areas outright, which is why it shows no coach and
-  almost no metro.
+  archives actually have data, by ATCO administrative area, mode and year,
+  with maps. The measured successor to the manual's hand-assessed coverage
+  grid: 2004 is missing 34 areas outright, London runs at 7–15% of normal in
+  2004–06 and 2014–17, and every mode gets its own accounting.
 
 ## Method
 
