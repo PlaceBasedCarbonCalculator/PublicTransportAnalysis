@@ -45,7 +45,13 @@ There are also six analysis reports, all rebuilt by the pipeline:
   against operators' own published timetables, which is the only evidence that
   says which of them is *right* rather than only that they differ.
 - [reports/lsoa_disagreement.md](reports/lsoa_disagreement.md) — where TNDS
-  and BODS GTFS disagree most, zone by zone, and the routes responsible.
+  and BODS GTFS disagree most, zone by zone, the routes responsible, and
+  **which of the two sources is wrong** where the evidence decides it: the gap
+  split into journeys against operating days, weighed against each source's
+  residual duplication and daily profile. Covers every mode, where the largest
+  non-bus disagreement turns out to be classification rather than missing
+  service — the DLR, the Glasgow Subway and the heritage railways are each
+  carried by both sources under different modes.
 - [reports/near_duplicate_journeys.md](reports/near_duplicate_journeys.md) —
   the duplication deduplication cannot see: one service registered twice from
   two working timetables a minute apart. How common it is, what tolerance
@@ -359,7 +365,8 @@ R/convert.R         UK2GTFS conversions (Bus Archive merges, RDP rail, TXC)
 R/frequency.R       feed reading + deduplication, per-year trips-per-zone
 R/comparison.R      three-source bus comparison, 2022-2026
 R/route_match.R     matching a service across sources by number and stops
-R/lsoa_gap.R        zone-level TNDS vs BODS GTFS disagreement
+R/lsoa_gap.R        zone-level TNDS vs BODS GTFS disagreement, all modes,
+                    and the per-zone verdict on which source is wrong
 R/pdf_timetable.R   reading journey times out of published PDF/Word timetables
 R/pdf_validation.R  checking each source against those published timetables
 R/near_duplicates.R the duplication exact matching cannot see, and its cost

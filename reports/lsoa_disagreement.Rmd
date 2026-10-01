@@ -13,6 +13,22 @@ top <- as.data.table(g$top)
 svc <- as.data.table(g$services)
 nat <- g$national
 
+# Feature flags for the sections added in October 2026, set here rather than in
+# the chunks that use them: knitr evaluates a chunk's `eval=` option before
+# running it, so the flag has to exist before the first chunk that is gated on
+# it. An analysis output produced by the previous version of lsoa_gap_analysis()
+# still knits, minus those sections.
+has_verdict <- all(c("trips_tnds", "days_full_tnds") %in% names(top))
+has_modes <- !is.null(g$modes)
+has_expiry <- !is.null(g$expiry)
+
+# The verdict is re-derived here from the measurements stored in the analysis
+# output rather than read from it. The analysis measures; this interprets. The
+# thresholds in gap_verdict() are judgement and will be revised, and revising
+# them should cost a seven-second re-knit rather than the two hours it takes
+# to read both national feeds again.
+if (has_verdict) top <- gap_verdict(top)
+
 # scientific = FALSE: format() renders a round number such as 9000000 as 9e+06
 # whatever big.mark says
 fmt <- function(x) format(round(x), big.mark = ",", scientific = FALSE,
@@ -61,11 +77,20 @@ service_table <- function(zid, n = 8) {
 The comparison report (`bus_source_comparison.md`) measures how far the three
 bus timetable sources disagree nationally. This report asks a narrower and more
 practical question: **for which individual LSOAs (Data Zones in Scotland) does
-the choice between TNDS and the DfT's BODS GTFS change the answer most, and
-which bus routes are responsible?**
+the choice between TNDS and the DfT's BODS GTFS change the answer most, which
+routes are responsible, and — where the evidence allows — which of the two
+sources is wrong?**
 
-Both sources are the **`r g$year`** snapshot, deduplicated with
-`UK2GTFS::gtfs_deduplicate()` so that neither describes the same bus twice,
+The bulk of it is about buses, which is what both sources exist to carry. Two
+sections are newer: "Which source is wrong?" adjudicates the largest
+disagreements instead of only cataloguing their causes, and "Every mode, not
+just bus" covers tram, metro, rail, coach, ferry and the one aerial lift, which
+every previous edition filtered out.
+
+Both sources are the **`r g$year`** snapshot, both passed through
+`UK2GTFS::gtfs_deduplicate()` so that most of the duplicate publication in
+each is removed before counting — "Is either source still counting the same
+bus twice?" below measures what survives, which is not nothing —
 and counted over the same 28-day window (**`r g$window$startdate` to
 `r g$window$enddate`**) on the **plain LSOA21 / DZ22 boundaries**. The
 published trips-per-zone outputs use zones widened for stop access; this
@@ -297,12 +322,15 @@ the comparison report applies nationally, but computed within the zone. They are
 signed contributions and add up to `Difference`, so "Only BODS" is negative:
 service the DfT feed has and TNDS does not pulls the difference down.
 
-Expect repeated localities. City-centre LSOAs are small and the zone polygons
-are widened by 500 m, so half a dozen adjacent zones can all contain the same
-bus station and all rank together on the same handful of services. That is a
-faithful answer to "which zones disagree most" rather than a fault in the
-ranking, but it means the tables describe fewer distinct places than rows. The
-route-level section below therefore takes one zone per locality.
+Expect repeated localities. City-centre LSOAs are small, and a busy corridor
+runs through several of them in a row, so half a dozen adjacent zones can rank
+together on the same handful of services. (This is not the widened-zone
+overlap described in editions before August 2026 — these are the plain
+boundaries, which tile the country and put each stop in exactly one zone. The
+repetition is geography, not double counting.) That is a faithful answer to
+"which zones disagree most" rather than a fault in the ranking, but it means
+the tables describe fewer distinct places than rows. The route-level section
+below therefore takes one zone per locality.
 
 ### Zones where TNDS counts substantially more service
 
@@ -325,12 +353,22 @@ sp <- top[, list(
   only_tnds = sum(gap_services_only_tnds),
   only_bods = sum(gap_services_only_bods),
   freq = sum(gap_frequency))]
+# Which of the three parts is the largest is a measurement, not a constant. An
+# earlier edition ended this paragraph with the hardcoded sentence "Missing
+# services, not frequency differences, dominate", which was true of the
+# widened-zone edition and false here by a factor of six.
+parts <- c(`services only TNDS carries` = abs(sp$only_tnds),
+           `services only BODS GTFS carries` = abs(sp$only_bods),
+           `services both carry at different frequencies` = abs(sp$freq))
+lead_part <- names(parts)[which.max(parts)]
 cat(sprintf(paste0(
   "Across the %d zones investigated in detail, the differences come to %s ",
   "trip-runs on services only TNDS carries, %s on services only BODS GTFS ",
   "carries, and a net %s from services both carry at different frequencies. ",
-  "Missing services, not frequency differences, dominate.\n"),
-  nrow(top), fmt(sp$only_tnds), fmt(-sp$only_bods), fmt(sp$freq)))
+  "The largest of the three is **%s**, at %s of the three absolute ",
+  "contributions.\n"),
+  nrow(top), fmt(sp$only_tnds), fmt(-sp$only_bods), fmt(sp$freq),
+  lead_part, pct(max(parts) / sum(parts))))
 ```
 
 ## Is either source still counting the same bus twice?
@@ -340,30 +378,46 @@ publishes one journey more than once. Both feeds have already been through
 `UK2GTFS::gtfs_deduplicate()`, so what follows measures what that deliberately
 left behind, not the sources as published.
 
-The test used here is the looser of the two: within each zone a journey is
-identified by the (stop, departure time) pairs it makes at that zone's stops,
-and two trips with the same route number, the same signature and the same
-operating **date** are the same bus counted twice. Removal is stricter than
-that — it needs the whole itinerary to match, the route and trip attributes to
-agree, and every date of the copy removed to be covered by the copy kept.
-Anything reported below therefore falls in the gap between the two: copies that
-overlap in the window only partly, or that one source publishes under a
-different route number or operator.
+A journey is identified by its **whole itinerary** — every (stop, departure
+time) pair of the trip — and two trips count as one bus twice only if they are
+the same journey end to end, run on the same **date**, and carry the same route
+number. Removal by `gtfs_deduplicate()` is stricter again: it also requires the
+route and trip attributes to agree and every date of the copy removed to be
+covered by the copy kept. What is reported below therefore falls in the gap
+between the two: copies that overlap in the window only partly, or that one
+source publishes under a different route number or operator.
 
-The date matters to both. GTFS models a school-term journey and its holiday
-twin as two trips with identical times and complementary calendars, which is
-correct modelling; a test that ignored dates would call every one of those a
-duplicate.
+The date matters. GTFS models a school-term journey and its holiday twin as two
+trips with identical times and complementary calendars, which is correct
+modelling; a test that ignored dates would call every one of those a duplicate.
+
+> **A correction to earlier editions.** Until October 2026 this section
+> identified a journey by the (stop, departure time) pairs it made at stops
+> *inside the zone* only, reasoning that a zone can see no more of a trip than
+> that. The reasoning is wrong and the error is large. Checked against the feed
+> on route 74 in Birmingham city centre, the loose test reported 2,500
+> duplicate trip-days that are not duplicates: the pairs it flagged are two
+> buses three minutes apart — 14:06 and 14:09 from the same first stop, 29
+> identical stops, different `service_id`s — whose times coincide at the few
+> stops inside one small LSOA once rounded to the minute. On a high-frequency
+> corridor that is ordinary service. The loose test called **16% of that
+> zone's BODS GTFS count** a duplicate, against under 1% nationally, and a
+> verdict resting on it would have blamed the wrong source for the largest
+> single disagreement in the analysis. The figures below use whole-itinerary
+> identity throughout and are much smaller as a result.
 
 ```{r duplication-national, results="asis"}
-dn <- as.data.table(g$duplication_national)
+dn_all <- as.data.table(g$duplication_national)
+# The whole-feed test is now run per mode; this section is the bus one and the
+# non-bus modes have their own table further down.
+dn <- if ("route_type" %in% names(dn_all)) dn_all[route_type == 3L] else dn_all
 if (nrow(dn)) {
   src_lab <- c(tnds = "TNDS (TransXChange)", bods_gtfs = "BODS (GTFS)")
   # print(): a kable inside an if block is not the chunk's last expression, so
   # its value is discarded and the table silently never appears
   print(knitr::kable(
     data.frame(Source = src_lab[dn$source],
-               `Bus trips` = fmt(dn$bus_trips),
+               `Bus trips` = fmt(dn$trips),
                `Distinct journeys` = fmt(dn$distinct_journeys),
                `Trip-days` = fmt(dn$trip_days),
                `Duplicate runs` = fmt(dn$duplicate_runs),
@@ -374,10 +428,11 @@ if (nrow(dn)) {
   worse <- dn$source[which.max(dn$share_duplicate)]
   cat(sprintf(paste0(
     "\nNationally, **%s** of the counted runs still left in %s are the same ",
-    "journey twice on one day, against %s in the other source. Across the ",
-    "whole feed a journey is its entire itinerary, which is a stricter test ",
-    "than the zone-level one below: inside a zone only the part of the trip ",
-    "that touches the zone's stops can be compared.\n\n"),
+    "journey twice on one day, against %s in the other source. The zone-level ",
+    "figures below apply the same whole-itinerary test, restricted to trips ",
+    "touching the zone, so the two are now directly comparable and a zone ",
+    "figure far above the national one is a real concentration rather than an ",
+    "artefact of a looser rule.\n\n"),
     pct(max(dn$share_duplicate)), src_lab[worse],
     pct(min(dn$share_duplicate))))
 }
@@ -403,7 +458,11 @@ if (all(c("dup_runs_tnds", "dup_runs_bods_gtfs") %in% names(top))) {
     fmt(sum(dd$dup_runs_tnds)), fmt(sum(dd$trip_days_tnds)),
     fmt(sum(dd$dup_runs_bods_gtfs)), fmt(sum(dd$trip_days_bods_gtfs))))
 
-  setorderv(dd, "share_g", -1L)
+  # Zones with no BODS GTFS service at all have no share to rank, and
+  # data.table sorts those NAs to the top, which filled the head of this table
+  # with "NA%" rows.
+  dd <- dd[!is.na(share_g)]
+  setorderv(dd, "share_g", -1L, na.last = TRUE)
   # print(): see the note in duplication-national above
   print(knitr::kable(
     data.frame(Zone = dd$zone_id[1:min(12, nrow(dd))],
@@ -418,14 +477,437 @@ if (all(c("dup_runs_tnds", "dup_runs_bods_gtfs") %in% names(top))) {
 
   cat(paste0("\nA duplicate here is a statement about the feed, not about the ",
              "road: two identical journeys on one day is one bus described ",
-             "twice. These are the ones deduplication would not remove without ",
-             "risking real service, so where a source's remaining excess over ",
-             "the other is close to its remaining duplicate share, the zone's ",
-             "gap is still an artefact of the feed; where it is not, the gap ",
-             "is real service one source lacks.\n"))
+             "twice. So where a source's remaining excess over the other is ",
+             "close to its remaining duplicate share, the zone's gap is still ",
+             "an artefact of the feed; where it is not, the gap is real ",
+             "service one source lacks. The next section uses this as one of ",
+             "its three tests.\n\n"))
+  cat(paste0("These were previously described here as the copies ",
+             "`gtfs_deduplicate()` could not remove without risking real ",
+             "service. In **one of them, checked trip by trip** (E01034091, ",
+             "verified below), that is wrong: the pairs share a `route_id`, a ",
+             "`service_id` and a byte-identical itinerary, which is precisely ",
+             "the case deduplication is built to remove. Whether the other ",
+             "zones in this table have the same cause is not established — ",
+             "they sit at a similar share and in neighbouring areas, which is ",
+             "suggestive and no more. Why deduplication keeps any of them is ",
+             "an open question about `UK2GTFS` rather than about the bus ",
+             "sources.\n"))
 } else {
   cat("No duplication measurements in this analysis output.\n")
 }
+```
+
+## Which source is wrong?
+
+The sections above say how far the two sources disagree and which services the
+disagreement sits on. They do not say which source to believe, and for the
+zones at the extremes that is the question that matters: a zone whose bus
+service differs by tens of thousands of runs over four weeks is being described
+correctly by at most one of the two feeds.
+
+Three measurements decide it, and they cannot be mistaken for one another.
+
+**1. Journeys against operating days.** A zone's run total is the number of
+vehicle journeys touching the zone multiplied by the number of days each one
+runs. Those two factors fail for different reasons, and dividing the gap
+between them says which failure happened:
+
+- same journeys, fewer days each → the difference is in the **calendars**. A
+  registration that expires inside the window gives a source a part-window
+  service where the other has a whole-window one.
+- same days each, fewer journeys → the difference is in the **timetable**.
+  Service one source does not carry.
+
+**2. Duplicate runs remaining**, measured in the section above. Where the
+*higher* source's residual duplication accounts for much of its own excess, the
+excess is one bus described twice, and the higher source is the wrong one. Only
+the higher source can be explained this way: duplication in the lower source
+would make its shortfall larger, not smaller.
+
+**3. The daily profile** — how many of the window's 28 days each source counts
+a normal day's service on. This separates a source that is uniformly thin from
+one that stops partway through the window, and only the second is an expiry. It
+is required as corroboration before any zone is called truncated, so that a
+source which genuinely runs less often is not mislabelled.
+
+Before the zone verdicts, one national fact frames most of them.
+
+```{r expiry-frame, results="asis"}
+ex <- if (!is.null(g$expiry)) as.data.table(g$expiry) else NULL
+if (!is.null(ex) && nrow(ex) == 2) {
+  et <- ex[source == "tnds"]; eb <- ex[source == "bods_gtfs"]
+  print(knitr::kable(
+    data.frame(
+      Source = c("TNDS (TransXChange)", "BODS (GTFS)"),
+      `Last date in feed` = c(et$feed_end, eb$feed_end),
+      `Bus trips` = fmt(c(et$bus_trips, eb$bus_trips)),
+      `Expiring inside the window` = pct(c(et$share_ending_early,
+                                           eb$share_ending_early)),
+      `Runs if none expired` = fmt(c(et$runs_if_full, eb$runs_if_full)),
+      check.names = FALSE),
+    row.names = FALSE, align = c("l", "r", "r", "r", "r"),
+    caption = paste("How much of each feed stops before the window closes",
+                    "(window", format(g$window$startdate), "to",
+                    format(g$window$enddate), ")")))
+  cat(sprintf(paste0(
+    "\nThe two feeds are not symmetric in time. The TNDS snapshot's calendar ",
+    "runs out on **%s**, and **%s of its bus journeys stop running before the ",
+    "window closes** — the single largest cluster of them on %s. The DfT's ",
+    "GTFS holds forward-dated files to **%s** and only %s of its journeys ",
+    "expire inside the window.\n\n"),
+    et$feed_end, pct(et$share_ending_early), et$biggest_end_dates,
+    eb$feed_end, pct(eb$share_ending_early)))
+  cat(paste0(
+    "A TNDS snapshot carries the registrations operative on the day it was ",
+    "taken, and this one was taken on the eve of the window with no history ",
+    "behind it. So wherever a zone below is found to hold *the same journeys ",
+    "as BODS GTFS on fewer days*, it is one instance of this: the TNDS figure ",
+    "describes part of the window and the BODS figure the whole of it. That ",
+    "is a measurement artefact rather than a difference in service.\n\n"))
+  if ("days_full_tnds" %in% names(top)) {
+    n_cut <- sum(top$days_full_tnds < top$days_full_bods_gtfs, na.rm = TRUE)
+    cat(sprintf(paste0(
+      "How far it reaches into the zone findings below is worth stating up ",
+      "front, because the verdict table only names it where it is the *whole* ",
+      "explanation. **In %d of the %d zones investigated, TNDS carries a ",
+      "normal day's service on fewer of the 28 days than BODS GTFS does**, ",
+      "and in %d of those the shortfall is at least half. Most of those zones ",
+      "are labelled \"unresolved\" rather than \"calendars cut short\", ",
+      "because something else is wrong in them as well — but truncation is ",
+      "part of what is wrong in far more zones than carry its name.\n\n"),
+      n_cut, nrow(top),
+      sum(top$days_full_tnds <= 0.5 * top$days_full_bods_gtfs, na.rm = TRUE)))
+  }
+}
+```
+
+That chain was checked end to end on one operator rather than left as
+inference. **Reading Buses, in the 26 July 2026 snapshots** (verified against
+`calendar.txt` in both feeds, October 2026):
+
+- TNDS holds 6,245 Reading Buses journeys, of which **6,134 carry a service
+  ending 2 August 2026** — seven days into a twenty-eight-day window. Every one
+  of the 6,245 ends before the window closes.
+- BODS GTFS holds 6,658, of which **6,112 run to 31 August 2026**, past the end
+  of the window. Only 224 expire inside it.
+- Seven days of twenty-eight is **0.25**, and that is exactly the ratio the
+  Reading zone shows: of its 48 shared services, **39 read TNDS at 0.250 of
+  the BODS GTFS figure**, to three decimal places.
+
+So for Reading the question "which source is wrong" has a definite answer:
+TNDS is counting one week of a four-week window because its registrations
+expire on 2 August, and the DfT's GTFS is describing the window correctly. The
+same signature — a ratio at a clean fraction, with the journey counts matching
+— appears on other operators, and the verdict table below is how to find them.
+
+```{r verdict-method, results="asis"}
+if (!has_verdict) {
+  cat("This analysis output predates the per-zone adjudication; re-run the",
+      "`lsoa_gap` target to populate it.\n")
+}
+```
+
+```{r verdict-summary, results="asis", eval=has_verdict}
+vs <- top[, list(zones = .N, runs = sum(abs(gap))), by = verdict]
+setorderv(vs, "runs", -1L)
+vs[, share := runs / sum(vs$runs)]
+print(knitr::kable(
+  data.frame(Verdict = vs$verdict, Zones = vs$zones,
+             `Disagreement (runs)` = fmt(vs$runs),
+             `Share of it` = pct(vs$share), check.names = FALSE),
+  row.names = FALSE, align = c("l", "r", "r", "r"),
+  caption = paste("What the evidence says about the", nrow(top),
+                  "most disagreeing zones")))
+
+tot_gap <- sum(abs(top$gap))
+rt <- sum(abs(top$gap[top$blames == "TNDS"]))
+rb <- sum(abs(top$gap[top$blames == "BODS GTFS"]))
+cat(sprintf(paste0(
+  "\nOf the %d zones investigated, the evidence faults **TNDS in %d** and ",
+  "**BODS GTFS in %d**; the remaining %d are either an absence that may be ",
+  "correct or genuinely unresolved. Weighted by the size of the disagreement ",
+  "rather than by zone count, **%s of it is laid at TNDS's door and %s at ",
+  "BODS GTFS's**, with the other %s unattributed. So among the zones where a ",
+  "single mechanism can be identified at all, TNDS is the source at fault ",
+  "about %.1f times as often by volume — but that is a statement about the ",
+  "extremes of the distribution, not about the two feeds nationally, where ",
+  "BODS GTFS counts the higher total.\n\n"),
+  nrow(top), sum(top$blames == "TNDS"), sum(top$blames == "BODS GTFS"),
+  sum(top$blames == "neither"),
+  pct(rt / tot_gap), pct(rb / tot_gap), pct(1 - (rt + rb) / tot_gap),
+  rt / rb))
+
+unres <- top[verdict == "unresolved"]
+if (nrow(unres)) {
+  cat(sprintf(paste0(
+    "The %d unresolved zones are not a failure of the method so much as its ",
+    "honest limit: in each, the journey count and the days-per-journey *both* ",
+    "differ, so more than one thing is wrong at once and no single mechanism ",
+    "accounts for the gap. They hold %s of the disagreement in these zones.\n\n"),
+    nrow(unres), pct(sum(abs(unres$gap)) / sum(abs(top$gap)))))
+  # Say what the two simultaneous faults usually are, rather than leaving
+  # "unresolved" as a shrug. Both halves are measured.
+  both <- unres[days_full_tnds < days_full_bods_gtfs & dup_share_bods >= 0.05]
+  if (nrow(both)) {
+    cat(sprintf(paste0(
+      "In **%d of them the two faults are identifiable even though neither ",
+      "accounts for the whole gap**: TNDS carries a normal day's service on ",
+      "fewer of the 28 days *and* at least 5%% of BODS GTFS's counted ",
+      "trip-days in the zone are the same journey twice. The largest is %s ",
+      "(%s), where TNDS manages %d full days against %d and %s of the BODS ",
+      "GTFS count is duplicated. Both sources are misdescribing that zone, in ",
+      "opposite directions, which is why no single verdict fits.\n"),
+      nrow(both), both[order(-abs(gap))]$zone_id[1],
+      ifelse(is.na(both[order(-abs(gap))]$locality[1]), "unnamed",
+             both[order(-abs(gap))]$locality[1]),
+      both[order(-abs(gap))]$days_full_tnds[1],
+      both[order(-abs(gap))]$days_full_bods_gtfs[1],
+      pct(both[order(-abs(gap))]$dup_share_bods[1])))
+  }
+}
+```
+
+That duplication figure was checked against the feed rather than taken on
+trust, because the previous edition of this report had a duplicate measure
+that produced false positives of exactly this size. **E01034091, the Chelmsford
+cluster, BODS GTFS, 26 July 2026** (verified October 2026): 21,185 of the
+zone's 66,571 counted trip-days are duplicates, which reproduces the 31.8%
+above. The pairs are genuine — the largest involves two trips on **the same
+`route_id` (the X30, agency `OP393`), with the same `service_id`, 29 stops
+each, both leaving stop `1500CHBS2` at 03:55 and arriving at `15800726` at
+04:54, byte-identical end to end**. That is one bus published twice, not two
+buses minutes apart. The duplication spans a dozen route numbers in the zone
+(X30, C1, C6, C12, 170, 31, 47, 332, 13A, 73A, 73B, X10), so it is a
+publishing pattern rather than one rogue registration.
+
+Why `gtfs_deduplicate()` keeps these is not established here. It removed 5.3%
+of the BODS feed's trips on this read, and copies this exact — same route, same
+calendar, same times — are the case it is designed to remove, so the survival
+of 21,185 of them in one zone is worth a look in its own right. That is a
+question about `UK2GTFS`, not about which bus source to prefer, and it is
+recorded here rather than pursued.
+
+### The verdicts, zone by zone
+
+`Journeys` and `Days each` are the two factors of the run total; `Dup.` is the
+share of that source's counted trip-days that are still the same bus twice;
+`Full days` is how many of the 28 days carry a normal day's service.
+
+```{r verdict-table, results="asis", eval=has_verdict}
+vt <- top[order(-abs(gap))][seq_len(min(18, .N))]
+print(knitr::kable(
+  data.frame(
+    Zone = vt$zone_id,
+    Locality = ifelse(is.na(vt$locality), "—", substr(vt$locality, 1, 22)),
+    Difference = round(vt$gap),
+    `Journeys T:B` = sprintf("%s : %s", fmt(vt$trips_tnds), fmt(vt$trips_bods)),
+    `Days each T:B` = sprintf("%.1f : %.1f", vt$dpt_tnds, vt$dpt_bods),
+    `Dup. T:B` = sprintf("%s : %s", pct(vt$dup_share_tnds),
+                         pct(vt$dup_share_bods)),
+    `Full days T:B` = sprintf("%d : %d", vt$days_full_tnds,
+                              vt$days_full_bods_gtfs),
+    Verdict = vt$verdict,
+    check.names = FALSE),
+  row.names = FALSE, format.args = list(big.mark = ",")))
+```
+
+### The cases worth reading in full
+
+```{r verdict-cases, results="asis", eval=has_verdict}
+# One worked case per distinct mechanism, chosen as the largest zone carrying
+# that verdict rather than picked by hand, so the examples follow the data if
+# the snapshot changes.
+mech <- c("BODS GTFS counts one bus twice", "TNDS calendars cut short",
+          "journeys missing from TNDS", "TNDS counts one bus twice",
+          "journeys missing from BODS GTFS", "BODS GTFS calendars cut short")
+case_zones <- character(0)
+for (m in mech) {
+  d <- top[verdict == m][order(-abs(gap))]
+  if (!nrow(d)) next
+  d <- d[1]
+  case_zones <- c(case_zones, d$zone_id)
+  cat(sprintf("\n#### %s — %s\n\n", d$zone_id,
+              ifelse(is.na(d$locality), "unnamed", d$locality)))
+  cat(sprintf(paste0(
+    "TNDS %s trip-runs against BODS GTFS's %s, a difference of **%s**. ",
+    "TNDS holds **%s journeys** touching the zone, each running on an average ",
+    "of **%.1f** of the 28 days; BODS GTFS holds **%s journeys** at **%.1f** ",
+    "days each. Residual duplication is %s of TNDS's trip-days and %s of ",
+    "BODS GTFS's. A normal day's service appears on %d of 28 days in TNDS and ",
+    "%d in BODS GTFS.\n\n"),
+    fmt(d$runs_tnds), fmt(d$runs_bods), fmt(d$gap),
+    fmt(d$trips_tnds), d$dpt_tnds, fmt(d$trips_bods), d$dpt_bods,
+    pct(d$dup_share_tnds), pct(d$dup_share_bods),
+    d$days_full_tnds, d$days_full_bods_gtfs))
+
+  # Spell out the arithmetic that produced the verdict, so the reader can
+  # disagree with it on the numbers rather than on trust.
+  reason <- switch(
+    m,
+    "BODS GTFS counts one bus twice" = sprintf(paste0(
+      "The two sources hold journeys of similar length and similar calendars, ",
+      "but BODS GTFS's own residual duplicates come to %s runs, which is %s ",
+      "of the %s it counts above TNDS. The excess is substantially one bus ",
+      "described twice."),
+      fmt(d$dup_runs_bods_gtfs), pct(d$dup_explains), fmt(abs(d$gap))),
+    "TNDS counts one bus twice" = sprintf(paste0(
+      "TNDS's own residual duplicates come to %s runs, %s of the %s it counts ",
+      "above BODS GTFS."),
+      fmt(d$dup_runs_tnds), pct(d$dup_explains), fmt(abs(d$gap))),
+    "TNDS calendars cut short" = sprintf(paste0(
+      "The journey counts agree to within %s (%s against %s), so neither ",
+      "source is missing the timetable. What differs is how long each journey ",
+      "runs for: %.1f days against %.1f, a ratio of %.2f, and a normal day's ",
+      "service appears on %d of the 28 days in TNDS against %d in BODS GTFS. ",
+      "That is a registration expiring inside the window, not a service that ",
+      "does not exist."),
+      pct(abs(d$trip_ratio - 1)), fmt(d$trips_tnds), fmt(d$trips_bods),
+      d$dpt_tnds, d$dpt_bods, d$dpt_ratio, d$days_full_tnds,
+      d$days_full_bods_gtfs),
+    "BODS GTFS calendars cut short" = sprintf(paste0(
+      "The journey counts agree to within %s, but each BODS GTFS journey runs ",
+      "%.1f days against TNDS's %.1f, and a normal day's service appears on ",
+      "%d of 28 days against %d."),
+      pct(abs(d$trip_ratio - 1)), d$dpt_bods, d$dpt_tnds,
+      d$days_full_bods_gtfs, d$days_full_tnds),
+    "journeys missing from TNDS" = sprintf(paste0(
+      "Each journey runs for about as long in both sources (%.1f days against ",
+      "%.1f, a ratio of %.2f), so the calendars are not the problem: TNDS ",
+      "holds %s fewer journeys — %s against %s. Of that shortfall, %s sits on ",
+      "services BODS GTFS carries and TNDS does not carry at all, and the ",
+      "rest is **fewer journeys on services both sources carry** — the same ",
+      "route numbers, run less often in TNDS. The second is the harder kind ",
+      "to dismiss, because no missing registration explains it."),
+      d$dpt_tnds, d$dpt_bods, d$dpt_ratio,
+      pct(1 - d$trip_ratio), fmt(d$trips_tnds), fmt(d$trips_bods),
+      pct(abs(d$gap_services_only_bods) / abs(d$gap))),
+    "journeys missing from BODS GTFS" = sprintf(paste0(
+      "Each journey runs for about as long in both sources (%.1f against %.1f ",
+      "days), but BODS GTFS holds %s fewer journeys — %s against %s. Of that, ",
+      "%s sits on services TNDS carries and BODS GTFS does not carry at all."),
+      d$dpt_bods, d$dpt_tnds, pct(1 - 1 / d$trip_ratio),
+      fmt(d$trips_bods), fmt(d$trips_tnds),
+      pct(abs(d$gap_services_only_tnds) / abs(d$gap))))
+  cat(reason, "\n\n")
+  print(knitr::kable(service_table(d$zone_id, 6), row.names = FALSE,
+                     format.args = list(big.mark = ",")))
+  cat("\n")
+}
+```
+
+One of those cases was checked against the feeds directly, because "missing
+service" is the verdict most easily faked by a failure of the route matching.
+**Metrobus around Crawley and Gatwick, 26 July 2026 snapshots** (verified
+against `routes.txt` and `trips.txt`, October 2026): BODS GTFS carries
+Metrobus routes 1, 2, 10 and 100 — the Crawley town network — and TNDS carries
+**none of those four route numbers under Metrobus at all**, so no matching
+rule could have paired them. The numbers TNDS does share with BODS there (3,
+4, 5, 20 and 400) hold between 12 and 26 journeys each, against a full
+timetable on the BODS side. The absence is in the feed, not in the comparison.
+
+### The ratios give one mechanism away by themselves
+
+Zone verdicts aggregate over everything in the zone. Looking instead at each
+shared service's ratio between the two sources finds a mechanism the zone view
+blurs: a service one source publishes twice reads *exactly* double, and exact
+small-integer ratios do not arise from timetables.
+
+```{r ratio-spikes, results="asis"}
+sh <- copy(svc[cause == "both, different frequency" & bods_gtfs > 0 & tnds > 0])
+sh[, r := tnds / bods_gtfs]
+near <- function(x, target, tol = 0.03) abs(x - target) <= tol * target
+spikes <- data.table(
+  Ratio = c("0.25 (BODS ×4)", "0.50 (BODS ×2)", "1.00 (agree)",
+            "2.00 (TNDS ×2)", "4.00 (TNDS ×4)"),
+  target = c(0.25, 0.5, 1, 2, 4))
+spikes[, n := vapply(target, function(t) sum(near(sh$r, t)), integer(1))]
+spikes[, runs := vapply(target, function(t)
+  sum(abs(sh$tnds[near(sh$r, t)] - sh$bods_gtfs[near(sh$r, t)])), numeric(1))]
+print(knitr::kable(
+  data.frame(`Ratio TNDS:BODS` = spikes$Ratio,
+             `Service-zone pairs` = fmt(spikes$n),
+             `Runs at stake` = fmt(spikes$runs), check.names = FALSE),
+  row.names = FALSE, align = c("l", "r", "r"),
+  caption = "Shared services sitting on an exact integer ratio"))
+
+two <- sh[near(r, 2)]
+quarter <- sh[near(r, 0.25)]
+cat(sprintf(paste0(
+  "\nOf %s shared services in the zones investigated, **%s sit within 3%% of ",
+  "exactly 2.00** — TNDS reading precisely double the DfT's figure — and ",
+  "those alone account for **%s trip-runs** of TNDS's excess. A further %s sit ",
+  "on 0.25, where BODS GTFS reads exactly four times TNDS.\n\n"),
+  fmt(nrow(sh)), fmt(nrow(two)), fmt(sum(two$tnds - two$bods_gtfs)),
+  fmt(nrow(quarter))))
+
+if (nrow(two)) {
+  tw <- two[order(-(tnds - bods_gtfs))]
+  tw <- tw[, .SD[1], by = name][seq_len(min(8, uniqueN(two$name)))]
+  print(knitr::kable(
+    data.frame(Service = tw$name,
+               Description = substr(ifelse(is.na(tw$long_name), "—",
+                                           tw$long_name), 1, 40),
+               TNDS = round(tw$tnds), `BODS GTFS` = round(tw$bods_gtfs),
+               Ratio = sprintf("%.3f", tw$r), check.names = FALSE),
+    row.names = FALSE, format.args = list(big.mark = ","),
+    caption = "Services TNDS reads exactly twice (one zone each)"))
+}
+cat(paste0(
+  "\nThis group is the one cause on the list that an outside check has ",
+  "already settled. The mechanism was traced on the Preston–Bolton 125: TNDS ",
+  "holds it under two `route_id`s with the same number of trips each, and no ",
+  "pair of those trips is a same-day duplicate under any signature — whole ",
+  "itinerary, stop and departure time, or stop alone — because the two ",
+  "registrations describe the same service at times that differ. No ",
+  "signature test can match them, and `gtfs_deduplicate()` is right to keep ",
+  "both. Its published timetable decides it: **TNDS reads 2.28 of the ",
+  "document and the DfT's GTFS 1.14**, so TNDS is the source at fault and ",
+  "BODS GTFS is close to correct. That this group survives the mode fixes of ",
+  "September 2026 untouched is expected — it is a duplicate-registration ",
+  "defect, not a classification one.\n\n"))
+```
+
+### What this does and does not settle
+
+The verdicts are about **which feed misdescribes the service**, which is not
+quite the same question as which feed to use. Three limits are worth stating.
+
+- A verdict of "absent from BODS GTFS" is often not a fault at all. BODS is a
+  statutory requirement for English local bus services; a Welsh or Scottish
+  service, or a tram, has no duty to appear in it. The adjudication therefore
+  blames neither source for an absence, and the counts above keep those zones
+  separate rather than scoring them against BODS.
+- "TNDS calendars cut short" says the TNDS snapshot undercounts *that window*.
+  It does not say the BODS figure is the better estimate of normal service,
+  because a feed holding future-dated files can equally describe a timetable
+  that had not started. What it does establish is that the shortfall is an
+  artefact of when the snapshot was taken.
+- None of the three tests is an external check. They compare the two feeds with
+  each other and with their own internal consistency. Where a published
+  timetable has been brought to bear the answer has been settled outright, and
+  that work lives in `pdf_validation.md` and `route_279_pdf_validation.md`;
+  only a handful of services have been checked that way.
+
+```{r london-note, results="asis", eval=has_verdict}
+# The TNDS-higher side of the distribution is dominated by one cause with a
+# known explanation. Counted rather than asserted.
+tnds_side <- top[gap > 0]
+ldn <- svc[zone_id %in% tnds_side$zone_id & cause == "only in TNDS"]
+cat(sprintf(paste0(
+  "One more reading note, because it collapses several apparently separate ",
+  "verdicts into one cause. **The BODS-side shortfall is concentrated in ",
+  "London.** Of the %d zones here where TNDS counts more, the services TNDS ",
+  "carries alone are worth %s trip-runs, and the largest are TfL routes — in ",
+  "the worked case above the 87, 39, 170, 37, 156 and 337, every one present ",
+  "in TNDS and absent from the DfT's GTFS. The comparison report records the ",
+  "same gap on the BODS TransXChange side. So a verdict of \"journeys ",
+  "missing from BODS GTFS\" in a London zone is this one cause recurring, ",
+  "not %d independent findings, and the %d zones carrying that verdict ",
+  "should be counted as fewer than %d distinct problems.\n"),
+  nrow(tnds_side), fmt(sum(ldn$gap)), nrow(tnds_side),
+  sum(top$verdict == "journeys missing from BODS GTFS"),
+  sum(top$verdict == "journeys missing from BODS GTFS")))
 ```
 
 ## What is actually going on in those zones
@@ -433,7 +915,8 @@ if (all(c("dup_runs_tnds", "dup_runs_bods_gtfs") %in% names(top))) {
 The route-level breakdown for the largest disagreement in each direction.
 "Service" is a group of routes matched across the two sources on route number
 and stop pattern, so a service split across several `route_id`s in one source
-is compared as one thing.
+is compared as one thing. Zones already broken down as worked cases under
+"Which source is wrong?" are skipped here rather than tabulated twice.
 
 ```{r detail, results="asis"}
 # One zone per locality. City-centre LSOAs come in adjacent clusters that all
@@ -446,8 +929,11 @@ distinct_places <- function(d, n) {
   d <- d[, .SD[1], by = grp]
   head(d, n)[, grp := NULL][]
 }
-detail <- rbind(distinct_places(top[order(-gap)], 5),
-                distinct_places(top[order(gap)], 5))
+# Skip the zones already worked through case by case above; without this the
+# same service table is printed twice for the largest zones.
+avail <- if (exists("case_zones")) top[!zone_id %in% case_zones] else top
+detail <- rbind(distinct_places(avail[order(-gap)], 5),
+                distinct_places(avail[order(gap)], 5))
 for (i in seq_len(nrow(detail))) {
   d <- detail[i]
   cat(sprintf("\n### %s — %s (%s)\n\n", d$zone_id,
@@ -463,6 +949,317 @@ for (i in seq_len(nrow(detail))) {
                      format.args = list(big.mark = ",")))
   cat("\n")
 }
+```
+
+## Every mode, not just bus
+
+Everything above counts buses, as every comparison in this repository has. That
+is the right default — both sources exist to carry local bus registrations, and
+bus is the great majority of what either holds — but it is not the whole of
+either feed, and the non-bus modes disagree in ways bus does not. This section
+covers them.
+
+The numbers come from the same per-zone counts the comparison already produced,
+which have always held every mode; only the reporting was bus-only.
+
+```{r modes-present, results="asis"}
+if (!has_modes) {
+  cat("This analysis output predates the non-bus section; re-run the",
+      "`lsoa_gap` target to populate it.\n")
+}
+```
+
+```{r modes-national, results="asis", eval=has_modes}
+mn <- as.data.table(g$modes$national)
+print(knitr::kable(
+  data.frame(Mode = mn$mode,
+             `Zones, TNDS` = fmt(mn$zones_tnds),
+             `Zones, BODS` = fmt(mn$zones_bods),
+             `Only TNDS` = fmt(mn$zones_only_tnds),
+             `Only BODS` = fmt(mn$zones_only_bods),
+             `Runs, TNDS` = fmt(mn$runs_tnds),
+             `Runs, BODS` = fmt(mn$runs_bods),
+             `T/B` = ifelse(is.na(mn$ratio), "—", sprintf("%.2f", mn$ratio)),
+             check.names = FALSE),
+  row.names = FALSE, align = c("l", rep("r", 7)),
+  caption = "Counted runs and zones served, by mode and source"))
+
+nb <- mn[route_type != 3L]
+agree <- nb[!is.na(ratio) & ratio >= 0.9 & ratio <= 1.111]
+disagree <- nb[is.na(ratio) | ratio < 0.9 | ratio > 1.111]
+tenfold <- nb[!is.na(ratio) & (ratio >= 10 | ratio <= 0.1)]
+cat(sprintf(paste0(
+  "\nBus is %s of TNDS's counted runs and %s of BODS GTFS's, so the non-bus ",
+  "modes are a small part of either feed. They are not a small part of the ",
+  "*disagreement*: %s of the %s non-bus modes differ by more than a tenth, ",
+  "and %s of them (%s) by more than a factor of ten.\n\n"),
+  pct(mn$runs_tnds[mn$route_type == 3L] / sum(mn$runs_tnds)),
+  pct(mn$runs_bods[mn$route_type == 3L] / sum(mn$runs_bods)),
+  nrow(disagree), nrow(nb), nrow(tenfold),
+  paste(tolower(tenfold$mode), collapse = " and ")))
+if (nrow(agree)) {
+  cat(sprintf(paste0(
+    "The modes that agree are %s — within a tenth on run totals, which for ",
+    "ferry and the one aerial lift means the two feeds are rendering the same ",
+    "source data compatibly.\n\n"),
+    paste(sprintf("**%s** (ratio %.2f)", tolower(agree$mode), agree$ratio),
+          collapse = ", ")))
+}
+```
+
+### The commonest non-bus disagreement is not missing service
+
+```{r modes-swap, results="asis", eval=has_modes}
+lab <- gap_mode_labels()
+sw <- mode_swap_zones(g$modes$zones)
+if (nrow(sw)) {
+  sw[, pair := paste0(lab[as.character(type_tnds)], " in TNDS, ",
+                      lab[as.character(type_bods)], " in BODS GTFS")]
+  ag <- sw[, list(zones = .N, runs_tnds = sum(runs_t), runs_bods = sum(runs_b),
+                  worst_rel = max(rel)), by = pair]
+  setorderv(ag, "runs_tnds", -1L)
+  cat(sprintf(paste0(
+    "In **%d zones** a mode goes to zero in one source while a *different* ",
+    "mode goes to zero in the other, in the same zone, by almost exactly the ",
+    "same number of runs. That is not absent service. It is the same vehicles ",
+    "counted under a different mode, and it means neither source has lost ",
+    "anything — they disagree about what to call it.\n\n"),
+    uniqueN(sw$zone_id)))
+  print(knitr::kable(
+    data.frame(`Classified as` = ag$pair, Zones = ag$zones,
+               `Runs, TNDS` = fmt(ag$runs_tnds),
+               `Runs, BODS` = fmt(ag$runs_bods),
+               `Worst mismatch` = pct(ag$worst_rel),
+               check.names = FALSE),
+    row.names = FALSE, align = c("l", "r", "r", "r", "r"),
+    caption = "Modes both sources carry and label differently"))
+  cat(sprintf(paste0(
+    "\nThe run totals matching to within %s is what makes this a ",
+    "classification difference rather than a coincidence: missing service does ",
+    "not reappear in the same zone at the same volume under another name.\n\n"),
+    pct(max(ag$worst_rel))))
+} else {
+  cat("No mode-classification disagreements detected in this snapshot.\n\n")
+}
+```
+
+```{r modes-swap-named, results="asis", eval=has_modes}
+# Name the systems behind the swaps from the route detail rather than from a
+# hardcoded list, so a change of feed cannot leave the prose describing
+# something that is no longer there.
+ms <- as.data.table(g$modes$services)
+if (nrow(sw) && nrow(ms)) {
+  named <- merge(sw[, list(zone_id, type_tnds, type_bods)],
+                 ms[, list(zone_id, route_type, name, long_name, cause,
+                           runs_tnds, runs_bods_gtfs)],
+                 by = "zone_id", allow.cartesian = TRUE)
+  pick <- function(d, src) {
+    x <- d[cause == src]
+    if (!nrow(x)) return("—")
+    x <- x[, list(runs = sum(abs(runs_tnds - runs_bods_gtfs))),
+           by = list(label = ifelse(is.na(long_name) | long_name == "",
+                                    name, long_name))]
+    setorderv(x, "runs", -1L)
+    paste(utils::head(x$label[nzchar(x$label) & !is.na(x$label)], 3),
+          collapse = "; ")
+  }
+  # Group by the mode PAIR, not by the TNDS mode: metro->rail and metro->tram
+  # share a TNDS mode, so splitting on that alone merged the DLR with the
+  # Glasgow Subway and dropped the rail->tram pair entirely.
+  named[, pair_key := paste(type_tnds, type_bods)]
+  rows <- lapply(split(named, named$pair_key), function(d) {
+    tt <- d$type_tnds[1]; tb <- d$type_bods[1]
+    data.frame(
+      zones = uniqueN(d$zone_id),
+      Relabelling = sprintf("%s in TNDS, %s in BODS GTFS",
+                            lab[as.character(tt)], lab[as.character(tb)]),
+      `Named in TNDS as` = substr(pick(d[route_type == tt], "only in TNDS"),
+                                  1, 54),
+      `Named in BODS GTFS as` = substr(
+        pick(d[route_type == tb], "only in BODS GTFS"), 1, 40),
+      check.names = FALSE, stringsAsFactors = FALSE)
+  })
+  out <- do.call(rbind, rows)
+  out <- out[order(-out$zones), setdiff(names(out), "zones"), drop = FALSE]
+  print(knitr::kable(out, row.names = FALSE,
+                     caption = "The services behind each relabelling"))
+  cat("\n")
+  # Route-level detail is only read for the zones in the per-mode top table, so
+  # a small relabelling can appear in the aggregate above and have no named
+  # services here. Say which, rather than let it go missing silently.
+  missing <- setdiff(ag$pair, out$Relabelling)
+  if (length(missing)) {
+    cat(sprintf(paste0(
+      "The %s pair%s named above; %s is in the aggregate table but below the ",
+      "threshold at which this report reads route-level detail (its zones are ",
+      "too small to enter the per-mode top ten). From the feeds' own agency ",
+      "lists it is the heritage and minor railways — Bo'ness and Kinneil, ",
+      "Keith and Dufftown, Leadhills and Wanlockhead, Strathspey — which ",
+      "`UK2GTFS` codes as rail under its standard mode rules and the DfT's ",
+      "GTFS codes as tram.\n\n"),
+      if (nrow(out) == 1) "one" else "two", if (nrow(out) == 1) " is" else "s are",
+      paste(missing, collapse = "; ")))
+  }
+}
+```
+
+### Coach, and why this one is deliberate
+
+```{r modes-coach, results="asis", eval=has_modes}
+mn <- as.data.table(g$modes$national)
+co <- mn[route_type == 200L]
+if (nrow(co)) {
+  cat(sprintf(paste0(
+    "Coach is the largest proportional disagreement of any mode: BODS GTFS ",
+    "counts **%s** runs against TNDS's **%s**, a ratio of %.2f, and serves ",
+    "**%s zones** where TNDS serves %s. %s zones have coach in BODS GTFS and ",
+    "none in TNDS.\n\n"),
+    fmt(co$runs_bods), fmt(co$runs_tnds), co$ratio, fmt(co$zones_bods),
+    fmt(co$zones_tnds), fmt(co$zones_only_bods)))
+  cat(paste0(
+    "This one is known and expected, and the pipeline already acts on it. ",
+    "TNDS carried the National Coach Services Database until it was withdrawn, ",
+    "after which the TNDS snapshots hold almost no coach at all; the ",
+    "registrations moved to BODS. That is why `year_sources()` takes coach ",
+    "from a separate BODS coach feed from 2024 onwards rather than from TNDS, ",
+    "and why the published coach series is not simply the TNDS figure. The ",
+    "residue left in TNDS is the handful of coach services that are also ",
+    "registered as local bus services.\n\n"))
+}
+```
+
+### The Nottingham tram, and what the mode fixes changed
+
+```{r modes-tram, results="asis", eval=has_modes}
+tr <- mn[route_type == 0L]
+if (nrow(tr)) {
+  cat(sprintf(paste0(
+    "Tram now **agrees to within %s** between the two sources (%s runs in ",
+    "TNDS against %s in BODS GTFS). That is new, and it is the clearest ",
+    "visible effect of the non-bus mode work in `UK2GTFS`.\n\n"),
+    pct(abs(tr$ratio - 1)), fmt(tr$runs_tnds), fmt(tr$runs_bods)))
+  cat(paste0(
+    "Earlier editions of this report opened their interpretation with the ",
+    "Nottingham tram: TNDS filed Nottingham Express Transit as `route_type = ",
+    "3`, a bus, so all of its runs landed in the *bus* comparison and were ",
+    "credited to TNDS alone. It was the largest single \"only in TNDS\" entry ",
+    "in the whole analysis, more than twenty times the next largest, and it ",
+    "dragged a cluster of Nottingham zones — including one whose locality is ",
+    "\"Highbury Vale Tram Stop\" — into the table of worst bus disagreements.\n\n"))
+  cat(paste0(
+    "`UK2GTFS::apply_standard_modes()` now classifies it as a tram, and the ",
+    "consequence is visible in two places: the tram totals above, and the ",
+    "absence of Nottingham from the bus tables earlier in this report. The ",
+    "defect is fixed, and the bus comparison is cleaner for it.\n\n"))
+  cat(paste0(
+    "The correction does not make the two sources agree about Nottingham, ",
+    "though — it moves the disagreement to where it belongs. The tram is in ",
+    "TNDS and **not in BODS GTFS at all**, under any mode: BODS carries no ",
+    "Nottingham tram agency, and no route of any mode named for the line's ",
+    "termini (Hucknall, Toton, Phoenix Park, Clifton). A tramway is not a local bus ",
+    "service and has no duty to register, so this is BODS behaving as ",
+    "designed. What changed is that the difference is now a non-bus ",
+    "difference, visible in the tram row, instead of a phantom bus ",
+    "disagreement in a table of bus interchanges.\n\n"))
+}
+```
+
+### Metro: TNDS holds more journeys for much the same service
+
+```{r modes-metro, results="asis", eval=has_modes}
+dn_nb <- if ("route_type" %in% names(dn_all)) dn_all[route_type != 3L] else NULL
+me <- mn[route_type == 1L]
+if (nrow(me)) {
+  cat(sprintf(paste0(
+    "Metro is the one non-bus mode where TNDS counts materially *more* than ",
+    "BODS GTFS: **%s** runs against **%s**, a ratio of %.2f, over %s zones ",
+    "against %s. Part of that is the Docklands Light Railway, which the table ",
+    "above shows TNDS filing as metro and BODS GTFS as rail — but only part, ",
+    "and the remainder is not a classification difference.\n\n"),
+    fmt(me$runs_tnds), fmt(me$runs_bods), me$ratio, fmt(me$zones_tnds),
+    fmt(me$zones_bods)))
+}
+if (!is.null(dn_nb) && nrow(dn_nb)) {
+  d1 <- dn_nb[route_type == 1L]
+  if (nrow(d1) == 2) {
+    tn <- d1[source == "tnds"]; bo <- d1[source == "bods_gtfs"]
+    cat(sprintf(paste0(
+      "Counting journeys rather than runs makes the mechanism plain. Inside ",
+      "the window TNDS holds **%s metro journeys** against BODS GTFS's **%s** ",
+      "— a factor of %.2f — while the run totals differ by only %s. Journeys ",
+      "that much more numerous for service that similar means TNDS's extra ",
+      "journeys each operate on fewer days: they are **copies of the same ",
+      "line with partial calendars**, not extra service.\n\n"),
+      fmt(tn$trips), fmt(bo$trips), tn$trips / bo$trips,
+      pct(abs(me$ratio - 1))))
+    cat(sprintf(paste0(
+      "The same-day duplicate test finds almost nothing in either source — ",
+      "%s of TNDS's metro trip-days and %s of BODS GTFS's — and that *is* ",
+      "the expected result rather than a contradiction. The Underground ",
+      "copies are not byte-identical: one calls at a stop the other skips and ",
+      "intermediate times shift by a minute, so no exact-itinerary test can ",
+      "match them, which is precisely why `metro_duplicate_copies.md` had to ",
+      "propose a looser rule keyed on first and last stop instead. The ",
+      "journeys-against-days arithmetic above sees the duplication that the ",
+      "signature test cannot.\n\n"),
+      pct(tn$share_duplicate), pct(bo$share_duplicate)))
+  }
+  cat(paste0(
+    "This is the defect `metro_duplicate_copies.md` documents in detail: TfL ",
+    "publishes each Underground line into TNDS as several TransXChange files ",
+    "with distinct `ServiceCode`s and overlapping validity, and ",
+    "`gtfs_deduplicate()` cannot group them because the converter deletes ",
+    "`route_short_name` for names longer than six characters — which is every ",
+    "Underground line except `Circle`. The DfT's own rendering of the same ",
+    "TfL data does not carry the copies, which is useful corroboration: it is ",
+    "an independent indication that the TNDS metro figure is too high rather ",
+    "than the BODS one too low.\n\n"))
+}
+```
+
+```{r modes-dup-table, results="asis", eval=has_modes}
+if (!is.null(dn_nb) && nrow(dn_nb)) {
+  w <- dcast(dn_nb, route_type ~ source,
+             value.var = c("trips", "trip_days", "share_duplicate"))
+  w[, mode := lab[as.character(route_type)]]
+  w[, ord := match(as.character(route_type), names(lab))]
+  setorderv(w, "ord")
+  print(knitr::kable(
+    data.frame(Mode = w$mode,
+               `Journeys, TNDS` = fmt(w$trips_tnds),
+               `Journeys, BODS` = fmt(w$trips_bods_gtfs),
+               `Duplicate, TNDS` = pct(w$share_duplicate_tnds),
+               `Duplicate, BODS` = pct(w$share_duplicate_bods_gtfs),
+               check.names = FALSE),
+    row.names = FALSE, align = c("l", "r", "r", "r", "r"),
+    caption = paste("Whole-feed journeys and residual same-day duplication,",
+                    "non-bus modes")))
+  cat("\n")
+}
+```
+
+### Where the non-bus modes disagree on the map
+
+```{r modes-top, results="asis", eval=has_modes}
+mt <- as.data.table(g$modes$top)
+mt <- mt[order(-abs(gap))][seq_len(min(16, .N))]
+print(knitr::kable(
+  data.frame(Zone = mt$zone_id,
+             Locality = ifelse(is.na(mt$locality), "—",
+                               substr(mt$locality, 1, 26)),
+             Mode = lab[as.character(mt$route_type)],
+             Country = cn[mt$country],
+             TNDS = round(mt$runs_tnds),
+             `BODS GTFS` = round(mt$runs_bods),
+             Difference = round(mt$gap),
+             check.names = FALSE),
+  row.names = FALSE, format.args = list(big.mark = ","),
+  caption = "The largest non-bus disagreements, any mode"))
+cat(paste0(
+  "\nRead this table with the relabelling table above in hand: a zone ",
+  "appearing twice, once with a large positive metro difference and once with ",
+  "a large negative rail one, is one railway classified two ways, not two ",
+  "failures.\n"))
 ```
 
 ## Interpretation
@@ -510,24 +1307,27 @@ cat("- Disagreement by country:",
 ### Why these particular zones
 
 The zone-level pattern is the national pattern concentrated. The causes below
-are ordered by how much of the remaining gap each accounts for, and the first
-three were each traced to a named service rather than inferred.
+are the catalogue; "Which source is wrong?" above is the attempt to decide
+which of them applies to each zone, and how much of the total each accounts
+for. Several were traced to a named service rather than inferred, and those
+say so.
 
-- **Mode classification, not missing service.** The largest single "only in
-  TNDS" entry in the whole analysis is the Nottingham tram: TNDS files
-  Nottingham Express Transit ("Clifton/Toton – Phoenix Park/Hucknall", agency
-  `NEXT`) as `route_type = 3`, a *bus*, while the DfT's GTFS carries trams as
-  `route_type = 0`. This analysis counts buses, so every one of its 144,488
-  runs is credited to TNDS alone — more than twenty times the next largest
-  TNDS-only service, and the whole of the Nottingham cluster in the table
-  above, including the zone whose locality is "Highbury Vale Tram Stop".
-  Nothing is missing from either feed. TNDS codes trams correctly elsewhere
-  (79 `route_type = 0` routes, Metrolink and Tramlink among them), so this is
-  specific to NET.
+- **Mode classification.** This was the largest single cause in editions of
+  this report before October 2026, when TNDS filed the Nottingham tram as a
+  bus and all of its runs entered the bus comparison on the TNDS side.
+  `UK2GTFS::apply_standard_modes()` has since corrected it and the Nottingham
+  cluster has left the bus tables entirely. Mode classification still accounts
+  for the largest *non-bus* disagreement — see "Every mode, not just bus"
+  below, where the Docklands Light Railway, the Glasgow Subway and the
+  heritage railways are each carried by both sources under different modes —
+  but it no longer distorts the bus figures this section is about.
 - **Duplicate publication in TNDS that no signature test can see.** A run of
   services read *exactly* twice in TNDS what they read in the DfT's GTFS —
-  ratio 0.50 to two decimal places on the Debden–Walthamstow 20, the 275, the
-  Preston–Bolton 125, the Wrexham–Chester 1 and 4, the Derby X38 and others.
+  a TNDS:BODS ratio of 2.00 to three decimal places on the Debden–Walthamstow
+  20, the 275, the Preston–Bolton 125, the Harrow 140 and the Derby X38 among
+  others. Counted in "The ratios give one mechanism away by themselves" above,
+  which also shows this group survived the September 2026 mode fixes
+  untouched, as a duplicate-registration defect should.
   The mechanism was measured on the Preston–Bolton 125: TNDS holds it under two
   `route_id`s of 371 trips each, and **not one pair of them is a same-day
   duplicate under any signature** — whole itinerary, stop and departure time,
@@ -552,8 +1352,11 @@ three were each traced to a named service rather than inferred.
   day it was taken; the BODS change archive holds future-dated files. Where a
   registration expires inside the counting window, TNDS counts a part-window
   service and BODS GTFS a whole-window one, which appears here as a frequency
-  difference on a shared service rather than a missing service. See the
-  snapshot-expiry section of the comparison report for the size of this effect.
+  difference on a shared service rather than a missing service. The Reading
+  Buses case above pins this one to the day — registrations ending 2 August in
+  a window that runs to 23 August, giving the exact 0.25 ratio that zone shows
+  — and the verdict table says how many of the zones investigated it accounts
+  for. The comparison report measures the same effect nationally.
 - **Route naming.** Where the two sources disagree about a service's public
   number — TNDS carrying an operator's marketing name against the DfT's short
   code — the matching links them on stop pattern alone, and only for
@@ -588,4 +1391,27 @@ three were each traced to a named service rather than inferred.
 - Zones carry only a code, so the "Locality" column is the commonest locality
   prefix among the NaPTAN names of the stops inside the zone. It names the
   place, not the LSOA.
-```
+- The verdicts apply only to the zones investigated in detail — the extremes of
+  the distribution in both directions — and are not a sample of the country.
+  They say which source misdescribes *those* zones. Nothing here licenses a
+  national preference for one source over the other, and the national totals
+  earlier in this report point in a different direction from several of the
+  individual verdicts.
+- A verdict is a statement about the two feeds, reached by comparing them with
+  each other and with their own internal consistency. Only `pdf_validation.md`
+  and the route-level validation reports settle a case against evidence from
+  outside the feeds, and they cover a handful of services.
+- The thresholds in `gap_verdict()` are judgement, not derived: one factor
+  must have moved at least 2.5 times as far as the other on a log scale before
+  the gap is attributed to it, the moved factor must be below 0.7 or above
+  1.43, and duplication must explain half the gap before it is blamed. They
+  are deliberately wide and the fall-through is "unresolved" rather than a
+  guess, so moving them changes how many zones are labelled rather than which
+  direction the labelled ones point. The verdict is recomputed from the stored
+  measurements each time this report is knitted, so the thresholds can be
+  revised without re-reading the feeds.
+- Non-bus figures inherit one limitation the bus figures do not: the
+  cross-source route matching is built for bus and is not run for other modes,
+  so the non-bus service tables compare route *names* within a zone rather
+  than matched services. Where the two sources name a tram line differently,
+  its runs appear on both sides as one-source-only.
