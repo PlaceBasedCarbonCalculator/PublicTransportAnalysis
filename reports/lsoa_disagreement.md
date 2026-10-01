@@ -286,6 +286,18 @@ expire on 2 August, and the DfT's GTFS is describing the window correctly. The
 same signature — a ratio at a clean fraction, with the journey counts matching
 — appears on other operators, and the verdict table below is how to find them.
 
+An expiry is also the one mechanism that is obvious by eye. Each panel below is
+one zone's counted service on each of the window's 28 days, in both sources.
+Where the two lines run together and then one of them drops off a cliff, a
+registration ended mid-window; where one line sits below the other all month,
+the difference is in the timetable rather than the calendar.
+
+![plot of chunk daily-profiles](figures/lsoagap-daily-profiles-1.png)
+
+The sharpest single drop in the window is E01033420 (Kings Road): the TNDS figure goes from matching BODS GTFS to a fraction of it **overnight on 03 August**, a fall of 97 points of the BODS figure in one day. **18 of the 58 zones with a profile in both sources** show a fall of at least 30 points on one date (the other 2 have no counted service in one source to compare against).
+
+It is worth separating what moves on those dates, because a fall in the *ratio* is not the same as a fall in TNDS. In 11 of the 18, TNDS itself drops by a tenth or more; in 9, BODS GTFS simultaneously *rises* by a tenth or more, which is a new registration taking effect that the TNDS snapshot is too old to contain. 2 show both at once — the old timetable ending in one source while the new one begins in the other — and those are the zones in the chart above whose two lines diverge in opposite directions on the same day. The commonest date is 02 August 2026.
+
 
 
 
@@ -352,6 +364,16 @@ share of that source's counted trip-days that are still the same bus twice;
 |E01031575 |North Terminal Bus Sta |    -24,160|750 : 3,833     |11.5 : 8.6    |0.0% : 0.0%  |28 : 28       |journeys missing from TNDS |
 |E01020554 |Kings Statue           |    -23,405|2,682 : 4,865   |2.0 : 5.9     |0.0% : 26.3% |6 : 21        |unresolved                 |
 |E01021592 |Cockney Corner         |    -23,014|1,367 : 3,619   |2.1 : 7.2     |0.0% : 31.7% |6 : 23        |unresolved                 |
+
+The same table as a picture. Each zone sits at its two ratios: how many
+journeys TNDS holds relative to BODS GTFS (horizontal) against how many days
+each journey runs relative to BODS GTFS (vertical), both on a log scale so that
+"half" and "double" are the same distance from the centre. The axes are the two
+mechanisms, so position *is* the diagnosis — a zone on the horizontal line
+differs only in journeys, one on the vertical line only in calendars, and one
+out on the diagonal has both wrong at once, which is what "unresolved" means.
+
+![plot of chunk verdict-scatter](figures/lsoagap-verdict-scatter-1.png)
 
 ### The cases worth reading in full
 
@@ -696,6 +718,8 @@ Table: Counted runs and zones served, by mode and source
 Bus is 96.0% of TNDS's counted runs and 95.9% of BODS GTFS's, so the non-bus modes are a small part of either feed. They are not a small part of the *disagreement*: 3 of the 6 non-bus modes differ by more than a tenth, and 2 of them (coach and rail) by more than a factor of ten.
 
 The modes that agree are **tram** (ratio 0.97), **ferry** (ratio 1.00), **aerial lift** (ratio 1.00) — within a tenth on run totals, which for ferry and the one aerial lift means the two feeds are rendering the same source data compatibly.
+
+![plot of chunk mode-ratio-chart](figures/lsoagap-mode-ratio-chart-1.png)
 
 ### The commonest non-bus disagreement is not missing service
 

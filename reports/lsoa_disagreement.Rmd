@@ -21,6 +21,7 @@ nat <- g$national
 has_verdict <- all(c("trips_tnds", "days_full_tnds") %in% names(top))
 has_modes <- !is.null(g$modes)
 has_expiry <- !is.null(g$expiry)
+has_daily <- !is.null(g$daily) && nrow(as.data.table(g$daily)) > 0
 
 # The verdict is re-derived here from the measurements stored in the analysis
 # output rather than read from it. The analysis measures; this interprets. The
@@ -601,6 +602,92 @@ expire on 2 August, and the DfT's GTFS is describing the window correctly. The
 same signature — a ratio at a clean fraction, with the journey counts matching
 — appears on other operators, and the verdict table below is how to find them.
 
+An expiry is also the one mechanism that is obvious by eye. Each panel below is
+one zone's counted service on each of the window's 28 days, in both sources.
+Where the two lines run together and then one of them drops off a cliff, a
+registration ended mid-window; where one line sits below the other all month,
+the difference is in the timetable rather than the calendar.
+
+```{r daily-profiles, fig.height=5.6, eval=has_daily}
+dl <- as.data.table(g$daily)
+pick6 <- top[order(-abs(gap))][seq_len(min(6, .N))]
+dp <- dl[zone_id %in% pick6$zone_id]
+dp <- merge(dp, pick6[, list(zone_id, locality, gap, verdict)], by = "zone_id")
+dp[, panel := sprintf("%s — %s\n%s", zone_id,
+                      ifelse(is.na(locality), "unnamed", locality), verdict)]
+dp[, src := ifelse(source == "tnds", "TNDS", "BODS GTFS")]
+# Order panels by size of disagreement, not alphabetically by code
+dp[, panel := factor(panel, levels = unique(panel[order(-abs(gap))]))]
+
+ggplot(dp, aes(x = date, y = trip_days, colour = src)) +
+  geom_line(linewidth = 0.65) +
+  facet_wrap(~panel, ncol = 2, scales = "free_y") +
+  scale_colour_manual(values = c(TNDS = gap_cols[1],
+                                 `BODS GTFS` = gap_cols[2]), name = NULL) +
+  scale_y_continuous(labels = function(x) format(x, big.mark = ","),
+                     limits = c(0, NA)) +
+  scale_x_date(date_labels = "%d %b") +
+  labs(title = "Counted service day by day, the six largest disagreements",
+       subtitle = paste0("Journeys touching the zone on each day of the ",
+                         "28-day window. A cliff in one line is a ",
+                         "registration expiring mid-window"),
+       x = NULL, y = "Journeys counted that day") +
+  theme_report +
+  theme(strip.text = element_text(size = 8.5, lineheight = 1.1),
+        panel.grid.major.x = element_line(colour = "grey92"))
+```
+
+```{r daily-profiles-text, results="asis", eval=has_daily}
+# Quantify the sharpest cliff rather than leaving the chart to speak alone.
+cliff <- dl[, {
+  w <- dcast(.SD, date ~ source, value.var = "trip_days", fill = 0)
+  if (!all(c("tnds", "bods_gtfs") %in% names(w))) {
+    data.table(drop = NA_real_, when = as.Date(NA), t_fell = NA,
+               b_rose = NA)
+  } else {
+    r <- w$tnds / pmax(w$bods_gtfs, 1)
+    i <- which.max(utils::head(r, -1) - utils::tail(r, -1))
+    # A fall in the RATIO is not the same as a fall in TNDS: the other source
+    # rising does it too, and in several of these zones a new registration
+    # starts the same day. Record which actually moved.
+    data.table(drop = r[i] - r[i + 1], when = w$date[i + 1],
+               t_fell = w$tnds[i + 1] < 0.9 * w$tnds[i],
+               b_rose = w$bods_gtfs[i + 1] > 1.1 * w$bods_gtfs[i])
+  }
+}, by = zone_id]
+cliff <- merge(cliff, top[, list(zone_id, locality, gap, verdict)],
+               by = "zone_id")
+cliff <- cliff[!is.na(drop)][order(-drop)]
+if (nrow(cliff)) {
+  c1 <- cliff[1]
+  big <- cliff[drop >= 0.3]
+  cat(sprintf(paste0(
+    "The sharpest single drop in the window is %s (%s): the TNDS figure goes ",
+    "from matching BODS GTFS to a fraction of it **overnight on %s**, a fall ",
+    "of %.0f points of the BODS figure in one day. **%d of the %d zones with ",
+    "a profile in both sources** show a fall of at least 30 points on one ",
+    "date (the other %d have no counted service in one source to compare ",
+    "against).\n\n"),
+    c1$zone_id, ifelse(is.na(c1$locality), "unnamed", c1$locality),
+    format(c1$when, "%d %B"), 100 * c1$drop, nrow(big), nrow(cliff),
+    nrow(top) - nrow(cliff)))
+  cat(sprintf(paste0(
+    "It is worth separating what moves on those dates, because a fall in the ",
+    "*ratio* is not the same as a fall in TNDS. In %d of the %d, TNDS itself ",
+    "drops by a tenth or more; in %d, BODS GTFS simultaneously *rises* by a ",
+    "tenth or more, which is a new registration taking effect that the TNDS ",
+    "snapshot is too old to contain. %d show both at once — the old timetable ",
+    "ending in one source while the new one begins in the other — and those ",
+    "are the zones in the chart above whose two lines diverge in opposite ",
+    "directions on the same day. The commonest date is %s.\n\n"),
+    sum(big$t_fell, na.rm = TRUE), nrow(big),
+    sum(big$b_rose, na.rm = TRUE),
+    sum(big$t_fell & big$b_rose, na.rm = TRUE),
+    format(as.Date(names(sort(table(as.character(big$when)),
+                              decreasing = TRUE))[1]), "%d %B %Y")))
+}
+```
+
 ```{r verdict-method, results="asis"}
 if (!has_verdict) {
   cat("This analysis output predates the per-zone adjudication; re-run the",
@@ -710,6 +797,60 @@ print(knitr::kable(
     Verdict = vt$verdict,
     check.names = FALSE),
   row.names = FALSE, format.args = list(big.mark = ",")))
+```
+
+The same table as a picture. Each zone sits at its two ratios: how many
+journeys TNDS holds relative to BODS GTFS (horizontal) against how many days
+each journey runs relative to BODS GTFS (vertical), both on a log scale so that
+"half" and "double" are the same distance from the centre. The axes are the two
+mechanisms, so position *is* the diagnosis — a zone on the horizontal line
+differs only in journeys, one on the vertical line only in calendars, and one
+out on the diagonal has both wrong at once, which is what "unresolved" means.
+
+```{r verdict-scatter, fig.height=5.4, eval=has_verdict}
+sc <- top[!is.na(trip_ratio) & !is.na(dpt_ratio) & trip_ratio > 0 &
+            dpt_ratio > 0]
+ord <- c("journeys missing from TNDS", "journeys missing from BODS GTFS",
+         "TNDS calendars cut short", "BODS GTFS calendars cut short",
+         "TNDS counts one bus twice", "BODS GTFS counts one bus twice",
+         "unresolved")
+sc[, vf := factor(verdict, levels = intersect(ord, unique(verdict)))]
+vcols <- c("journeys missing from TNDS" = "#2a78d6",
+           "journeys missing from BODS GTFS" = "#d94f70",
+           "TNDS calendars cut short" = "#4fb3a9",
+           "BODS GTFS calendars cut short" = "#e8893c",
+           "TNDS counts one bus twice" = "#7f5bd5",
+           "BODS GTFS counts one bus twice" = "#b8303f",
+           "unresolved" = "grey62")
+
+ggplot(sc, aes(x = trip_ratio, y = dpt_ratio, colour = vf,
+               size = abs(gap))) +
+  annotate("rect", xmin = 0.9, xmax = 1.111, ymin = -Inf, ymax = Inf,
+           fill = "grey85", alpha = 0.35) +
+  annotate("rect", xmin = -Inf, xmax = Inf, ymin = 0.9, ymax = 1.111,
+           fill = "grey85", alpha = 0.35) +
+  geom_hline(yintercept = 1, colour = "grey45", linewidth = 0.35) +
+  geom_vline(xintercept = 1, colour = "grey45", linewidth = 0.35) +
+  geom_point(alpha = 0.85) +
+  scale_x_log10(breaks = c(0.125, 0.25, 0.5, 1, 2, 4),
+                labels = c("1/8", "1/4", "1/2", "1", "2", "4")) +
+  scale_y_log10(breaks = c(0.25, 0.5, 1, 2, 4),
+                labels = c("1/4", "1/2", "1", "2", "4")) +
+  scale_colour_manual(values = vcols, name = NULL,
+                      guide = guide_legend(nrow = 3, override.aes =
+                                             list(size = 3))) +
+  scale_size_area(max_size = 7, guide = "none") +
+  labs(title = "The two mechanisms, and where each zone falls between them",
+       subtitle = paste0("Journeys ratio against days-per-journey ratio, ",
+                         "TNDS ÷ BODS GTFS; point area is the size of ",
+                         "the disagreement.\nShaded bands mark parity on ",
+                         "each axis. Left of centre TNDS has fewer ",
+                         "journeys; below centre its journeys run fewer days"),
+       x = "Journeys, TNDS ÷ BODS GTFS",
+       y = "Days per journey, TNDS ÷ BODS GTFS") +
+  theme_report +
+  theme(legend.text = element_text(size = 8.5),
+        panel.grid.major.x = element_line(colour = "grey92"))
 ```
 
 ### The cases worth reading in full
@@ -1005,6 +1146,40 @@ if (nrow(agree)) {
     paste(sprintf("**%s** (ratio %.2f)", tolower(agree$mode), agree$ratio),
           collapse = ", ")))
 }
+```
+
+```{r mode-ratio-chart, fig.height=4.0, eval=has_modes}
+mr <- as.data.table(g$modes$national)[!is.na(ratio) & ratio > 0]
+mr[, side := fifelse(ratio > 1.111, "TNDS counts more",
+                     fifelse(ratio < 0.9, "BODS GTFS counts more",
+                             "within a tenth"))]
+mr[, mode_f := factor(mode, levels = mode[order(ratio)])]
+# A lollipop, not a bar: geom_col draws from zero, which on a log axis is at
+# minus infinity, so every bar ran off the bottom of the panel and a ratio of
+# 0.01 looked the same shape as one of 0.94. A segment from parity to the
+# value says "this far from equal" on the scale the axis actually uses.
+ggplot(mr, aes(y = mode_f, x = ratio, colour = side)) +
+  geom_vline(xintercept = 1, colour = "grey35", linewidth = 0.4) +
+  geom_segment(aes(x = 1, xend = ratio, yend = mode_f), linewidth = 1.1) +
+  geom_point(size = 3.4) +
+  geom_text(aes(label = sprintf("%.2f", ratio),
+                hjust = ifelse(ratio >= 1, -0.45, 1.45)), size = 3.2,
+            colour = "grey25", show.legend = FALSE) +
+  scale_x_log10(breaks = c(0.01, 0.1, 0.5, 1, 2),
+                labels = c("1/100", "1/10", "1/2", "equal", "2×"),
+                expand = expansion(mult = c(0.13, 0.13))) +
+  scale_colour_manual(values = c("TNDS counts more" = gap_cols[1],
+                                 "BODS GTFS counts more" = gap_cols[2],
+                                 "within a tenth" = "grey65"), name = NULL) +
+  labs(title = "How far each mode disagrees between the two sources",
+       subtitle = paste0("Counted runs, TNDS ÷ BODS GTFS, log scale. ",
+                         "Rail and coach differ by more than a factor of ",
+                         "ten;\ntram, ferry and the aerial lift agree. Run ",
+                         "totals are in the table above"),
+       x = "TNDS ÷ BODS GTFS", y = NULL) +
+  theme_report +
+  theme(panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(colour = "grey92"))
 ```
 
 ### The commonest non-bus disagreement is not missing service
