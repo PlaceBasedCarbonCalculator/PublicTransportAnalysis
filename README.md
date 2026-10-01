@@ -52,6 +52,16 @@ There are also six analysis reports, all rebuilt by the pipeline:
   non-bus disagreement turns out to be classification rather than missing
   service — the DLR, the Glasgow Subway and the heritage railways are each
   carried by both sources under different modes.
+- [reports/source_disagreement_investigation.md](reports/source_disagreement_investigation.md)
+  — the LSOA disagreements traced back into the raw TransXChange. Why
+  duplicates survive `gtfs_deduplicate()` (`arrival_time` is in the journey
+  signature, worth 0.137% of a feed); why TNDS services stop mid-window (they
+  genuinely do — TNDS has no forward horizon, and every published year from
+  2021 loses 3–10% of its service across its own counting window); and why
+  services go missing (a `ServiceCode` collision in `txc_filter_files()` that
+  deletes 3.4% of the South East, including five whole Crawley routes). Also
+  finds the DfT's own GTFS carrying Birmingham route 74 twice over on every
+  weekday. Reproduced by `scripts/source_disagreement/`.
 - [reports/near_duplicate_journeys.md](reports/near_duplicate_journeys.md) —
   the duplication deduplication cannot see: one service registered twice from
   two working timetables a minute apart. How common it is, what tolerance

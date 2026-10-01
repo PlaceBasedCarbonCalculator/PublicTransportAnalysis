@@ -216,7 +216,7 @@ Table: Zones with the largest share of duplicated runs remaining in BODS GTFS
 
 A duplicate here is a statement about the feed, not about the road: two identical journeys on one day is one bus described twice. So where a source's remaining excess over the other is close to its remaining duplicate share, the zone's gap is still an artefact of the feed; where it is not, the gap is real service one source lacks. The next section uses this as one of its three tests.
 
-These were previously described here as the copies `gtfs_deduplicate()` could not remove without risking real service. In **one of them, checked trip by trip** (E01034091, verified below), that is wrong: the pairs share a `route_id`, a `service_id` and a byte-identical itinerary, which is precisely the case deduplication is built to remove. Whether the other zones in this table have the same cause is not established — they sit at a similar share and in neighbouring areas, which is suggestive and no more. Why deduplication keeps any of them is an open question about `UK2GTFS` rather than about the bus sources.
+These were previously described here as the copies `gtfs_deduplicate()` could not remove without risking real service. In **one of them, checked trip by trip** (E01034091, verified below), that is wrong: the pairs share a `route_id`, a `service_id` and every departure time, and are kept only because their recorded *arrival* time at the origin stop differs by two minutes. Whether the other zones in this table have the same cause is not established — they sit at a similar share and in neighbouring areas, which is suggestive and no more. This is a question about `UK2GTFS` rather than about which bus source to prefer.
 
 ## Which source is wrong?
 
@@ -323,19 +323,22 @@ that produced false positives of exactly this size. **E01034091, the Chelmsford
 cluster, BODS GTFS, 26 July 2026** (verified October 2026): 21,185 of the
 zone's 66,571 counted trip-days are duplicates, which reproduces the 31.8%
 above. The pairs are genuine — the largest involves two trips on **the same
-`route_id` (the X30, agency `OP393`), with the same `service_id`, 29 stops
-each, both leaving stop `1500CHBS2` at 03:55 and arriving at `15800726` at
-04:54, byte-identical end to end**. That is one bus published twice, not two
-buses minutes apart. The duplication spans a dozen route numbers in the zone
-(X30, C1, C6, C12, 170, 31, 47, 332, 13A, 73A, 73B, X10), so it is a
-publishing pattern rather than one rogue registration.
+`route_id` (the X30, agency `OP393`), with the same `service_id`, the same 29
+stops, and the same departure time at every one of them**, from `1500CHBS2` at
+03:55 to `15800726` at 04:54. That is one bus published twice, not two buses
+minutes apart. The duplication spans a dozen route numbers in the zone (X30,
+C1, C6, C12, 170, 31, 47, 332, 13A, 73A, 73B, X10), so it is a publishing
+pattern rather than one rogue registration.
 
-Why `gtfs_deduplicate()` keeps these is not established here. It removed 5.3%
-of the BODS feed's trips on this read, and copies this exact — same route, same
-calendar, same times — are the case it is designed to remove, so the survival
-of 21,185 of them in one zone is worth a look in its own right. That is a
-question about `UK2GTFS`, not about which bus source to prefer, and it is
-recorded here rather than pursued.
+**Why `gtfs_deduplicate()` keeps them is now known, and it is a defect in the
+test rather than a judgement call.** The two trips are not quite identical:
+they differ in the **`arrival_time` at the first stop — 03:53 against 03:51 —
+and in nothing else**. Both depart at 03:55, and every later call agrees on
+arrival, departure, `pickup_type` and `drop_off_type` alike. Because
+`gtfs_deduplicate()` includes `arrival_time` in the signature that identifies
+a journey, a two-minute difference in how long the bus is recorded as standing
+at its origin before departing makes the two copies different journeys, and
+both are kept. Nothing a passenger could observe differs between them.
 
 ### The verdicts, zone by zone
 
@@ -477,6 +480,28 @@ Table: Services TNDS reads exactly twice (one zone each)
 |1       |Wrexham Bus Station 7 - Chester Railway  | 6,016|     3,008|2.000 |
 
 This group is the one cause on the list that an outside check has already settled. The mechanism was traced on the Preston–Bolton 125: TNDS holds it under two `route_id`s with the same number of trips each, and no pair of those trips is a same-day duplicate under any signature — whole itinerary, stop and departure time, or stop alone — because the two registrations describe the same service at times that differ. No signature test can match them, and `gtfs_deduplicate()` is right to keep both. Its published timetable decides it: **TNDS reads 2.28 of the document and the DfT's GTFS 1.14**, so TNDS is the source at fault and BODS GTFS is close to correct. That this group survives the mode fixes of September 2026 untouched is expected — it is a duplicate-registration defect, not a classification one.
+
+### One verdict here has since been overturned
+
+`source_disagreement_investigation.md` took these findings back into the raw
+TransXChange, and it reverses the largest one. **E01033620 (Birmingham, Church
+Centre) is labelled "journeys missing from TNDS" above, and that is the wrong
+way round.** The DfT's GTFS carries route 74 under two service calendars over
+identical dates — `service_id` 90 running Monday to Friday and 3194 running
+Monday to Thursday, 417 and 419 trips — so on any Monday to Thursday the line
+runs twice over. At one city-centre stop on a Wednesday that is 419 calls
+against TNDS's 210, with three departures in the same minute at 14:04.
+
+The two sources are not a bus apart; one of them is counting the same bus
+twice, and it is not TNDS. The tests on this page cannot see it: the two
+registrations share only 103 of 535 itineraries exactly, so the duplicate
+measure reports Birmingham at 0.9%, and the journeys-against-days arithmetic
+reads the excess as service TNDS lacks. **Where a zone's verdict is "journeys
+missing from TNDS" and the daily profile is flat in both sources, read it as
+"the two sources disagree about the number of journeys" and go to the
+registrations before concluding which is short.** The same investigation found
+the opposite failure too — a `ServiceCode` collision in `UK2GTFS` that deletes
+real TNDS service in some regions — so neither direction is safe to assume.
 
 ### What this does and does not settle
 
