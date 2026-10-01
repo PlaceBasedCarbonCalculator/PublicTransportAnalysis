@@ -36,7 +36,7 @@ departing after midnight (GTFS times ≥ 24:00) count as Night.
 These files are consumed by `../build/R/public_transport_frequency.R` (the
 `pt_frequency` target): copy them to `../inputdata/pt_frequency/`.
 
-There are also four analysis reports, all rebuilt by the pipeline:
+There are also six analysis reports, all rebuilt by the pipeline:
 
 - [reports/bus_source_comparison.md](reports/bus_source_comparison.md) — a
   three-way comparison of the bus timetable sources (TNDS, BODS
@@ -50,6 +50,14 @@ There are also four analysis reports, all rebuilt by the pipeline:
   the duplication deduplication cannot see: one service registered twice from
   two working timetables a minute apart. How common it is, what tolerance
   would catch it, and why that tolerance is not safe as a default.
+- [reports/non_bus_modes.md](reports/non_bus_modes.md) — tram, metro, rail,
+  ferry and coach, which every other stage here filters out. The standing
+  check for the blind spot that let three mode defects through in 2026.
+- [reports/data_coverage.md](reports/data_coverage.md) — where and when the
+  archives actually have data, by ATCO administrative area and year, with
+  maps. The measured successor to the manual's hand-assessed coverage grid:
+  2004 is missing 34 areas outright, which is why it shows no coach and
+  almost no metro.
 
 ## Method
 
@@ -355,7 +363,9 @@ R/lsoa_gap.R        zone-level TNDS vs BODS GTFS disagreement
 R/pdf_timetable.R   reading journey times out of published PDF/Word timetables
 R/pdf_validation.R  checking each source against those published timetables
 R/near_duplicates.R the duplication exact matching cannot see, and its cost
-reports/            the four reports (Rmd sources + rendered md + figures)
+R/non_bus.R         the modes that are not bus, and the defects hiding there
+R/coverage.R        which administrative areas each year's archive contains
+reports/            the six reports (Rmd sources + rendered md + figures)
 scripts/            one-off analyses, not part of the pipeline
 data/               outputs (gitignored; copy to ../inputdata/pt_frequency)
 gtfs/               GTFS built by this pipeline (gitignored)

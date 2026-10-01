@@ -281,5 +281,29 @@ list(
     bods_coach_2024, bods_coach_2025,
     rail_2018, rail_2019, rail_2020, rail_2021, rail_2022, rail_2023,
     rail_2024, rail_rdp_2025)), format = "file"),
-  tar_target(non_bus_report, render_non_bus_report(non_bus), format = "file")
+  tar_target(non_bus_report, render_non_bus_report(non_bus), format = "file"),
+
+  # Where and when the archives actually have data.
+  #
+  # The series spans four sources over twenty-two years and none of them
+  # covers the whole country in every year - 2004 is missing 34 ATCO
+  # administrative areas outright, most of western Scotland and the North
+  # East among them, which is why that year shows no coach and almost no
+  # metro. The manual's coverage figure recorded this as a hand-assessed
+  # region-by-year grid; this measures it per administrative area from the
+  # converted feeds, so it cannot drift away from the data, and it extends
+  # past the 2023 the manual stops at.
+  #
+  # Bus-side feeds only: the rail CIF feeds are keyed on TIPLOC rather than
+  # ATCO, so the stop id carries no administrative area to count by. Every
+  # one of them is a dependency so that reconverting any year re-measures it.
+  tar_target(coverage, coverage_analysis(c(
+    nptdr_2004, nptdr_2005, nptdr_2006, nptdr_2007, nptdr_2008, nptdr_2009,
+    nptdr_2010, nptdr_2011,
+    busarchive_2014, busarchive_2015, busarchive_2016, busarchive_2017,
+    tnds_20180515, tnds_20191008, tnds_20200701, tnds_20211012,
+    tnds_20221102, tnds_20231101, tnds_20241004, tnds_20251003,
+    bods_coach_2024, bods_coach_2025)), format = "file"),
+  tar_target(coverage_report, render_coverage_report(coverage),
+             format = "file")
 )
