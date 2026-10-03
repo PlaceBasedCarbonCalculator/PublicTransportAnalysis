@@ -43,18 +43,18 @@ band and does not weight weekdays, so it is a plain total.
 
 |Measure                                         |       Value|
 |:-----------------------------------------------|-----------:|
-|Zones with counted bus service in either source |      40,817|
-|Total bus trip-runs, TNDS                       | 190,990,151|
+|Zones with counted bus service in either source |      40,820|
+|Total bus trip-runs, TNDS                       | 191,991,720|
 |Total bus trip-runs, BODS GTFS                  | 203,021,824|
-|Zones where TNDS counts more                    |       9,756|
-|Zones where BODS GTFS counts more               |      11,805|
-|Zones where the two agree exactly               |      19,256|
-|Zones with service in TNDS only                 |         293|
-|Zones with service in BODS GTFS only            |         261|
+|Zones where TNDS counts more                    |      10,195|
+|Zones where BODS GTFS counts more               |      10,995|
+|Zones where the two agree exactly               |      19,630|
+|Zones with service in TNDS only                 |         297|
+|Zones with service in BODS GTFS only            |         140|
 
-Nationally TNDS counts 190,990,151 bus trip-runs against BODS GTFS's 203,021,824, so BODS GTFS is the higher of the two by 12,031,673 (-5.9% of the BODS GTFS total). The direction is not uniform: BODS GTFS is the higher source in 11,805 zones and TNDS in 9,756, so the national total is a partial cancellation of disagreements pointing opposite ways.
+Nationally TNDS counts 191,991,720 bus trip-runs against BODS GTFS's 203,021,824, so BODS GTFS is the higher of the two by 11,030,104 (-5.4% of the BODS GTFS total). The direction is not uniform: BODS GTFS is the higher source in 10,995 zones and TNDS in 10,195, so the national total is a partial cancellation of disagreements pointing opposite ways.
 
-At zone level the two agree exactly in only 19,256 of 40,817 zones (47.2%), and in **554 zones** one source shows a bus service where the other shows none at all — 293 in TNDS only, 261 in BODS GTFS only. Those are the zones where the choice of source is not a matter of degree.
+At zone level the two agree exactly in only 19,630 of 40,820 zones (48.1%), and in **437 zones** one source shows a bus service where the other shows none at all — 297 in TNDS only, 140 in BODS GTFS only. Those are the zones where the choice of source is not a matter of degree.
 
 ![plot of chunk gap-dist](figures/lsoagap-gap-dist-1.png)
 
@@ -75,15 +75,15 @@ each gridline is ten times the last, in both directions from zero:
 
 ![plot of chunk gap-curve-log](figures/lsoagap-gap-curve-log-1.png)
 
-Summed over every zone, the two sources differ by **20,612,583 trip-runs** in absolute terms, against **12,031,673** between the national totals — the difference between those two figures is disagreement that cancels between zones pointing opposite ways. Of the absolute total, the worst **1%** of zones carry **22.8%** and the worst **10%** carry **76.1%**.
+Summed over every zone, the two sources differ by **19,981,562 trip-runs** in absolute terms, against **11,030,104** between the national totals — the difference between those two figures is disagreement that cancels between zones pointing opposite ways. Of the absolute total, the worst **1%** of zones carry **23.4%** and the worst **10%** carry **77.6%**.
 
-By size of difference: **5,215 zones** differ by 1,000 trip-runs or more (12.8% of all zones), **8,343** by between 100 and 1,000, **8,003** by between 1 and 100, and **19,256** agree exactly. A zone differing by 100 trip-runs over 28 days is under four departures a day; one differing by 1,000 is thirty-six.
+By size of difference: **4,998 zones** differ by 1,000 trip-runs or more (12.2% of all zones), **7,941** by between 100 and 1,000, **8,251** by between 1 and 100, and **19,630** agree exactly. A zone differing by 100 trip-runs over 28 days is under four departures a day; one differing by 1,000 is thirty-six.
 
-The curve is not symmetric. It crosses zero at rank **9,757 of 40,817**, 23.9% of the way along, and the two ends are of very different size: the highest zone is **+18,886** and the lowest **-74,064**, so the drop on the right is about 4 times the rise on the left. BODS GTFS counts more service than TNDS in more zones and by a wider margin.
+The curve is not symmetric. It crosses zero at rank **10,196 of 40,820**, 25.0% of the way along, and the two ends are of very different size: the highest zone is **+18,886** and the lowest **-74,064**, so the drop on the right is about 4 times the rise on the left. BODS GTFS counts more service than TNDS in more zones and by a wider margin.
 
-The left-hand side is not one country's story either way. Of the **9,756 zones** where TNDS counts more, the split by country is 9,102 England, 357 Wales, 297 Scotland; but among the worst **1%** of that side it is 83 England, 11 Wales, 4 Scotland. England leads on both counts here, though that is a property of this snapshot rather than of the sources: on the February 2026 feeds the extremes were mostly Scottish. The top-ten tables below rank by size, so they show only the second of those two answers.
+The left-hand side is not one country's story either way. Of the **10,195 zones** where TNDS counts more, the split by country is 9,520 England, 377 Wales, 298 Scotland; but among the worst **1%** of that side it is 86 England, 11 Wales, 5 Scotland. England leads on both counts here, though that is a property of this snapshot rather than of the sources: on the February 2026 feeds the extremes were mostly Scottish. The top-ten tables below rank by size, so they show only the second of those two answers.
 
-So the answer to "a few extreme zones or many moderate ones" is both, and the two facts have to be held together: the tail is heavy enough that a tenth of zones account for 76.1% of all disagreement, yet **12.8% of zones** differ by more than thirty-six departures a day, which is not a rounding error in any of them. The choice of source changes the answer over most of the country, and changes it drastically in a small part of it.
+So the answer to "a few extreme zones or many moderate ones" is both, and the two facts have to be held together: the tail is heavy enough that a tenth of zones account for 77.6% of all disagreement, yet **12.2% of zones** differ by more than thirty-six departures a day, which is not a rounding error in any of them. The choice of source changes the answer over most of the country, and changes it drastically in a small part of it.
 
 ## The zones that disagree most
 
@@ -122,31 +122,31 @@ below therefore takes one zone per locality.
 |E01003670 |St Aubyns School               |England  |  19,308|    11,768|      7,540|       240|         0|     7,300|
 |E01024940 |Bus Station                    |England  |  19,908|    12,368|      7,540|     1,444|        -8|     6,104|
 |E01004377 |Chelmsford Rd /Woodford New Rd |England  |  18,016|    10,484|      7,532|       240|         0|     7,292|
+|E01016969 |North Street                   |England  |  93,388|    85,912|      7,476|    10,224|    -3,199|       451|
 |E01002218 |Alexandra Avenue (HA2)         |England  |  25,380|    17,939|      7,441|         0|         0|     7,441|
-|E01021766 |Audleigh Place                 |England  |  13,304|     6,712|      6,592|         0|         0|     6,592|
 
 ### Zones where BODS GTFS counts substantially more service
 
 
-|Zone      |Locality                  |Country |    TNDS| BODS GTFS| Difference| Only TNDS| Only BODS| Frequency|
-|:---------|:-------------------------|:-------|-------:|---------:|----------:|---------:|---------:|---------:|
-|E01033620 |Church Centre             |England | 134,556|   208,620|    -74,064|         0|         0|   -74,064|
-|E01034091 |Bus Station               |England |  10,649|    66,571|    -55,922|       501|    -4,310|   -52,113|
-|E01033617 |Albert Street             |England | 100,336|   151,028|    -50,692|         0|         0|   -50,692|
-|E01034092 |Cathedral                 |England |  11,497|    60,111|    -48,614|       498|      -944|   -48,168|
-|E01033415 |Friar Street              |England |  24,918|    71,384|    -46,466|     1,544|         0|   -48,010|
-|E01033140 |Parkway                   |England |   9,328|    52,895|    -43,567|       309|      -912|   -42,964|
-|E01033561 |Moor St Selfridges        |England |  81,536|   122,344|    -40,808|         0|         0|   -40,808|
-|E01033615 |Markets                   |England |  65,888|   100,304|    -34,416|         0|         0|   -34,416|
-|E01034313 |Wolverhampton Bus Station |England |  67,926|   100,521|    -32,595|         0|         0|   -32,595|
-|E01010102 |West Bromwich Bus Station |England |  60,306|    88,662|    -28,356|     2,168|         0|   -30,524|
-|E01002968 |Cromwell Road Bus Station |England |  94,740|   122,222|    -27,482|        40|         0|   -27,522|
-|E01031585 |Bus Station               |England |   7,228|    33,548|    -26,320|         0|   -26,532|       212|
-|E01033420 |Kings Road                |England |   9,814|    35,836|    -26,022|        20|         0|   -26,042|
-|E01017032 |City Shops South          |England |  32,139|    56,709|    -24,570|     1,296|         0|   -25,866|
-|E01010125 |Chelmsley Interchange     |England |  33,288|    57,456|    -24,168|         0|       -32|   -24,136|
+|Zone      |Locality                   |Country |    TNDS| BODS GTFS| Difference| Only TNDS| Only BODS| Frequency|
+|:---------|:--------------------------|:-------|-------:|---------:|----------:|---------:|---------:|---------:|
+|E01033620 |Church Centre              |England | 134,556|   208,620|    -74,064|         0|         0|   -74,064|
+|E01034091 |Bus Station                |England |  10,649|    66,571|    -55,922|       501|    -4,310|   -52,113|
+|E01033617 |Albert Street              |England | 100,336|   151,028|    -50,692|         0|         0|   -50,692|
+|E01034092 |Cathedral                  |England |  11,497|    60,111|    -48,614|       498|      -944|   -48,168|
+|E01033415 |Friar Street               |England |  25,438|    71,384|    -45,946|     1,544|         0|   -47,490|
+|E01033140 |Parkway                    |England |   9,328|    52,895|    -43,567|       309|      -912|   -42,964|
+|E01033561 |Moor St Selfridges         |England |  81,536|   122,344|    -40,808|         0|         0|   -40,808|
+|E01033615 |Markets                    |England |  65,888|   100,304|    -34,416|         0|         0|   -34,416|
+|E01034313 |Wolverhampton Bus Station  |England |  67,926|   100,521|    -32,595|         0|         0|   -32,595|
+|E01010102 |West Bromwich Bus Station  |England |  60,306|    88,662|    -28,356|     2,168|         0|   -30,524|
+|E01002968 |Cromwell Road Bus Station  |England |  94,740|   122,222|    -27,482|        40|         0|   -27,522|
+|E01033420 |Kings Road                 |England |  10,074|    35,836|    -25,762|        20|         0|   -25,782|
+|E01017032 |City Shops South           |England |  32,139|    56,709|    -24,570|     1,296|         0|   -25,866|
+|E01010125 |Chelmsley Interchange      |England |  33,288|    57,456|    -24,168|         0|       -32|   -24,136|
+|E01031575 |North Terminal Bus Station |England |   8,660|    32,820|    -24,160|         0|   -23,924|      -236|
 
-Across the 60 zones investigated in detail, the differences come to 70,435 trip-runs on services only TNDS carries, 102,792 on services only BODS GTFS carries, and a net -640,533 from services both carry at different frequencies. The largest of the three is **services both carry at different frequencies**, at 78.7% of the three absolute contributions.
+Across the 60 zones investigated in detail, the differences come to 90,499 trip-runs on services only TNDS carries, 103,953 on services only BODS GTFS carries, and a net -648,020 from services both carry at different frequencies. The largest of the three is **services both carry at different frequencies**, at 76.9% of the three absolute contributions.
 
 ## Is either source still counting the same bus twice?
 
@@ -188,12 +188,12 @@ Table: Whole-feed duplicate journeys remaining, by source
 
 |Source              | Bus trips| Distinct journeys|  Trip-days| Duplicate runs| Share|
 |:-------------------|---------:|-----------------:|----------:|--------------:|-----:|
-|TNDS (TransXChange) | 1,101,628|           825,987|  9,382,018|          2,896|  0.0%|
+|TNDS (TransXChange) | 1,108,509|           831,142|  9,446,552|          2,920|  0.0%|
 |BODS (GTFS)         | 1,128,176|           861,410| 10,000,181|         78,830|  0.8%|
 
 Nationally, **0.8%** of the counted runs still left in BODS (GTFS) are the same journey twice on one day, against 0.0% in the other source. The zone-level figures below apply the same whole-itinerary test, restricted to trips touching the zone, so the two are now directly comparable and a zone figure far above the national one is a real concentration rather than an artefact of a looser rule.
 
-Across the 60 zones investigated, the duplicate runs still present account for a median of **0.0%** of TNDS's counted trip-days and **0.0%** of the DfT GTFS's. Totals: 244 of 1,901,514 TNDS trip-days and 122,728 of 2,573,888 BODS GTFS trip-days.
+Across the 60 zones investigated, the duplicate runs still present account for a median of **0.0%** of TNDS's counted trip-days and **0.0%** of the DfT GTFS's. Totals: 244 of 2,074,610 TNDS trip-days and 122,728 of 2,735,568 BODS GTFS trip-days.
 
 
 
@@ -258,10 +258,10 @@ Table: How much of each feed stops before the window closes (window 2026-07-27 t
 
 |Source              | Last date in feed| Bus trips| Expiring inside the window| Runs if none expired|
 |:-------------------|-----------------:|---------:|--------------------------:|--------------------:|
-|TNDS (TransXChange) |        2026-09-09| 1,321,834|                      18.1%|            9,675,968|
+|TNDS (TransXChange) |        2026-09-09| 1,328,717|                      18.0%|            9,743,392|
 |BODS (GTFS)         |        2027-08-02| 1,288,523|                       6.2%|           10,316,166|
 
-The two feeds are not symmetric in time. The TNDS snapshot's calendar runs out on **2026-09-09**, and **18.1% of its bus journeys stop running before the window closes** — the single largest cluster of them on 2026-07-25 (68,345 trips); 2026-08-15 (27,972 trips). The DfT's GTFS holds forward-dated files to **2027-08-02** and only 6.2% of its journeys expire inside the window.
+The two feeds are not symmetric in time. The TNDS snapshot's calendar runs out on **2026-09-09**, and **18.0% of its bus journeys stop running before the window closes** — the single largest cluster of them on 2026-07-25 (68,345 trips); 2026-08-15 (27,972 trips). The DfT's GTFS holds forward-dated files to **2027-08-02** and only 6.2% of its journeys expire inside the window.
 
 A TNDS snapshot carries the registrations operative on the day it was taken, and this one was taken on the eve of the window with no history behind it. So wherever a zone below is found to hold *the same journeys as BODS GTFS on fewer days*, it is one instance of this: the TNDS figure describes part of the window and the BODS figure the whole of it. That is a measurement artefact rather than a difference in service.
 
@@ -294,9 +294,9 @@ the difference is in the timetable rather than the calendar.
 
 ![plot of chunk daily-profiles](figures/lsoagap-daily-profiles-1.png)
 
-The sharpest single drop in the window is E01033420 (Kings Road): the TNDS figure goes from matching BODS GTFS to a fraction of it **overnight on 03 August**, a fall of 97 points of the BODS figure in one day. **18 of the 58 zones with a profile in both sources** show a fall of at least 30 points on one date (the other 2 have no counted service in one source to compare against).
+The sharpest single drop in the window is E01032955 (Aylesbury Bus Stn): the TNDS figure goes from matching BODS GTFS to a fraction of it **overnight on 03 August**, a fall of 100 points of the BODS figure in one day. **21 of the 59 zones with a profile in both sources** show a fall of at least 30 points on one date (the other 1 have no counted service in one source to compare against).
 
-It is worth separating what moves on those dates, because a fall in the *ratio* is not the same as a fall in TNDS. In 11 of the 18, TNDS itself drops by a tenth or more; in 9, BODS GTFS simultaneously *rises* by a tenth or more, which is a new registration taking effect that the TNDS snapshot is too old to contain. 2 show both at once — the old timetable ending in one source while the new one begins in the other — and those are the zones in the chart above whose two lines diverge in opposite directions on the same day. The commonest date is 02 August 2026.
+It is worth separating what moves on those dates, because a fall in the *ratio* is not the same as a fall in TNDS. In 13 of the 21, TNDS itself drops by a tenth or more; in 11, BODS GTFS simultaneously *rises* by a tenth or more, which is a new registration taking effect that the TNDS snapshot is too old to contain. 3 show both at once — the old timetable ending in one source while the new one begins in the other — and those are the zones in the chart above whose two lines diverge in opposite directions on the same day. The commonest date is 02 August 2026.
 
 
 
@@ -305,15 +305,15 @@ Table: What the evidence says about the 60 most disagreeing zones
 
 |Verdict                         | Zones| Disagreement (runs)| Share of it|
 |:-------------------------------|-----:|-------------------:|-----------:|
-|unresolved                      |    26|             503,420|       44.4%|
-|journeys missing from TNDS      |    13|             406,250|       35.8%|
-|journeys missing from BODS GTFS |    17|             141,136|       12.4%|
-|TNDS calendars cut short        |     2|              72,488|        6.4%|
-|absent from BODS GTFS           |     2|              11,328|        1.0%|
+|unresolved                      |    28|             518,660|       45.7%|
+|journeys missing from TNDS      |    13|             401,994|       35.4%|
+|journeys missing from BODS GTFS |    16|             137,560|       12.1%|
+|TNDS calendars cut short        |     2|              71,708|        6.3%|
+|absent from BODS GTFS           |     1|               6,044|        0.5%|
 
-Of the 60 zones investigated, the evidence faults **TNDS in 15** and **BODS GTFS in 17**; the remaining 28 are either an absence that may be correct or genuinely unresolved. Weighted by the size of the disagreement rather than by zone count, **42.2% of it is laid at TNDS's door and 12.4% at BODS GTFS's**, with the other 45.4% unattributed. So among the zones where a single mechanism can be identified at all, TNDS is the source at fault about 3.4 times as often by volume — but that is a statement about the extremes of the distribution, not about the two feeds nationally, where BODS GTFS counts the higher total.
+Of the 60 zones investigated, the evidence faults **TNDS in 15** and **BODS GTFS in 16**; the remaining 29 are either an absence that may be correct or genuinely unresolved. Weighted by the size of the disagreement rather than by zone count, **41.7% of it is laid at TNDS's door and 12.1% at BODS GTFS's**, with the other 46.2% unattributed. So among the zones where a single mechanism can be identified at all, TNDS is the source at fault about 3.4 times as often by volume — but that is a statement about the extremes of the distribution, not about the two feeds nationally, where BODS GTFS counts the higher total.
 
-The 26 unresolved zones are not a failure of the method so much as its honest limit: in each, the journey count and the days-per-journey *both* differ, so more than one thing is wrong at once and no single mechanism accounts for the gap. They hold 44.4% of the disagreement in these zones.
+The 28 unresolved zones are not a failure of the method so much as its honest limit: in each, the journey count and the days-per-journey *both* differ, so more than one thing is wrong at once and no single mechanism accounts for the gap. They hold 45.7% of the disagreement in these zones.
 
 In **7 of them the two faults are identifiable even though neither accounts for the whole gap**: TNDS carries a normal day's service on fewer of the 28 days *and* at least 5% of BODS GTFS's counted trip-days in the zone are the same journey twice. The largest is E01034091 (Bus Station), where TNDS manages 6 full days against 24 and 31.8% of the BODS GTFS count is duplicated. Both sources are misdescribing that zone, in opposite directions, which is why no single verdict fits.
 
@@ -340,6 +340,78 @@ a journey, a two-minute difference in how long the bus is recorded as standing
 at its origin before departing makes the two copies different journeys, and
 both are kept. Nothing a passenger could observe differs between them.
 
+### The West Midlands cluster: overlapping weekday calendars in BODS GTFS
+
+Seven of the fifteen zones where BODS GTFS counts most are one cluster —
+Birmingham city centre (Church Centre, Albert Street, Moor St Selfridges,
+Markets), Wolverhampton, West Bromwich and Chelmsley — and together they hold
+**285,099 runs of disagreement**, more than a quarter of the disagreement in
+all 60 zones investigated. Every one of them carried the verdict "unresolved",
+because the journey counts and the days-per-journey both differ. The mechanism
+is now measured, and it is in BODS GTFS.
+
+The signature is visible in the zone's route table: it is not one rogue
+service but *every* service. In E01033620, route 6 reads 10,952 runs in BODS
+GTFS against 5,256 in TNDS, route 74 13,592 against 8,224, route 14 10,096
+against 5,440 — a ratio between 1.6 and 2.1 for all 46 services the two share.
+A whole stop cluster reading roughly double is a publishing pattern, not a
+timetable.
+
+**What BODS GTFS does** (verified against `calendar.txt` and `trips.txt`,
+October 2026). For National Express West Midlands routes it carries five
+weekday calendars over one identical date span, 2026-07-26 to 2027-04-26:
+
+| `service_id` | Days | Route 74 trips |
+|---|---|---|
+| `90` | Monday–Friday | 417 |
+| `3194` | Monday–Thursday | 419 |
+| `1863` | Friday only | 422 |
+| `367` | Saturday | 434 |
+| `365` | Sunday | 352 |
+
+`90` already covers Monday to Friday, so `3194` and `1863` are a second,
+complete copy of the weekday timetable. Monday to Thursday runs 417 + 419
+times, Friday 417 + 422 — about twice the real service. The same five-calendar
+pattern holds on routes 6, 14 and 97, which is why the doubling is uniform
+across the zone.
+
+`gtfs_deduplicate()` cannot see it because the two registrations are not
+identical journey for journey — they share only 103 of 535 itineraries
+exactly — so the residual-duplication measure reports Birmingham at 0.9%, and
+the zone is thrown into "unresolved" rather than faulted.
+
+**How much it explains.** Treating a Monday–Thursday or Friday-only calendar
+as redundant wherever the same route and date span also carries a
+Monday–Friday one, and removing those trip-days from the BODS side:
+
+| Zone | Locality | TNDS | BODS GTFS | BODS adjusted | Gap before | Gap after |
+|---|---|---|---|---|---|---|
+| E01033620 | Church Centre | 134,556 | 208,620 | 162,191 | -74,064 | -27,635 |
+| E01033617 | Albert Street | 100,336 | 151,028 | 130,443 | -50,692 | -30,107 |
+| E01033561 | Moor St Selfridges | 81,536 | 122,344 | 89,676 | -40,808 | -8,140 |
+| E01033615 | Markets | 65,888 | 100,304 | 77,660 | -34,416 | -11,772 |
+| E01034313 | Wolverhampton Bus Stn | 67,926 | 100,521 | 75,288 | -32,595 | -7,362 |
+| E01010102 | West Bromwich Bus Stn | 60,306 | 88,662 | 75,389 | -28,356 | -15,083 |
+| E01010125 | Chelmsley Interchange | 33,288 | 57,456 | 36,863 | -24,168 | -3,575 |
+
+**That removes 64% of the cluster's disagreement** (285,099 runs to 103,674),
+and in four of the seven zones more than three-quarters of it. For these
+zones TNDS is the source to believe.
+
+**But this is not a BODS-only defect, and the national arithmetic is smaller
+than the zone arithmetic suggests.** Nationally, 385 of BODS GTFS's 12,331 bus
+routes (3.1%) carry an overlapping weekday pair on one date span, holding 7.7%
+of its bus trip-days; the redundant trip-days are **1.80% of the BODS bus
+total**. TNDS has the same pattern on *more* routes (798) but less volume —
+**1.26%**. So the pattern accounts for about half a percentage point of the
+5.4% national gap, not the bulk of it. What makes it decisive here rather than
+nationally is its concentration: National Express West Midlands alone
+contributes 43 routes and 244,864 trip-days of it, and those routes converge
+on exactly the stop clusters that top this table. The other operators
+affected, in order of volume, are Bee Network, Stagecoach South, Stagecoach
+Oxfordshire, Stagecoach West, trentbarton, Arriva London North and Reading
+Buses.
+
 ### The verdicts, zone by zone
 
 `Journeys` and `Days each` are the two factors of the run total; `Dup.` is the
@@ -353,19 +425,19 @@ share of that source's counted trip-days that are still the same bus twice;
 |E01034091 |Bus Station            |    -55,922|3,802 : 9,544   |2.8 : 7.0     |0.0% : 31.8% |6 : 24        |unresolved                 |
 |E01033617 |Albert Street          |    -50,692|9,433 : 13,746  |10.6 : 11.0   |0.0% : 2.1%  |28 : 24       |journeys missing from TNDS |
 |E01034092 |Cathedral              |    -48,614|3,580 : 8,270   |3.2 : 7.3     |0.0% : 30.6% |6 : 23        |unresolved                 |
-|E01033415 |Friar Street           |    -46,466|6,900 : 6,834   |3.6 : 10.4    |0.0% : 0.0%  |6 : 24        |TNDS calendars cut short   |
+|E01033415 |Friar Street           |    -45,946|6,942 : 6,834   |3.7 : 10.4    |0.0% : 0.0%  |6 : 24        |TNDS calendars cut short   |
 |E01033140 |Parkway                |    -43,567|3,239 : 7,465   |2.9 : 7.1     |0.0% : 34.2% |6 : 23        |unresolved                 |
 |E01033561 |Moor St Selfridges     |    -40,808|7,867 : 11,859  |10.4 : 10.3   |0.0% : 0.4%  |28 : 24       |journeys missing from TNDS |
 |E01033615 |Markets                |    -34,416|6,314 : 9,626   |10.4 : 10.4   |0.0% : 1.1%  |28 : 24       |journeys missing from TNDS |
 |E01034313 |Wolverhampton Bus Stat |    -32,595|6,494 : 9,034   |10.5 : 11.1   |0.0% : 3.3%  |24 : 24       |unresolved                 |
 |E01010102 |West Bromwich Bus Stat |    -28,356|5,973 : 7,871   |10.1 : 11.3   |0.0% : 5.2%  |24 : 24       |unresolved                 |
 |E01002968 |Cromwell Road Bus Stat |    -27,482|12,193 : 14,692 |7.8 : 8.3     |0.0% : 0.0%  |28 : 28       |unresolved                 |
-|E01031585 |Bus Station            |    -26,320|777 : 4,387     |9.3 : 7.6     |0.0% : 0.0%  |24 : 24       |journeys missing from TNDS |
-|E01033420 |Kings Road             |    -26,022|3,364 : 3,362   |2.9 : 10.7    |0.0% : 0.0%  |6 : 24        |TNDS calendars cut short   |
+|E01033420 |Kings Road             |    -25,762|3,385 : 3,362   |3.0 : 10.7    |0.0% : 0.0%  |6 : 24        |TNDS calendars cut short   |
 |E01017032 |City Shops South       |    -24,570|6,977 : 11,246  |4.6 : 5.0     |0.0% : 12.0% |26 : 27       |journeys missing from TNDS |
 |E01010125 |Chelmsley Interchange  |    -24,168|3,129 : 5,716   |10.6 : 10.1   |0.0% : 2.9%  |28 : 24       |journeys missing from TNDS |
-|E01031575 |North Terminal Bus Sta |    -24,160|750 : 3,833     |11.5 : 8.6    |0.0% : 0.0%  |28 : 28       |journeys missing from TNDS |
+|E01031575 |North Terminal Bus Sta |    -24,160|977 : 3,833     |8.9 : 8.6     |0.0% : 0.0%  |28 : 28       |journeys missing from TNDS |
 |E01020554 |Kings Statue           |    -23,405|2,682 : 4,865   |2.0 : 5.9     |0.0% : 26.3% |6 : 21        |unresolved                 |
+|E01031585 |Bus Station            |    -23,280|1,331 : 4,387   |7.7 : 7.6     |0.0% : 0.0%  |24 : 24       |journeys missing from TNDS |
 |E01021592 |Cockney Corner         |    -23,014|1,367 : 3,619   |2.1 : 7.2     |0.0% : 31.7% |6 : 23        |unresolved                 |
 
 The same table as a picture. Each zone sits at its two ratios: how many
@@ -383,9 +455,9 @@ out on the diagonal has both wrong at once, which is what "unresolved" means.
 
 #### E01033415 — Friar Street
 
-TNDS 24,918 trip-runs against BODS GTFS's 71,384, a difference of **-46,466**. TNDS holds **6,900 journeys** touching the zone, each running on an average of **3.6** of the 28 days; BODS GTFS holds **6,834 journeys** at **10.4** days each. Residual duplication is 0.0% of TNDS's trip-days and 0.0% of BODS GTFS's. A normal day's service appears on 6 of 28 days in TNDS and 24 in BODS GTFS.
+TNDS 25,438 trip-runs against BODS GTFS's 71,384, a difference of **-45,946**. TNDS holds **6,942 journeys** touching the zone, each running on an average of **3.7** of the 28 days; BODS GTFS holds **6,834 journeys** at **10.4** days each. Residual duplication is 0.0% of TNDS's trip-days and 0.0% of BODS GTFS's. A normal day's service appears on 6 of 28 days in TNDS and 24 in BODS GTFS.
 
-The journey counts agree to within 1.0% (6,900 against 6,834), so neither source is missing the timetable. What differs is how long each journey runs for: 3.6 days against 10.4, a ratio of 0.35, and a normal day's service appears on 6 of the 28 days in TNDS against 24 in BODS GTFS. That is a registration expiring inside the window, not a service that does not exist. 
+The journey counts agree to within 1.6% (6,942 against 6,834), so neither source is missing the timetable. What differs is how long each journey runs for: 3.7 days against 10.4, a ratio of 0.35, and a normal day's service appears on 6 of the 28 days in TNDS against 24 in BODS GTFS. That is a registration expiring inside the window, not a service that does not exist. 
 
 
 
@@ -437,12 +509,30 @@ Each journey runs for about as long in both sources (7.2 against 7.5 days), but 
 One of those cases was checked against the feeds directly, because "missing
 service" is the verdict most easily faked by a failure of the route matching.
 **Metrobus around Crawley and Gatwick, 26 July 2026 snapshots** (verified
-against `routes.txt` and `trips.txt`, October 2026): BODS GTFS carries
-Metrobus routes 1, 2, 10 and 100 — the Crawley town network — and TNDS carries
-**none of those four route numbers under Metrobus at all**, so no matching
-rule could have paired them. The numbers TNDS does share with BODS there (3,
-4, 5, 20 and 400) hold between 12 and 26 journeys each, against a full
-timetable on the BODS side. The absence is in the feed, not in the comparison.
+against `routes.txt`, `trips.txt` and `calendar.txt`, October 2026). Before
+the `ServiceCode` fix in `UK2GTFS` (see below), TNDS carried **none of the
+Crawley town network's route numbers under Metrobus at all**, so no matching
+rule could have paired them. The fix recovered the route numbers but not the
+timetables, and the distinction matters:
+
+- **Three services were recovered whole**: in E01031585 (Crawley Bus Station)
+  routes **1, 21 and 281 now agree with BODS GTFS exactly** — 2,120, 308 and
+  612 runs against 2,120, 308 and 612. Agreement to the run, on services that
+  previously read zero, is as strong a confirmation of the fix as this report
+  contains.
+- **Eight are still effectively absent.** Routes 2, 3, 4, 5, 10, 20, 100 and
+  400 now exist in TNDS, with calendars spanning the window (2026-06-11 to
+  2026-09-09) and plausible itineraries, but they carry a fraction of the BODS
+  journey count — route 10 holds 165 trips against 989, route 100 63 against
+  503, route 2 37 against 490 — and **not one of their journeys touches the
+  Crawley Bus Station or Gatwick North Terminal zones**, so both zones still
+  read zero for all eight. They are stubs of the registration, not the
+  network.
+
+So TNDS has gone from carrying none of this network to carrying part of it,
+and the residual gap — 22,492 runs in E01031585 and 23,924 in E01031575 — is
+still an absence in the feed rather than a failure of the comparison. BODS
+GTFS is the source to believe for Crawley and Gatwick.
 
 ### The ratios give one mechanism away by themselves
 
@@ -456,13 +546,13 @@ Table: Shared services sitting on an exact integer ratio
 
 |Ratio TNDS:BODS | Service-zone pairs| Runs at stake|
 |:---------------|------------------:|-------------:|
-|0.25 (BODS ×4)  |                 70|        89,126|
+|0.25 (BODS ×4)  |                 69|        88,910|
 |0.50 (BODS ×2)  |                 21|        24,012|
-|1.00 (agree)    |                514|           536|
-|2.00 (TNDS ×2)  |                 87|       153,973|
+|1.00 (agree)    |                616|         1,843|
+|2.00 (TNDS ×2)  |                 83|       145,885|
 |4.00 (TNDS ×4)  |                  0|             0|
 
-Of 1,174 shared services in the zones investigated, **87 sit within 3% of exactly 2.00** — TNDS reading precisely double the DfT's figure — and those alone account for **153,973 trip-runs** of TNDS's excess. A further 70 sit on 0.25, where BODS GTFS reads exactly four times TNDS.
+Of 1,299 shared services in the zones investigated, **83 sit within 3% of exactly 2.00** — TNDS reading precisely double the DfT's figure — and those alone account for **145,885 trip-runs** of TNDS's excess. A further 69 sit on 0.25, where BODS GTFS reads exactly four times TNDS.
 
 
 
@@ -524,7 +614,7 @@ quite the same question as which feed to use. Three limits are worth stating.
   that work lives in `pdf_validation.md` and `route_279_pdf_validation.md`;
   only a handful of services have been checked that way.
 
-One more reading note, because it collapses several apparently separate verdicts into one cause. **The BODS-side shortfall is concentrated in London.** Of the 30 zones here where TNDS counts more, the services TNDS carries alone are worth 61,231 trip-runs, and the largest are TfL routes — in the worked case above the 87, 39, 170, 37, 156 and 337, every one present in TNDS and absent from the DfT's GTFS. The comparison report records the same gap on the BODS TransXChange side. So a verdict of "journeys missing from BODS GTFS" in a London zone is this one cause recurring, not 30 independent findings, and the 17 zones carrying that verdict should be counted as fewer than 17 distinct problems.
+One more reading note, because it collapses several apparently separate verdicts into one cause. **The BODS-side shortfall is concentrated in London.** Of the 30 zones here where TNDS counts more, the services TNDS carries alone are worth 81,295 trip-runs, and the largest are TfL routes — in the worked case above the 87, 39, 170, 37, 156 and 337, every one present in TNDS and absent from the DfT's GTFS. The comparison report records the same gap on the BODS TransXChange side. So a verdict of "journeys missing from BODS GTFS" in a London zone is this one cause recurring, not 30 independent findings, and the 16 zones carrying that verdict should be counted as fewer than 16 distinct problems.
 
 ## What is actually going on in those zones
 
@@ -732,17 +822,17 @@ Table: Counted runs and zones served, by mode and source
 
 |Mode        | Zones, TNDS| Zones, BODS| Only TNDS| Only BODS|  Runs, TNDS|  Runs, BODS|  T/B|
 |:-----------|-----------:|-----------:|---------:|---------:|-----------:|-----------:|----:|
-|Bus         |      40,481|      40,449|       293|       261| 190,990,151| 203,021,824| 0.94|
+|Bus         |      40,606|      40,449|       297|       140| 191,991,720| 203,021,824| 0.95|
 |Coach       |          94|         875|        26|       807|      51,368|     923,841| 0.06|
 |Tram        |         276|         259|        54|        37|   1,520,693|   1,571,683| 0.97|
-|Metro       |         389|         335|        59|         5|   6,201,362|   5,499,306| 1.13|
+|Metro       |         388|         335|        58|         5|   6,201,362|   5,499,306| 1.13|
 |Rail        |          21|          42|        21|        42|       5,178|     500,481| 0.01|
-|Ferry       |          88|          84|         7|         3|      88,286|      88,397| 1.00|
+|Ferry       |          92|          84|         9|         1|     112,149|      88,397| 1.27|
 |Aerial lift |           2|           2|         0|         0|      14,224|      14,176| 1.00|
 
-Bus is 96.0% of TNDS's counted runs and 95.9% of BODS GTFS's, so the non-bus modes are a small part of either feed. They are not a small part of the *disagreement*: 3 of the 6 non-bus modes differ by more than a tenth, and 2 of them (coach and rail) by more than a factor of ten.
+Bus is 96.0% of TNDS's counted runs and 95.9% of BODS GTFS's, so the non-bus modes are a small part of either feed. They are not a small part of the *disagreement*: 4 of the 6 non-bus modes differ by more than a tenth, and 2 of them (coach and rail) by more than a factor of ten.
 
-The modes that agree are **tram** (ratio 0.97), **ferry** (ratio 1.00), **aerial lift** (ratio 1.00) — within a tenth on run totals, which for ferry and the one aerial lift means the two feeds are rendering the same source data compatibly.
+The modes that agree are **tram** (ratio 0.97), **aerial lift** (ratio 1.00) — within a tenth on run totals, which means that for tram and aerial lift the two feeds are rendering the same source data compatibly.
 
 ![plot of chunk mode-ratio-chart](figures/lsoagap-mode-ratio-chart-1.png)
 
@@ -778,6 +868,52 @@ Coach is the largest proportional disagreement of any mode: BODS GTFS counts **9
 
 This one is known and expected, and the pipeline already acts on it. TNDS carried the National Coach Services Database until it was withdrawn, after which the TNDS snapshots hold almost no coach at all; the registrations moved to BODS. That is why `year_sources()` takes coach from a separate BODS coach feed from 2024 onwards rather than from TNDS, and why the published coach series is not simply the TNDS figure. The residue left in TNDS is the handful of coach services that are also registered as local bus services.
 
+### Ferry, and a stop-identity defect that moves it 27%
+
+Ferry is the one mode whose figure moved for a reason that has nothing to do
+with ferries. Between the September and October 2026 editions TNDS's ferry
+total went from 88,286 runs to 112,149 — a ratio against BODS GTFS of 1.00
+becoming 1.27 — while **the ferry content of the feed did not change at all**:
+the same 567 routes, the same 16,673 trips, the same 106,115 trip-days, the
+same 257 stop ids, and no residual duplication in either edition.
+
+What changed is where some of those stops are. Comparing the two merged feeds
+stop by stop, **91 stops moved by more than half a metre, 35 by more than
+50 m, and 16 by more than 200 m**; in 14 of those 16 the `stop_name` changed
+as well. The extremes are not boundary cases:
+
+| `stop_id` | September name and position | October name and position | Moved |
+|---|---|---|---|
+| `1100DEA11988` | Start Point Car Park, 50.226 N 3.655 W | Mannings Way, 51.091 N 4.063 W | 100 km |
+| `1100DEA11989` | Village Green, 50.215 N 3.710 W | Spry Lane, 50.644 N 4.269 W | 62 km |
+| `9400ZZLUBNK8` | Haste Hill (Ruislip Lido Railway) | Bank Underground Station | 25 km |
+| `9300GUR` | Gourock Ferry Terminal | Gourock Ferry Terminal | 300 m |
+
+So one `stop_id` is being defined by more than one source file, with different
+names and different coordinates, and which definition reaches the merged feed
+depends on which files survive `txc_filter_files()`. The `ServiceCode` fix
+changed that set, so 91 stops flipped definition. `9400ZZLUBNK8` is the case
+that shows the direction of travel: it is a NaPTAN London Underground code for
+Bank, and the October value is the correct one — the September feed had it in
+Ruislip.
+
+Ferry is hit out of all proportion to its size: **27.6% of ferry stops moved,
+against 0.0% of bus stops** (19 of 314,584). Two things cause that. Ferry
+terminals are published both by the ferry operator and by the local authority
+whose buses call there, so they are among the stops most likely to carry two
+definitions; and they sit on coastlines, where LSOA boundaries follow the
+shore, so a shift of a few hundred metres moves a terminal into a different
+zone or out of all of them. Of the 21 ferry zones whose counts changed, five
+Scottish zones moved **onto** the BODS figure exactly, and eight English zones
+in Devon and the Solent gained a whole service each.
+
+Two conclusions follow, and the second is the uncomfortable one. The October
+ferry figure is built on better stop positions than the September one. But
+**neither figure is reproducible from the ferry data alone** — it depends on
+which bus files happened to survive filtering elsewhere in the same feed — so
+the ferry series should not be read as a trend until stop identity is resolved
+at source. The bus series, at 19 stops of 314,584, is unaffected.
+
 ### The Nottingham tram, and what the mode fixes changed
 
 Tram now **agrees to within 3.2%** between the two sources (1,520,693 runs in TNDS against 1,571,683 in BODS GTFS). That is new, and it is the clearest visible effect of the non-bus mode work in `UK2GTFS`.
@@ -790,7 +926,7 @@ The correction does not make the two sources agree about Nottingham, though — 
 
 ### Metro: TNDS holds more journeys for much the same service
 
-Metro is the one non-bus mode where TNDS counts materially *more* than BODS GTFS: **6,201,362** runs against **5,499,306**, a ratio of 1.13, over 389 zones against 335. Part of that is the Docklands Light Railway, which the table above shows TNDS filing as metro and BODS GTFS as rail — but only part, and the remainder is not a classification difference.
+Metro is the one non-bus mode where TNDS counts materially *more* than BODS GTFS: **6,201,362** runs against **5,499,306**, a ratio of 1.13, over 388 zones against 335. Part of that is the Docklands Light Railway, which the table above shows TNDS filing as metro and BODS GTFS as rail — but only part, and the remainder is not a classification difference.
 
 Counting journeys rather than runs makes the mechanism plain. Inside the window TNDS holds **47,856 metro journeys** against BODS GTFS's **33,397** — a factor of 1.43 — while the run totals differ by only 12.8%. Journeys that much more numerous for service that similar means TNDS's extra journeys each operate on fewer days: they are **copies of the same line with partial calendars**, not extra service.
 
@@ -839,9 +975,9 @@ Read this table with the relabelling table above in hand: a zone appearing twice
 ## Interpretation
 
 - The largest single-zone disagreement is E01033620 (Church Centre), where the two sources differ by 74,064 trip-runs over the four weeks — 35.5% of the larger of the two figures.
-- Within the zones investigated, 14.8% of the difference (by trip-runs) is services one source carries and the other does not at all, against 85.2% from differing frequencies on shared services.
-- 2 of the 60 zones investigated have **no counted bus service at all** in one of the two sources. For those zones the choice of source is not a matter of degree: one says the zone has a bus service and the other says it has none.
-- Disagreement by country: England 62.5% of zones; Wales 36.8% of zones; Scotland 9.5% of zones 
+- Within the zones investigated, 16.3% of the difference (by trip-runs) is services one source carries and the other does not at all, against 83.7% from differing frequencies on shared services.
+- 1 of the 60 zones investigated have **no counted bus service at all** in one of the two sources. For those zones the choice of source is not a matter of degree: one says the zone has a bus service and the other says it has none.
+- Disagreement by country: England 61.6% of zones; Wales 33.0% of zones; Scotland 9.5% of zones 
 
 ### Why these particular zones
 

@@ -170,7 +170,7 @@ manual was written, or was missed by eye.
 | 2008|              2|               0|Great Britain, Scotland                                 |
 | 2009|              1|               0|Scotland                                                |
 | 2010|              2|               0|Great Britain, Scotland                                 |
-| 2011|              4|               1|Great Britain, Scotland, South West                     |
+| 2011|              3|               1|Great Britain, South West                               |
 | 2014|              3|               1|Great Britain, London                                   |
 | 2015|              3|               2|Great Britain, London                                   |
 | 2016|              3|               2|Great Britain, London                                   |
@@ -249,7 +249,7 @@ continuous TNDS series and coverage should be complete, so anything flagged
 here is either a real reduction in service or a defect worth chasing. This
 section is the detail for those eight years.
 
-Across the eight years there are 119 area-years below six tenths of normal, involving 59 distinct areas.
+Across the eight years there are 113 area-years below six tenths of normal, involving 59 distinct areas.
 
 The national codes (National - National Air, National - National Coach, National - National Rail) are left out of this section. They are modes rather than places and their comings and goings are a question about sources, dealt with under "Great Britain is not a region" above.
 
@@ -267,27 +267,26 @@ a service reduction does not respect administrative borders so precisely.
 |region        |area                   |ATCO |years                              | count|lowest |status  |
 |:-------------|:----------------------|:----|:----------------------------------|-----:|:------|:-------|
 |West Midlands |Staffordshire          |380  |2018 2020 2021 2022 2023 2024 2025 |     7|46%    |partial |
-|West Midlands |Stoke-on-Trent         |389  |2018 2020 2021 2022 2023 2024 2025 |     7|33%    |partial |
+|West Midlands |Stoke-on-Trent         |389  |2018 2020 2021 2022 2023 2024 2025 |     7|32%    |partial |
 |East Midlands |Derbyshire             |100  |2021 2022 2023 2024 2025           |     5|45%    |partial |
-|South East    |Windsor and Maidenhead |036  |2021 2022 2023 2024 2025           |     5|27%    |partial |
 |East Midlands |Leicester              |269  |2021 2023 2024 2025                |     4|53%    |partial |
-|East Midlands |Leicestershire         |260  |2022 2023 2024 2025                |     4|49%    |partial |
+|East Midlands |Leicestershire         |260  |2022 2023 2024 2025                |     4|48%    |partial |
+|East Midlands |Nottingham             |339  |2021 2022 2023 2025                |     4|48%    |partial |
 |North West    |Cheshire East          |060  |2018 2020 2022 2023                |     4|54%    |partial |
-|South East    |Reading                |039  |2021 2022 2023 2025                |     4|49%    |partial |
-|South East    |Slough                 |037  |2021 2022 2023 2025                |     4|40%    |partial |
-|South East    |West Berkshire         |030  |2021 2022 2023 2025                |     4|49%    |partial |
-|South East    |Wokingham              |035  |2021 2022 2023 2025                |     4|38%    |partial |
-|East Midlands |Nottingham             |339  |2022 2023 2025                     |     3|48%    |partial |
+|South East    |Slough                 |037  |2021 2022 2023 2025                |     4|43%    |partial |
+|South East    |West Berkshire         |030  |2021 2022 2023 2025                |     4|50%    |partial |
 |East Midlands |Nottinghamshire        |330  |2021 2022 2023                     |     3|49%    |partial |
 |Scotland      |Falkirk                |669  |2020 2024 2025                     |     3|40%    |partial |
 |Scotland      |West Lothian           |629  |2023 2024 2025                     |     3|44%    |partial |
-|Wales         |Bridgend               |551  |2020 2024 2025                     |     3|51%    |partial |
+|South East    |Windsor and Maidenhead |036  |2021 2022 2023                     |     3|43%    |partial |
+|South East    |Wokingham              |035  |2021 2022 2023                     |     3|50%    |partial |
 |Wales         |Neath Port Talbot      |582  |2020 2024 2025                     |     3|48%    |partial |
 |West Midlands |Shropshire             |350  |2022 2023 2025                     |     3|55%    |partial |
-|East Midlands |Northamptonshire       |300  |2024 2025                          |     2|58%    |partial |
+|East Midlands |Northamptonshire       |300  |2024 2025                          |     2|57%    |partial |
 |East Midlands |Rutland                |268  |2024 2025                          |     2|48%    |partial |
 |South East    |Southend-on-Sea        |158  |2023 2024                          |     2|56%    |partial |
 |South West    |Somerset               |360  |2019 2020                          |     2|46%    |partial |
+|Wales         |Bridgend               |551  |2020 2025                          |     2|51%    |partial |
 |Wales         |Newport                |531  |2020 2021                          |     2|32%    |partial |
 
 Flagged in a single year only:
@@ -302,12 +301,13 @@ Flagged in a single year only:
 |North West    |Warrington            |069  |2022 |56%   |
 |Scotland      |Aberdeenshire         |630  |2022 |58%   |
 |Scotland      |Angus                 |649  |2019 |59%   |
-|Scotland      |Argyll and Bute       |607  |2020 |60%   |
+|Scotland      |Argyll and Bute       |607  |2020 |59%   |
 |Scotland      |Clackmannanshire      |668  |2024 |54%   |
 |Scotland      |East Dunbartonshire   |611  |2025 |51%   |
 |Scotland      |Edinburgh             |620  |2020 |47%   |
 |Scotland      |Fife                  |650  |2020 |45%   |
 |South East    |Bedford               |020  |2025 |55%   |
+|South East    |Reading               |039  |2022 |57%   |
 |South East    |West Sussex           |440  |2022 |58%   |
 |South West    |Bristol               |010  |2019 |56%   |
 |South West    |Dorset                |120  |2019 |45%   |
@@ -323,23 +323,23 @@ Flagged in a single year only:
 |Wales         |Flintshire            |512  |2020 |55%   |
 |Wales         |Gwynedd               |540  |2020 |53%   |
 |Wales         |Isle of Anglesey      |541  |2025 |52%   |
-|Wales         |Merthyr Tydfil        |553  |2023 |37%   |
+|Wales         |Merthyr Tydfil        |553  |2023 |38%   |
 |Wales         |Monmouthshire         |533  |2020 |54%   |
 |Wales         |Pembrokeshire         |521  |2020 |48%   |
 |Wales         |Rhondda Cynon Taff    |552  |2020 |57%   |
 |Wales         |Torfaen               |534  |2020 |46%   |
 |Wales         |Vale of Glamorgan     |572  |2020 |56%   |
 |West Midlands |Herefordshire         |209  |2020 |59%   |
-|West Midlands |Warwickshire          |420  |2022 |60%   |
+|West Midlands |Warwickshire          |420  |2022 |59%   |
 |Yorkshire     |Kingston upon Hull    |229  |2022 |35%   |
 
 
 **The strongest candidates for a defect**, flagged in four or more of the eight years:
 
-- *West Midlands* — Staffordshire (7 years, low 46%); Stoke-on-Trent (7 years, low 33%)
-- *East Midlands* — Derbyshire (5 years, low 45%); Leicester (4 years, low 53%); Leicestershire (4 years, low 49%)
-- *South East* — Windsor and Maidenhead (5 years, low 27%); Reading (4 years, low 49%); Slough (4 years, low 40%); West Berkshire (4 years, low 49%); Wokingham (4 years, low 38%)
+- *West Midlands* — Staffordshire (7 years, low 46%); Stoke-on-Trent (7 years, low 32%)
+- *East Midlands* — Derbyshire (5 years, low 45%); Leicester (4 years, low 53%); Leicestershire (4 years, low 48%); Nottingham (4 years, low 48%)
 - *North West* — Cheshire East (4 years, low 54%)
+- *South East* — Slough (4 years, low 43%); West Berkshire (4 years, low 50%)
 
 Several of those are adjacent pairs or blocks rather than isolated areas — Staffordshire with Stoke-on-Trent, Leicester with Leicestershire, and the four Berkshire authorities together — which is what makes them worth opening: a contiguous group of authorities short in the same set of years points at one upstream source, not at the bus networks themselves.
 
@@ -378,7 +378,7 @@ placed by coordinate rather than by code.
 |tram        |94     |156    |171    |239    |218    |217    |214    |200    |883     |1,043   |1,281   |1,217   |344    |364    |175    |287    |308    |375    |540    |788    |
 |metro       |2      |8      |43     |667    |645    |651    |650    |722    |191     |316     |262     |232     |2,271  |2,368  |1,718  |1,322  |2,048  |2,168  |1,562  |1,781  |
 |rail        |2,191  |1,647  |1,692  |1,604  |1,679  |1,741  |1,773  |1,832  |2       |3       |4       |4       |3      |1      |1      |0      |0      |1      |1      |1      |
-|bus         |26,003 |41,379 |45,257 |56,996 |59,733 |57,473 |61,744 |56,529 |231,572 |220,423 |215,754 |200,590 |55,400 |68,296 |37,486 |49,903 |55,022 |48,723 |52,054 |53,095 |
+|bus         |26,003 |41,379 |45,257 |56,996 |59,733 |57,473 |61,744 |56,529 |231,572 |220,423 |215,754 |200,590 |55,227 |68,208 |37,425 |49,937 |55,070 |48,767 |52,128 |53,153 |
 |ferry       |5      |15     |23     |27     |32     |31     |32     |26     |58      |94      |90      |93      |34     |29     |19     |28     |31     |33     |33     |52     |
 |aerial lift |–      |–      |–      |–      |–      |–      |–      |–      |–       |–       |–       |–       |2      |2      |1      |2      |2      |2      |2      |2      |
 |coach       |0      |268    |508    |751    |393    |144    |133    |202    |621     |569     |574     |466     |176    |144    |16     |60     |78     |80     |191    |109    |
@@ -390,7 +390,7 @@ is a mode the year's feeds do not contain at all.*
 **Compare down a column, not across a row.** These are raw counts, and
 2014–2017 hold four weekly snapshots each, so their figures are about four
 times those of a comparable year — bus reads 231,572 in 2014 against 56,529
-in 2011 and 55,400 in 2018, and almost all of that is the merge, not the
+in 2011 and 55,227 in 2018, and almost all of that is the merge, not the
 network. The chart below is on shares for that reason.
 
 ![plot of chunk modechart](figures/coverage-modechart-1.png)
@@ -472,21 +472,20 @@ These feeds are not purely rail. They carry **metro**, which the pipeline drops 
 | 2005|Scotland      |Falkirk                   |669  |18,002     |0      |18%             |severe shortfall |
 | 2005|Scotland      |Orkney Islands            |602  |30         |0      |0%              |severe shortfall |
 | 2005|Scotland      |Scottish Borders          |690  |7,391      |0      |18%             |severe shortfall |
-| 2005|Scotland      |Shetland Islands          |603  |1,611      |0      |19%             |severe shortfall |
+| 2005|Scotland      |Shetland Islands          |603  |1,611      |0      |23%             |severe shortfall |
 | 2006|Great Britain |National - National Tram  |940  |69,177     |0      |10%             |severe shortfall |
 | 2006|London        |Greater London            |490  |1,451,096  |0      |14%             |severe shortfall |
 | 2006|Scotland      |Orkney Islands            |602  |1,264      |0      |14%             |severe shortfall |
-| 2006|Scotland      |Shetland Islands          |603  |1,390      |0      |15%             |severe shortfall |
+| 2006|Scotland      |Shetland Islands          |603  |1,390      |0      |18%             |severe shortfall |
 | 2007|Scotland      |Orkney Islands            |602  |924        |0      |8%              |severe shortfall |
-| 2007|Scotland      |Shetland Islands          |603  |2,153      |0      |19%             |severe shortfall |
+| 2007|Scotland      |Shetland Islands          |603  |2,153      |0      |22%             |severe shortfall |
 | 2008|Great Britain |National - National Coach |900  |33         |0      |16%             |severe shortfall |
-| 2008|Scotland      |Shetland Islands          |603  |2,232      |0      |19%             |severe shortfall |
-| 2009|Scotland      |Shetland Islands          |603  |2,242      |0      |19%             |severe shortfall |
+| 2008|Scotland      |Shetland Islands          |603  |2,232      |0      |22%             |severe shortfall |
+| 2009|Scotland      |Shetland Islands          |603  |2,242      |0      |23%             |severe shortfall |
 | 2010|Great Britain |National - National Air   |920  |212        |0      |5%              |severe shortfall |
-| 2010|Scotland      |Shetland Islands          |603  |2,488      |0      |20%             |severe shortfall |
+| 2010|Scotland      |Shetland Islands          |603  |2,488      |0      |24%             |severe shortfall |
 | 2011|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2011|Great Britain |National - National Coach |900  |39         |0      |20%             |severe shortfall |
-| 2011|Scotland      |Shetland Islands          |603  |2,480      |0      |22%             |severe shortfall |
 | 2011|South West    |Portsmouth                |199  |12,252     |0      |7%              |severe shortfall |
 | 2014|Great Britain |National - National Air   |920  |48         |0      |0%              |severe shortfall |
 | 2014|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
@@ -574,4 +573,4 @@ A stop id whose first three characters are not a known ATCO area code. These are
 
 ---
 
-Generated 2026-10-01 08:20 from 22 bus feeds covering 20 years.
+Generated 2026-10-03 07:59 from 22 bus feeds covering 20 years.

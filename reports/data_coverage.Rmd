@@ -482,7 +482,7 @@ is a mode the year's feeds do not contain at all.*
 **Compare down a column, not across a row.** These are raw counts, and
 2014–2017 hold four weekly snapshots each, so their figures are about four
 times those of a comparable year — bus reads 231,572 in 2014 against 56,529
-in 2011 and 55,400 in 2018, and almost all of that is the merge, not the
+in 2011 and 55,227 in 2018, and almost all of that is the merge, not the
 network. The chart below is on shares for that reason.
 
 ```{r modechart, fig.height=5.5}

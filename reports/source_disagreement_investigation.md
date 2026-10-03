@@ -448,12 +448,27 @@ The honest ordering is uncomfortable, because the two sources fail at opposite
 ends and neither failure is small where it occurs.
 
 **For a level** — how much bus service a place has — the TransXChange route is
-the better baseline, *once the collision is fixed*. It reconciles overlapping
-registrations, which is the larger error: Birmingham route 74 is carried twice
-by the DfT's GTFS on every weekday, and if that is at all widespread it
-inflates the source this repository has been treating as the reference. The
-national ratio of 0.94 between TNDS and BODS GTFS should not be read as TNDS
-being 6% short until that is counted.
+the better baseline *in the places where overlapping registrations occur*, but
+the national qualifier this section used to carry has now been measured and
+does not hold.
+
+The collision is fixed (October 2026) and the national ratio has moved from
+0.94 to **0.95**. The overlapping-registration error has been counted: it is
+**1.80%** of BODS GTFS's bus trip-days against **1.26%** of TNDS's, so it
+accounts for roughly half a percentage point of the remaining 5.4% gap, not
+the bulk of it. The earlier wording — that the 0.94 ratio "should not be read
+as TNDS being 6% short until that is counted" — was too generous to TNDS. It
+is now counted, and most of the gap *is* TNDS being short: principally its
+lack of a forward horizon (18.0% of its bus journeys stop before the 28-day
+window closes, against 6.2% in the DfT's GTFS) and residual missing
+registrations such as the eight Metrobus services still absent from Crawley
+and Gatwick after the fix.
+
+Where overlapping registrations *do* bite they dominate, and the West Midlands
+is the clear case: 64% of the disagreement in seven zones of the national top
+fifteen. So the ordering is regional rather than national — prefer TNDS in the
+West Midlands and the other operators listed in `lsoa_disagreement.md`, prefer
+the DfT's GTFS where the question is whether a service exists at all.
 
 **For a trend** — how service changed between years — the risk is the
 opposite. TNDS's within-window decay varies from −0.3% to −10.2% between
@@ -474,13 +489,28 @@ zone counting rather than of the sources.
   from that archive entirely), and part is the `ServiceCode` collision of
   section 3(b) acting on the same archive. The split between those three has
   not been measured.
-- **Whether the Birmingham pattern generalises.** Overlapping registrations
-  were traced on one route in one city, on three days. How much of BODS GTFS's
-  national excess over the TransXChange sources is the same thing has not been
-  counted, and it is the most valuable thing left to measure: if weekday
-  doubling of this kind is widespread, the DfT's GTFS is the wrong baseline
-  for a national count and much of this report's "BODS counts more" becomes
-  "BODS counts twice".
+- ~~**Whether the Birmingham pattern generalises.**~~ **Measured, October
+  2026 — see `lsoa_disagreement.md`, "The West Midlands cluster".** The
+  mechanism is an overlapping pair of weekday calendars on one date span: a
+  Monday–Friday `service_id` alongside a Monday–Thursday one and a Friday-only
+  one, so every weekday is published twice. It holds across National Express
+  West Midlands routes 6, 14, 74 and 97, not just the 74, which is why all 46
+  services shared at the Birmingham stop clusters read 1.6–2.1 times higher in
+  BODS GTFS. Removing the redundant calendars closes **64% of the
+  disagreement** in the seven West Midlands zones among the national top
+  fifteen (285,099 runs to 103,674).
+
+  The national answer, though, is **no — it does not generalise enough to
+  change the baseline**, and the guess above was wrong in two ways. Nationally
+  the pattern covers 385 of BODS GTFS's 12,331 bus routes (3.1%), holding 7.7%
+  of its bus trip-days, and the redundant trip-days are **1.80%** of its bus
+  total. And TNDS has the same pattern, on more routes (798) though less
+  volume: **1.26%**. The net effect is about half a percentage point of the
+  5.4% national gap. So "BODS counts more" does *not* become "BODS counts
+  twice" nationally; it does in the West Midlands, because National Express
+  West Midlands alone contributes 43 routes and 244,864 trip-days of it and
+  those routes converge on the stop clusters that top the zone table. The
+  concentration, not the national share, is what makes it decisive.
 - **Why Saturday differs.** On Saturday BODS runs one service and still shows
   65 of 180 times doubled. Duplication inside a single registration is a third
   mechanism, distinct from the two this report traces, and it is not explained

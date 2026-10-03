@@ -63,7 +63,7 @@ counted first.
 
 |Source              | Published| In window| After exact dedup| Removed exactly|
 |:-------------------|---------:|---------:|-----------------:|---------------:|
-|TNDS (TransXChange) | 1,475,566| 1,211,210|         1,185,335|           2.14%|
+|TNDS (TransXChange) | 1,482,449| 1,218,091|         1,192,216|           2.12%|
 |BODS (GTFS)         | 1,469,864| 1,282,704|         1,208,170|           5.81%|
 
 The table below counts **pairs of trips** by how far apart they are at their
@@ -90,8 +90,8 @@ says whether a given tolerance is discriminating or guessing.
 |1-60s             |              713|                 134|   5.3|
 |61-120s           |              500|               5,132|   0.1|
 |121-180s          |              271|               3,081|   0.1|
-|181-300s          |              405|              15,257|   0.0|
-|301-600s          |            1,085|             177,903|   0.0|
+|181-300s          |              410|              15,257|   0.0|
+|301-600s          |            1,090|             177,906|   0.0|
 
 
 **BODS (GTFS)**
@@ -124,7 +124,7 @@ says whether a given tolerance is discriminating or guessing.
 |90s       |                         1,911|     0.16%|                  1,905|                              270|
 |120s      |                         2,382|     0.20%|                  2,376|                            5,617|
 |180s      |                         2,866|     0.24%|                  2,860|                            9,491|
-|300s      |                         3,240|     0.27%|                  3,234|                           18,575|
+|300s      |                         3,250|     0.27%|                  3,244|                           18,575|
 
 
 **BODS (GTFS)**
@@ -164,8 +164,8 @@ a minute apart. The buses are a quiet minority inside the same numbers.
 |1-60s             |              646|                 134|   4.8|
 |61-120s           |              456|                 110|   4.1|
 |121-180s          |              249|                 130|   1.9|
-|181-300s          |              384|               2,857|   0.1|
-|301-600s          |              851|             127,112|   0.0|
+|181-300s          |              389|               2,857|   0.1|
+|301-600s          |              856|             127,115|   0.0|
 
 
 **BODS (GTFS), buses only (`route_type` 3)**
@@ -273,9 +273,9 @@ Widening from two minutes to five would add these bus services -
 |ARRIVA North East                     |X12  |bus  |         2|    38|
 |LONDON GENERAL TRANSPORT SERVICES LTD |265  |bus  |         2|    20|
 |Arriva Midlands                       |158  |bus  |         2|    16|
+|Hodgson's                             |72   |bus  |         2|    10|
 |Central Connect Transport Ltd         |33   |bus  |         2|     6|
 |ARRIVA North East                     |28A  |bus  |         2|     4|
-|Arriva                                |97A  |bus  |         2|     2|
 
 - at the price of admitting these within-route bus pairs, which the same rule cannot distinguish, and which outnumber them:
 
@@ -315,10 +315,10 @@ operator identity.
 |:-------------------|:---------------------|:---------|-----------------------------:|---------:|
 |TNDS (TransXChange) |agency_name           |0s        |                             6|     0.00%|
 |TNDS (TransXChange) |agency_name           |120s      |                         2,382|     0.20%|
-|TNDS (TransXChange) |agency_name           |300s      |                         3,240|     0.27%|
+|TNDS (TransXChange) |agency_name           |300s      |                         3,250|     0.27%|
 |TNDS (TransXChange) |NOC operator identity |0s        |                             6|     0.00%|
 |TNDS (TransXChange) |NOC operator identity |120s      |                         3,564|     0.30%|
-|TNDS (TransXChange) |NOC operator identity |300s      |                         4,716|     0.40%|
+|TNDS (TransXChange) |NOC operator identity |300s      |                         4,726|     0.40%|
 |BODS (GTFS)         |agency_name           |0s        |                            70|     0.01%|
 |BODS (GTFS)         |agency_name           |120s      |                         8,622|     0.71%|
 |BODS (GTFS)         |agency_name           |300s      |                        14,187|     1.17%|

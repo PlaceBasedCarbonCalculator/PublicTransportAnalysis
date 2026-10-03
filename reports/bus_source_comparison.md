@@ -98,20 +98,20 @@ report.
 
 |Year |Source              | Agencies| Routes| Routes in window| Trips in window| Missing departure times|
 |:----|:-------------------|--------:|------:|----------------:|---------------:|-----------------------:|
-|2022 |TNDS (TransXChange) |      950| 16,513|           16,513|       1,188,241|                       0|
-|2022 |BODS (TransXChange) |      457| 10,116|           10,116|         452,389|                       0|
+|2022 |TNDS (TransXChange) |      950| 16,520|           16,520|       1,189,071|                       0|
+|2022 |BODS (TransXChange) |      457| 10,139|           10,139|         452,778|                       0|
 |2022 |BODS (GTFS)         |      920| 13,526|           13,526|         895,093|                       0|
-|2023 |TNDS (TransXChange) |      910| 15,058|           15,058|       1,196,906|                       0|
-|2023 |BODS (TransXChange) |      500| 11,069|           11,069|         506,599|                       0|
+|2023 |TNDS (TransXChange) |      910| 15,065|           15,065|       1,197,534|                       0|
+|2023 |BODS (TransXChange) |      500| 11,082|           11,082|         507,539|                       0|
 |2023 |BODS (GTFS)         |      879| 12,930|           12,930|         873,299|                       0|
-|2024 |TNDS (TransXChange) |      856| 15,531|           15,531|       1,239,203|                       0|
-|2024 |BODS (TransXChange) |      459| 10,812|           10,812|         513,984|                       0|
+|2024 |TNDS (TransXChange) |      856| 15,551|           15,551|       1,241,821|                       0|
+|2024 |BODS (TransXChange) |      460| 10,827|           10,827|         514,092|                       0|
 |2024 |BODS (GTFS)         |      858| 13,556|           13,556|         914,578|                       0|
-|2025 |TNDS (TransXChange) |      818| 15,898|           15,898|       1,316,897|                       0|
-|2025 |BODS (TransXChange) |      477| 11,749|           11,749|         529,516|                       0|
+|2025 |TNDS (TransXChange) |      818| 15,920|           15,920|       1,318,615|                       0|
+|2025 |BODS (TransXChange) |      479| 11,776|           11,776|         531,100|                       0|
 |2025 |BODS (GTFS)         |      661| 13,743|           13,743|       1,341,279|                       0|
-|2026 |TNDS (TransXChange) |      805| 16,172|           16,172|       1,185,203|                       0|
-|2026 |BODS (TransXChange) |      439| 11,685|           11,685|         449,783|                       0|
+|2026 |TNDS (TransXChange) |      807| 16,366|           16,366|       1,192,084|                       0|
+|2026 |BODS (TransXChange) |      443| 11,696|           11,696|         449,871|                       0|
 |2026 |BODS (GTFS)         |      633| 12,822|           12,822|       1,210,169|                       0|
 
 ## National bus service totals
@@ -135,11 +135,11 @@ because a journey crossing several zones contributes to each.
 
 |Year |        TNDS|   BODS TXC|   BODS GTFS|TNDS vs BODS GTFS |BODS TXC vs BODS GTFS |
 |:----|-----------:|----------:|-----------:|:-----------------|:---------------------|
-|2022 | 192,218,046| 69,467,459| 191,861,067|+0.2%             |-63.8%                |
-|2023 | 187,821,127| 69,380,542| 184,316,305|+1.9%             |-62.4%                |
-|2024 | 189,102,514| 72,452,719| 195,271,287|-3.2%             |-62.9%                |
-|2025 | 191,843,122| 76,102,724| 199,212,058|-3.7%             |-61.8%                |
-|2026 | 190,990,151| 75,347,306| 203,021,824|-5.9%             |-62.9%                |
+|2022 | 192,418,265| 69,525,001| 191,861,067|+0.3%             |-63.8%                |
+|2023 | 187,972,994| 69,573,088| 184,316,305|+2.0%             |-62.3%                |
+|2024 | 189,260,456| 72,460,144| 195,271,287|-3.1%             |-62.9%                |
+|2025 | 191,976,137| 76,345,985| 199,212,058|-3.6%             |-61.7%                |
+|2026 | 191,991,720| 75,373,069| 203,021,824|-5.4%             |-62.9%                |
 
 ![plot of chunk totals-chart](figures/comparison-totals-chart-1.png)
 
@@ -152,21 +152,21 @@ BODS GTFS baseline.
 
 |Year |Comparison            | Pearson r| Spearman rho| Median abs diff (tph)|Zones within 10% |
 |:----|:---------------------|---------:|------------:|---------------------:|:----------------|
-|2022 |TNDS vs BODS GTFS     |     0.983|        0.942|                  0.04|70.3%            |
+|2022 |TNDS vs BODS GTFS     |     0.983|        0.942|                  0.05|70.0%            |
 |2022 |BODS TXC vs BODS GTFS |     0.454|        0.305|                  1.63|26.8%            |
-|2022 |TNDS vs BODS TXC      |     0.456|        0.285|                  2.00|21.2%            |
-|2023 |TNDS vs BODS GTFS     |     0.980|        0.919|                  0.06|67.3%            |
-|2023 |BODS TXC vs BODS GTFS |     0.444|        0.282|                  1.47|29.1%            |
-|2023 |TNDS vs BODS TXC      |     0.446|        0.284|                  1.88|22.3%            |
-|2024 |TNDS vs BODS GTFS     |     0.990|        0.969|                  0.04|73.8%            |
-|2024 |BODS TXC vs BODS GTFS |     0.478|        0.334|                  1.66|28.2%            |
-|2024 |TNDS vs BODS TXC      |     0.458|        0.307|                  1.83|22.0%            |
-|2025 |TNDS vs BODS GTFS     |     0.980|        0.965|                  0.04|70.3%            |
-|2025 |BODS TXC vs BODS GTFS |     0.488|        0.345|                  1.69|25.6%            |
-|2025 |TNDS vs BODS TXC      |     0.440|        0.304|                  1.86|20.0%            |
-|2026 |TNDS vs BODS GTFS     |     0.977|        0.959|                  0.00|74.0%            |
+|2022 |TNDS vs BODS TXC      |     0.456|        0.286|                  2.01|21.1%            |
+|2023 |TNDS vs BODS GTFS     |     0.980|        0.919|                  0.07|66.9%            |
+|2023 |BODS TXC vs BODS GTFS |     0.447|        0.286|                  1.47|29.2%            |
+|2023 |TNDS vs BODS TXC      |     0.449|        0.289|                  1.89|22.2%            |
+|2024 |TNDS vs BODS GTFS     |     0.990|        0.970|                  0.04|73.8%            |
+|2024 |BODS TXC vs BODS GTFS |     0.478|        0.334|                  1.66|28.1%            |
+|2024 |TNDS vs BODS TXC      |     0.458|        0.309|                  1.84|21.8%            |
+|2025 |TNDS vs BODS GTFS     |     0.980|        0.967|                  0.04|70.3%            |
+|2025 |BODS TXC vs BODS GTFS |     0.489|        0.345|                  1.68|25.7%            |
+|2025 |TNDS vs BODS TXC      |     0.441|        0.306|                  1.86|20.1%            |
+|2026 |TNDS vs BODS GTFS     |     0.977|        0.963|                  0.00|75.4%            |
 |2026 |BODS TXC vs BODS GTFS |     0.513|        0.363|                  1.71|28.0%            |
-|2026 |TNDS vs BODS TXC      |     0.463|        0.330|                  1.63|26.5%            |
+|2026 |TNDS vs BODS TXC      |     0.463|        0.332|                  1.67|26.4%            |
 
 ![plot of chunk agreement-chart](figures/comparison-agreement-chart-1.png)
 
@@ -180,21 +180,21 @@ country-level coverage is where the sources should differ most.
 
 |Year |Country  |  Zones| TNDS mean tph| BODS TXC mean tph| BODS GTFS mean tph| TNDS zero-service zones| BODS TXC zero-service zones| BODS GTFS zero-service zones|
 |:----|:--------|------:|-------------:|-----------------:|------------------:|-----------------------:|---------------------------:|----------------------------:|
-|2022 |England  | 32,424|         10.14|              4.28|              10.14|                       0|                           0|                            0|
-|2022 |Scotland |  6,548|          6.53|              0.00|               6.71|                       0|                           1|                            0|
-|2022 |Wales    |  1,878|          6.21|              1.81|               5.03|                       0|                           0|                            0|
-|2023 |England  | 32,375|          9.90|              4.27|               9.68|                       0|                           0|                            0|
-|2023 |Scotland |  6,546|          6.57|              0.01|               6.60|                       0|                           0|                            0|
-|2023 |Wales    |  1,881|          5.33|              1.93|               5.01|                       0|                           0|                            0|
-|2024 |England  | 32,391|         10.08|              4.43|              10.43|                       0|                           0|                            0|
-|2024 |Scotland |  6,542|          5.93|              0.01|               5.93|                       0|                           0|                            0|
-|2024 |Wales    |  1,881|          5.15|              2.09|               5.84|                       0|                           0|                            0|
-|2025 |England  | 32,441|         10.10|              4.65|              10.57|                       0|                           0|                            0|
+|2022 |England  | 32,424|         10.16|              4.29|              10.14|                       0|                           0|                            0|
+|2022 |Scotland |  6,548|          6.50|              0.00|               6.71|                       0|                           1|                            0|
+|2022 |Wales    |  1,878|          6.29|              1.81|               5.03|                       0|                           0|                            0|
+|2023 |England  | 32,389|          9.90|              4.28|               9.67|                       0|                           0|                            0|
+|2023 |Scotland |  6,546|          6.55|              0.01|               6.60|                       0|                           0|                            0|
+|2023 |Wales    |  1,881|          5.42|              1.93|               5.01|                       0|                           0|                            0|
+|2024 |England  | 32,390|         10.09|              4.43|              10.43|                       0|                           0|                            0|
+|2024 |Scotland |  6,542|          5.92|              0.01|               5.93|                       0|                           0|                            0|
+|2024 |Wales    |  1,881|          5.19|              2.09|               5.84|                       0|                           0|                            0|
+|2025 |England  | 32,439|         10.11|              4.66|              10.57|                       0|                           0|                            0|
 |2025 |Scotland |  6,522|          6.50|              0.00|               6.49|                       0|                           1|                            0|
-|2025 |Wales    |  1,882|          5.27|              2.13|               4.95|                       0|                           0|                            0|
-|2026 |England  | 32,407|         10.13|              4.61|              10.87|                       0|                           0|                            0|
+|2025 |Wales    |  1,882|          5.28|              2.14|               4.95|                       0|                           0|                            0|
+|2026 |England  | 32,412|         10.19|              4.61|              10.87|                       0|                           0|                            0|
 |2026 |Scotland |  6,539|          6.12|              0.00|               6.11|                       0|                           1|                            0|
-|2026 |Wales    |  1,884|          4.90|              2.06|               4.94|                       0|                           0|                            0|
+|2026 |Wales    |  1,884|          4.94|              2.06|               4.94|                       0|                           0|                            0|
 
 ## What the sources actually disagree about
 
@@ -220,11 +220,11 @@ stricter measure than the zone-level departure counts above.
 
 |Year | Matched services| In all three sources| TNDS only| BODS TXC only| BODS GTFS only|
 |:----|----------------:|--------------------:|---------:|-------------:|--------------:|
-|2022 |           17,232|                6,821|     1,014|           265|             99|
-|2023 |           15,997|                6,621|     1,114|           145|            127|
-|2024 |           16,217|                7,605|       938|            29|            172|
-|2025 |           15,952|                8,138|     1,314|            42|            124|
-|2026 |           20,379|                6,083|       747|           737|            145|
+|2022 |           17,230|                6,834|     1,014|           263|             97|
+|2023 |           16,007|                6,628|     1,118|           144|            124|
+|2024 |           16,222|                7,619|       940|            29|            168|
+|2025 |           15,969|                8,156|     1,316|            42|            124|
+|2026 |           20,417|                6,159|       761|           737|            130|
 
 ### Missing services, or different frequencies?
 
@@ -236,11 +236,11 @@ differently.
 
 |Year | Services in both| TNDS-only services| BODS GTFS-only services| Journeys on TNDS-only services| Journeys on BODS GTFS-only services| Net difference on shared services| Total gap (TNDS - BODS GTFS)|
 |:----|----------------:|------------------:|-----------------------:|------------------------------:|-----------------------------------:|---------------------------------:|----------------------------:|
-|2022 |           11,841|              1,425|                     727|                        485,595|                             308,007|                           -88,288|                       89,300|
-|2023 |           10,981|              1,638|                   1,041|                        584,316|                             397,596|                            33,364|                      220,084|
-|2024 |           11,807|              1,020|                   1,026|                        297,010|                             336,409|                          -367,304|                     -406,703|
-|2025 |           11,711|              1,352|                     832|                        269,852|                             169,133|                          -507,318|                     -406,599|
-|2026 |            9,316|                803|                     562|                        196,931|                             250,439|                          -566,151|                     -619,659|
+|2022 |           11,854|              1,427|                     714|                        486,799|                             295,114|                           -87,170|                      104,515|
+|2023 |           10,990|              1,645|                   1,032|                        588,944|                             392,056|                            34,018|                      230,906|
+|2024 |           11,823|              1,022|                   1,010|                        297,458|                             324,325|                          -367,765|                     -394,632|
+|2025 |           11,728|              1,354|                     815|                        270,128|                             151,793|                          -516,175|                     -397,840|
+|2026 |            9,411|                817|                     471|                        199,863|                             195,463|                          -559,525|                     -555,125|
 
 ![plot of chunk exclusive-chart](figures/comparison-exclusive-chart-1.png)
 
@@ -262,13 +262,13 @@ other. Requiring the operator to match as well keeps generic terminal names
 
 |Year | Paired services| ...with identical counts| ...with no TNDS route number| TNDS journeys involved| BODS GTFS journeys involved|Share of TNDS-only journeys |Share of BODS GTFS-only journeys |
 |:----|---------------:|------------------------:|----------------------------:|----------------------:|---------------------------:|:---------------------------|:--------------------------------|
-|2022 |              94|                       89|                            0|                 74,140|                      73,905|15.3%                       |24.0%                            |
-|2023 |              88|                       76|                            0|                 70,029|                      70,000|12.0%                       |17.6%                            |
-|2024 |             113|                       97|                            0|                 95,298|                      96,182|32.1%                       |28.6%                            |
-|2025 |              61|                       50|                            0|                 50,862|                      50,514|18.8%                       |29.9%                            |
-|2026 |              28|                       21|                            0|                 33,536|                      33,123|17.0%                       |13.2%                            |
+|2022 |              94|                       89|                            0|                 74,140|                      73,905|15.2%                       |25.0%                            |
+|2023 |              88|                       76|                            0|                 70,029|                      70,000|11.9%                       |17.9%                            |
+|2024 |             113|                       97|                            0|                 95,298|                      96,182|32.0%                       |29.7%                            |
+|2025 |              61|                       50|                            0|                 50,862|                      50,514|18.8%                       |33.3%                            |
+|2026 |              27|                       21|                            0|                 32,772|                      32,363|16.4%                       |16.6%                            |
 
-This is a persistent, material share of the apparent gap, present in every year of the series: 12.0%-32.1% of the journeys attributed to TNDS-only services and 13.2%-29.9% of those attributed to BODS GTFS-only services belong to a service the *other* source also carries, under a different name. In 2026, 21 of the 28 pairs match to the journey, which puts them beyond reasonable doubt, and 0 of them have no route number in TNDS at all.
+This is a persistent, material share of the apparent gap, present in every year of the series: 11.9%-32.0% of the journeys attributed to TNDS-only services and 16.6%-33.3% of those attributed to BODS GTFS-only services belong to a service the *other* source also carries, under a different name. In 2026, 21 of the 27 pairs match to the journey, which puts them beyond reasonable doubt, and 0 of them have no route number in TNDS at all.
 
 
 Table: Largest services counted as exclusive to both sources at once, 2026
@@ -288,7 +288,7 @@ Table: Largest services counted as exclusive to both sources at once, 2026
 |East Beach           |Leigh-on-Sea Railway Station |99          |         1,008|99OT             |              1,008|Ensign Bus           |
 |Woodthorpe Shops     |Woodthorpe Shops             |12          |           824|Y12              |                824|East Yorkshire       |
 
-Two naming habits produce these pairs, and they carry very different weight. In 2026, TNDS holds the longer name in 11 pairs and the shorter one in 14, with 0 carrying no number at all. One habit is a marketing name or local variant against a bare code - `one`/`1`, `mln`/`RM`, `sky`/`SN`, each agreeing on journeys to within 5%. The other is school-service prefixes and suffixes (`S458`/`458`, `807D`/`808`), a long tail of tiny services: it is why **trentbarton** contributes both the most pairs (8) and the most journeys (20,008 of 33,536).
+Two naming habits produce these pairs, and they carry very different weight. In 2026, TNDS holds the longer name in 11 pairs and the shorter one in 14, with 0 carrying no number at all. One habit is a marketing name or local variant against a bare code - `one`/`1`, `mln`/`RM`, `sky`/`SN`, each agreeing on journeys to within 5%. The other is school-service prefixes and suffixes (`S458`/`458`, `807D`/`808`), a long tail of tiny services: it is why **trentbarton** contributes both the most pairs (8) and the most journeys (20,008 of 32,772).
 
 One caveat on reading the table: where an operator runs many routes between
 the same pair of generic terminals, the *aggregate* is sound but an individual
@@ -316,11 +316,11 @@ number of journeys?
 
 |Year | Shared services|Within 2% |Within 10% |Differ by more than 50% |Median absolute difference |
 |:----|---------------:|:---------|:----------|:-----------------------|:--------------------------|
-|2022 |          11,841|85.7%     |89.0%      |3.4%                    |0.0%                       |
-|2023 |          10,981|82.0%     |86.2%      |3.5%                    |0.0%                       |
-|2024 |          11,807|77.9%     |81.9%      |2.7%                    |0.0%                       |
-|2025 |          11,711|75.8%     |80.0%      |4.0%                    |0.0%                       |
-|2026 |           9,316|83.6%     |87.9%      |3.3%                    |0.0%                       |
+|2022 |          11,854|85.5%     |88.8%      |3.5%                    |0.0%                       |
+|2023 |          10,990|81.8%     |86.0%      |3.6%                    |0.0%                       |
+|2024 |          11,823|77.8%     |81.8%      |2.8%                    |0.0%                       |
+|2025 |          11,728|75.7%     |80.0%      |4.1%                    |0.0%                       |
+|2026 |           9,411|83.6%     |88.0%      |3.3%                    |0.0%                       |
 
 #### The age of a snapshot relative to its window
 
@@ -344,23 +344,23 @@ its trips as expiring, which says nothing about the timetable.
 
 |Year |Source              |Window ends |Feed ends  |Horizon    | Bus trips| Ending early| Runs, early| Runs, lasting| Journeys counted| If none expired|
 |:----|:-------------------|:-----------|:----------|:----------|---------:|------------:|-----------:|-------------:|----------------:|---------------:|
-|2022 |TNDS (TransXChange) |2022-11-27  |2022-12-17 |2022-11-27 | 1,315,609|        21.4%|        0.91|          9.00|        9,567,760|      10,012,498|
-|2022 |BODS (TransXChange) |2022-11-27  |2022-12-03 |2022-11-27 |   468,419|        14.0%|        2.59|          9.36|        3,938,320|       4,167,431|
+|2022 |TNDS (TransXChange) |2022-11-27  |2022-12-17 |2022-11-27 | 1,317,338|        21.4%|        0.91|          9.00|        9,582,975|      10,031,589|
+|2022 |BODS (TransXChange) |2022-11-27  |2022-12-03 |2022-11-27 |   468,834|        14.1%|        2.59|          9.36|        3,941,527|       4,171,595|
 |2022 |BODS (GTFS)         |2022-11-27  |2023-07-21 |2022-11-27 |   890,243|         6.4%|        1.42|         11.30|        9,478,460|       9,682,551|
-|2023 |TNDS (TransXChange) |2023-11-26  |2023-12-16 |2023-11-26 | 1,170,642|        16.8%|        2.88|          8.94|        9,277,309|      10,067,139|
-|2023 |BODS (TransXChange) |2023-11-26  |2023-12-02 |2023-11-26 |   519,413|        20.7%|        2.34|          9.00|        3,956,002|       4,637,712|
+|2023 |TNDS (TransXChange) |2023-11-26  |2023-12-16 |2023-11-26 | 1,172,140|        16.9%|        2.90|          8.94|        9,288,131|      10,082,833|
+|2023 |BODS (TransXChange) |2023-11-26  |2023-12-02 |2023-11-26 |   521,168|        20.8%|        2.32|          8.99|        3,963,011|       4,644,721|
 |2023 |BODS (GTFS)         |2023-11-26  |2024-07-19 |2023-11-26 |   856,501|        10.7%|        4.19|         11.35|        9,057,225|       9,540,037|
-|2024 |TNDS (TransXChange) |2024-11-03  |2024-11-18 |2024-11-03 | 1,255,663|        24.3%|        3.42|          8.76|        9,368,731|       9,915,949|
-|2024 |BODS (TransXChange) |2024-11-03  |2024-11-07 |2024-11-03 |   520,860|        17.8%|        4.72|          8.72|        4,171,344|       4,407,494|
+|2024 |TNDS (TransXChange) |2024-11-03  |2024-11-18 |2024-11-03 | 1,258,137|        24.4%|        3.42|          8.76|        9,380,802|       9,938,253|
+|2024 |BODS (TransXChange) |2024-11-03  |2024-11-07 |2024-11-03 |   520,968|        17.8%|        4.72|          8.72|        4,172,735|       4,408,895|
 |2024 |BODS (GTFS)         |2024-11-03  |2025-06-27 |2024-11-03 |   878,614|         6.2%|        9.50|         11.24|        9,775,434|       9,996,734|
-|2025 |TNDS (TransXChange) |2025-11-02  |2025-11-17 |2025-11-02 | 1,272,241|        23.7%|        3.98|          8.56|        9,513,888|      10,315,162|
-|2025 |BODS (TransXChange) |2025-11-02  |2025-11-06 |2025-11-02 |   542,876|        22.4%|        4.82|          8.94|        4,353,596|       4,674,646|
+|2025 |TNDS (TransXChange) |2025-11-02  |2025-11-17 |2025-11-02 | 1,273,885|        23.7%|        3.97|          8.56|        9,522,647|      10,333,746|
+|2025 |BODS (TransXChange) |2025-11-02  |2025-11-06 |2025-11-02 |   544,760|        22.4%|        4.81|          8.94|        4,366,962|       4,688,358|
 |2025 |BODS (GTFS)         |2025-11-02  |2125-09-28 |2025-11-02 | 1,263,811|         8.7%|        3.81|          8.28|        9,920,487|      10,386,761|
-|2026 |TNDS (TransXChange) |2026-08-23  |2026-09-09 |2026-08-23 | 1,321,834|        18.1%|        1.06|          8.43|        9,382,018|       9,675,968|
-|2026 |BODS (TransXChange) |2026-08-23  |2026-08-25 |2026-08-23 |   469,832|        10.9%|        1.22|         10.13|        4,303,720|       4,464,171|
+|2026 |TNDS (TransXChange) |2026-08-23  |2026-09-09 |2026-08-23 | 1,328,717|        18.0%|        1.06|          8.44|        9,446,552|       9,743,392|
+|2026 |BODS (TransXChange) |2026-08-23  |2026-08-25 |2026-08-23 |   469,922|        10.9%|        1.22|         10.13|        4,304,840|       4,465,291|
 |2026 |BODS (GTFS)         |2026-08-23  |2027-08-02 |2026-08-23 | 1,288,523|         6.2%|        3.58|          8.24|       10,001,677|      10,316,166|
 
-In TNDS the share of bus trips ending before the horizon ranges from **16.8% in 2023** up to **24.3% in 2024**. In that worst year they average 3.42 runs against 8.76 for the trips that last to the horizon, and scaling them up would lift the TNDS total from 9,368,731 to about 9,915,949 journeys — a shortfall of **547,218**, against a measured gap to BODS GTFS of 406,703. The expiry is concentrated on a few dates rather than spread through the window — in 2024, 2024-10-26 (105,674 trips); 2024-11-02 (36,918 trips) — which is the signature of collective re-registration rather than of services being withdrawn one by one.
+In TNDS the share of bus trips ending before the horizon ranges from **16.9% in 2023** up to **24.4% in 2024**. In that worst year they average 3.42 runs against 8.76 for the trips that last to the horizon, and scaling them up would lift the TNDS total from 9,380,802 to about 9,938,253 journeys — a shortfall of **557,451**, against a measured gap to BODS GTFS of 394,632. The expiry is concentrated on a few dates rather than spread through the window — in 2024, 2024-10-26 (105,680 trips); 2024-11-02 (36,918 trips) — which is the signature of collective re-registration rather than of services being withdrawn one by one.
 
 The DfT's BODS GTFS is not immune to the same measure (6.2%-10.7%), which is worth knowing before reading it as the stable baseline, though it is a continuously updated feed rather than a dated registration snapshot, so the two are not measuring quite the same thing.
 
@@ -417,13 +417,13 @@ Table: Busiest services in BODS GTFS but absent from TNDS, 2026
 |1     |trentbarton                           |Victoria Bus Station       |Victoria Bus Station       |              5,040|             5,040|
 |RM    |trentbarton                           |Friar Lane                 |Swallow Drive              |              4,516|             4,516|
 |12    |Arriva Wales                          |Rhyl Bus Station Stand A   |Rhyl Bus Station Stand D   |              4,156|               300|
-|6     |Arriva Beds and Bucks                 |Buttermere Close           |Buttermere Close           |              4,124|                 0|
 |100   |Metrobus                              |Oriel School               |Oriel School               |              3,728|               332|
 |2     |Metrobus                              |Yewlands Walk              |Yewlands Walk              |              3,676|               288|
 |HE    |Go Ahead Luton Parkway                |HereEast / The Yard        |HereEast / The Yard        |              3,620|                60|
 |C     |Fastrack (Arriva Kent Thameside)      |Manor Way Roundabout       |Manor Way Roundabout       |              3,363|             2,295|
 |X30   |First Essex                           |Bus Station                |Coach Station              |              3,290|             1,832|
 |20    |Brighton & Hove Bus and Coach Company |Stonehurst Court           |Stonehurst Court           |              3,287|               341|
+|20    |Metrobus                              |Orchard Drive              |Orchard Drive              |              3,272|               376|
 
 
 Table: Largest journey-count disagreements on services both sources carry, 2026
@@ -448,11 +448,11 @@ Table: Largest journey-count disagreements on services both sources carry, 2026
 
 ## Interpretation
 
-- Across 2022-2026 the TNDS bus total runs between -5.9% and +1.9% of the BODS GTFS total, and the BODS TransXChange total between -63.8% and -61.8%.
-- Per-zone agreement with BODS GTFS is stable across the series: Pearson r ranges 0.977-0.990 for TNDS and 0.444-0.513 for BODS TransXChange.
-- Of TNDS bus journeys, 2.1%-6.3% sit on services BODS GTFS does not carry at all; of BODS GTFS journeys, 1.7%-4.4% sit on services TNDS does not carry.
-- Where both sources carry a service, 80.0%-89.0% of services agree on the 28-day journey count to within 10%.
-- Agreement on shared services is weakest in **2025** (median difference 0.0%, 75.8% of services within 2%) against 77.9%-85.7% within 2% in the other years. In that window 23.7% of TNDS bus trips sit on calendars ending before it does, which is the largest single identified contributor.
+- Across 2022-2026 the TNDS bus total runs between -5.4% and +2.0% of the BODS GTFS total, and the BODS TransXChange total between -63.8% and -61.7%.
+- Per-zone agreement with BODS GTFS is stable across the series: Pearson r ranges 0.977-0.990 for TNDS and 0.447-0.513 for BODS TransXChange.
+- Of TNDS bus journeys, 2.1%-6.3% sit on services BODS GTFS does not carry at all; of BODS GTFS journeys, 1.5%-4.3% sit on services TNDS does not carry.
+- Where both sources carry a service, 80.0%-88.8% of services agree on the 28-day journey count to within 10%.
+- Agreement on shared services is weakest in **2025** (median difference 0.0%, 75.7% of services within 2%) against 77.8%-85.5% within 2% in the other years. In that window 23.7% of TNDS bus trips sit on calendars ending before it does, which is the largest single identified contributor.
 - The measured differences above are upper bounds on two counts: route matching cannot link a service the two sources number differently (see the paired-services table), and a TNDS figure is service *as registered at the snapshot date*, not service operated across the window.
 
 ### Why the sources differ
@@ -476,15 +476,26 @@ Table: Largest journey-count disagreements on services both sources carry, 2026
   the analysis date. Beyond that, every feed of every source passes through
   `UK2GTFS::gtfs_deduplicate()` before it is counted, which removes a journey
   the feed describes twice on the same day. On the July 2026 snapshots that is
-  5.2% of the DfT GTFS's trips and 1.6% of TNDS's.
+  5.2% of the DfT GTFS's trips and 2.3% of TNDS's.
 
 <!-- Those two rates are measured, not derived from any target, so they go
      stale when a feed is reconverted. To re-measure: read each July 2026 feed
      exactly as read_feed() does (gtfs_read, drop shapes, drop stops with no
      stop_lon, gtfs_clean) and compare nrow(trips) before and after
-     gtfs_deduplicate(). Last measured 2026-08-08 on the reconverted feeds:
-     TNDS 23,711 of 1,483,772 (1.6%); DfT GTFS 77,151 of 1,469,864 (5.2%),
-     against 47,242 (3.2%) with match_block = TRUE and
+     gtfs_deduplicate().
+
+     TNDS re-measured 2026-10-03 after the ServiceCode/operator-key
+     reconversion of 2026-10-02: 34,668 of 1,482,449 (2.34%), up from
+     23,711 of 1,483,772 (1.60%) on 2026-08-08. The rise is a consequence of
+     the fix rather than a regression - recovering the registrations that the
+     ServiceCode collision had deleted also restored duplicate copies of some
+     of them, and gtfs_deduplicate() is now removing those. The residual after
+     removal stayed flat (TNDS duplicate runs 2,896 -> 2,920 in
+     lsoa_disagreement.md), which is what says the extra duplicates are being
+     caught rather than counted.
+
+     DfT GTFS unchanged at 77,151 of 1,469,864 (5.2%) - that feed was not
+     reconverted - against 47,242 (3.2%) with match_block = TRUE and
      match_operator = "agency_id". -->
 
 

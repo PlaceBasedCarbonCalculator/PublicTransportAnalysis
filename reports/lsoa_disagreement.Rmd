@@ -778,6 +778,78 @@ a journey, a two-minute difference in how long the bus is recorded as standing
 at its origin before departing makes the two copies different journeys, and
 both are kept. Nothing a passenger could observe differs between them.
 
+### The West Midlands cluster: overlapping weekday calendars in BODS GTFS
+
+Seven of the fifteen zones where BODS GTFS counts most are one cluster —
+Birmingham city centre (Church Centre, Albert Street, Moor St Selfridges,
+Markets), Wolverhampton, West Bromwich and Chelmsley — and together they hold
+**285,099 runs of disagreement**, more than a quarter of the disagreement in
+all 60 zones investigated. Every one of them carried the verdict "unresolved",
+because the journey counts and the days-per-journey both differ. The mechanism
+is now measured, and it is in BODS GTFS.
+
+The signature is visible in the zone's route table: it is not one rogue
+service but *every* service. In E01033620, route 6 reads 10,952 runs in BODS
+GTFS against 5,256 in TNDS, route 74 13,592 against 8,224, route 14 10,096
+against 5,440 — a ratio between 1.6 and 2.1 for all 46 services the two share.
+A whole stop cluster reading roughly double is a publishing pattern, not a
+timetable.
+
+**What BODS GTFS does** (verified against `calendar.txt` and `trips.txt`,
+October 2026). For National Express West Midlands routes it carries five
+weekday calendars over one identical date span, 2026-07-26 to 2027-04-26:
+
+| `service_id` | Days | Route 74 trips |
+|---|---|---|
+| `90` | Monday–Friday | 417 |
+| `3194` | Monday–Thursday | 419 |
+| `1863` | Friday only | 422 |
+| `367` | Saturday | 434 |
+| `365` | Sunday | 352 |
+
+`90` already covers Monday to Friday, so `3194` and `1863` are a second,
+complete copy of the weekday timetable. Monday to Thursday runs 417 + 419
+times, Friday 417 + 422 — about twice the real service. The same five-calendar
+pattern holds on routes 6, 14 and 97, which is why the doubling is uniform
+across the zone.
+
+`gtfs_deduplicate()` cannot see it because the two registrations are not
+identical journey for journey — they share only 103 of 535 itineraries
+exactly — so the residual-duplication measure reports Birmingham at 0.9%, and
+the zone is thrown into "unresolved" rather than faulted.
+
+**How much it explains.** Treating a Monday–Thursday or Friday-only calendar
+as redundant wherever the same route and date span also carries a
+Monday–Friday one, and removing those trip-days from the BODS side:
+
+| Zone | Locality | TNDS | BODS GTFS | BODS adjusted | Gap before | Gap after |
+|---|---|---|---|---|---|---|
+| E01033620 | Church Centre | 134,556 | 208,620 | 162,191 | -74,064 | -27,635 |
+| E01033617 | Albert Street | 100,336 | 151,028 | 130,443 | -50,692 | -30,107 |
+| E01033561 | Moor St Selfridges | 81,536 | 122,344 | 89,676 | -40,808 | -8,140 |
+| E01033615 | Markets | 65,888 | 100,304 | 77,660 | -34,416 | -11,772 |
+| E01034313 | Wolverhampton Bus Stn | 67,926 | 100,521 | 75,288 | -32,595 | -7,362 |
+| E01010102 | West Bromwich Bus Stn | 60,306 | 88,662 | 75,389 | -28,356 | -15,083 |
+| E01010125 | Chelmsley Interchange | 33,288 | 57,456 | 36,863 | -24,168 | -3,575 |
+
+**That removes 64% of the cluster's disagreement** (285,099 runs to 103,674),
+and in four of the seven zones more than three-quarters of it. For these
+zones TNDS is the source to believe.
+
+**But this is not a BODS-only defect, and the national arithmetic is smaller
+than the zone arithmetic suggests.** Nationally, 385 of BODS GTFS's 12,331 bus
+routes (3.1%) carry an overlapping weekday pair on one date span, holding 7.7%
+of its bus trip-days; the redundant trip-days are **1.80% of the BODS bus
+total**. TNDS has the same pattern on *more* routes (798) but less volume —
+**1.26%**. So the pattern accounts for about half a percentage point of the
+5.4% national gap, not the bulk of it. What makes it decisive here rather than
+nationally is its concentration: National Express West Midlands alone
+contributes 43 routes and 244,864 trip-days of it, and those routes converge
+on exactly the stop clusters that top this table. The other operators
+affected, in order of volume, are Bee Network, Stagecoach South, Stagecoach
+Oxfordshire, Stagecoach West, trentbarton, Arriva London North and Reading
+Buses.
+
 ### The verdicts, zone by zone
 
 `Journeys` and `Days each` are the two factors of the run total; `Dup.` is the
@@ -943,12 +1015,30 @@ for (m in mech) {
 One of those cases was checked against the feeds directly, because "missing
 service" is the verdict most easily faked by a failure of the route matching.
 **Metrobus around Crawley and Gatwick, 26 July 2026 snapshots** (verified
-against `routes.txt` and `trips.txt`, October 2026): BODS GTFS carries
-Metrobus routes 1, 2, 10 and 100 — the Crawley town network — and TNDS carries
-**none of those four route numbers under Metrobus at all**, so no matching
-rule could have paired them. The numbers TNDS does share with BODS there (3,
-4, 5, 20 and 400) hold between 12 and 26 journeys each, against a full
-timetable on the BODS side. The absence is in the feed, not in the comparison.
+against `routes.txt`, `trips.txt` and `calendar.txt`, October 2026). Before
+the `ServiceCode` fix in `UK2GTFS` (see below), TNDS carried **none of the
+Crawley town network's route numbers under Metrobus at all**, so no matching
+rule could have paired them. The fix recovered the route numbers but not the
+timetables, and the distinction matters:
+
+- **Three services were recovered whole**: in E01031585 (Crawley Bus Station)
+  routes **1, 21 and 281 now agree with BODS GTFS exactly** — 2,120, 308 and
+  612 runs against 2,120, 308 and 612. Agreement to the run, on services that
+  previously read zero, is as strong a confirmation of the fix as this report
+  contains.
+- **Eight are still effectively absent.** Routes 2, 3, 4, 5, 10, 20, 100 and
+  400 now exist in TNDS, with calendars spanning the window (2026-06-11 to
+  2026-09-09) and plausible itineraries, but they carry a fraction of the BODS
+  journey count — route 10 holds 165 trips against 989, route 100 63 against
+  503, route 2 37 against 490 — and **not one of their journeys touches the
+  Crawley Bus Station or Gatwick North Terminal zones**, so both zones still
+  read zero for all eight. They are stubs of the registration, not the
+  network.
+
+So TNDS has gone from carrying none of this network to carrying part of it,
+and the residual gap — 22,492 runs in E01031585 and 23,924 in E01031575 — is
+still an absence in the feed rather than a failure of the comparison. BODS
+GTFS is the source to believe for Crawley and Gatwick.
 
 ### The ratios give one mechanism away by themselves
 
@@ -1164,12 +1254,17 @@ cat(sprintf(paste0(
   nrow(disagree), nrow(nb), nrow(tenfold),
   paste(tolower(tenfold$mode), collapse = " and ")))
 if (nrow(agree)) {
+  # Name the agreeing modes from the data rather than in prose: ferry sat in
+  # this sentence until October 2026, when the stop-identity shift described
+  # below moved it to a ratio of 1.27 and left the clause contradicting the
+  # table directly above it.
   cat(sprintf(paste0(
-    "The modes that agree are %s — within a tenth on run totals, which for ",
-    "ferry and the one aerial lift means the two feeds are rendering the same ",
-    "source data compatibly.\n\n"),
+    "The modes that agree are %s — within a tenth on run totals, which means ",
+    "that for %s the two feeds are rendering the same source data ",
+    "compatibly.\n\n"),
     paste(sprintf("**%s** (ratio %.2f)", tolower(agree$mode), agree$ratio),
-          collapse = ", ")))
+          collapse = ", "),
+    paste(tolower(agree$mode), collapse = " and ")))
 }
 ```
 
@@ -1327,6 +1422,52 @@ if (nrow(co)) {
     "registered as local bus services.\n\n"))
 }
 ```
+
+### Ferry, and a stop-identity defect that moves it 27%
+
+Ferry is the one mode whose figure moved for a reason that has nothing to do
+with ferries. Between the September and October 2026 editions TNDS's ferry
+total went from 88,286 runs to 112,149 — a ratio against BODS GTFS of 1.00
+becoming 1.27 — while **the ferry content of the feed did not change at all**:
+the same 567 routes, the same 16,673 trips, the same 106,115 trip-days, the
+same 257 stop ids, and no residual duplication in either edition.
+
+What changed is where some of those stops are. Comparing the two merged feeds
+stop by stop, **91 stops moved by more than half a metre, 35 by more than
+50 m, and 16 by more than 200 m**; in 14 of those 16 the `stop_name` changed
+as well. The extremes are not boundary cases:
+
+| `stop_id` | September name and position | October name and position | Moved |
+|---|---|---|---|
+| `1100DEA11988` | Start Point Car Park, 50.226 N 3.655 W | Mannings Way, 51.091 N 4.063 W | 100 km |
+| `1100DEA11989` | Village Green, 50.215 N 3.710 W | Spry Lane, 50.644 N 4.269 W | 62 km |
+| `9400ZZLUBNK8` | Haste Hill (Ruislip Lido Railway) | Bank Underground Station | 25 km |
+| `9300GUR` | Gourock Ferry Terminal | Gourock Ferry Terminal | 300 m |
+
+So one `stop_id` is being defined by more than one source file, with different
+names and different coordinates, and which definition reaches the merged feed
+depends on which files survive `txc_filter_files()`. The `ServiceCode` fix
+changed that set, so 91 stops flipped definition. `9400ZZLUBNK8` is the case
+that shows the direction of travel: it is a NaPTAN London Underground code for
+Bank, and the October value is the correct one — the September feed had it in
+Ruislip.
+
+Ferry is hit out of all proportion to its size: **27.6% of ferry stops moved,
+against 0.0% of bus stops** (19 of 314,584). Two things cause that. Ferry
+terminals are published both by the ferry operator and by the local authority
+whose buses call there, so they are among the stops most likely to carry two
+definitions; and they sit on coastlines, where LSOA boundaries follow the
+shore, so a shift of a few hundred metres moves a terminal into a different
+zone or out of all of them. Of the 21 ferry zones whose counts changed, five
+Scottish zones moved **onto** the BODS figure exactly, and eight English zones
+in Devon and the Solent gained a whole service each.
+
+Two conclusions follow, and the second is the uncomfortable one. The October
+ferry figure is built on better stop positions than the September one. But
+**neither figure is reproducible from the ferry data alone** — it depends on
+which bus files happened to survive filtering elsewhere in the same feed — so
+the ferry series should not be read as a trend until stop identity is resolved
+at source. The bus series, at 19 stops of 314,584, is unaffected.
 
 ### The Nottingham tram, and what the mode fixes changed
 
