@@ -115,7 +115,7 @@ kt(w, caption = "Trips per system per year, bus-side feeds")
 ## 2. Is any line published as more than one live copy?
 
 The defect that started this work. For each line and each date inside the
-28-day counting window: how many journeys all live copies claim between them,
+counting window: how many journeys all live copies claim between them,
 against how many the single largest copy claims alone. The difference is
 service that exists only because the same timetable was published twice.
 

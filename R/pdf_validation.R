@@ -68,7 +68,7 @@ validation_routes <- function() {
     # schedules do differ - Bh is 191 against 233 for a normal Monday to
     # Thursday - and 31 August now falls inside the `bankhol` window, so
     # they are testable in principle. What is still missing is the
-    # comparison: feed_route_departures() totals a whole 28-day window, in
+    # comparison: feed_route_departures() totals a whole study window, in
     # which one substituted day is well inside the noise. Using them needs
     # per-date counts rather than another document.
 

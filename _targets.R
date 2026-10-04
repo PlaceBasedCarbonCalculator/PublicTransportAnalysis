@@ -1,4 +1,4 @@
-# targets pipeline: public transport frequency per LSOA, 2004-2025.
+# targets pipeline: public transport frequency per LSOA, 2004-2026.
 #
 # Main outputs: data/trips_per_lsoa21_22_by_mode_<year>.Rds, consumed by the
 # PlaceBasedCarbonCalculator build pipeline (../build, `pt_frequency` target).
@@ -43,7 +43,7 @@ for (f in list.files("R", full.names = TRUE)) source(f)
 # dependency; the BODS GTFS feed is read from the data drive as supplied.
 cmp_tnds_target <- c(`2022` = "tnds_20221102", `2023` = "tnds_20231101",
                      `2024` = "tnds_20241004", `2025` = "tnds_20251003",
-                     `2026` = "tnds_20260726")
+                     `2026` = "tnds_20261002")
 
 comparison_targets <- unlist(lapply(comparison_years(), function(y) {
   ys <- as.character(y)
@@ -139,12 +139,17 @@ list(
   tar_target(tnds_20231101, convert_tnds_snapshot("20231101", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
   tar_target(tnds_20241004, convert_tnds_snapshot("20241004", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
   tar_target(tnds_20251003, convert_tnds_snapshot("20251003", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  # October 2026: the snapshot the 2026 figures are counted from, and the
+  # comparison's 2026 TNDS column. July 2026 is converted further down and
+  # kept for validation against published timetables.
+  tar_target(tnds_20261002, convert_tnds_snapshot("20261002", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
 
   # Coach from 2024: the BODS Coach dataset, because TNDS stops carrying the
   # national coach network (see convert_bods_coach()). Small archives, so the
   # default worker count is plenty.
   tar_target(bods_coach_2024, convert_bods_coach("20241007", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
   tar_target(bods_coach_2025, convert_bods_coach("20251006", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
+  tar_target(bods_coach_2026, convert_bods_coach("20261003", txc_cal, naptan, cfg = cfg_cores(30)), format = "file"),
 
   # Rail: ATOC CIF (2018-2024), then the National Rail Data Portal (2025)
   tar_target(rail_2018, convert_atoc_date("2018-10-16"), format = "file"),
@@ -155,6 +160,7 @@ list(
   tar_target(rail_2023, convert_atoc_date("2023-11-01"), format = "file"),
   tar_target(rail_2024, convert_atoc_date("2024-10-05"), format = "file"),
   tar_target(rail_rdp_2025, convert_rail_rdp("20251006"), format = "file"),
+  tar_target(rail_rdp_2026, convert_rail_rdp("20261004"), format = "file"),
 
   # --- Per-year frequency statistics (the files ../build consumes) ---
 
@@ -180,17 +186,23 @@ list(
   tar_target(trips_2023, run_year(2023, zones_file, tnds_20231101, rail_2023, cfg = cfg_cores(30)), format = "file"),
   tar_target(trips_2024, run_year(2024, zones_file, tnds_20241004, bods_coach_2024, rail_2024, cfg = cfg_cores(30)), format = "file"),
   tar_target(trips_2025, run_year(2025, zones_file, tnds_20251003, bods_coach_2025, rail_rdp_2025, cfg = cfg_cores(30)), format = "file"),
+  # 2026, from the October snapshots. The first year in the series whose TNDS
+  # side comes from the TransXChange 2.5 edition from the start; 2022-2025
+  # were moved onto it retrospectively (see tnds_edition()).
+  tar_target(trips_2026, run_year(2026, zones_file, tnds_20261002, bods_coach_2026, rail_rdp_2026, cfg = cfg_cores(30)), format = "file"),
 
   # --- Bus source comparison, 2022-2026: TNDS TransXChange vs BODS
   # --- TransXChange vs BODS GTFS, each year counted over one shared
   # --- window and the same zones.
   #
-  # The TNDS feeds for 2022-2025 are the same targets the main trips_<year>
-  # outputs use; 2026 is the July snapshot converted for the validation
-  # section below and shared with the comparison (see comparison_snapshots()
-  # for why February 2026 was dropped). The BODS TransXChange change archives
-  # are converted here (the archive file name does not always match its
-  # folder, hence the explicit `archive`).
+  # The TNDS feeds are the same targets the main trips_<year> outputs use, 2026
+  # included: its October snapshot replaced the July one as the comparison's
+  # 2026 column once October data existed, so the comparison is five October
+  # snapshots and nothing else (see comparison_snapshots()). July 2026 is
+  # still converted, for validation against published timetables and for the
+  # zone-level gap analysis, but it is no longer a comparison year. The BODS
+  # TransXChange change archives are converted here (the archive file name
+  # does not always match its folder, hence the explicit `archive`).
   tar_target(bods_txc_2022, convert_bods_txc("20221102", txc_cal, naptan,
                                              archive = "bodds_archive_20221102.zip",
                                              filter_date = "2022-11-02",
@@ -207,18 +219,28 @@ list(
                                              archive = "bodds_archive_20251005.zip",
                                              filter_date = "2025-10-06",
                                              cfg = cfg_cores(30)), format = "file"),
-  tar_target(bods_txc_2026, convert_bods_txc("20260725", txc_cal, naptan,
-                                             archive = "bodds_archive_20260725.zip",
-                                             filter_date = "2026-07-27",
+  tar_target(bods_txc_2026, convert_bods_txc("20261003", txc_cal, naptan,
+                                             archive = "bodds_archive_20261003.zip",
+                                             filter_date = "2026-10-05",
                                              cfg = cfg_cores(30)), format = "file"),
 
   # --- Validation against published timetables ---
   #
-  # A current snapshot, converted the same way as the comparison feeds — and
-  # since February 2026 was dropped it *is* the comparison's 2026 snapshot.
+  # The July 2026 snapshot, converted the same way as the comparison feeds.
   # Published timetables are easy to obtain for today and hard for the past,
   # so the PDFs in data/example_timetables are checked against this rather
   # than against a historic snapshot.
+  #
+  # It is deliberately NOT moved to the October snapshot along with the
+  # comparison. Every document in data/example_timetables was collected for,
+  # and checked for validity against, the July window; the zone-level checks
+  # in data/zone_pdf_validation.csv were measured over it; and
+  # reports/tnds_conversion_investigation.md traced its disagreements back
+  # into the raw TransXChange file by file. Re-measuring those same checks
+  # over the same window is how a conversion fix is shown to have worked,
+  # which it could not be if the window moved at the same time. Collecting a
+  # fresh set of October documents is the way to move it, not repointing this
+  # target.
   #
   # TNDS and BODS GTFS only — see validation_sources() for why the BODS
   # TransXChange archive is not validated against the PDFs.
@@ -237,11 +259,27 @@ list(
   # --- Zone-level TNDS vs BODS GTFS disagreement ---
   #
   # The comparison says how much the sources differ nationally; this takes it
-  # down to the LSOA/Data Zone and names the routes responsible. It reuses the
-  # two comparison_source_result() objects of the current year rather than
-  # recounting, so the figures are the same ones the comparison reports.
-  tar_target(lsoa_gap, lsoa_gap_analysis(comparison_2026, plain_zones_file,
-                                         cmp_2026_tnds, cmp_2026_bods_gtfs),
+  # down to the LSOA/Data Zone and names the routes responsible.
+  #
+  # Counted over the **July 2026 validation snapshot**, which is why these two
+  # targets exist rather than the analysis reusing cmp_2026_tnds and
+  # cmp_2026_bods_gtfs as it used to. The comparison's 2026 column is now
+  # October (comparison_snapshots()); this analysis is what picks the zones
+  # that are then checked against operators' published timetables, and those
+  # documents are valid for the July window alone. Two feeds counted twice is
+  # the price of being able to re-measure those checks after a conversion fix.
+  tar_target(val_2026_tnds,
+             comparison_source_result(2026, "tnds", plain_zones_file,
+                                      tnds_20260726,
+                                      spec = validation_snapshot(),
+                                      cfg = cfg_cores(30))),
+  tar_target(val_2026_bods_gtfs,
+             comparison_source_result(2026, "bods_gtfs", plain_zones_file,
+                                      spec = validation_snapshot(),
+                                      cfg = cfg_cores(30))),
+  tar_target(lsoa_gap, lsoa_gap_analysis(validation_snapshot(), 2026,
+                                         plain_zones_file,
+                                         val_2026_tnds, val_2026_bods_gtfs),
              format = "file"),
   tar_target(lsoa_gap_report, render_lsoa_gap_report(lsoa_gap),
              format = "file"),
@@ -278,9 +316,10 @@ list(
     busarchive_2014, busarchive_2015, busarchive_2016, busarchive_2017,
     tnds_20180515, tnds_20191008, tnds_20200701, tnds_20211012,
     tnds_20221102, tnds_20231101, tnds_20241004, tnds_20251003,
-    bods_coach_2024, bods_coach_2025,
+    tnds_20261002,
+    bods_coach_2024, bods_coach_2025, bods_coach_2026,
     rail_2018, rail_2019, rail_2020, rail_2021, rail_2022, rail_2023,
-    rail_2024, rail_rdp_2025)), format = "file"),
+    rail_2024, rail_rdp_2025, rail_rdp_2026)), format = "file"),
   tar_target(non_bus_report, render_non_bus_report(non_bus), format = "file"),
 
   # Where and when the archives actually have data.
@@ -303,7 +342,8 @@ list(
     busarchive_2014, busarchive_2015, busarchive_2016, busarchive_2017,
     tnds_20180515, tnds_20191008, tnds_20200701, tnds_20211012,
     tnds_20221102, tnds_20231101, tnds_20241004, tnds_20251003,
-    bods_coach_2024, bods_coach_2025)), format = "file"),
+    tnds_20261002,
+    bods_coach_2024, bods_coach_2025, bods_coach_2026)), format = "file"),
   tar_target(coverage_report, render_coverage_report(coverage),
              format = "file")
 )

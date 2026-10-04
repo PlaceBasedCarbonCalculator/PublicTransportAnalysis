@@ -67,14 +67,14 @@ snap <- across_years(function(c) {
              bods_txc = basename(c$snapshot$bods_txc),
              bods_gtfs = sub(".*GTFS/([0-9]+)/.*", "\\1", c$snapshot$bods_gtfs))
 })
-knitr::kable(snap, col.names = c("Year", "28-day counting window",
+knitr::kable(snap, col.names = c("Year", "counting window",
                                  "TNDS snapshot", "BODS TransXChange snapshot",
                                  "BODS GTFS snapshot"))
 ```
 
 Within a year all three sources are deduplicated with
 `UK2GTFS::gtfs_deduplicate()`, then counted with
-`UK2GTFS::gtfs_trips_per_zone()` over the **same 28-day window** and the
+`UK2GTFS::gtfs_trips_per_zone()` over the **same window** and the
 **same plain LSOA21 / DZ22 boundaries**, so every difference below is a
 difference in the sources or their conversion, not in the counting method.
 (The published trips-per-zone outputs use zones widened for stop access.
@@ -107,19 +107,33 @@ the numbers below: **TNDS discontinued its separate NCSD national coach
 archive after February 2025**, and the TNDS regional files grew substantially
 from the 2025 snapshots onward.
 
-### Which 2026 snapshot, and why not February
+### Which 2026 snapshot
 
-Two 2026 triples exist on the data drive, February and July. The series uses
-**July**. February was dropped because its TNDS side is distorted by
+Three 2026 triples exist on the data drive: February, July and October. The
+series uses **October**.
+
+February was dropped first, because its TNDS side is distorted by
 registrations that expire *inside* the counting window: about a quarter of the
-feed's bus trips stop part-way through it, and the effect is large enough to
-exceed the whole measured gap to BODS GTFS, so every February figure was
-incomparable with the other four years. The mechanism is general and is
-measured for every year below — February was simply the window in which it
-dominated. Using July has a second benefit: it is the same snapshot the
-published-timetable validation (`pdf_validation.md`) checks against, so the
-comparison's most recent year and the PDF validation now describe the same
-feeds.
+feed's bus trips stopped part-way through it, and the effect was large enough
+to exceed the whole measured gap to BODS GTFS, so every February figure was
+incomparable with the other years. The mechanism is general and is measured
+for every year below — February was simply the window in which it dominated.
+
+July then held the slot until the October snapshots arrived, and has now been
+replaced by them. July was the most recent snapshot there was at the time, and
+it doubled as the published-timetable validation snapshot. It is also a
+*summer* snapshot sitting among four October ones, which is the worst case for
+reading TNDS twice over: the weekly-export operators' files end inside the
+window, and the school-day journeys that make up much of the restored sibling
+service are not running. October is where every other year in this series and
+in the main per-year outputs is anchored, so 2026 is now anchored there too.
+
+The July triple has not gone away. It is still converted, and it is still what
+`pdf_validation.md` checks against published timetables and what the
+zone-level analysis in `lsoa_disagreement.md` is counted over, because the
+documents collected for it are valid for that window and no other. The
+comparison and the validation therefore no longer describe the same feeds,
+which they did while July held this slot.
 
 All five years of both TransXChange sources were converted with one UK2GTFS
 build. An earlier version of this report mixed builds across the series, which
@@ -129,7 +143,7 @@ an artefact of the converter rather than of the data.
 ## Feed-level summary
 
 `Agencies` and `Routes` count the whole converted feed; `Routes in window` and
-`Trips in window` count only what operates inside the 28-day window. **Compare
+`Trips in window` count only what operates inside the counting window. **Compare
 sources on the windowed columns.** The whole-feed columns are not like-for-like:
 a TNDS conversion is kept for the snapshot date ±`r tnds_trim_days()` days and a
 BODS TransXChange one for ±31, so TNDS carries a longer stretch of calendar and
@@ -209,7 +223,7 @@ ggplot(tot_plot, aes(x = year, y = runs / 1e6, colour = source)) +
                      expand = expansion(mult = c(0.04, 0.12))) +
   scale_y_continuous(limits = c(0, NA),
                      expand = expansion(mult = c(0, 0.08))) +
-  labs(title = "Counted bus departures in the 28-day window, by source",
+  labs(title = sprintf("Counted bus departures in the %d-day window, by source", 7L * study_weeks()),
        subtitle = "Millions of stop departures; same window and zones within each year",
        x = NULL, y = "Bus departures (millions)") +
   theme_report
@@ -312,7 +326,7 @@ as between them, so a service that one source splits across several
 whatever the numbers failed to pair, on stop overlap alone (80%), because the
 sources do not always agree on what a service's public number is.
 
-The unit counted here is **vehicle journeys in the 28-day window** — a
+The unit counted here is **vehicle journeys in the counting window** — a
 journey counts once however many stops or zones it passes through. This is a
 stricter measure than the zone-level departure counts above.
 
@@ -733,7 +747,7 @@ ggplot(sh_plot, aes(x = factor(year), y = share, fill = band)) +
   scale_y_continuous(labels = scales::percent_format(accuracy = 1),
                      expand = expansion(mult = c(0, 0.12))) +
   labs(title = "Agreement on journey counts for services both sources carry",
-       subtitle = "TNDS vs BODS GTFS, 28-day vehicle journey counts per service",
+       subtitle = sprintf("TNDS vs BODS GTFS, %d-day vehicle journey counts per service", 7L * study_weeks()),
        x = NULL, y = "Share of shared services") +
   theme_report
 ```
@@ -818,12 +832,13 @@ cat(sprintf(
 
 cat(sprintf(
   paste0("- Where both sources carry a service, %s-%s of services agree on ",
-         "the 28-day journey count to within 10%%.\n"),
+         "the journey count in the window to within 10%%.\n"),
   pct(min(shared$within10)), pct(max(shared$within10))))
 
 # Which year agrees least on shared services, and how much of that year's
 # weakness the snapshot-age effect accounts for. Found from the data, not
-# assumed: the answer changed when the 2026 snapshot moved from February to July.
+# assumed: the answer changed when the 2026 snapshot moved from February to
+# July, and again when it moved from July to October.
 sh_worst <- shared[which.min(shared$within2), ]
 sh_rest <- shared[shared$year != sh_worst$year, ]
 ex_worst <- exp_all[exp_all$source == src_labels[["tnds"]] &
@@ -865,14 +880,20 @@ cat(paste0("- The measured differences above are upper bounds on two counts: ",
   are dropped with `UK2GTFS::txc_filter_files()`, keeping the revision valid on
   the analysis date. Beyond that, every feed of every source passes through
   `UK2GTFS::gtfs_deduplicate()` before it is counted, which removes a journey
-  the feed describes twice on the same day. On the July 2026 snapshots that is
-  5.2% of the DfT GTFS's trips and 2.3% of TNDS's.
+  the feed describes twice on the same day. On the October 2026 snapshots
+  that is `r dedup_rate_text()`.
 
-<!-- Those two rates are measured, not derived from any target, so they go
-     stale when a feed is reconverted. To re-measure: read each July 2026 feed
-     exactly as read_feed() does (gtfs_read, drop shapes, drop stops with no
-     stop_lon, gtfs_clean) and compare nrow(trips) before and after
-     gtfs_deduplicate().
+<!-- Those rates are measured, not derived from any target, so they go stale
+     when a feed is reconverted. They are now read out of
+     data/dedup_rates.Rds, which scripts/dedup_rates.R harvests from the
+     conversion and counting logs of the last run, rather than typed in. If
+     that file is missing the text says so instead of printing a stale
+     figure. The older hand-measured July 2026 values were 5.2% of the DfT
+     GTFS's trips and 2.3% of TNDS's.
+
+     To re-measure by hand: read each feed exactly as read_feed() does
+     (gtfs_read, drop shapes, drop stops with no stop_lon, gtfs_clean) and
+     compare nrow(trips) before and after gtfs_deduplicate().
 
      TNDS re-measured 2026-10-03 after the ServiceCode/operator-key
      reconversion of 2026-10-02: 34,668 of 1,482,449 (2.34%), up from
@@ -944,5 +965,5 @@ cat(paste0("- The measured differences above are upper bounds on two counts: ",
   overlap it requires: where one source omits a branch or a length of a route,
   the overlap falls short and the pair is left unlinked.
 - Journey counts are the number of vehicle journeys operating in the
-  28-day window under GTFS calendar semantics, including `calendar_dates`
+  counting window under GTFS calendar semantics, including `calendar_dates`
   exceptions. They are not passenger-facing frequencies.

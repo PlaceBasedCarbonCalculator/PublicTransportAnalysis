@@ -25,7 +25,7 @@
 #' 2. **Same stops in the same order.** The stop sequence must be identical.
 #'    Nothing weaker would do: two journeys over different roads are two
 #'    journeys however close their times.
-#' 3. **At least one shared operating day**, inside the 28-day window.
+#' 3. **At least one shared operating day**, inside the study window.
 #' 4. **Within the tolerance at every stop.** The largest absolute difference
 #'    anywhere on the journey is what is measured, not the difference at the
 #'    first stop, so a pair that starts together and diverges is not a pair.
@@ -40,8 +40,13 @@
 #' tolerance is discriminating or guessing.
 #'
 #' @param tolerances seconds; the rule is evaluated at each
-#' @param window_days length of the window the operating-day test uses. Must be
-#'   at most 30: the days are held as bits of an integer.
+#' @param window_days length of the window the operating-day test uses. It is
+#'   the study window, derived from study_weeks() rather than written out: it
+#'   was 28 while the study window was, and a stale 28 here would have let the
+#'   shared-operating-day test pass on a day two weeks PAST the window the
+#'   pairs are counted over, which is not a shared day as far as this analysis
+#'   is concerned. Must be at most 30 either way: the days are held as bits of
+#'   an integer.
 near_duplicate_settings <- function() {
   list(tolerances = c(0L, 30L, 60L, 90L, 120L, 180L, 300L),
        # widest difference examined at all; bands beyond the tolerances are
@@ -49,7 +54,7 @@ near_duplicate_settings <- function() {
        max_gap = 600L,
        # most neighbours examined per trip, in first-departure order
        max_neighbours = 60L,
-       window_days = 28L,
+       window_days = 7L * study_weeks(),
        bands = list(breaks = c(-1, 0, 60, 120, 180, 300, 600),
                     labels = c("exactly 0", "1-60s", "61-120s", "121-180s",
                                "181-300s", "301-600s")))

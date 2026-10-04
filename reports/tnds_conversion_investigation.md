@@ -195,9 +195,15 @@ more than half its departure times at the first stop in common). That is
 more robust if a publisher stamps every file in a bulk export with one time,
 but it needs the journeys read before filtering. How to apply, install,
 test and rebuild with the patch is in `scripts/tnds_investigation/README.md`.
-The patch has not been run
-in R here: R could not be installed in this environment. It is a one-branch
-change, and the Python port reproduces the effect.
+
+**Applied 4 October 2026.** It is on the `overlap-siblings` branch of
+UK2GTFS, the four First Essex checks above come out as predicted, and the
+package's 293 tests pass. One of them had to be changed: the fixture for
+`same start and a different end moves the longer period's start` gave both
+its files one timestamp, which makes them siblings under the new rule, so it
+now uses distinct creation times like every other overlap test in the file.
+Two tests were added for the new behaviour. The patch file also needed its
+CRLF line endings stripped before `git apply` would take it.
 
 ### The design limit: regions are converted separately
 
@@ -377,16 +383,53 @@ compare with.
 
 ## Recommendations
 
+All four were acted on in October 2026; what was done to each is recorded
+here so that the figures above can be read against the right pipeline.
+
 1. **Convert the `TNDSV2.5` files.** This fixes every duplicated count found
    here, at no cost: the 2.5 edition loses nothing that is not published
    elsewhere or repeated.
+
+   **Done** (`tnds_edition()` in `R/convert.R`), for every snapshot that has
+   a 2.5 edition, which is February 2022 onward. Two things this section did
+   not reach: the 2.5 output contains no `NCSD.zip`, so the national coach
+   archive is still read from the 2.1 edition or the coach network would
+   vanish from 2018-2023; and `iom.zip` appears in some snapshots' 2.5 output
+   and not others, so it is excluded. Because no snapshot before 2022 has a
+   2.5 edition, the series now has a step at 2022 where cross-boundary
+   duplicates stop being counted. That was accepted deliberately rather than
+   leave the London and Preston doubling in every recent year.
+
 2. **Apply the UK2GTFS sibling patch.** This recovers about 2,600 VJ in 91
    files nationally, Chelmsford X30 among them.
+
+   **Done**, as recorded in section 1.
+
 3. **Report, rather than hide, the short-horizon files.** Flag services whose
    last file ends inside the window (RBUS, FESX, FDOR, Stagecoach South and
    the expiring Yorkshire LA files) and measure them over the covered dates.
    Alternatively, use BODS for those operators, which publishes the full
    period.
+
+   **Addressed differently: the counting window was halved**, from 28 days to
+   14 (`study_weeks()` in `R/config.R`), across the whole pipeline. This
+   section shows why that is the blunt but effective answer - Reading 1 read
+   412 against a four-week timetable of 1,648, *exactly* a quarter, because
+   the snapshot covered exactly one of the four weeks. A 14-day window
+   collects half as much of the truncation and keeps two of each weekday, so
+   no count loses comparability between years and `tph_*` stays exact. It
+   does not remove the effect, and `window_expiry_stats()` still measures
+   what is left per source and year. Flagging per operator and rolling a
+   service forward were both left undone: the first needs a decision about
+   what to do with a flagged zone, and the second invents data.
+
 4. **Drop the shared-route-number checks** (Birmingham 50, Black Country 9,
    59, 82) and **Southampton 17, 18** from the TNDS error tally in
    `pdf_validation.md`, or count them per operator.
+
+   **Not done.** This is a change to how the zone check is scored rather than
+   to the pipeline, and the figures it would change are in a hand-written
+   section of `pdf_validation.md` produced by the Python scripts in
+   `scripts/zone_pdf_validation/`, which have not been re-run - their work
+   directory and downloads are gone. The six checks remain in the tally and
+   should be discounted by a reader.

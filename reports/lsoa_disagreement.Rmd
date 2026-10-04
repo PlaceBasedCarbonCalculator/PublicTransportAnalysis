@@ -13,6 +13,13 @@ top <- as.data.table(g$top)
 svc <- as.data.table(g$services)
 nat <- g$national
 
+# The window length, read off the analysis rather than written down. Every
+# "of the N days" in this report used to say 28, which was right while the
+# study window was 28 days and silently wrong the moment it became 14 - the
+# worse because several of those sentences print a COMPUTED count of days
+# beside the literal, so the text would have read "7.0 of the 28 days".
+wl <- as.integer(g$window$enddate - g$window$startdate) + 1L
+
 # Feature flags for the sections added in October 2026, set here rather than in
 # the chunks that use them: knitr evaluates a chunk's `eval=` option before
 # running it, so the flag has to exist before the first chunk that is gated on
@@ -92,7 +99,7 @@ Both sources are the **`r g$year`** snapshot, both passed through
 `UK2GTFS::gtfs_deduplicate()` so that most of the duplicate publication in
 each is removed before counting — "Is either source still counting the same
 bus twice?" below measures what survives, which is not nothing —
-and counted over the same 28-day window (**`r g$window$startdate` to
+and counted over the same `r wl`-day window (**`r g$window$startdate` to
 `r g$window$enddate`**) on the **plain LSOA21 / DZ22 boundaries**. The
 published trips-per-zone outputs use zones widened for stop access; this
 report does not, because widened zones overlap and a disagreement at a stop
@@ -105,7 +112,7 @@ in several of them would be counted several times over:
 
 The measure is **total bus trip-runs in the window**: every vehicle journey
 that calls at least once inside the zone, weighted by the number of times it
-runs over the 28 days. A journey counts once per zone however many of the
+runs over the `r wl` days. A journey counts once per zone however many of the
 zone's stops it calls at, which is exactly what `gtfs_trips_per_zone()` does, so
 these numbers reconcile with the comparison report's zone totals. Unlike
 `tph_daytime_avg` — the measure the pipeline publishes — it includes the night
@@ -174,7 +181,7 @@ ggplot(bd, aes(x = band, y = N,
                                "equal" = "grey65"), name = NULL) +
   scale_y_continuous(expand = expansion(mult = c(0, 0.08))) +
   labs(title = "How far the two sources differ, zone by zone",
-       subtitle = "TNDS minus BODS GTFS bus trip-runs in the 28-day window",
+       subtitle = sprintf("TNDS minus BODS GTFS bus trip-runs in the %d-day window", wl),
        x = NULL, y = "Zones") +
   theme_report +
   theme(axis.text.x = element_text(angle = 30, hjust = 1))
@@ -205,7 +212,7 @@ ggplot(zc, aes(x = rank, y = gap, fill = side)) +
                      labels = comma) +
   scale_y_continuous(labels = comma) +
   labs(title = "Every zone, ordered by how far the two sources disagree",
-       subtitle = paste0("TNDS minus BODS GTFS bus trip-runs in the 28-day ",
+       subtitle = paste0("TNDS minus BODS GTFS bus trip-runs in the ", wl, "-day ",
                          "window; above the line TNDS counts more"),
        x = paste0("Zones, ordered by difference (", comma(nrow(zc)), " in all)"),
        y = "TNDS − BODS GTFS") +
@@ -262,10 +269,10 @@ cat(sprintf(paste0(
 cat(sprintf(paste0(
   "By size of difference: **%s zones** differ by 1,000 trip-runs or more (%s ",
   "of all zones), **%s** by between 100 and 1,000, **%s** by between 1 and 100, ",
-  "and **%s** agree exactly. A zone differing by 100 trip-runs over 28 days is ",
+  "and **%s** agree exactly. A zone differing by 100 trip-runs over %d days is ",
   "under four departures a day; one differing by 1,000 is thirty-six.\n\n"),
   fmt(band(1000, Inf)), pct(band(1000, Inf) / nrow(zc)),
-  fmt(band(100, 1000)), fmt(band(1, 100)), fmt(sum(zc$gap == 0))))
+  fmt(band(100, 1000)), fmt(band(1, 100)), fmt(sum(zc$gap == 0)), wl))
 cross <- which(zc$gap <= 0)[1]
 cat(sprintf(paste0(
   "The curve is not symmetric. It crosses zero at rank **%s of %s**, %s of the ",
@@ -504,7 +511,7 @@ if (all(c("dup_runs_tnds", "dup_runs_bods_gtfs") %in% names(top))) {
 The sections above say how far the two sources disagree and which services the
 disagreement sits on. They do not say which source to believe, and for the
 zones at the extremes that is the question that matters: a zone whose bus
-service differs by tens of thousands of runs over four weeks is being described
+service differs by tens of thousands of runs over the window is being described
 correctly by at most one of the two feeds.
 
 Three measurements decide it, and they cannot be mistaken for one another.
@@ -526,7 +533,7 @@ excess is one bus described twice, and the higher source is the wrong one. Only
 the higher source can be explained this way: duplication in the lower source
 would make its shortfall larger, not smaller.
 
-**3. The daily profile** — how many of the window's 28 days each source counts
+**3. The daily profile** — how many of the window's `r wl` days each source counts
 a normal day's service on. This separates a source that is uniformly thin from
 one that stops partway through the window, and only the second is an expiry. It
 is required as corroboration before any zone is called truncated, so that a
@@ -572,12 +579,12 @@ if (!is.null(ex) && nrow(ex) == 2) {
       "How far it reaches into the zone findings below is worth stating up ",
       "front, because the verdict table only names it where it is the *whole* ",
       "explanation. **In %d of the %d zones investigated, TNDS carries a ",
-      "normal day's service on fewer of the 28 days than BODS GTFS does**, ",
+      "normal day's service on fewer of the %d days than BODS GTFS does**, ",
       "and in %d of those the shortfall is at least half. Most of those zones ",
       "are labelled \"unresolved\" rather than \"calendars cut short\", ",
       "because something else is wrong in them as well — but truncation is ",
       "part of what is wrong in far more zones than carry its name.\n\n"),
-      n_cut, nrow(top),
+      n_cut, nrow(top), wl,
       sum(top$days_full_tnds <= 0.5 * top$days_full_bods_gtfs, na.rm = TRUE)))
   }
 }
@@ -603,7 +610,7 @@ same signature — a ratio at a clean fraction, with the journey counts matching
 — appears on other operators, and the verdict table below is how to find them.
 
 An expiry is also the one mechanism that is obvious by eye. Each panel below is
-one zone's counted service on each of the window's 28 days, in both sources.
+one zone's counted service on each of the window's `r wl` days, in both sources.
 Where the two lines run together and then one of them drops off a cliff, a
 registration ended mid-window; where one line sits below the other all month,
 the difference is in the timetable rather than the calendar.
@@ -629,7 +636,7 @@ ggplot(dp, aes(x = date, y = trip_days, colour = src)) +
   scale_x_date(date_labels = "%d %b") +
   labs(title = "Counted service day by day, the six largest disagreements",
        subtitle = paste0("Journeys touching the zone on each day of the ",
-                         "28-day window. A cliff in one line is a ",
+                         sprintf("%d-day window. A cliff in one line is a ", wl),
                          "registration expiring mid-window"),
        x = NULL, y = "Journeys counted that day") +
   theme_report +
@@ -740,12 +747,12 @@ if (nrow(unres)) {
     cat(sprintf(paste0(
       "In **%d of them the two faults are identifiable even though neither ",
       "accounts for the whole gap**: TNDS carries a normal day's service on ",
-      "fewer of the 28 days *and* at least 5%% of BODS GTFS's counted ",
+      "fewer of the %d days *and* at least 5%% of BODS GTFS's counted ",
       "trip-days in the zone are the same journey twice. The largest is %s ",
       "(%s), where TNDS manages %d full days against %d and %s of the BODS ",
       "GTFS count is duplicated. Both sources are misdescribing that zone, in ",
       "opposite directions, which is why no single verdict fits.\n"),
-      nrow(both), both[order(-abs(gap))]$zone_id[1],
+      nrow(both), wl, both[order(-abs(gap))]$zone_id[1],
       ifelse(is.na(both[order(-abs(gap))]$locality[1]), "unnamed",
              both[order(-abs(gap))]$locality[1]),
       both[order(-abs(gap))]$days_full_tnds[1],
@@ -854,7 +861,7 @@ Buses.
 
 `Journeys` and `Days each` are the two factors of the run total; `Dup.` is the
 share of that source's counted trip-days that are still the same bus twice;
-`Full days` is how many of the 28 days carry a normal day's service.
+`Full days` is how many of the `r wl` days carry a normal day's service.
 
 ```{r verdict-table, results="asis", eval=has_verdict}
 vt <- top[order(-abs(gap))][seq_len(min(18, .N))]
@@ -948,14 +955,14 @@ for (m in mech) {
   cat(sprintf(paste0(
     "TNDS %s trip-runs against BODS GTFS's %s, a difference of **%s**. ",
     "TNDS holds **%s journeys** touching the zone, each running on an average ",
-    "of **%.1f** of the 28 days; BODS GTFS holds **%s journeys** at **%.1f** ",
+    "of **%.1f** of the %d days; BODS GTFS holds **%s journeys** at **%.1f** ",
     "days each. Residual duplication is %s of TNDS's trip-days and %s of ",
-    "BODS GTFS's. A normal day's service appears on %d of 28 days in TNDS and ",
+    "BODS GTFS's. A normal day's service appears on %d of %d days in TNDS and ",
     "%d in BODS GTFS.\n\n"),
     fmt(d$runs_tnds), fmt(d$runs_bods), fmt(d$gap),
-    fmt(d$trips_tnds), d$dpt_tnds, fmt(d$trips_bods), d$dpt_bods,
+    fmt(d$trips_tnds), d$dpt_tnds, wl, fmt(d$trips_bods), d$dpt_bods,
     pct(d$dup_share_tnds), pct(d$dup_share_bods),
-    d$days_full_tnds, d$days_full_bods_gtfs))
+    d$days_full_tnds, wl, d$days_full_bods_gtfs))
 
   # Spell out the arithmetic that produced the verdict, so the reader can
   # disagree with it on the numbers rather than on trust.
@@ -975,18 +982,18 @@ for (m in mech) {
       "The journey counts agree to within %s (%s against %s), so neither ",
       "source is missing the timetable. What differs is how long each journey ",
       "runs for: %.1f days against %.1f, a ratio of %.2f, and a normal day's ",
-      "service appears on %d of the 28 days in TNDS against %d in BODS GTFS. ",
+      "service appears on %d of the %d days in TNDS against %d in BODS GTFS. ",
       "That is a registration expiring inside the window, not a service that ",
       "does not exist."),
       pct(abs(d$trip_ratio - 1)), fmt(d$trips_tnds), fmt(d$trips_bods),
-      d$dpt_tnds, d$dpt_bods, d$dpt_ratio, d$days_full_tnds,
+      d$dpt_tnds, d$dpt_bods, d$dpt_ratio, d$days_full_tnds, wl,
       d$days_full_bods_gtfs),
     "BODS GTFS calendars cut short" = sprintf(paste0(
       "The journey counts agree to within %s, but each BODS GTFS journey runs ",
       "%.1f days against TNDS's %.1f, and a normal day's service appears on ",
-      "%d of 28 days against %d."),
+      "%d of %d days against %d."),
       pct(abs(d$trip_ratio - 1)), d$dpt_bods, d$dpt_tnds,
-      d$days_full_bods_gtfs, d$days_full_tnds),
+      d$days_full_bods_gtfs, wl, d$days_full_tnds),
     "journeys missing from TNDS" = sprintf(paste0(
       "Each journey runs for about as long in both sources (%.1f days against ",
       "%.1f, a ratio of %.2f), so the calendars are not the problem: TNDS ",

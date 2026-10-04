@@ -69,7 +69,9 @@ present. Departures is the measure used throughout, and it is split by
 An area is judged against **its own usual level**, and on its **share of that
 year's departures** rather than the raw count. The eras are not on a common
 scale: a Bus Archive year merges four weekly snapshots, so 2014–2017 hold
-around 220 million departures against 28–71 million in an NPTDR or TNDS year.
+several times the departures of an NPTDR or TNDS year – it was about four
+times while the counting window was 28 days, and the ratio moves with the
+window length.
 Any benchmark in raw departures inherits that multiplier. A share cancels it,
 and it also cancels genuine national change — which is what is wanted here,
 because this measures coverage, not service. `absent` is no departures at
@@ -137,7 +139,7 @@ f[, src := fcase(grepl("nptdr", path), "NPTDR",
 tab <- f[, list(source = paste(unique(src), collapse = " + "),
                 window = paste0(min(window_start), " to ", max(window_end))),
          by = "year"][order(year)]
-kt(tab, col.names = c("year", "source", "28-day counting window"))
+kt(tab, col.names = c("year", "source", "counting window"))
 ```
 
 `r if (length(cv$missing_years)) paste0("There is no archive at all for ", paste(cv$missing_years, collapse = " and "), ": NPTDR stopped after 2011 and the Bus Archive starts in 2014. Those years are shown as a grey column throughout and are not interpolated anywhere in this pipeline.") else ""`
@@ -422,7 +424,7 @@ ggplot(nat, aes(year, departures / 1e6)) +
   scale_x_continuous(breaks = cv$years) +
   labs(x = NULL, y = "million departures in the feed",
        title = "Total scheduled departures in each year's bus feed",
-       subtitle = "the feed as converted, before the 28-day window and mode filters") +
+       subtitle = "the feed as converted, before the window and mode filters") +
   theme_minimal(base_size = 11) +
   theme(axis.text.x = element_text(angle = 90, vjust = 0.5),
         panel.grid.minor = element_blank())

@@ -8,7 +8,7 @@ SP = paths.WORK
 REPO = paths.REPO
 EX = REPO + 'data/example_timetables/'
 DOCS = {d['key']: d for d in docs}
-WIN0, WIN1 = '2026-07-27', '2026-08-23'
+WIN0, WIN1 = paths.WIN0, paths.WIN1
 TOL = 0.15
 
 

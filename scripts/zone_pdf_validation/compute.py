@@ -1,13 +1,13 @@
-"""PDF journeys at a reference zone, scaled to the 28-day window, against the
-TNDS and BODS GTFS counts for the same route in the same zone."""
+"""PDF journeys at a reference zone, scaled to the counting window, against
+the TNDS and BODS GTFS counts for the same route in the same zone."""
 import re, json, collections
 import pandas as pd
 import ttread as T
 from review import blocks_for, runs
 from registry import docs, SP
+from paths import WINDOW
 
 DOCS = {d['key']: d for d in docs}
-WINDOW = {'MT': 16, 'Fr': 4, 'MF': 20, 'Sa': 4, 'Su': 4, 'MS': 24}
 
 BHAM = r"^Birmingham (Moor St|Priory|Carrs|Colmore|City Centre Old Square|Corporation|High Street)|^Bus Mall"
 CHELM_BS = r'^Chelmsford, Bus Stn'

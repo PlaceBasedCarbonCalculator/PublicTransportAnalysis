@@ -55,7 +55,7 @@ the same, and not one time matches. No exact test can see it, and both copies
 are counted.
 
 Everything below is measured on the **`r nd$snapshot$snapshot_date`** snapshot
-of each source, over the 28-day window **`r nd$window$startdate` to
+of each source, over the `r as.integer(nd$window$enddate - nd$window$startdate) + 1L`-day window **`r nd$window$startdate` to
 `r nd$window$enddate`**, and on what *survives* exact deduplication — so it is
 all additional to what is already removed.
 

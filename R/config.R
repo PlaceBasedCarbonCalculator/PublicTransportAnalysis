@@ -42,16 +42,40 @@ cfg_cores <- function(n, cfg = load_cfg()) {
   cfg
 }
 
-#' Study window: a 28-day period that always starts on a Monday
+#' Study window: a whole number of weeks, always starting on a Monday
 #'
-#' Every year is counted over a 28-day window containing exactly four of each
-#' weekday, derived by flooring the source's snapshot/reference date to the
-#' Monday of its week. This makes raw runs_* counts directly comparable
-#' between years and makes the tph_* normalisation exact.
+#' Every year is counted over the same window length, containing exactly
+#' `study_weeks()` of each weekday, derived by flooring the source's
+#' snapshot/reference date to the Monday of its week. Whole weeks are what
+#' makes raw runs_* counts directly comparable between years and the tph_*
+#' normalisation exact (gtfs_trips_per_zone() divides each weekday's runs by
+#' the number of that weekday in the window).
+#'
+#' **Two weeks, not four.** It was 28 days until October 2026. The TNDS
+#' snapshots are a current-data download, not a forward-looking one: a
+#' registration that expires shortly after the extraction date is carried with
+#' its real end date, and several large operators publish TNDS one week or one
+#' fortnight at a time (First Essex, First Dorset and Reading Buses among
+#' them). Over 28 days those services run for part of the window and stop,
+#' which reads as a service cut rather than as the end of the published
+#' horizon: 326 live files nationally, 30,652 vehicle journeys, 2.7% of all
+#' live journeys in the July 2026 snapshot, and ratios of 0.2-0.3 against the
+#' operators' own printed timetables for every route in Reading, Chelmsford
+#' and Weymouth. Halving the window halves how far past the extraction date it
+#' reaches and so how much of that truncation it collects, while keeping two
+#' of each weekday and so keeping every count comparable between years. See
+#' reports/tnds_conversion_investigation.md section 3 and
+#' window_expiry_stats(), which measures what is left.
+#'
+#' Changing this rescales every raw `runs_*` figure in the outputs ../build
+#' consumes - they are window totals, so two weeks is half of four. The
+#' `tph_*` rates and `tph_daytime_avg` are per-hour and do not move.
+study_weeks <- function() 2L
+
 study_window <- function(ref) {
   start <- lubridate::floor_date(lubridate::ymd(ref), unit = "week",
                                  week_start = 1)
-  list(startdate = start, enddate = start + 27L)
+  list(startdate = start, enddate = start + (7L * study_weeks() - 1L))
 }
 
 #' Timetable sources for each analysis year
@@ -194,6 +218,25 @@ year_sources <- function(cfg = load_cfg()) {
                 drop_route_types = 1)
   )
 
+  # 2026: TNDS TransXChange (bus) + BODS Coach + Rail Data Portal, on the same
+  # footing as 2025. The October snapshots, not the July ones: July is kept as
+  # the validation snapshot (see validation_snapshot()) because the published
+  # timetables collected for it are valid for that window, but October is the
+  # October-anchored snapshot every other year in the series uses and so is
+  # the one the year is counted from.
+  #
+  # From 2022 the TNDS side is converted from the TransXChange 2.5 edition
+  # rather than 2.1 - see tnds_edition() - so part of any fall between 2021
+  # and 2022 is cross-boundary deduplication arriving, not the network.
+  spec[["2026"]] <- list(
+    year = 2026,
+    bus = list(feed("gtfs/tnds_20261002_merged.zip", "2026-10-02",
+                    drop_route_types = 200),
+               feed("gtfs/bods_coach_20261003.zip", "2026-10-03")),
+    rail = feed("gtfs/rail_rdp_20261004.zip", "2026-10-04",
+                drop_route_types = 1)
+  )
+
   spec
 }
 
@@ -202,4 +245,4 @@ resolve_feed_path <- function(path, cfg = load_cfg()) {
   if (startsWith(path, "gtfs/")) path else file.path(cfg$data_root, path)
 }
 
-analysis_years <- function() c(2004:2011, 2014:2025)
+analysis_years <- function() c(2004:2011, 2014:2026)

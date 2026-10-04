@@ -261,8 +261,10 @@ bus_archive_files <- function(year, cfg = load_cfg()) {
                  snapshot = lubridate::ymd(basename(w)))
     }))
   }
-  # Use the (up to) four weekly snapshots that tile the study window: the
-  # Monday-aligned 28 days starting in the week of the first October snapshot
+  # Use the weekly snapshots that tile the study window: the Monday-aligned
+  # study_weeks() weeks starting in the week of the first October snapshot.
+  # Two weeks since October 2026, so two snapshots per year rather than four
+  # - see study_weeks().
   win <- study_window(min(out$snapshot))
   out <- out[out$snapshot >= win$startdate & out$snapshot <= win$enddate, ]
   out[order(out$snapshot, out$region), ]
@@ -272,7 +274,7 @@ bus_archive_files <- function(year, cfg = load_cfg()) {
 #'
 #' Each weekly regional snapshot is converted (with caching), trimmed to the
 #' Monday-Sunday week containing its snapshot date, and merged, so the
-#' merged feed exactly tiles the Monday-aligned 28-day study window.
+#' merged feed exactly tiles the Monday-aligned study window.
 convert_bus_archive_year <- function(year, cal, naptan, cfg = load_cfg()) {
   files <- bus_archive_files(year, cfg)
   message(nrow(files), " weekly regional files for ", year)
@@ -296,20 +298,26 @@ convert_bus_archive_year <- function(year, cal, naptan, cfg = load_cfg()) {
 
 #' How far either side of its snapshot date a TNDS conversion is kept
 #'
-#' The counting windows are 28 days, so 31 was enough for the comparison. It
+#' The counting windows were 28 days and 31 was enough for the comparison. It
 #' was not enough for validation: validation_windows() has a second window
-#' opening two weeks after the first so that a bank holiday falls inside it,
-#' which ends 42 days past the snapshot. With a 31-day trim the last 11 days of
-#' that window were empty in TNDS by construction, and every TNDS count in it
-#' came out at almost exactly 17/28 of the first window's - an artefact that
-#' made the two bank-holiday reference timetables (the Cardiff 62's "Sundays &
-#' public holidays" table, Kinchbus's "Sunday & Bank Holiday Monday" table)
-#' impossible to test against TNDS at all.
+#' placed so that a bank holiday falls inside it, which ends 42 days past the
+#' snapshot. With a 31-day trim the last 11 days of that window were empty in
+#' TNDS by construction, and every TNDS count in it came out at almost exactly
+#' 17/28 of the first window's - an artefact that made the two bank-holiday
+#' reference timetables (the Cardiff 62's "Sundays & public holidays" table,
+#' Kinchbus's "Sunday & Bank Holiday Monday" table) impossible to test against
+#' TNDS at all.
 #'
-#' 45 covers that window with a fortnight to spare. Widening only *adds*
-#' calendar coverage: every consumer re-trims to its own window before
-#' counting, so no figure inside a narrower window changes. The feed-level
-#' totals in the comparison report (routes, trips, calendar_end) do grow,
+#' 45 covers that window with a fortnight to spare, and still does now the
+#' windows are 14 days: the second one closes on 6 September, 42 days past the
+#' July snapshot, exactly where it did before (see validation_windows()).
+#' Narrowing the trim to match the shorter window would only re-convert every
+#' snapshot to remove calendar coverage that costs nothing to keep.
+#'
+#' Widening only *adds* calendar coverage: every consumer re-trims to its own
+#' window before counting, so no figure inside a narrower window changes. The
+#' feed-level totals in the comparison report (routes, trips, calendar_end)
+#' do grow,
 #' because those are whole-feed counts rather than windowed ones.
 #'
 #' It does not make the extra fortnight as trustworthy as the rest. A snapshot
@@ -318,6 +326,70 @@ convert_bus_archive_year <- function(year, cal, naptan, cfg = load_cfg()) {
 #' now measurable rather than masked by an empty tail. See
 #' window_expiry_stats().
 tnds_trim_days <- function() 45L
+
+#' Which edition of a TNDS snapshot to convert, and from where
+#'
+#' TNDS publishes each snapshot twice: TransXChange 2.1 regional zips at the
+#' top level and a 2.5 rendering of the same data in `TNDSV2.5/`. The 2.5
+#' edition is preferred wherever it exists, which is every snapshot from
+#' February 2022 on.
+#'
+#' The reason is not the schema version - UK2GTFS reads both, and
+#' `transxchange_export_functions.R` already handles the 2.5 notation
+#' (`principalTimingPoint`, `RegistrationDocument`,
+#' `DynamicDestinationDisplay`). It is **cross-boundary deduplication**. Both
+#' editions' `log.txt` claims "Apply Deduplication Cross Boundary: True", but
+#' only the 2.5 output has had it applied: the 2.1 output still carries a
+#' service published in two regions twice over, and because
+#' convert_tnds_snapshot() converts each region on its own and merges them,
+#' nothing downstream can see the second copy. That is the whole reason the
+#' 2.1 conversion **doubled** the North-east London routes 20, 167, 215, 275
+#' and 462 - exactly twice the TfL schedule, against exactly the schedule on
+#' 2.5 - and carried Stagecoach 125 in Preston twice under two operator codes.
+#' Measured over the July 2026 snapshot, 2.5 is 2.1 minus 240 files and 14,449
+#' vehicle journeys; it adds no file and changes no file's content, and 178 of
+#' the 240 are demonstrably still published in another region. See
+#' reports/tnds_conversion_investigation.md section 2.
+#'
+#' **The series has a step at 2022 because of this.** No snapshot before
+#' February 2022 has a TNDSV2.5 folder, so 2018-2021 are converted from 2.1
+#' and keep their cross-boundary duplicates while 2022 on lose theirs. Part of
+#' any fall between 2021 and 2022 is therefore this change and not the
+#' network. It was taken deliberately: the alternative is to leave the London
+#' and Preston doubling in every recent year to protect a comparison with four
+#' early years that are wrong in a known direction.
+#'
+#' One archive is still taken from the 2.1 edition: **NCSD.zip**, the national
+#' coach services database, which the 2.5 output does not contain at all
+#' (2022, 2023 and 2024 publish it in 2.1 only). Dropping it would delete the
+#' national coach network from the years whose only coach source it is. It is
+#' a national archive rather than a region, so cross-boundary duplication
+#' cannot apply to it and the 2.1 copy is the right one.
+#'
+#' `iom.zip` is excluded. The Isle of Man is outside the LSOA21/DZ22 zone set,
+#' so none of its service reaches a counted zone, and it appears in some
+#' snapshots' 2.5 output and not others (2022-2024 and October 2026 have it;
+#' August 2025 to July 2026 do not), which would put a spurious step in the
+#' feed-level totals the comparison report prints.
+#'
+#' The cache folder differs by edition (`tnds_<snapshot>_v25`), so a 2.1
+#' conversion already on disk is kept for comparison rather than overwritten.
+#'
+#' @param src the snapshot folder, `<data_root>/TransXChange/data_<snapshot>`
+#' @return list(version, zips, cache_suffix)
+tnds_edition <- function(src) {
+  top <- list.files(src, pattern = "\\.zip$", full.names = TRUE)
+  v25dir <- file.path(src, "TNDSV2.5")
+  v25 <- if (dir.exists(v25dir)) {
+    list.files(v25dir, pattern = "\\.zip$", full.names = TRUE)
+  } else character(0)
+  v25 <- v25[!grepl("^iom\\.zip$", basename(v25), ignore.case = TRUE)]
+  if (!length(v25)) {
+    return(list(version = "2.1", zips = top, cache_suffix = ""))
+  }
+  ncsd <- top[grepl("NCSD", basename(top), ignore.case = TRUE)]
+  list(version = "2.5", zips = c(v25, ncsd), cache_suffix = "_v25")
+}
 
 #' Convert one TNDS snapshot (regional zips + NCSD coach archive) to GTFS
 #'
@@ -337,7 +409,10 @@ tnds_trim_days <- function() 45L
 #' minutes apart. See reports/near_duplicate_journeys.md.
 convert_tnds_snapshot <- function(snapshot, cal, naptan, cfg = load_cfg()) {
   src <- file.path(cfg$data_root, "TransXChange", paste0("data_", snapshot))
-  zips <- list.files(src, pattern = "\\.zip$", full.names = TRUE)
+  ed <- tnds_edition(src)
+  message("TNDS ", snapshot, ": TransXChange ", ed$version, " edition, ",
+          length(ed$zips), " archive(s)")
+  zips <- ed$zips
   if (length(zips) == 0) stop("No TNDS zips found in ", src)
   if (!any(grepl("NCSD", zips))) {
     message("Note: no NCSD.zip (coach) in TNDS snapshot ", snapshot)
@@ -346,7 +421,8 @@ convert_tnds_snapshot <- function(snapshot, cal, naptan, cfg = load_cfg()) {
   snap_date <- lubridate::ymd(snapshot)
   gtfs_all <- lapply(zips, function(z) {
     region <- gsub("\\.zip$", "", basename(z))
-    cache <- file.path(cfg$gtfs_dir, "cache", paste0("tnds_", snapshot),
+    cache <- file.path(cfg$gtfs_dir, "cache",
+                       paste0("tnds_", snapshot, ed$cache_suffix),
                        paste0(region, ".zip"))
     convert_txc_cached(z, cache, cal, naptan,
                        scotland = ifelse(region == "S", "yes", "no"),

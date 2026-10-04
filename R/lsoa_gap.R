@@ -16,7 +16,7 @@
 #    calls at (internal_trips_per_zone() de-duplicates on trip_id);
 #  * a stop-time with no departure time is dropped before that, because
 #    gtfs_trips_per_zone() drops rows whose time band is NA;
-#  * a trip's weight is the number of times it runs in the 28-day window,
+#  * a trip's weight is the number of times it runs in the study window,
 #    with frequency-based trips weighted by their implied departures.
 #
 # Everything here is measured on the DEDUPLICATED feed, like every other
@@ -52,7 +52,7 @@
 #' Total bus runs per zone in one comparison source result
 #'
 #' The per-zone table gtfs_trips_per_zone() produced, reduced to one number
-#' per zone: bus trip-runs over the whole 28-day window, all days and all
+#' per zone: bus trip-runs over the whole study window, all days and all
 #' time bands including Night. `tph_daytime_avg` is the measure the pipeline
 #' publishes, but it drops Night and weights weekdays, so it is not a total.
 zone_bus_runs <- function(cmp_result) {
@@ -542,18 +542,31 @@ zone_locality <- function(stops) {
 
 #' Zone-level TNDS vs BODS GTFS disagreement, and the routes behind it
 #'
-#' @param comparison_path data/bus_source_comparison_<year>.Rds
+#' Counted over the **July 2026 validation snapshot**, not the comparison's
+#' 2026 column, which is October. The two were the same snapshot until the
+#' October data arrived. They are separated now because this analysis is what
+#' selects the zones that are then checked against operators' published
+#' timetables - the 60 zones of `scripts/zone_pdf_validation/`, whose results
+#' are in `data/zone_pdf_validation.csv` and in the zone section of
+#' `reports/pdf_validation.md`. Those documents are valid for the July window
+#' and for no other, so moving this analysis to October would make every one
+#' of those checks unverifiable. The national source comparison, which wants
+#' the most recent snapshot and no documents, moved; this did not.
+#'
+#' @param spec a snapshot triple with at least `tnds`, `bods_gtfs` and `ref`
+#'   (validation_snapshot())
+#' @param year label for the output file, `lsoa_disagreement_<year>.Rds`
 #' @param zones_path zone polygons
-#' @param cmp_tnds,cmp_bods the two comparison_source_result() objects, used
-#'   for the exact zone totals and for the cross-source route matching
+#' @param cmp_tnds,cmp_bods the two comparison_source_result() objects counted
+#'   over `spec`, used for the exact zone totals, the window-expiry frame and
+#'   the cross-source route matching
 #' @param top_n how many zones to investigate in detail
-lsoa_gap_analysis <- function(comparison_path, zones_path, cmp_tnds, cmp_bods,
+lsoa_gap_analysis <- function(spec, year, zones_path, cmp_tnds, cmp_bods,
                               top_n = 30, cfg = load_cfg()) {
   suppressMessages(sf::sf_use_s2(FALSE))
-  cmp <- readRDS(comparison_path)
-  year <- cmp$year
-  win <- cmp$window
-  spec <- cmp$snapshot
+  win <- study_window(spec$ref)
+  message("lsoa_gap: ", year, " over ", win$startdate, " to ", win$enddate)
+  stopifnot(identical(win, cmp_tnds$window), identical(win, cmp_bods$window))
 
   # --- national picture, exact totals -------------------------------------
   a <- zone_bus_runs(cmp_tnds)

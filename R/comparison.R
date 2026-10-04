@@ -8,9 +8,9 @@
 #  - BODS GTFS: the DfT's own GTFS rendering of BODS data (the source used
 #               directly for 2024-2025)
 #
-# All three are counted with gtfs_trips_per_zone() over the same 28-day
-# Monday window and the same zones, so any differences are differences in
-# the sources (or their conversion), not in the method.
+# All three are counted with gtfs_trips_per_zone() over the same Monday
+# window - study_weeks() whole weeks - and the same zones, so any differences
+# are differences in the sources (or their conversion), not in the method.
 #
 # The comparison runs for 2022-2026, one snapshot per year. It cannot run
 # earlier: the BODS TransXChange change archive only starts in May 2022, and
@@ -69,13 +69,24 @@ comparison_snapshots <- function() {
                   tnds = "gtfs/tnds_20251003_merged.zip",
                   bods_txc = "gtfs/bods_txc_20251006.zip",
                   bods_gtfs = "OpenBusData/GTFS/20251006/itm_all_gtfs.zip"),
-    # 2026: extracted on Sunday 26 July (BODS TransXChange on the 25th) with
-    # no history, so the window opens on the following Monday rather than the
-    # preceding one.
-    `2026` = list(ref = "2026-07-27", snapshot_date = "2026-07-26",
-                  tnds = "gtfs/tnds_20260726_merged.zip",
-                  bods_txc = "gtfs/bods_txc_20260725.zip",
-                  bods_gtfs = "OpenBusData/GTFS/20260726/itm_all_gtfs.zip")
+    # 2026: the October snapshots, extracted Friday 2 October (TNDS) and
+    # Saturday 3 October (both BODS datasets). The DfT's GTFS still carries no
+    # history, so the window opens on the first Monday on or after the
+    # extraction date - 5 October - rather than the preceding one.
+    #
+    # It was the July triple until October 2026. July was the most recent
+    # snapshot there was at the time and it doubled as the validation
+    # snapshot; it is now a summer snapshot sitting among nine October ones,
+    # and summer is the worst time to read TNDS, because the weekly-export
+    # operators' files end inside the window and the school-day variants are
+    # not running. The July triple stays in the repository as the validation
+    # snapshot (validation_snapshot()), where the published timetables
+    # collected for it apply, and the comparison's 2026 column is now the
+    # October data like every other year's.
+    `2026` = list(ref = "2026-10-05", snapshot_date = "2026-10-03",
+                  tnds = "gtfs/tnds_20261002_merged.zip",
+                  bods_txc = "gtfs/bods_txc_20261003.zip",
+                  bods_gtfs = "OpenBusData/GTFS/20261003/itm_all_gtfs.zip")
   )
 }
 
@@ -90,9 +101,16 @@ comparison_snapshots <- function() {
 #' Extracted Sunday 26 July 2026, so the window opens on Monday 27 July for
 #' the same no-history reason described in comparison_snapshots().
 #'
-#' Since February 2026 was dropped this is the same triple the comparison
-#' calls 2026, minus BODS TransXChange, which is deliberately absent: see
-#' validation_sources().
+#' This was the comparison's 2026 triple as well until the October 2026
+#' snapshots arrived. It no longer is: the comparison counts October, which is
+#' where the rest of the series is anchored, and validation stays on July,
+#' which is the window the collected PDFs are valid for and the window every
+#' figure in reports/pdf_validation.md and
+#' reports/tnds_conversion_investigation.md was measured over. Keeping it here
+#' is what makes those figures re-measurable after a conversion fix, which is
+#' the whole purpose of the set.
+#'
+#' BODS TransXChange is deliberately absent: see validation_sources().
 validation_snapshot <- function() {
   list(ref = "2026-07-27", snapshot_date = "2026-07-26",
        tnds = "gtfs/tnds_20260726_merged.zip",
@@ -101,22 +119,65 @@ validation_snapshot <- function() {
 
 #' Windows the validation counts over
 #'
-#' Two, because the two bank holidays fall either side of a single 28-day
-#' window and bank holiday handling is the nearest untested neighbour of the
+#' Two, because the two bank holidays fall either side of a single window and
+#' bank holiday handling is the nearest untested neighbour of the
 #' holiday-profile duplication that was fixed in UK2GTFS.
 #'
-#'  * `main` (27 Jul - 23 Aug 2026) contains Monday 3 August, the Scottish
+#'  * `main` (27 Jul - 9 Aug 2026) contains Monday 3 August, the Scottish
 #'    summer bank holiday. The Glasgow, Falkirk and Fife references are all
 #'    inside it.
-#'  * `bankhol` (10 Aug - 6 Sep 2026) contains Monday 31 August, the England
+#'  * `bankhol` (24 Aug - 6 Sep 2026) contains Monday 31 August, the England
 #'    and Wales summer bank holiday, and so covers the Cardiff 62's "Sundays
 #'    & public holidays" table and Kinchbus's "Sunday & Bank Holiday Monday"
 #'    table - the only two published references for a bank holiday in the
 #'    set. It runs six weeks past the extraction date, which is well within
 #'    what the TransXChange sources carry forward but should be read with
 #'    that in mind.
+#'
+#' `bankhol` opened on 10 August while the window was 28 days. Halving the
+#' window to 14 (see study_weeks()) took 31 August out of it, which would have
+#' left the two bank-holiday reference timetables with nothing to test
+#' against - the one thing this second window exists for. Moving its start two
+#' weeks later puts 31 August back inside it and leaves its close on 6
+#' September exactly where it was, so it still ends well inside what
+#' tnds_trim_days() keeps and the trim arithmetic in pdf_validation.Rmd is
+#' unchanged.
+#'
+#' Both dates are Mondays, which study_window() requires in effect: it floors
+#' whatever it is given, so a mid-week date here would silently shift the
+#' window backwards.
 validation_windows <- function() {
-  c(main = "2026-07-27", bankhol = "2026-08-10")
+  c(main = "2026-07-27", bankhol = "2026-08-24")
+}
+
+#' How much of each source the deduplication stage removes, as prose
+#'
+#' `gtfs_deduplicate()` runs inside read_feed(), between conversion and
+#' counting, and how much it removes is one of the few figures in the
+#' comparison report that no target produces: measuring it means reading a
+#' national feed twice, which costs more than the sentence is worth. It was
+#' therefore typed into the report by hand, and went stale the first time a
+#' feed was reconverted.
+#'
+#' It is now harvested from the conversion logs by `scripts/dedup_rates.R`,
+#' which reads the rates UK2GTFS already prints, and written to
+#' data/dedup_rates.Rds. This turns that file into a sentence, and says so
+#' plainly when the file is absent rather than printing a figure whose
+#' provenance has been lost.
+dedup_rate_text <- function(path = file.path(load_cfg()$out_dir,
+                                             "dedup_rates.Rds")) {
+  if (!file.exists(path)) {
+    return(paste("not measured on this build (run `scripts/dedup_rates.R`",
+                 "after a conversion to fill it in)"))
+  }
+  d <- readRDS(path)
+  lab <- comparison_source_labels()
+  d <- d[order(-d$pct), ]
+  parts <- sprintf("%.1f%% of %s's trips", d$pct,
+                   ifelse(d$source %in% names(lab), lab[d$source], d$source))
+  if (length(parts) == 1) return(parts)
+  paste(paste(utils::head(parts, -1), collapse = ", "), "and",
+        utils::tail(parts, 1))
 }
 
 comparison_years <- function() as.integer(names(comparison_snapshots()))
@@ -301,16 +362,25 @@ add_tph_daytime_avg <- function(res) {
 #' One target per source and year, so an interrupted run resumes at the last
 #' completed source rather than restarting the year.
 #'
-#' @param year analysis year (must be in comparison_snapshots())
+#' @param year analysis year (must be in comparison_snapshots() unless `spec`
+#'   is given, in which case it is only a label)
 #' @param source one of comparison_sources()
 #' @param zones_path path to the zone polygons
 #' @param ... unused; carries the file dependency on the converted feed so
 #'   targets rebuilds this when the conversion changes
+#' @param spec a snapshot triple to count instead of the comparison's own
+#'   entry for `year`. This is how the zone-level gap analysis stays on the
+#'   July 2026 validation snapshot after the comparison's 2026 column moved to
+#'   October: it needs the same counts the comparison produces, over the
+#'   window the published timetables apply to, and recounting is the only way
+#'   to get them. Defaults to the comparison's entry.
 comparison_source_result <- function(year, source, zones_path, ...,
-                                     cfg = load_cfg()) {
-  spec <- comparison_snapshots()[[as.character(year)]]
+                                     spec = NULL, cfg = load_cfg()) {
+  if (is.null(spec)) spec <- comparison_snapshots()[[as.character(year)]]
   if (is.null(spec)) stop("No comparison snapshot for year ", year)
   if (!source %in% comparison_sources()) stop("Unknown source ", source)
+  if (is.null(spec[[source]]))
+    stop("Snapshot for ", year, " has no ", source, " feed")
 
   suppressMessages(sf::sf_use_s2(FALSE))
   win <- study_window(spec$ref)

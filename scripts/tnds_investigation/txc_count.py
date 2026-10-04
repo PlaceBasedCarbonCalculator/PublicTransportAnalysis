@@ -198,7 +198,7 @@ def count(xml_bytes, stops, days, bank=None, keep=None):
     return per, detail
 
 
-def window(a='2026-07-27', b='2026-08-23'):
+def window(a='2026-07-27', b='2026-08-09'):
     a, b = d(a), d(b)
     return [a + dt.timedelta(i) for i in range((b - a).days + 1)]
 

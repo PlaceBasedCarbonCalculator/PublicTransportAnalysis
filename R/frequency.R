@@ -1,7 +1,7 @@
 # Per-year trips-per-LSOA frequency statistics.
 #
 # The counting itself is UK2GTFS::gtfs_trips_per_zone(); this file only
-# handles reading feeds, applying the standard 28-day Monday study window,
+# handles reading feeds, applying the standard Monday study window,
 # and combining bus and rail feeds into one table per year.
 #
 # read_feed() is also where the deduplication stage sits, between conversion
@@ -56,7 +56,7 @@ read_feed <- function(path, cfg = load_cfg(), deduplicate = TRUE) {
   gtfs
 }
 
-#' Count trips per zone for one feed over its 28-day Monday window
+#' Count trips per zone for one feed over its Monday study window
 #'
 #' `feed$drop_route_types` removes modes this feed should not contribute,
 #' which is how a year takes bus from one source and coach from another

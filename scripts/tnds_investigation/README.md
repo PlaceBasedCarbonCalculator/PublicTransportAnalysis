@@ -24,24 +24,53 @@ Set `TNDS_WORK` to a directory that holds:
 
 ## Using the UK2GTFS patch
 
+**Applied and installed, 4 October 2026.** It is on the `overlap-siblings`
+branch of `../../ITSleeds/UK2GTFS` as commit "Do not reconcile TransXChange
+files written in one export", and the whole pipeline has been rebuilt on it.
+What follows is kept as the record of how it was applied and checked, and for
+anyone applying it to another checkout.
+
 `uk2gtfs_overlap_siblings.patch` changes one function in UK2GTFS,
 `txc_overlap_plan()` in `R/txc_filter_files.R`, the overlap rule
 `txc_filter_files()` applies when `resolve_overlaps = TRUE`. It stops the rule
 reconciling two files that were written at the same instant
 (`CreationDateTime`) under different `ServiceCode`s, because those are parts
 of one publication, not successive registrations. It was written against
-itsleeds/UK2GTFS commit `6824b31`. It has not been run in R; the Python port
-in `overlap_emulation.py` shows its effect.
+itsleeds/UK2GTFS commit `6824b31`.
+
+Three things were not known when it was written, all found on applying it:
+
+* **The patch file has CRLF line endings** (it was produced on a Windows
+  checkout) and the target file has LF, so `git apply` rejects it on the
+  commit it was written against, with `patch does not apply` and no further
+  explanation. `tr -d '\r' < uk2gtfs_overlap_siblings.patch | git apply -`
+  applies it cleanly.
+* **It breaks one passing test**, `same start and a different end moves the
+  longer period\'s start`. That fixture gave both its files one timestamp -
+  `make_txc()` defaults `createtime` to `modtime` - which makes them siblings
+  under the new rule, so the longer period is no longer truncated. The test
+  is about the geometry of the two periods, not about creation times, and
+  every other overlap test in the file already uses distinct times, as the
+  real Stagecoach and TfL cases do. The fixture now does too, and two tests
+  were added for the new behaviour: that sibling files all survive with their
+  periods untouched, and that a re-upload of the *same* ServiceCode at one
+  instant is still deduplicated. 293 tests, no failures.
+* **It needs no code change for the same-start branch.** The skip is placed
+  before all three branches, so it covers the 12 sibling files the report
+  found being truncated by the same-start rule as well as the 110 being
+  dropped outright.
 
 ### 1. Apply it to a UK2GTFS checkout
 
 From the UK2GTFS repository (for this project usually
-`../../ITSleeds/UK2GTFS`):
+`../../ITSleeds/UK2GTFS`). Strip the carriage returns or it will not apply:
 
 ```sh
 git checkout -b overlap-siblings
-git apply --check /path/to/PublicTransportAnalysis/scripts/tnds_investigation/uk2gtfs_overlap_siblings.patch
-git apply /path/to/PublicTransportAnalysis/scripts/tnds_investigation/uk2gtfs_overlap_siblings.patch
+P=/path/to/PublicTransportAnalysis/scripts/tnds_investigation/uk2gtfs_overlap_siblings.patch
+tr -d '\r' < "$P" > /tmp/overlap.patch
+git apply --check /tmp/overlap.patch
+git apply /tmp/overlap.patch
 git diff --stat      # R/txc_filter_files.R | 14 ++++++++++++++
 ```
 
@@ -60,6 +89,8 @@ packageDescription("UK2GTFS")$Built   # should be today
 ```
 
 ### 3. Check it on First Essex X30 (a few seconds, no pipeline)
+
+All four cases below were confirmed on 4 October 2026.
 
 Unzip the South East region of the TNDS snapshot and filter the X30 files:
 

@@ -336,14 +336,16 @@ coverage_analysis <- function(feed_paths = NULL, cfg = load_cfg()) {
   cov <- cov[!(region == "Unassigned" & atco_code != "900")]
 
   # Share of the year's own total, not raw departures. The eras are not on a
-  # common scale: a Bus Archive year merges four weekly snapshots, so its
-  # feeds hold roughly four times the departures of an NPTDR or TNDS year
-  # (about 220 million against 28 to 71 million). Any benchmark taken across
-  # years in raw departures inherits that, and 2020 in particular came out
-  # amber almost everywhere for a reason that had nothing to do with the
-  # pandemic. A share cancels the multiplier, and it also cancels a genuine
-  # national change - which is right here, because this measures coverage,
-  # not service.
+  # common scale: a Bus Archive year merges one weekly snapshot per week of
+  # the study window and holds every departure in each, so its feeds carry
+  # several times the departures of an NPTDR or TNDS year - roughly four times
+  # when the window was 28 days (about 220 million against 28 to 71 million),
+  # and the ratio moves with study_weeks(), which is itself the reason not to
+  # write it down. Any benchmark taken across years in raw departures inherits
+  # the multiplier, and 2020 in particular came out amber almost everywhere
+  # for a reason that had nothing to do with the pandemic. A share cancels it,
+  # and it also cancels a genuine national change - which is right here,
+  # because this measures coverage, not service.
   cov[, national := sum(departures), by = "year"]
   cov[, share := ifelse(national == 0, NA_real_, departures / national)]
   cov[, typical := stats::median(share[share > 0]), by = "atco_code"]

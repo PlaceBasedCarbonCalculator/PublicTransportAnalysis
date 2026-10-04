@@ -88,7 +88,7 @@ alone which of them is wrong. It could only do that for half of them, and one of
 its largest verdicts was later reversed. This section brings the operators' own
 timetables to those zones instead: for the routes that carry each zone's
 disagreement, how many journeys does the published timetable say pass through
-the zone in the same 28-day window, and which feed is nearer that number?
+the zone in the same counting window, and which feed is nearer that number?
 
 ### What was collected
 

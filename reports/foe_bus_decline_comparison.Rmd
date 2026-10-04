@@ -585,7 +585,7 @@ to matter in completely different eras.
 counted GTFS feeds converted in June-July 2023 (NPTDR) and November 2023
 (TransXChange) and kept on the data drive. Applying one identical piece of
 GTFS arithmetic to the old feed and the new one - how many departures does
-each describe inside the same 28-day window? - isolates what reconversion
+each describe inside the same counting window? - isolates what reconversion
 changed, with no counting code and no spatial join involved.
 
 **What deduplication removes.** This repo's `read_feed()` runs
@@ -668,11 +668,15 @@ are method, not conversion:
   effect that runs the other way.
 - **The counting windows differ in the early years.** The previous outputs use
   calendar-month windows in several years (2005, 2006, 2007 and 2011 contain
-  five Mondays rather than four); the rebuilt outputs are 28-day
-  Monday-aligned throughout. Because trips per hour is normalised by the actual
-  number of each weekday in the window, this does not bias the measure, but it
-  does mean the two runs are averaging over slightly different stretches of the
-  timetable.
+  five Mondays rather than four); the rebuilt outputs are a whole number of
+  Monday-aligned weeks throughout — `r 7L * study_weeks()` days, which was 28
+  until October 2026 and is `r 7L * study_weeks()` now. Because trips per hour
+  is normalised by the actual number of each weekday in the window, neither the
+  calendar-month windows nor the change in length biases the measure, but it
+  does mean the two runs are averaging over different stretches of the
+  timetable. It is also why this comparison is made on `tph_*` and not on
+  `runs_*`: the raw run counts are window totals and halved when the window
+  did, in every year at once.
 
 **Which run is closer to the truth is not fully settled here.** The validation
 work in this repo — `reports/route_279_pdf_validation.md`,

@@ -2,7 +2,7 @@
 
 A clean, reproducible [`targets`](https://books.ropensci.org/targets/) workflow
 measuring scheduled public transport service for every small area in Great
-Britain, for each year from 2004 to 2025. It supersedes the analysis half of
+Britain, for each year from 2004 to 2026. It supersedes the analysis half of
 [ITSleeds/TransportBlackspots](https://github.com/ITSLeeds/TransportBlackspots),
 keeping only the part consumed by the
 [Carbon & Place](https://www.carbon.place) build pipeline (`../build`).
@@ -12,7 +12,7 @@ keeping only the part consumed by the
 The main outputs are one file per year:
 
 ```
-data/trips_per_lsoa21_22_by_mode_<year>.Rds        (2004-2011, 2014-2025)
+data/trips_per_lsoa21_22_by_mode_<year>.Rds        (2004-2011, 2014-2026)
 ```
 
 Each is a data frame keyed on `zone_id` (LSOA 2021 code for England & Wales,
@@ -21,7 +21,9 @@ Data Zone 2022 for Scotland) × `route_type` (GTFS mode: 0 tram, 1 metro,
 columns:
 
 - `runs_<Day>_<Band>` — vehicle departures counted at stops in the zone over
-  the 28-day study window (7 days × 5 time bands),
+  the 14-day study window (7 days × 5 time bands; **two** of each weekday,
+  so these are half what a 28-day window gave before October 2026 — see
+  *Study windows*),
 - `tph_<Day>_<Band>` — the same normalised to trips per hour,
 - `routes_<Band>` — distinct routes serving the zone in each band.
 
@@ -148,31 +150,58 @@ once. Both versions cover the same 43,064 areas with the same codes.
 
 ### Study windows
 
-Every feed is counted over a **28-day window that always starts on a
-Monday** — exactly four of every weekday — derived by flooring the source's
-snapshot date to the Monday of its week. This makes `runs_*` directly
-comparable across years and the `tph_*` normalisation exact.
+Every feed is counted over a **14-day window that always starts on a
+Monday** — exactly two of every weekday — derived by flooring the source's
+snapshot date to the Monday of its week. Whole weeks are what makes `runs_*`
+directly comparable across years and the `tph_*` normalisation exact.
 
 | Year | Bus source | Bus window (Mon–Sun) | Rail source | Rail window |
 |------|-----------|----------------------|-------------|-------------|
-| 2004–2011 | NPTDR October snapshot | Monday of the week of 1 Oct + 28 d | (within NPTDR) | — |
-| 2014 | Bus Archive (TNDS weekly) | 2014-10-06 – 2014-11-02 | — | — |
-| 2015 | Bus Archive | 2015-10-05 – 2015-11-01 | — | — |
-| 2016 | Bus Archive | 2016-10-03 – 2016-10-30 | — | — |
-| 2017 | Bus Archive | 2017-10-02 – 2017-10-29 | — | — |
-| 2018 | TNDS | 2018-05-14 – 2018-06-10 | ATOC | 2018-10-15 – 2018-11-11 |
-| 2019 | TNDS | 2019-10-07 – 2019-11-03 | ATOC | 2019-08-26 – 2019-09-22 |
-| 2020 | TNDS | 2020-06-29 – 2020-07-26 | ATOC | 2020-11-23 – 2020-12-20 |
-| 2021 | TNDS | 2021-10-11 – 2021-11-07 | ATOC | 2021-10-04 – 2021-10-31 |
-| 2022 | TNDS | 2022-10-31 – 2022-11-27 | ATOC | 2022-10-31 – 2022-11-27 |
-| 2023 | TNDS (November snapshot) | 2023-10-30 – 2023-11-26 | ATOC | 2023-10-30 – 2023-11-26 |
-| 2024 | TNDS **+** BODS Coach | 2024-09-30 – 2024-10-27 (TNDS), 2024-10-07 – 2024-11-03 (coach) | ATOC | 2024-09-30 – 2024-10-27 |
-| 2025 | TNDS **+** BODS Coach | 2025-09-29 – 2025-10-26 (TNDS), 2025-10-06 – 2025-11-02 (coach) | **Rail Data Portal** | 2025-10-06 – 2025-11-02 |
+| 2004–2011 | NPTDR October snapshot | Monday of the week of 1 Oct + 14 d | (within NPTDR) | — |
+| 2014 | Bus Archive (TNDS weekly) | 2014-10-06 – 2014-10-19 | — | — |
+| 2015 | Bus Archive | 2015-10-05 – 2015-10-18 | — | — |
+| 2016 | Bus Archive | 2016-10-03 – 2016-10-16 | — | — |
+| 2017 | Bus Archive | 2017-10-02 – 2017-10-15 | — | — |
+| 2018 | TNDS | 2018-05-14 – 2018-05-27 | ATOC | 2018-10-15 – 2018-10-28 |
+| 2019 | TNDS | 2019-10-07 – 2019-10-20 | ATOC | 2019-08-26 – 2019-09-08 |
+| 2020 | TNDS | 2020-06-29 – 2020-07-12 | ATOC | 2020-11-23 – 2020-12-06 |
+| 2021 | TNDS | 2021-10-11 – 2021-10-24 | ATOC | 2021-10-04 – 2021-10-17 |
+| 2022 | TNDS | 2022-10-31 – 2022-11-13 | ATOC | 2022-10-31 – 2022-11-13 |
+| 2023 | TNDS (November snapshot) | 2023-10-30 – 2023-11-12 | ATOC | 2023-10-30 – 2023-11-12 |
+| 2024 | TNDS **+** BODS Coach | 2024-09-30 – 2024-10-13 (TNDS), 2024-10-07 – 2024-10-20 (coach) | ATOC | 2024-09-30 – 2024-10-13 |
+| 2025 | TNDS **+** BODS Coach | 2025-09-29 – 2025-10-12 (TNDS), 2025-10-06 – 2025-10-19 (coach) | **Rail Data Portal** | 2025-10-06 – 2025-10-19 |
+| 2026 | TNDS **+** BODS Coach | 2026-09-28 – 2026-10-11 (both) | **Rail Data Portal** | 2026-09-28 – 2026-10-11 |
 
 October is the preferred analysis month (a "normal" school-term month); the
 exceptions (2018/2020/2023 bus, some rail snapshots) are where no October
 snapshot was archived. The 2020 window falls between COVID lockdowns and
 reflects substantially reduced timetables.
+
+#### Why 14 days and not 28
+
+It was 28 days until October 2026. The problem is that a TNDS snapshot holds
+the registration operative on the day it was taken and carries nothing
+forward, and several large operators publish TNDS one week or one fortnight
+at a time — First Essex, First Dorset and Reading Buses among them. Over 28
+days those services run for part of the window and then stop, which a count
+cannot distinguish from a service cut. Measured on the July 2026 snapshot,
+326 live files nationally end inside the window with no successor: 30,652
+vehicle journeys, 2.7% of all live journeys. Where it bites it is severe
+rather than marginal — every route checked in Reading, Chelmsford and
+Weymouth read 0.2–0.3 of the operator's own printed timetable, and within the
+week each snapshot does cover, the counts were right. See
+`reports/tnds_conversion_investigation.md` section 3.
+
+Halving the window halves how far past the extraction date it reaches, and so
+how much of that truncation it collects, while keeping two of each weekday so
+that every count stays comparable between years and `tph_*` stays exact. It
+does not remove the effect; `window_expiry_stats()` measures what is left, and
+the comparison report prints it per source and year.
+
+**This rescales `runs_*`.** Those columns are window totals, so a 14-day
+window gives half of what the published 28-day figures gave. `tph_*` and
+`tph_daytime_avg` are rates per hour and do not move. `../build` publishes
+both.
 
 2023 has two archived TNDS snapshots. The November one is used alone; the
 spring snapshot is dropped rather than combined with it.
@@ -191,21 +220,32 @@ results are cached under `gtfs/cache/` so interrupted runs resume):
   so the merged feed exactly tiles the Monday-aligned study window. A
   static 2013–2018 bank-holiday table (cross-checked against UK2GTFS's
   `historic_bank_holidays`) extends the gov.uk calendar back over this era.
-- **TNDS snapshots 2018–2025, plus July 2026** — the 11 regional zips
-  *plus the NCSD national coach archive* where it exists, via
-  `transxchange2gtfs()` (Scottish bank holidays for `S.zip`), trimmed to ±45
-  days around the snapshot and merged. The trim is ±45 rather than ±31
-  because the validation report's second counting window ends 42 days past
-  its snapshot: a 31-day trim cut the last 11 days off it and made every TNDS
-  count in that window a fixed fraction of the first window's. Widening the
-  trim only *adds* calendar coverage — every consumer re-trims to its own
-  window before counting. The July 2026 snapshot is shared between the
-  validation report and the comparison's 2026 year.
+- **TNDS snapshots 2018–2026** — the regional zips *plus the NCSD national
+  coach archive* where it exists, via `transxchange2gtfs()` (Scottish bank
+  holidays for `S.zip`), trimmed to @PM@45 days around the snapshot and merged.
+  The trim is @PM@45 rather than @PM@31 because the validation report's second
+  counting window ends 42 days past its snapshot: a 31-day trim cut the last
+  11 days off it and made every TNDS count in that window a fixed fraction of
+  the first window's. Widening the trim only *adds* calendar coverage — every
+  consumer re-trims to its own window before counting.
+
+  **Which edition.** Each snapshot is published twice, as TransXChange 2.1 at
+  the top level and as 2.5 under `TNDSV2.5/`. The 2.5 edition is converted
+  wherever it exists, which is February 2022 onward, because only it has had
+  TNDS's own cross-boundary deduplication applied (`tnds_edition()`). The
+  national coach archive is taken from the 2.1 edition even so, because the
+  2.5 output does not contain it; `iom.zip` is excluded.
+
+  **Two 2026 snapshots are converted.** October 2026 is the 2026 analysis year
+  and the comparison's 2026 column. July 2026 is kept because every published
+  timetable in `data/example_timetables/` was collected for the July window
+  and the zone-level checks were measured over it, so it is the snapshot the
+  validation reports are re-measured on after a conversion fix.
 - **Rail 2018–2024** — the raw ATOC CIF snapshots via `atoc2gtfs()`.
-- **Rail October 2025** — from the National Rail Data Portal
-  (`RailDataPortal/20251006/timetable.zip`), the successor to the ATOC data
-  feed, converted with `atoc2gtfs()` (the current UK2GTFS handles the
-  portal's newer CIF flavour).
+- **Rail October 2025 and October 2026** — from the National Rail Data
+  Portal (`RailDataPortal/<snapshot>/timetable.zip`), the successor to the
+  ATOC data feed, converted with `atoc2gtfs()` (the current UK2GTFS handles
+  the portal's newer CIF flavour).
 - **BODS TransXChange 2022–2026** — one change archive per comparison year,
   converted for the source-comparison report. Each archive holds every
   revision of every dataset, so superseded revisions are dropped with
@@ -259,7 +299,8 @@ The differences are deliberate:
    under-counts and occasional negative run counts. TransXChange feeds
    routinely "cancel" bank-holiday-type days for every service of a route
    regardless of its day pattern, so the under-count was widespread.
-4. **Standardised 28-day Monday-aligned windows for every year.** The
+4. **Standardised Monday-aligned windows for every year** (28 days to
+   September 2026, 14 days from October 2026). The
    published 2004–2011 outputs used calendar-month windows (1–31 October:
    five Fridays/Saturdays/Sundays but four of other weekdays), and other
    years used windows not aligned to weeks. Raw `runs_*` values are now
@@ -283,7 +324,7 @@ The differences are deliberate:
    (2024, 2025) describe some services as frequency windows rather than
    individual trips; these departures were previously ignored. Each implied
    departure is now counted in its correct time band.
-8. **Extended to 2025**, with rail from the new National Rail Data Portal
+8. **Extended to 2026**, with rail from the new National Rail Data Portal
    (the ATOC feed this analysis previously used was retired).
 9. **Deduplication before counting** (UK2GTFS `gtfs_deduplicate()`, August
    2026). No previous version of this analysis removed journeys a feed
@@ -293,6 +334,32 @@ The differences are deliberate:
     (blackspot classification, quintiles, maps, xlsx exports) stays in
     TransportBlackspots; this repo produces just the per-year frequency
     files, plus the three analysis reports listed under *Outputs*.
+11. **TransXChange 2.5 for TNDS from 2022** (October 2026). Only the 2.5
+    edition of a TNDS snapshot has had TNDS's own cross-boundary
+    deduplication applied, although both editions' logs claim it. Converted
+    from 2.1, a service published in two regions was counted twice and
+    nothing downstream could see it, because each region is converted on its
+    own and then merged: the North-east London routes 20, 167, 215, 275 and
+    462 came out at **exactly twice** the TfL schedule, and Stagecoach 125 in
+    Preston twice under two operator codes. No snapshot before February 2022
+    has a 2.5 edition, so 2018–2021 keep their duplicates and **part of any
+    fall between 2021 and 2022 is this change rather than the network**. See
+    `reports/tnds_conversion_investigation.md` section 2.
+12. **Sibling TransXChange files no longer discarded** (UK2GTFS, October
+    2026). `txc_filter_files()` reconciles files whose operating periods
+    overlap, on the assumption that they are successive registrations of one
+    service. Some publishers instead split one timetable across several files
+    with their own `ServiceCode`s, all written in one export: First Essex
+    publishes route X30 as four such files, identical in operator,
+    description, line, operating period and `CreationDateTime`, carrying
+    different journeys between them. Every tie-break was equal and three of
+    the four were dropped — 126 of the route's 301 vehicle journeys. Two
+    files written at the same instant under different codes are now treated
+    as one publication rather than competing registrations, which recovers
+    110 files and 2,603 vehicle journeys on the July 2026 snapshot, and 91 of
+    those files are live in the counting window. It affects every TNDS year
+    and the BODS TransXChange conversions; it does not touch London, so the
+    re-registration case the rule exists for still works.
 
 Two further UK2GTFS bugs were found and fixed while building this pipeline
 (July 2026): `gtfs_merge()` corrupted the S4 Period time columns produced by
@@ -316,10 +383,10 @@ are invisible.
 |-----|--------|-------------|
 | 2004–2011 | **NPTDR** (National Public Transport Data Repository), annual October snapshots | Data quality varies by year and region; some rail/metro/tram included but coverage of non-bus modes is inconsistent; some stops have missing/bad coordinates (dropped or patched); 2012–2013 do not exist (the programme was discontinued, later replaced by TNDS archiving). |
 | 2014–2017 | **Bus Archive** TNDS weekly snapshots | Essentially no rail, tram or metro — bus (`route_type == 3`) is the only mode with a continuous series across this gap. Weekly snapshots must be stitched; snapshot dates are Tuesdays. |
-| 2018–2025 | **TNDS** (Traveline National Dataset) | Bus/coach/ferry/tram but no heavy rail (added separately from ATOC). Coach comes from the separate NCSD archive, **discontinued after February 2025**. Compiled from local authority systems; late-notice operator changes can lag. From ~2021 TNDS England content is itself increasingly derived from BODS. Not every year has an October snapshot archived (2018: May; 2020: July). A snapshot holds the registration operative on the day it was taken and carries nothing forward, so a window reaching weeks past it understates TNDS wherever a registration expires in between. |
+| 2018–2026 | **TNDS** (Traveline National Dataset) | Bus/coach/ferry/tram but no heavy rail (added separately from ATOC). Coach comes from the separate NCSD archive, **discontinued after February 2025**. Compiled from local authority systems; late-notice operator changes can lag. From ~2021 TNDS England content is itself increasingly derived from BODS. Not every year has an October snapshot archived (2018: May; 2020: July). A snapshot holds the registration operative on the day it was taken and carries nothing forward, so a window reaching weeks past it understates TNDS wherever a registration expires in between — which is why the window is now 14 days rather than 28. **From 2022 the TransXChange 2.5 edition is converted rather than 2.1**, so there is a step at 2022 where cross-boundary duplicates stop being counted; see *Known differences* item 11. |
 | 2018–2024 rail | **ATOC / Rail Delivery Group CIF** | Carries the London Underground (agency `LT`, 1,901–6,092 trips a year over 25 stations) and the Tyne and Wear Metro as well as heavy rail. TNDS carries both in full, so **route type 1 is dropped from this feed before counting**, or those stations would be counted twice. Includes some rail-replacement and ship services (recoded appropriately by UK2GTFS). |
-| 2024–2025 coach | **BODS Coach** (the Bus Open Data Service coach dataset), summed with TNDS bus | Statutory coverage is *English local bus services only*: Scottish and Welsh coverage is partial (voluntary/cross-border publication, Traveline Cymru uploads) — treat Scottish/Welsh 2024–2025 levels and trends with caution. Uses extended route types (e.g. 200 coach), harmonised where this analysis needs it. Includes `frequencies.txt`-based services. Carries more duplicate journeys than TNDS: 5.2% of its trips on the July 2026 snapshot, removed before counting. |
-| 2025 rail | **National Rail Data Portal CIF** | Successor to the ATOC feed; newer CIF flavour (RSPS5046). Same scope caveats as ATOC, including the Underground it carries and this pipeline drops. |
+| 2024–2026 coach | **BODS Coach** (the Bus Open Data Service coach dataset), summed with TNDS bus | Statutory coverage is *English local bus services only*: Scottish and Welsh coverage is partial (voluntary/cross-border publication, Traveline Cymru uploads) — treat Scottish/Welsh 2024–2026 levels and trends with caution. Uses extended route types (e.g. 200 coach), harmonised where this analysis needs it. Includes `frequencies.txt`-based services. Carries more duplicate journeys than TNDS: 5.2% of its trips on the July 2026 snapshot, removed before counting. |
+| 2025–2026 rail | **National Rail Data Portal CIF** | Successor to the ATOC feed; newer CIF flavour (RSPS5046). Same scope caveats as ATOC, including the Underground it carries and this pipeline drops. |
 
 Further caveats:
 
@@ -336,12 +403,15 @@ Further caveats:
   coordinates); they appear as `zone_id = NA` rows in the outputs — drop
   them before analysis (the build pipeline does).
 - **Use `tph_*` for cross-year comparison.** Although all windows are now
-  exactly 28 days, `tph_*` is the intended comparable measure.
+  exactly 14 days, `tph_*` is the intended comparable measure — and it is the
+  only one that survived the window changing, since `runs_*` halved with it.
 - **Mode composition is only trustworthy for bus.** Rail is absent
   2014–2017 and separately sourced elsewhere; tram/metro coverage varies by
   source. Coach (200) coverage depends on the NCSD archive for TNDS years
-  and on operator publication to BODS for 2024–2025; there is **no coach
-  data at all in the October 2025 TNDS snapshot** (NCSD discontinued).
+  and on operator publication to BODS for 2024–2026; there is **no coach
+  data at all in the October 2025 or October 2026 TNDS snapshots** (NCSD
+  discontinued), and none in the TransXChange 2.5 edition in any year, so the
+  2.1 `NCSD.zip` is still read for the years that have it.
 
 ### The metro series has era breaks
 
@@ -362,7 +432,7 @@ each source contains at all. Measured from the converted feeds; see
 |-------|------------------------|
 | 2004–2011 | NPTDR. The London Underground, the Tyne and Wear Metro, the Glasgow Subway and the DLR are all present from 2007; **2005 and 2006 hold no Underground and no DLR at all**. NPTDR files every tramway and every metro under one vehicle type and not consistently between years, so UK2GTFS applies one standard set of mode rules to it, the same rules it applies to every other source (`UK2GTFS::standard_mode_overrides()`). Without that correction the Underground sits in the **bus** totals in 2004 and Sheffield Supertram in most years. |
 | 2014–2017 | Bus Archive. **No London Underground whatsoever** – the metro series is Tyne and Wear only, about 172 zones against roughly 1,430 either side. This is a known and accepted gap in the source, not a decline: do not read a London metro trend across it. |
-| 2018–2025 | TNDS, with metro dropped from the rail feed so it is not counted twice. The same standard mode rules are applied here, so the DLR, the Glasgow Subway, the heritage railways and the airport people movers carry the same `route_type` as they do in the NPTDR years. |
+| 2018–2026 | TNDS, with metro dropped from the rail feed so it is not counted twice. The same standard mode rules are applied here, so the DLR, the Glasgow Subway, the heritage railways and the airport people movers carry the same `route_type` as they do in the NPTDR years. |
 
 ## Repo layout
 

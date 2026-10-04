@@ -142,6 +142,11 @@ trim_days <- tnds_trim_days()
 snap <- as.Date(v$snapshot$snapshot_date)
 tnds_end <- snap + trim_days
 over <- as.integer(v$window[[wn[2]]]$enddate - tnds_end)
+# Window length is read off the window, not written in: it was 28 days until
+# October 2026 and is 14 now (study_weeks()), and the trim-shortfall
+# arithmetic below is in units of it.
+wlen <- as.integer(v$window[[wn[2]]]$enddate -
+                     v$window[[wn[2]]]$startdate) + 1L
 
 d <- dcast(v$feeds, key + source ~ window, value.var = "runs", fill = 0)
 d <- d[get(wn[1]) > 0]
@@ -159,7 +164,7 @@ if (over > 0) {
     "A TNDS snapshot is trimmed to the snapshot date plus or minus %d days by ",
     "`convert_tnds_snapshot()`, so the %s feed ends on **%s** - %d days before ",
     "the `%s` window closes on %s. Those %d days are empty in TNDS by ",
-    "construction, which predicts a second-window count of %d/28 = **%.3f** of ",
+    "construction, which predicts a second-window count of %d/%d = **%.3f** of ",
     "a full one. Measured: the TNDS `%s` divided by `%s` ratio has a median of ",
     "%.3f and sits between %.3f and %.3f for %d of the %d routes, against a ",
     "median of %.3f for BODS GTFS. The apparent collapse of TNDS in the second ",
@@ -167,12 +172,14 @@ if (over > 0) {
     "the source, and **the `%s` TNDS column must not be read as a service ",
     "level**.\n\n"),
     trim_days, format(snap), format(tnds_end), over, wn[2],
-    format(v$window[[wn[2]]]$enddate), over, 28L - over, (28 - over) / 28,
+    format(v$window[[wn[2]]]$enddate), over, wlen - over, wlen,
+    (wlen - over) / wlen,
     wn[2], wn[1], tn$med, band$lo, band$hi, band$n, tn$n, bg$med, wn[2]))
 } else {
-  # The trim used to be 31 days, which stopped 11 days short of this window and
-  # made every TNDS figure in it 17/28 of the first window's. tnds_trim_days()
-  # is now 45, so what remains here is the source, not the conversion.
+  # The trim used to be 31 days, which stopped 11 days short of this window
+  # and made every TNDS figure in it 17/28 of the first window's (the windows
+  # were 28 days then). tnds_trim_days() is now 45, so what remains here is
+  # the source, not the conversion.
   cat(sprintf(paste0(
     "Both windows are now inside what the conversion keeps. ",
     "`convert_tnds_snapshot()` trims to the snapshot date plus or minus %d ",
@@ -639,13 +646,27 @@ twice looks like, and the near-duplicate pairing above supplies the mechanism.
 `data/lsoa_disagreement_2026.Rds`, and its figures are in
 `data/zone_pdf_validation.csv`.*
 
+> **Every number below this line predates the October 2026 conversion fixes.**
+> It was measured over a 28-day window, on the TransXChange 2.1 edition of the
+> July 2026 snapshot, and with the UK2GTFS overlap rule still discarding
+> sibling files. All three of those changed; the rest of this report, which is
+> knitted, reflects the change and this section does not. The 201 checks have
+> been re-measured on the current pipeline @EM@
+> `reports/zone_pdf_validation_refresh.md`, from
+> `scripts/zone_check_refresh.R` @EM@ and that is where to read what the fixes
+> did to them. This section is kept because the documents, the collection
+> method, the per-cause reasoning and the reasons a timetable could not be
+> obtained are all still current, and because the investigation in
+> `reports/tnds_conversion_investigation.md` is written against these figures.
+
 `lsoa_disagreement.md` ranks the 60 zones where the choice between TNDS and the
 DfT's BODS GTFS changes the answer most, and tries to say from the two feeds
 alone which of them is wrong. It could only do that for half of them, and one of
 its largest verdicts was later reversed. This section brings the operators' own
 timetables to those zones instead: for the routes that carry each zone's
 disagreement, how many journeys does the published timetable say pass through
-the zone in the same 28-day window, and which feed is nearer that number?
+the zone in the same counting window, and which feed is nearer that number?
+(28 days, as this section was measured; 14 since October 2026.)
 
 ### What was collected
 

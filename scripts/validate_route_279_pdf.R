@@ -270,7 +270,11 @@ main <- function() {
   print(pdf_daily)
   wk <- pdf_daily[daytype == "MT"]$journeys * 4 + pdf_daily[daytype == "Fr"]$journeys +
     pdf_daily[daytype == "Sa"]$journeys + pdf_daily[daytype == "Su"]$journeys
-  cat("journeys per week:", wk, "  per 28-day window:", wk * 4, "\n")
+  # study_weeks() rather than 4: this printed a 28-day figure while the
+  # pipeline counted 28 days, and the pipeline counts 14 now.
+  cat("journeys per week:", wk,
+      sprintf("  per %d-day window: ", 7L * study_weeks()),
+      wk * study_weeks(), "\n")
   cat("Mon-Thu direction split (odd trip nos towards Manor House):",
       pdf_manor[daytype == "MT", sum(trip %% 2 == 1)], "/",
       pdf_manor[daytype == "MT", sum(trip %% 2 == 0)], "\n")
