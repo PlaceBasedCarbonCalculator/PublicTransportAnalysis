@@ -6,6 +6,9 @@ The multi-year comparison in `bus_source_comparison.md` can say that TNDS,
 BODS TransXChange and BODS GTFS disagree; only an operator's own published
 timetable says which of them is right. This checks individual routes against
 the documents in `data/example_timetables/`.
+The section "The zones where TNDS and BODS GTFS disagree most", near the end, turns the
+same documents on the 60 zones of `lsoa_disagreement.md` and says, area by
+area, which source the operators' timetables support.
 
 Published timetables are easy to obtain for the current week and hard to
 obtain for the past, so this uses a **current snapshot** rather than one of
@@ -622,6 +625,522 @@ which is what England-only statutory coverage predicts for a Cardiff Bus
 service. SC125 is settled the other way and by the same evidence: TNDS reads
 2.28 of the document against BODS GTFS's 1.14, exactly what a service counted
 twice looks like, and the near-duplicate pairing above supplies the mechanism.
+
+## The zones where TNDS and BODS GTFS disagree most
+
+*This section is not recomputed when the report is knitted: it is written by
+`scripts/zone_pdf_validation/` from the documents and from
+`data/lsoa_disagreement_2026.Rds`, and its figures are in
+`data/zone_pdf_validation.csv`.*
+
+`lsoa_disagreement.md` ranks the 60 zones where the choice between TNDS and the
+DfT's BODS GTFS changes the answer most, and tries to say from the two feeds
+alone which of them is wrong. It could only do that for half of them, and one of
+its largest verdicts was later reversed. This section brings the operators' own
+timetables to those zones instead: for the routes that carry each zone's
+disagreement, how many journeys does the published timetable say pass through
+the zone in the same 28-day window, and which feed is nearer that number?
+
+### What was collected
+
+121 documents covering the routes in 45 of the 60 zones, all now in
+`data/example_timetables/`. They were collected for the routes that carry most
+of each zone's difference: the search started from every route whose two
+counts differ by 1,000 trip-runs or more in one of the zones, and for the
+operators carrying many of them most of their routes into those zones were
+collected.
+
+|Operator|Source|Documents|Editions|
+|:--|:--|--:|:--|
+|Bluestar|operator PDFs, passenger-line-assets archive|2|in force|
+|Brighton & Hove|operator PDFs, passenger-line-assets archive|7|in force|
+|East Yorkshire|operator PDFs, passenger-line-assets archive|9|in force|
+|First Bus|firstbus.co.uk timetable PDFs|28|in force, later edition|
+|Lothian|lothianbuses.com timing sheets|10|in force|
+|Metrobus|operator PDFs, passenger-line-assets archive (scanned; read by OCR)|8|in force, in force to 7 Aug|
+|National Express West Midlands|nxbus.co.uk timetable PDFs (generated on download)|26|in force, later edition|
+|Reading Buses|operator PDFs, passenger-line-assets archive|19|in force|
+|Redline|operator PDFs, passenger-line-assets archive|3|in force|
+|Stagecoach|operator PDF (already in the folder)|1|in force|
+|TfL contract|TfL running schedules (already in the folder)|8|TfL schedule|
+
+Where the operator keeps old editions, the edition in force for the window
+(27 July – 23 August 2026) was used: Reading Buses, East Yorkshire, Brighton &
+Hove, Bluestar, Metrobus and Redline all publish through a shared asset store
+that keeps every revision, and Lothian dates its timing sheets in the file
+name. National Express West Midlands and First publish only the current
+edition, so most of their documents are the **autumn editions (30 August – 27
+September 2026)**, a month or two after the window; the four NXWM routes
+already in the folder from August (6, 14, 50, 74) are the summer edition and
+are used for those. A later edition can differ from the window's by a few
+journeys an hour; it cannot account for a factor of two, which is the size of
+most of what follows.
+
+Some documents could not be had. Stagecoach and Arriva sit behind a browser
+check that the collection environment cannot pass, and TfL's own site refuses
+it, so Chester, Leven and the TfL routes without a schedule already in the
+folder (Wandsworth, Harrow, Southall, the City, Hackney) are not checked here;
+trentbarton's PDFs for Derby and Burton have no text layer and were not read;
+Darlington was not attempted.
+
+### How the check works
+
+* **The unit is the zone, not the route.** For each route the document is read
+  at a timing point inside the zone — or, where the zone has none (Edinburgh's
+  Salisbury Place and Drylaw, Southampton's Atherley Road), the adjacent one on
+  the same corridor — counting every journey in either direction that calls
+  there. That is the same quantity `lsoa_disagreement.md` counts: a vehicle
+  journey touching the zone, once, however many of its stops it calls at.
+* **Day types to window totals**: the window holds 16 Mondays–Thursdays, 4
+  Fridays, 4 Saturdays and 4 Sundays and no English bank holiday, and it lies in
+  the English and Welsh school holidays, so school-day-only journeys (First's
+  `SCH`/`SD` columns) are dropped and TfL's non-schoolday schedules used.
+* **Abbreviated periods are expanded** — "then every 10 minutes until",
+  "at these minutes past each hour" — and a reading where an abbreviation could
+  not be expanded is marked unreliable and left out of every count below
+  (18 rows). NXWM's "every 10 minutes **or less**" and Reading's "**up to**
+  every 9 mins" are expanded at the printed headway, so those counts are a
+  floor and a ceiling respectively.
+* **One check per zone and route.** Where a route's TNDS and BODS GTFS counts
+  in a second zone match its counts in the checked zone to within 2%, the same
+  journeys pass both, so the check is carried over (42 of the 183 checks,
+  marked † below).
+* **A source is right when it is within 15% of the document.** Beyond that,
+  the nearer of the two on a ratio scale (a reading of 0.5 is as far off as
+  2.0) is recorded as closer, not right.
+
+### What the documents say
+
+Across 183 zone-and-route checks in 45 zones, the document matches **TNDS in
+78** (including routes BODS GTFS does not carry) and **BODS GTFS in
+49** (including routes TNDS does not carry); in 56
+neither source is within 15%, TNDS being the nearer in 20 and BODS
+GTFS in 36.
+
+That headline hides the real result, which is that **the answer is decided by
+place, almost without exception**: within an area one source is right on
+nearly every route and the other wrong by the same factor on nearly every
+route, because each mechanism is an operator's or a region's publishing
+pattern rather than a property of individual timetables.
+
+|Area|Zones|Checks|TNDS ÷ doc (median)|BODS GTFS ÷ doc (median)|TNDS right|BODS GTFS right|Neither|Editions|
+|:--|--:|--:|--:|--:|--:|--:|--:|:--|
+|Birmingham city centre|6|42|0.94|1.67|38|0|4|in force, later edition|
+|Black Country|5|13|1.00|1.81|10|0|3|in force, later edition|
+|Chelmsford|6|28|0.20|2.09|0|0|28|later edition|
+|Weymouth|1|5|0.28|1.83|0|0|5|later edition|
+|Reading|2|19|0.24|0.98|0|15|4|in force|
+|Crawley and Gatwick|3|9|0.00|1.07|0|6|3|in force, in force to 7 Aug|
+|Hull|1|9|0.00|1.00|0|8|1|in force|
+|Portsmouth|2|10|1.00|1.42|10|0|0|later edition|
+|Edinburgh|2|12|1.00|0.50|10|0|2|in force|
+|North-east London|7|15|2.00|1.00|0|15|0|TfL schedule|
+|Kingston, Sunbury and Epsom|3|5|1.00|3.33|5|0|0|TfL schedule|
+|Preston and Chorley|2|2|2.49|1.24|0|0|2|in force|
+|Brighton|2|7|0.71|0.87|1|4|2|in force|
+|Aylesbury|1|3|0.87|0.00|2|0|1|in force|
+|Southampton|1|2|2.17|1.29|0|1|1|in force|
+|Swansea|1|2|0.96|0.00|2|0|0|in force|
+
+**Birmingham and the Black Country: TNDS is right, and BODS GTFS counts most
+weekday buses twice.** TNDS is within 15% of the document on 48 of the
+55 National Express West Midlands checks; BODS GTFS reads between
+1.44 and 2.15 of it on nine in ten of them. The summer-edition
+routes other than the 50, whose documents were in force for the window, show
+it most cleanly:
+TNDS 0.99–1.10 of the document, BODS GTFS 1.64–2.21.
+This is the overlapping Monday–Friday and Monday–Thursday/Friday calendars that
+`lsoa_disagreement.md` measured on route 74, now confirmed against the
+operator's own timetables in 55 checks; and NXWM's own autumn timetables are printed as
+separate Monday–Thursday and Friday tables, the split that BODS GTFS turns into
+a second copy of the week. Route 50 is the one exception: both sources read
+about twice and three times the document at Moor Street, and why is not
+established.
+
+**Chelmsford and Weymouth: neither source is right, in opposite directions.**
+TNDS reads 0.10–0.52 of the First Essex and First Wessex documents
+(median 0.22) — its registrations stop after six days of the
+twenty-eight — and BODS GTFS reads 1.28–5.48 (median 2.09).
+The BODS GTFS excess is larger than the 26–34% of duplicated journeys
+`lsoa_disagreement.md` traced to `gtfs_deduplicate()` keeping copies that differ
+only in arrival time at the first stop, so something else is inflating these
+zones as well. These documents are September editions; the size of the
+factors, not the exact ratios, is the finding. These are the zones that report
+left "unresolved" because both feeds are wrong, and the documents agree with it.
+
+**Reading: BODS GTFS is right, and TNDS counts one week of four.** BODS GTFS is
+within 15% on 15 of the 19 Reading Buses checks (median
+0.98), with documents in force for the window; TNDS reads a
+median 0.24, the registrations ending on 2 August. This is the
+one "TNDS calendars cut short" verdict, confirmed.
+
+**Hull: BODS GTFS is right, TNDS is missing East Yorkshire.** TNDS carries none
+of the 9 East Yorkshire routes checked at Hull Interchange except the
+X46; BODS GTFS matches the documents to within 5% on
+8 of 9, and exactly on several. The zone was "unresolved".
+
+**Crawley and Gatwick: TNDS is missing the town network, and BODS GTFS is the
+source to believe.** TNDS counts nothing for 9 of the
+9 Metrobus route-and-zone checks; BODS GTFS reads a median
+1.07 of the documents — 1.00–1.08 on routes 3, 10, 200 and 400,
+and 1.3–1.9 on the 2 and the 100, where the OCR reading is the likelier to
+have dropped journeys. The documents are scans with no
+text layer and were read by OCR, so these are the least precise counts in the
+section, but an absence is not a matter of precision: the service exists, and
+`lsoa_disagreement.md`'s "journeys missing from TNDS" stands.
+
+**Portsmouth: TNDS is right, and BODS GTFS overcounts.** TNDS matches First's
+documents to the journey on 9 of 10 checks (ratio 0.98–1.00);
+BODS GTFS reads 1.32–2.55. The zone verdict "journeys
+missing from TNDS" is the wrong way round.
+
+**Edinburgh: TNDS is right, and BODS GTFS carries half the service.** TNDS is
+within 15% of Lothian's timing sheets on 10 of 12 checks, exactly on
+three; BODS GTFS reads 0.40–0.60, half or a little under on every
+route. "Journeys missing from BODS GTFS" stands, and it is a uniform halving
+rather than missing routes.
+
+**North-east London: BODS GTFS is right, and TNDS counts every bus twice.**
+Against TfL's running schedules BODS GTFS reads 0.99–1.01 and TNDS
+1.99–2.01 on routes 20, 167, 215, 275 and 462. This is the exact-2.00
+group of `lsoa_disagreement.md` — duplicate TNDS registrations — and the zones it
+labelled "journeys missing from BODS GTFS" (Hainault Grove, Audleigh Place,
+Loughton Station) are the wrong way round.
+
+**Kingston, Sunbury and Epsom: TNDS is right, and BODS GTFS reads two to four
+times the schedules.** TNDS 1.00–1.05, BODS GTFS 2.00–3.99
+on routes 216, 235 and 406 — the second London pattern, in the opposite
+direction from the first. "Journeys missing from TNDS" is overturned.
+
+**Preston and Chorley: neither, BODS GTFS nearer.** The 125 reads TNDS
+2.41–2.57 and BODS GTFS 1.20–1.28 of the document at both
+bus stations — the duplicate Stagecoach registration in TNDS found earlier in
+this report, now seen at zone level.
+
+**The rest are mixed, and mostly about coverage.** In Brighton, BODS GTFS lacks
+routes 50, 12A and 18, which TNDS carries (50 to the journey), while TNDS lacks
+the 20, which BODS GTFS carries to within 2%; on the shared routes BODS GTFS is
+nearer. In Aylesbury, BODS GTFS carries none of Redline's 4, 130 and 300 and
+TNDS reads 0.84–0.89 of them. In Swansea TNDS matches First Cymru's 4 and X6
+and BODS GTFS has neither, as Welsh services need not appear in it. In
+Southampton, read at Central Station for want of a timing point in the zone,
+BODS GTFS matches Bluestar's 17 and reads the 18 half again high, while TNDS
+reads 1.8–2.5 of both.
+
+### What that means for the zone verdicts
+
+Weighting each checked route by how much of its zone's difference it carries,
+the documents find **TNDS right in 19 zones and BODS GTFS right in
+14**; in the other 12
+neither source is right, BODS GTFS being the nearer in 10
+(Chelmsford, Weymouth, Preston, Chorley, Southampton) and TNDS in
+2. By size, the zones where TNDS is right or nearer hold
+52% of the checked zones' combined difference and
+those where BODS GTFS is hold 48%.
+
+Set against the verdicts in `lsoa_disagreement.md`:
+
+* of the zones it blamed on **TNDS**, the documents agree in
+  5 and disagree in 10 —
+  every disagreement being a zone where BODS GTFS publishes more journeys than
+  run (Birmingham, Portsmouth, Sunbury Cross, Epsom);
+* of those it blamed on **BODS GTFS**, they agree in 3
+  and disagree in 5 — the disagreements being
+  TNDS's own duplicate registrations (north-east London, Chorley, Southampton);
+* of the **unresolved** zones checked, the documents settle
+  7 for TNDS (the Black Country bus stations, Kingston,
+  Swansea) and 6 for BODS GTFS (Hull, Walthamstow
+  and Woodford, Brighton's North Street), and confirm that in
+  9 more
+  both sources are wrong at once — which is what "unresolved" was meant to say.
+
+So the arithmetic in that report — journeys against operating days — reliably
+finds *where* the feeds disagree and *what kind* of disagreement it is, but
+"journeys missing from" one source is as often a duplicate in the other. The
+caution already in that report — that a flat daily profile with a
+journey-count gap should send the reader to the registrations before deciding
+which source is short — is borne out: ten of the fifteen checked zones it
+blamed on TNDS are the other way round.
+
+|Zone|Locality|Difference|Verdict in lsoa_disagreement.md|Routes checked|Checked routes' difference ÷ zone's|Document sides with|
+|:--|:--|--:|:--|--:|--:|:--|
+|E01033620|Church Centre|-74,064|journeys missing from TNDS|18|73%|TNDS|
+|E01034091|Bus Station|-55,922|unresolved|13|83%|BODS GTFS (closer)|
+|E01033617|Albert Street|-50,692|journeys missing from TNDS|5|30%|TNDS|
+|E01034092|Cathedral|-48,614|unresolved|5|23%|BODS GTFS (closer)|
+|E01033415|Friar Street|-45,946|TNDS calendars cut short|16|69%|BODS GTFS|
+|E01033140|Parkway|-43,567|unresolved|3|12%|BODS GTFS (closer)|
+|E01033561|Moor St Selfridges|-40,808|journeys missing from TNDS|7|60%|TNDS|
+|E01033615|Markets|-34,416|journeys missing from TNDS|4|20%|TNDS|
+|E01034313|Wolverhampton Bus Station|-32,595|unresolved|5|40%|TNDS|
+|E01010102|West Bromwich Bus Station|-28,356|unresolved|2|47%|TNDS|
+|E01002968|Cromwell Road Bus Station|-27,482|unresolved|2|50%|TNDS|
+|E01033420|Kings Road|-25,762|TNDS calendars cut short|3|16%|BODS GTFS|
+|E01017032|City Shops South|-24,570|journeys missing from TNDS|6|74%|TNDS|
+|E01010125|Chelmsley Interchange|-24,168|journeys missing from TNDS|6|79%|TNDS|
+|E01031575|North Terminal Bus Station|-24,160|journeys missing from TNDS|3|54%|BODS GTFS|
+|E01020554|Kings Statue|-23,405|unresolved|5|81%|BODS GTFS (closer)|
+|E01031585|Bus Station|-23,280|journeys missing from TNDS|5|80%|BODS GTFS|
+|E01021592|Cockney Corner|-23,014|unresolved|3|67%|BODS GTFS (closer)|
+|E01017034|The Hard Interchange|-22,595|journeys missing from TNDS|4|70%|TNDS|
+|E01031583|Manor Royal Central|-21,972|journeys missing from TNDS|1|33%|BODS GTFS|
+|E01010368|Walsall Bus Station|-21,947|unresolved|2|25%|TNDS|
+|E01009757|Evolve Campus|-21,136|unresolved|3|30%|TNDS|
+|E01010106|New Street|-20,992|unresolved|1|28%|TNDS|
+|E01021587|Skerry Rise|-20,987|unresolved|2|45%|BODS GTFS (closer)|
+|E01030751|Sunbury Cross|-20,924|journeys missing from TNDS|2|69%|TNDS|
+|E01034947|Barford Street|-20,600|journeys missing from TNDS|2|44%|TNDS (closer)|
+|E01034290|High Street|-19,745|journeys missing from TNDS|1|30%|TNDS|
+|E01033104|Hull Interchange|-19,312|unresolved|9|83%|BODS GTFS|
+|E01021542|Hospital|-18,421|unresolved|2|51%|BODS GTFS (closer)|
+|W01001955|Orchard Street|5,672|unresolved|2|64%|TNDS|
+|E01021767|Hainault Grove|5,916|journeys missing from BODS GTFS|2|100%|BODS GTFS|
+|E01017191|Atherley Road|6,011|journeys missing from BODS GTFS|2|65%|BODS GTFS (closer)|
+|S01014958|Drylaw Police Station|6,568|journeys missing from BODS GTFS|4|98%|TNDS|
+|E01021766|Audleigh Place|6,592|journeys missing from BODS GTFS|2|100%|BODS GTFS|
+|E01016952|Churchill Square|7,124|unresolved|1|47%|TNDS (closer)|
+|E01032955|Aylesbury Bus Stn|7,188|journeys missing from BODS GTFS|3|60%|TNDS|
+|E01016969|North Street|7,476|unresolved|6|174%|BODS GTFS|
+|E01004377|Chelmsford Rd /Woodford New Rd|7,532|unresolved|2|97%|BODS GTFS|
+|E01024940|Bus Station|7,540|journeys missing from BODS GTFS|1|58%|BODS GTFS (closer)|
+|E01003670|St Aubyns School|7,540|unresolved|2|97%|BODS GTFS|
+|E01003750|Chingford Lane (IG8)|7,590|unresolved|2|96%|BODS GTFS|
+|E01021782|Loughton Station|7,920|journeys missing from BODS GTFS|2|77%|BODS GTFS|
+|E01033223|Bus Station|8,001|unresolved|1|50%|BODS GTFS (closer)|
+|E01004397|Walthamstow Bus Station|10,248|unresolved|3|99%|BODS GTFS|
+|S01014636|Salisbury Place|13,004|journeys missing from BODS GTFS|8|96%|TNDS|
+
+### Every check
+
+`Edition`: *in force* is the edition valid for the window; *later edition*
+started after it; *TfL schedule* is a TfL running schedule current in July
+2026. † marks a check carried over from another zone with the same journeys.
+The same table, with the per-day counts and the document file names, is in
+`data/zone_pdf_validation.csv`.
+
+|Zone|Locality|Route|Edition|Document|TNDS|BODS GTFS|TNDS ÷ doc|BODS ÷ doc|Verdict|
+|:--|:--|:--|:--|--:|--:|--:|--:|--:|:--|
+|E01033617|Albert Street|14|in force|4,952|5,440|10,096|1.10|2.04|TNDS right †|
+|E01033617|Albert Street|94|later edition|4,612|4,224|7,892|0.92|1.71|TNDS right|
+|E01033617|Albert Street|95|later edition|4,660|4,160|7,848|0.89|1.68|TNDS right †|
+|E01033617|Albert Street|X13|later edition|1,984|1,748|3,108|0.88|1.57|TNDS right|
+|E01033617|Albert Street|X51|later edition|4,344|4,104|6,064|0.94|1.40|TNDS right|
+|E01034947|Barford Street|35|later edition|3,872|3,688|5,808|0.95|1.50|TNDS right †|
+|E01034947|Barford Street|50|in force|6,008|11,488|18,460|1.91|3.07|neither; TNDS closer †|
+|E01010125|Chelmsley Interchange|14|in force|4,952|5,440|10,096|1.10|2.04|TNDS right|
+|E01010125|Chelmsley Interchange|94|later edition|4,612|4,224|7,892|0.92|1.71|TNDS right †|
+|E01010125|Chelmsley Interchange|95|later edition|4,660|4,160|7,848|0.89|1.68|TNDS right|
+|E01010125|Chelmsley Interchange|96|later edition|1,756|1,756|3,096|1.00|1.76|TNDS right|
+|E01010125|Chelmsley Interchange|97|later edition|5,284|4,776|8,992|0.90|1.70|TNDS right †|
+|E01010125|Chelmsley Interchange|X12|later edition|2,228|2,104|3,716|0.94|1.67|TNDS right|
+|E01033620|Church Centre|101|later edition|4,032|3,920|6,468|0.97|1.60|TNDS right (unreliable reading)|
+|E01033620|Church Centre|126|later edition|2,760|2,760|4,616|1.00|1.67|TNDS right|
+|E01033620|Church Centre|14|in force|4,952|5,440|10,096|1.10|2.04|TNDS right †|
+|E01033620|Church Centre|23|later edition|4,800|4,324|6,788|0.90|1.41|TNDS right|
+|E01033620|Church Centre|24|later edition|4,748|4,240|6,992|0.89|1.47|TNDS right|
+|E01033620|Church Centre|4|later edition|4,728|4,628|7,288|0.98|1.54|TNDS right|
+|E01033620|Church Centre|4A|later edition|2,592|2,672|4,432|1.03|1.71|TNDS right|
+|E01033620|Church Centre|5|later edition|1,712|1,712|2,844|1.00|1.66|TNDS right|
+|E01033620|Church Centre|6|in force|4,956|5,256|10,952|1.06|2.21|TNDS right|
+|E01033620|Church Centre|74|in force|8,272|8,224|13,592|0.99|1.64|TNDS right|
+|E01033620|Church Centre|82|later edition|4,260|3,976|6,532|0.93|1.53|TNDS right|
+|E01033620|Church Centre|87|later edition|4,548|4,272|7,576|0.94|1.67|TNDS right|
+|E01033620|Church Centre|9|later edition|4,952|4,336|8,276|0.88|1.67|TNDS right|
+|E01033620|Church Centre|94|later edition|4,612|4,224|7,892|0.92|1.71|TNDS right †|
+|E01033620|Church Centre|95|later edition|4,660|4,160|7,848|0.89|1.68|TNDS right †|
+|E01033620|Church Centre|97|later edition|5,284|4,776|8,992|0.90|1.70|TNDS right|
+|E01033620|Church Centre|X20|later edition|1,936|1,528|2,724|0.79|1.41|neither; TNDS closer|
+|E01033620|Church Centre|X21|later edition|3,092|2,692|4,480|0.87|1.45|TNDS right|
+|E01033620|Church Centre|X22|later edition|2,960|2,608|4,312|0.88|1.46|TNDS right|
+|E01033620|Church Centre|X8|later edition|1,744|2,208|3,868|1.27|2.22|neither; TNDS closer (unreliable reading)|
+|E01033615|Markets|35|later edition|3,872|3,688|5,808|0.95|1.50|TNDS right|
+|E01033615|Markets|X20|later edition|1,936|1,528|2,724|0.79|1.41|neither; TNDS closer †|
+|E01033615|Markets|X21|later edition|3,092|2,692|4,480|0.87|1.45|TNDS right †|
+|E01033615|Markets|X22|later edition|2,960|2,608|4,312|0.88|1.46|TNDS right †|
+|E01033561|Moor St Selfridges|14|in force|4,976|5,440|10,096|1.09|2.03|TNDS right|
+|E01033561|Moor St Selfridges|17|later edition|2,900|2,780|5,008|0.96|1.73|TNDS right|
+|E01033561|Moor St Selfridges|17A|later edition|1,956|1,904|3,236|0.97|1.65|TNDS right|
+|E01033561|Moor St Selfridges|35|later edition|3,872|3,688|5,808|0.95|1.50|TNDS right †|
+|E01033561|Moor St Selfridges|50|in force|6,008|11,488|18,460|1.91|3.07|neither; TNDS closer|
+|E01033561|Moor St Selfridges|94|later edition|4,612|4,224|7,892|0.92|1.71|TNDS right †|
+|E01033561|Moor St Selfridges|95|later edition|4,660|4,160|7,848|0.89|1.68|TNDS right|
+|E01009757|Evolve Campus|126|later edition|2,780|2,780|4,636|1.00|1.67|TNDS right|
+|E01009757|Evolve Campus|82|later edition|1,268|1,620|2,660|1.28|2.10|neither; TNDS closer|
+|E01009757|Evolve Campus|87|later edition|4,484|4,316|7,656|0.96|1.71|TNDS right|
+|E01010106|New Street|79|later edition|4,628|4,262|10,062|0.92|2.17|TNDS right †|
+|E01010368|Walsall Bus Station|529|later edition|5,040|5,580|9,136|1.11|1.81|TNDS right|
+|E01010368|Walsall Bus Station|X51|later edition|4,480|4,196|6,156|0.94|1.37|TNDS right|
+|E01010102|West Bromwich Bus Station|74|in force|10,748|10,900|18,540|1.01|1.72|TNDS right|
+|E01010102|West Bromwich Bus Station|79|later edition|4,628|4,262|10,062|0.92|2.17|TNDS right|
+|E01034313|Wolverhampton Bus Station|16|later edition|2,440|2,204|3,504|0.90|1.44|TNDS right|
+|E01034313|Wolverhampton Bus Station|529|later edition|5,040|5,580|9,184|1.11|1.82|TNDS right|
+|E01034313|Wolverhampton Bus Station|59|later edition|3,488|4,584|5,616|1.31|1.61|neither; TNDS closer|
+|E01034313|Wolverhampton Bus Station|79|later edition|4,676|4,330|10,274|0.93|2.20|TNDS right|
+|E01034313|Wolverhampton Bus Station|9|later edition|1,452|1,892|3,080|1.30|2.12|neither; TNDS closer|
+|E01034091|Bus Station|170|later edition|1,468|291|2,109|0.20|1.44|neither; BODS GTFS closer|
+|E01034091|Bus Station|333|later edition|1,056|165|1,350|0.16|1.28|neither; BODS GTFS closer|
+|E01034091|Bus Station|336|later edition|1,000|140|1,441|0.14|1.44|neither; BODS GTFS closer|
+|E01034091|Bus Station|351|later edition|844|200|2,324|0.24|2.75|neither; BODS GTFS closer|
+|E01034091|Bus Station|C1|later edition|2,324|817|8,575|0.35|3.69|neither; TNDS closer|
+|E01034091|Bus Station|C10|later edition|1,564|364|4,740|0.23|3.03|neither; BODS GTFS closer|
+|E01034091|Bus Station|C2|later edition|1,404|617|6,675|0.44|4.75|neither; TNDS closer|
+|E01034091|Bus Station|C3|later edition|720|348|3,948|0.48|5.48|neither; TNDS closer|
+|E01034091|Bus Station|C5|later edition|1,112|517|4,843|0.46|4.36|neither; TNDS closer|
+|E01034091|Bus Station|C7|later edition|960|171|2,532|0.18|2.64|neither; BODS GTFS closer|
+|E01034091|Bus Station|C8|later edition|1,176|276|3,444|0.23|2.93|neither; BODS GTFS closer|
+|E01034091|Bus Station|X10|later edition|1,280|279|2,341|0.22|1.83|neither; BODS GTFS closer|
+|E01034091|Bus Station|X30|later edition|2,340|231|6,764|0.10|2.89|neither; BODS GTFS closer|
+|E01034092|Cathedral|333|later edition|1,056|165|1,350|0.16|1.28|neither; BODS GTFS closer †|
+|E01034092|Cathedral|336|later edition|1,000|140|1,441|0.14|1.44|neither; BODS GTFS closer †|
+|E01034092|Cathedral|351|later edition|844|200|2,324|0.24|2.75|neither; BODS GTFS closer †|
+|E01034092|Cathedral|700|later edition|1,612|403|2,961|0.25|1.84|neither; BODS GTFS closer †|
+|E01034092|Cathedral|C9|later edition|1,212|286|4,290|0.24|3.54|neither; BODS GTFS closer|
+|E01021592|Cockney Corner|170|later edition|1,468|291|2,109|0.20|1.44|neither; BODS GTFS closer †|
+|E01021592|Cockney Corner|C1|later edition|4,044|805|8,435|0.20|2.09|neither; BODS GTFS closer †|
+|E01021592|Cockney Corner|C2|later edition|1,404|617|6,671|0.44|4.75|neither; TNDS closer †|
+|E01021542|Hospital|170|later edition|1,468|291|2,109|0.20|1.44|neither; BODS GTFS closer †|
+|E01021542|Hospital|C1|later edition|4,044|805|8,435|0.20|2.09|neither; BODS GTFS closer|
+|E01033140|Parkway|333|later edition|1,056|165|1,350|0.16|1.28|neither; BODS GTFS closer †|
+|E01033140|Parkway|336|later edition|1,000|140|1,441|0.14|1.44|neither; BODS GTFS closer †|
+|E01033140|Parkway|700|later edition|1,612|403|2,961|0.25|1.84|neither; BODS GTFS closer|
+|E01021587|Skerry Rise|170|later edition|1,468|291|2,109|0.20|1.44|neither; BODS GTFS closer †|
+|E01021587|Skerry Rise|C1|later edition|4,044|805|8,435|0.20|2.09|neither; BODS GTFS closer|
+|E01020554|Kings Statue|1|later edition|3,496|756|5,663|0.22|1.62|neither; BODS GTFS closer|
+|E01020554|Kings Statue|10|later edition|3,012|665|4,790|0.22|1.59|neither; BODS GTFS closer|
+|E01020554|Kings Statue|2|later edition|3,320|918|6,079|0.28|1.83|neither; BODS GTFS closer|
+|E01020554|Kings Statue|4|later edition|1,128|450|3,253|0.40|2.88|neither; TNDS closer|
+|E01020554|Kings Statue|8|later edition|660|342|2,322|0.52|3.52|neither; TNDS closer|
+|E01033415|Friar Street|1|in force|1,648|412|1,648|0.25|1.00|BODS GTFS right|
+|E01033415|Friar Street|11|in force|2,456|614|2,456|0.25|1.00|BODS GTFS right|
+|E01033415|Friar Street|16|in force|2,452|603|2,412|0.25|0.98|BODS GTFS right|
+|E01033415|Friar Street|17|in force|6,840|1,629|6,516|0.24|0.95|BODS GTFS right|
+|E01033415|Friar Street|18|in force|1,644|401|1,604|0.24|0.98|BODS GTFS right|
+|E01033415|Friar Street|21|in force|3,688|761|3,044|0.21|0.83|neither; BODS GTFS closer|
+|E01033415|Friar Street|25|in force|1,368|363|1,452|0.27|1.06|BODS GTFS right|
+|E01033415|Friar Street|26|in force|3,916|950|3,800|0.24|0.97|BODS GTFS right|
+|E01033415|Friar Street|28|in force|1,920|369|1,476|0.19|0.77|neither; BODS GTFS closer|
+|E01033415|Friar Street|29|in force|1,428|374|1,496|0.26|1.05|BODS GTFS right|
+|E01033415|Friar Street|3|in force|2,728|759|3,036|0.28|1.11|BODS GTFS right|
+|E01033415|Friar Street|33|in force|2,492|623|2,492|0.25|1.00|BODS GTFS right|
+|E01033415|Friar Street|4|in force|2,212|410|1,640|0.19|0.74|neither; BODS GTFS closer|
+|E01033415|Friar Street|5|in force|4,412|1,102|4,408|0.25|1.00|BODS GTFS right|
+|E01033415|Friar Street|50|in force|996|359|1,436|0.36|1.44|neither; BODS GTFS closer (unreliable reading)|
+|E01033415|Friar Street|500|in force|892|607|2,428|0.68|2.72|neither; TNDS closer (unreliable reading)|
+|E01033415|Friar Street|6|in force|4,860|1,052|4,208|0.22|0.87|BODS GTFS right|
+|E01033415|Friar Street|600|in force|1,304|745|2,980|0.57|2.29|neither; TNDS closer (unreliable reading)|
+|E01033415|Friar Street|9|in force|940|207|828|0.22|0.88|BODS GTFS right †|
+|E01033420|Kings Road|3|in force|2,728|759|3,036|0.28|1.11|BODS GTFS right †|
+|E01033420|Kings Road|4|in force|2,212|410|1,640|0.19|0.74|neither; BODS GTFS closer †|
+|E01033420|Kings Road|9|in force|940|207|828|0.22|0.88|BODS GTFS right|
+|E01031585|Bus Station|10|in force|7,208|0|7,172|0.00|1.00|TNDS absent|
+|E01031585|Bus Station|100|in force|2,664|0|3,580|0.00|1.34|TNDS absent; BODS GTFS off|
+|E01031585|Bus Station|2|in force|1,908|0|3,620|0.00|1.90|TNDS absent; BODS GTFS off|
+|E01031585|Bus Station|20|in force|0|0|1,568|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031585|Bus Station|3|in force|2,672|0|2,768|0.00|1.04|TNDS absent|
+|E01031585|Bus Station|4|in force|4,360|0|1,664|0.00|0.38|TNDS absent; BODS GTFS off (unreliable reading)|
+|E01031585|Bus Station|400|in force to 7 Aug|1,356|0|1,456|0.00|1.07|TNDS absent|
+|E01031585|Bus Station|5|in force|4,360|0|1,664|0.00|0.38|TNDS absent; BODS GTFS off (unreliable reading)|
+|E01031583|Manor Royal Central|10|in force|7,200|0|7,172|0.00|1.00|TNDS absent|
+|E01031583|Manor Royal Central|100|in force|0|0|3,556|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031583|Manor Royal Central|20|in force|0|0|3,140|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031583|Manor Royal Central|200|in force|0|0|2,320|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031583|Manor Royal Central|3|in force|0|0|2,776|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031583|Manor Royal Central|400|in force to 7 Aug|0|0|1,408|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031575|North Terminal Bus Station|10|in force|6,816|0|7,172|0.00|1.05|TNDS absent|
+|E01031575|North Terminal Bus Station|100|in force|2,632|0|3,588|0.00|1.36|TNDS absent; BODS GTFS off|
+|E01031575|North Terminal Bus Station|20|in force|0|0|3,140|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031575|North Terminal Bus Station|200|in force|2,148|0|2,320|0.00|1.08|TNDS absent|
+|E01031575|North Terminal Bus Station|3|in force|0|0|2,776|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031575|North Terminal Bus Station|4|in force|0|0|1,664|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031575|North Terminal Bus Station|400|in force to 7 Aug|0|0|1,600|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01031575|North Terminal Bus Station|5|in force|0|0|1,664|—|—|neither; BODS GTFS closer (unreliable reading)|
+|E01033104|Hull Interchange|104|in force|1,568|0|1,568|0.00|1.00|TNDS absent|
+|E01033104|Hull Interchange|35|in force|1,528|0|1,528|0.00|1.00|TNDS absent|
+|E01033104|Hull Interchange|45|in force|1,952|0|2,032|0.00|1.04|TNDS absent|
+|E01033104|Hull Interchange|51|in force|1,924|0|1,924|0.00|1.00|TNDS absent|
+|E01033104|Hull Interchange|54|in force|1,544|0|1,544|0.00|1.00|TNDS absent|
+|E01033104|Hull Interchange|56|in force|1,968|0|1,964|0.00|1.00|TNDS absent|
+|E01033104|Hull Interchange|57|in force|2,144|0|2,144|0.00|1.00|TNDS absent|
+|E01033104|Hull Interchange|58|in force|1,724|0|1,764|0.00|1.02|TNDS absent|
+|E01033104|Hull Interchange|X46|in force|1,240|834|2,456|0.67|1.98|neither; TNDS closer|
+|E01017032|City Shops South|1|later edition|4,120|4,120|10,474|1.00|2.54|TNDS right|
+|E01017032|City Shops South|2|later edition|4,556|4,556|6,103|1.00|1.34|TNDS right|
+|E01017032|City Shops South|3|later edition|4,188|4,148|10,666|0.99|2.55|TNDS right|
+|E01017032|City Shops South|7|later edition|3,336|3,336|4,394|1.00|1.32|TNDS right|
+|E01017032|City Shops South|8|later edition|3,484|3,484|4,939|1.00|1.42|TNDS right|
+|E01017032|City Shops South|X3|later edition|1,316|1,296|0|0.98|0.00|BODS GTFS absent|
+|E01017034|The Hard Interchange|1|later edition|4,120|4,120|10,474|1.00|2.54|TNDS right †|
+|E01017034|The Hard Interchange|2|later edition|4,556|4,556|6,103|1.00|1.34|TNDS right †|
+|E01017034|The Hard Interchange|3|later edition|4,188|4,148|10,666|0.99|2.55|TNDS right †|
+|E01017034|The Hard Interchange|8|later edition|3,484|3,484|4,935|1.00|1.42|TNDS right †|
+|S01014958|Drylaw Police Station|21|in force|3,320|3,640|1,848|1.10|0.56|TNDS right|
+|S01014958|Drylaw Police Station|27|in force|3,300|3,444|1,756|1.04|0.53|TNDS right|
+|S01014958|Drylaw Police Station|29|in force|2,184|2,600|1,316|1.19|0.60|neither; TNDS closer|
+|S01014958|Drylaw Police Station|37|in force|3,616|3,476|1,784|0.96|0.49|TNDS right|
+|S01014636|Salisbury Place|29|in force|2,808|2,728|1,344|0.97|0.48|TNDS right|
+|S01014636|Salisbury Place|3|in force|4,212|4,212|2,100|1.00|0.50|TNDS right|
+|S01014636|Salisbury Place|31|in force|4,096|4,096|2,048|1.00|0.50|TNDS right|
+|S01014636|Salisbury Place|37|in force|3,164|3,504|1,792|1.11|0.57|TNDS right|
+|S01014636|Salisbury Place|47|in force|2,848|2,280|1,144|0.80|0.40|neither; TNDS closer|
+|S01014636|Salisbury Place|49|in force|2,660|2,660|1,284|1.00|0.48|TNDS right|
+|S01014636|Salisbury Place|7|in force|3,104|2,940|1,464|0.95|0.47|TNDS right|
+|S01014636|Salisbury Place|8|in force|2,292|2,488|1,220|1.09|0.53|TNDS right|
+|E01021766|Audleigh Place|167|TfL schedule|2,712|5,424|2,712|2.00|1.00|BODS GTFS right †|
+|E01021766|Audleigh Place|275|TfL schedule|3,920|7,840|3,960|2.00|1.01|BODS GTFS right †|
+|E01004377|Chelmsford Rd /Woodford New Rd|20|TfL schedule|3,392|6,804|3,392|2.01|1.00|BODS GTFS right †|
+|E01004377|Chelmsford Rd /Woodford New Rd|275|TfL schedule|3,920|7,840|3,960|2.00|1.01|BODS GTFS right †|
+|E01003750|Chingford Lane (IG8)|20|TfL schedule|3,392|6,804|3,392|2.01|1.00|BODS GTFS right †|
+|E01003750|Chingford Lane (IG8)|275|TfL schedule|3,920|7,840|3,960|2.00|1.01|BODS GTFS right †|
+|E01021767|Hainault Grove|167|TfL schedule|2,712|5,424|2,712|2.00|1.00|BODS GTFS right †|
+|E01021767|Hainault Grove|462|TfL schedule|3,204|6,408|3,204|2.00|1.00|BODS GTFS right|
+|E01021782|Loughton Station|167|TfL schedule|2,712|5,424|2,712|2.00|1.00|BODS GTFS right|
+|E01021782|Loughton Station|20|TfL schedule|3,392|6,804|3,392|2.01|1.00|BODS GTFS right|
+|E01003670|St Aubyns School|20|TfL schedule|3,392|6,804|3,392|2.01|1.00|BODS GTFS right †|
+|E01003670|St Aubyns School|275|TfL schedule|3,920|7,840|3,960|2.00|1.01|BODS GTFS right †|
+|E01004397|Walthamstow Bus Station|20|TfL schedule|3,392|6,804|3,392|2.01|1.00|BODS GTFS right|
+|E01004397|Walthamstow Bus Station|215|TfL schedule|2,836|5,640|2,820|1.99|0.99|BODS GTFS right|
+|E01004397|Walthamstow Bus Station|275|TfL schedule|3,920|7,840|3,960|2.00|1.01|BODS GTFS right|
+|E01002968|Cromwell Road Bus Station|216|TfL schedule|2,616|2,616|10,432|1.00|3.99|TNDS right|
+|E01002968|Cromwell Road Bus Station|406|TfL schedule|2,632|2,756|8,752|1.05|3.33|TNDS right|
+|E01034290|High Street|406|TfL schedule|2,632|2,756|8,752|1.05|3.33|TNDS right|
+|E01030751|Sunbury Cross|216|TfL schedule|2,616|2,616|10,432|1.00|3.99|TNDS right|
+|E01030751|Sunbury Cross|235|TfL schedule|6,640|6,640|13,280|1.00|2.00|TNDS right|
+|E01024940|Bus Station|125|in force|3,664|8,816|4,408|2.41|1.20|neither; BODS GTFS closer|
+|E01033223|Bus Station|125|in force|3,116|8,008|4,004|2.57|1.28|neither; BODS GTFS closer|
+|E01016952|Churchill Square|18|in force|1,548|3,320|0|2.14|0.00|BODS GTFS absent; TNDS off|
+|E01016969|North Street|12|in force|4,304|3,072|4,190|0.71|0.97|BODS GTFS right|
+|E01016969|North Street|12A|in force|3,720|2,512|0|0.68|0.00|BODS GTFS absent; TNDS off|
+|E01016969|North Street|14|in force|3,460|2,112|3,349|0.61|0.97|BODS GTFS right|
+|E01016969|North Street|20|in force|3,264|0|3,199|0.00|0.98|TNDS absent|
+|E01016969|North Street|25|in force|5,196|6,392|4,508|1.23|0.87|BODS GTFS right|
+|E01016969|North Street|50|in force|3,028|3,028|0|1.00|0.00|BODS GTFS absent|
+|E01032955|Aylesbury Bus Stn|130|in force|1,704|1,520|0|0.89|0.00|BODS GTFS absent|
+|E01032955|Aylesbury Bus Stn|300|in force|1,584|1,380|0|0.87|0.00|BODS GTFS absent|
+|E01032955|Aylesbury Bus Stn|4|in force|1,676|1,400|0|0.84|0.00|BODS GTFS absent; TNDS off|
+|E01017191|Atherley Road|17|in force|2,600|4,684|2,789|1.80|1.07|BODS GTFS right|
+|E01017191|Atherley Road|18|in force|1,948|4,940|2,950|2.54|1.51|neither; BODS GTFS closer|
+|W01001955|Orchard Street|4|in force|2,440|2,256|0|0.92|0.00|BODS GTFS absent|
+|W01001955|Orchard Street|X6|in force|1,360|1,360|0|1.00|0.00|BODS GTFS absent|
+
+### Limits
+
+* A later edition is not the window's timetable. For NXWM and First the ratios
+  are evidence of factors of two and four, not of exact agreement; where an
+  in-force edition exists (NXWM 6, 14, 74) it agrees with the later one to
+  within a few per cent.
+* The reference timing point stands for the zone. Where the zone has no timing
+  point of its own, the adjacent one on the same road is used, and a journey
+  that turns off between them would be miscounted.
+* Readings are mechanical, with expansion of abbreviated periods. The reader
+  was checked against the route-level counts earlier in this report (NXWM 14
+  and 6: within two journeys a day) and by hand on a few documents (First's
+  C1, Reading's 5 and 17); readings it could not complete are excluded rather
+  than estimated. The Metrobus documents are scans read by OCR.
+* The zones not checked are mostly those whose operators could not be reached
+  (Stagecoach, Arriva) and the London routes without a TfL schedule in the
+  folder — `missing_timetables.md` lists every document still wanted, with
+  links; the scripts that collected and read everything here
+  are in `scripts/zone_pdf_validation/`.
 
 ## Notes on each document
 
