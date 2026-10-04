@@ -19,8 +19,48 @@ Set `TNDS_WORK` to a directory that holds:
 | `txc_count.py` | Independent TransXChange journey counter (calendars, serviced organisations, special days, bank holidays) |
 | `rawcheck.py` | Runs the counter over every file in every region that publishes each disagreeing route, in both editions |
 | `compare_versions.py` | 2.1 against 2.5, file by file, and whether each removed file is published in another region |
-| `overlap_emulation.py v21` | Python port of UK2GTFS `txc_overlap_plan()`, with and without the sibling fix |
+| `overlap_emulation.py v21` | Python port of UK2GTFS `txc_overlap_plan()`, with and without the sibling fix. **Over-predicts: see below.** |
 | `uk2gtfs_overlap_siblings.patch` | The proposed UK2GTFS fix, against itsleeds/UK2GTFS 6824b31 |
+
+## What the emulation gets wrong
+
+`overlap_emulation.py` predicted that the fix would restore **110 files**
+nationally. Measured on the real archives with the patched package, it
+restores **88**, and the per-region distribution is quite different: SE 43
+against a predicted 46 and EM 32 against 15, but SW **0** against a predicted
+26, NW 1 against 11 and W 0 against 3.
+
+The reason is a scope difference, not a logic difference. `txc_filter_files()`
+applies rules 1 to 3 first and only then hands the survivors to rule 4:
+
+```r
+plan <- txc_overlap_plan(meta[meta$file %in% keep, ])
+```
+
+The emulation runs its port of rule 4 over **every** file in the region:
+
+```python
+meta = [dict(...) for r in rows if r['sc']]
+d0, s0 = plan(meta, fix=False)
+```
+
+So it gives rule 4 files that the pipeline has already discarded as
+superseded revisions of the same operator and ServiceCode. Those extra files
+form extra overlapping pairs, which makes the emulation both drop more than
+the real rule does and restore more when the fix is applied. Where a region's
+sibling pairs are made of files that rules 1 to 3 already remove - South West
+is the clearest case - rule 4 never sees them and the fix changes nothing.
+
+The emulation is still the right tool for the question it was built for: is
+there a pattern here, which publishers produce it, and roughly how much
+service is involved. It is not a prediction of what the patch will do to the
+pipeline. For that, `scripts/filter_effect_check.R` compares the files each
+conversion kept, before and after, and `scripts/patch_effect_exact.R`
+isolates the patch by running the patched rule over the same 2.1 archives the
+previous run logged unpatched.
+
+Feeding the emulation the survivors of rules 1 to 3 would make it predictive,
+and is the obvious improvement if it is used again.
 
 ## Using the UK2GTFS patch
 

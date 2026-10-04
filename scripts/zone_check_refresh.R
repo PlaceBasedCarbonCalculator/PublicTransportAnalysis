@@ -63,28 +63,60 @@ message("window: ", win$startdate, " to ", win$enddate)
 
 # --- the document side, rescaled to the current window --------------------
 #
-# day_counts() mirrors WINDOW in scripts/zone_pdf_validation/paths.py: MT is
-# Monday to Thursday, MF Monday to Friday, MS Monday to Saturday.
+# day_counts() is the number of each day type in the window. MT is Monday to
+# Thursday, MF Monday to Friday, MS Monday to Saturday.
 day_counts <- function(win) {
   n <- tabulate(lubridate::wday(seq(win$startdate, win$enddate, by = 1),
                                 week_start = 1), 7L)
   c(MT = sum(n[1:4]), Fr = n[5], MF = sum(n[1:5]), Sa = n[6], Su = n[7],
-    SuBh = n[7], MS = sum(n[1:6]))
+    MS = sum(n[1:6]))
 }
 DC <- day_counts(win)
-message("day counts: ",
-        paste(names(DC), DC, sep = "=", collapse = " "))
+message("day counts: ", paste(names(DC), DC, sep = "=", collapse = " "))
 
-# "{'MF': 97, 'Sa': 96, 'Su': 73}" -> 97*MF + 96*Sa + 73*Su
+# Scale one document's journeys-per-day up to the window.
+#
+# This is NOT a sum of journeys times day count over every day type present.
+# The day types a reader finds in a document are partly alternative labels for
+# the same weekdays, not additive blocks: a document whose weekday table is
+# headed "Mondays to Saturdays" can also yield an "MF" label from a sub-block,
+# and adding both counts its weekday service twice. Reading's route 500 is the
+# case in this set - `{'Sa': 43, 'MF': 36, 'MS': 12}` - and an additive
+# reading gives 1,180 against the published 892.
+#
+# So weekday service comes from exactly ONE source, in order of specificity:
+# MT/Fr if either is present, else MF, else MS; and MS, when it is what
+# supplies the weekdays, also supplies Saturday unless Saturday was read
+# separately. Saturday and Sunday are then added. This is a port of the
+# cascade in `run()` in scripts/zone_pdf_validation/compute.py, and it
+# reproduces all 201 published `document_window` values exactly when given
+# that section's 28-day counts - which is the test in
+# scripts/zone_check_doc_scaling_test.R.
 doc_window <- function(s, dc) {
   vapply(s, function(x) {
     m <- regmatches(x, gregexpr("'[A-Za-z]+':[ ]*-?[0-9]+", x))[[1]]
     if (!length(m)) return(NA_real_)
     k <- sub("^'([A-Za-z]+)'.*$", "\\1", m)
     v <- as.numeric(sub("^.*:[ ]*", "", m))
-    bad <- setdiff(k, names(dc))
-    if (length(bad)) stop("unmapped day type: ", paste(bad, collapse = ", "))
-    sum(v * dc[k])
+    d <- stats::setNames(as.list(v), k)
+    g <- function(nm, alt = NULL) if (!is.null(d[[nm]])) d[[nm]] else alt
+
+    if (!is.null(d[["MT"]]) || !is.null(d[["Fr"]])) {
+      mt <- g("MT", g("MF", 0))
+      fr <- g("Fr", g("MF", mt))
+      wk <- dc[["MT"]] * mt + dc[["Fr"]] * fr
+    } else if (!is.null(d[["MF"]])) {
+      wk <- dc[["MF"]] * d[["MF"]]
+    } else if (!is.null(d[["MS"]])) {
+      # MS covers Monday to Saturday, so its weekday part is the MF count and
+      # its Saturday part is added below - not the MS count, which would
+      # count Saturday twice.
+      wk <- dc[["MF"]] * d[["MS"]]
+      if (is.null(d[["Sa"]])) d[["Sa"]] <- d[["MS"]]
+    } else {
+      wk <- 0
+    }
+    wk + dc[["Sa"]] * g("Sa", 0) + dc[["Su"]] * g("Su", 0)
   }, 0, USE.NAMES = FALSE)
 }
 
