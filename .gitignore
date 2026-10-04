@@ -67,3 +67,4 @@ rsconnect/
 # Backups of outputs taken before a rebuild (recoverable from git history)
 backups/
 zpv_work/
+__pycache__/
