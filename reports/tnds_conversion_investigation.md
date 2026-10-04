@@ -193,7 +193,9 @@ A stricter alternative is to drop a file under the identical-period rule
 only when its journeys substantially repeat the other file's (for example,
 more than half its departure times at the first stop in common). That is
 more robust if a publisher stamps every file in a bulk export with one time,
-but it needs the journeys read before filtering. The patch has not been run
+but it needs the journeys read before filtering. How to apply, install,
+test and rebuild with the patch is in `scripts/tnds_investigation/README.md`.
+The patch has not been run
 in R here: R could not be installed in this environment. It is a one-branch
 change, and the Python port reproduces the effect.
 
