@@ -43,3 +43,8 @@ columns, expands "then every N minutes" and "at these minutes past the hour"
 blocks, drops school-day-only columns, and separates routes that share a
 table. `verdict.py` is a Python port of `gap_verdict()` in `R/lsoa_gap.R`,
 used only to label the zones; it reproduces the report's tally exactly.
+
+`missing.py` looks up, on bustimes.org, the routes that still lack a document
+(service page and operator), and `missing_report.py` writes
+`reports/missing_timetables.md` from that and the operators' bustimes pages
+(`ops.json` in the work directory).

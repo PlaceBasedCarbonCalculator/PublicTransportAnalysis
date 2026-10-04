@@ -1144,7 +1144,8 @@ The same table, with the per-day counts and the document file names, is in
   than estimated. The Metrobus documents are scans read by OCR.
 * The zones not checked are mostly those whose operators could not be reached
   (Stagecoach, Arriva) and the London routes without a TfL schedule in the
-  folder; the scripts that collected and read everything here
+  folder — `missing_timetables.md` lists every document still wanted, with
+  links; the scripts that collected and read everything here
   are in `scripts/zone_pdf_validation/`.
 
 ## Notes on each document
