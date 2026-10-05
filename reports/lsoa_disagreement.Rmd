@@ -270,9 +270,10 @@ cat(sprintf(paste0(
   "By size of difference: **%s zones** differ by 1,000 trip-runs or more (%s ",
   "of all zones), **%s** by between 100 and 1,000, **%s** by between 1 and 100, ",
   "and **%s** agree exactly. A zone differing by 100 trip-runs over %d days is ",
-  "under four departures a day; one differing by 1,000 is thirty-six.\n\n"),
+  "about %.0f departures a day; one differing by 1,000 is %.0f.\n\n"),
   fmt(band(1000, Inf)), pct(band(1000, Inf) / nrow(zc)),
-  fmt(band(100, 1000)), fmt(band(1, 100)), fmt(sum(zc$gap == 0)), wl))
+  fmt(band(100, 1000)), fmt(band(1, 100)), fmt(sum(zc$gap == 0)), wl,
+  100 / wl, 1000 / wl))
 cross <- which(zc$gap <= 0)[1]
 cat(sprintf(paste0(
   "The curve is not symmetric. It crosses zero at rank **%s of %s**, %s of the ",
@@ -315,10 +316,10 @@ cat(sprintf(paste0(
   "So the answer to \"a few extreme zones or many moderate ones\" is both, and ",
   "the two facts have to be held together: the tail is heavy enough that a ",
   "tenth of zones account for %s of all disagreement, yet **%s of zones** ",
-  "differ by more than thirty-six departures a day, which is not a rounding ",
+  "differ by more than %.0f departures a day, which is not a rounding ",
   "error in any of them. The choice of source changes the answer over most of ",
   "the country, and changes it drastically in a small part of it.\n\n"),
-  pct(share(0.10)), pct(band(1000, Inf) / nrow(zc))))
+  pct(share(0.10)), pct(band(1000, Inf) / nrow(zc)), 1000 / wl))
 ```
 
 ## The zones that disagree most
