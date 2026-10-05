@@ -119,8 +119,21 @@ if (file.exists(old)) {
     print(m[, list(region, files, removed_unpatched, removed_patched, restored)])
     cat("\nTOTAL restored:", sum(m$restored), "files over", nrow(m),
         "regions\n")
-    saveRDS(m, "data/patch_effect_exact.Rds")
-    message("wrote data/patch_effect_exact.Rds")
+    # Merged with whatever is already there rather than overwritten. Each
+    # region takes minutes, so this is normally run a few at a time, and a
+    # plain save silently threw away the earlier runs - the file ended up
+    # holding 8 of the 11 regions and a national total that was wrong by the
+    # three biggest.
+    out <- "data/patch_effect_exact.Rds"
+    if (file.exists(out)) {
+      prev <- as.data.table(readRDS(out))
+      m <- unique(rbindlist(list(m, prev), fill = TRUE),
+                  by = c("snapshot", "region"))
+    }
+    setorderv(m, c("snapshot", "restored"), c(1L, -1L))
+    saveRDS(as.data.frame(m), out)
+    message("wrote ", out, " (", nrow(m), " regions, ",
+            sum(m$restored), " files restored in total)")
   } else {
     message("no 2.1 removals for ", snapshot, " found in ", old)
     saveRDS(res, "data/patch_effect_exact.Rds")
