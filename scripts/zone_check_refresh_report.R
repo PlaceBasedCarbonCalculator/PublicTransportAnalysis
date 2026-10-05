@@ -24,8 +24,12 @@ w <- function(...) out <<- c(out, paste0(...))
 # nothing is as wrong as this measure can express.
 dist <- function(x) mean(abs(log(pmax(x, 1e-3))), na.rm = TRUE)
 near <- function(x, tol = 0.15) mean(abs(x - 1) <= tol, na.rm = TRUE)
+nnear <- function(x, tol = 0.15) sum(abs(x - 1) <= tol, na.rm = TRUE)
 
 r <- d[reliable == TRUE]
+# Checks where both sources carry something, so that a ratio scale means
+# anything. Needed before the prose that quotes it.
+nz0 <- r[tnds_over_doc > 0 & bods_over_doc > 0 & tnds_over_doc_published > 0]
 wl <- as.integer(v$window$enddate - v$window$startdate) + 1L
 
 w("# Did the October 2026 fixes improve the zone checks?")
@@ -83,34 +87,77 @@ w("Reliable checks only (", nrow(r), " of ", nrow(d),
   "; the rest are documents whose reading")
 w("the PDF reader could not be trusted on). *Distance* is the mean of")
 w("|log(ratio)|, so that reading half the timetable and reading twice it count")
-w("the same; lower is better. *Within 15%* is the share of checks the")
+w("the same; lower is better. *Within 15%* is the number of checks the")
 w("verdict rule would call right.")
 w("")
-w("| Source | Median ratio | Distance | Within 15% |")
-w("|---|---:|---:|---:|")
-w("| TNDS, as published (28 d, 2.1, unpatched) | ",
-  sprintf("%.2f", median(r$tnds_over_doc_published, na.rm = TRUE)), " | ",
-  sprintf("%.3f", dist(r$tnds_over_doc_published)), " | ",
-  sprintf("%.0f%%", 100 * near(r$tnds_over_doc_published)), " |")
-if (has_prefix) {
-  w("| TNDS, ", wl, " d only (2.1, unpatched) | ",
-    sprintf("%.2f", median(r$tnds_over_doc_prefix, na.rm = TRUE)), " | ",
-    sprintf("%.3f", dist(r$tnds_over_doc_prefix)), " | ",
-    sprintf("%.0f%%", 100 * near(r$tnds_over_doc_prefix)), " |")
+# Where each source carries nothing, named from the data rather than
+# asserted: which places go missing is exactly the kind of claim that goes
+# stale when a feed is reconverted.
+absent_by_area <- function(col) {
+  t <- sort(table(r$area[r[[col]] == 0 & !is.na(r[[col]])]), decreasing = TRUE)
+  if (!length(t)) return("nowhere")
+  paste(sprintf("%s (%d)", names(t), as.integer(t)), collapse = ", ")
 }
-w("| **TNDS, fixed** (", wl, " d, 2.5, patched) | ",
-  sprintf("%.2f", median(r$tnds_over_doc, na.rm = TRUE)), " | ",
-  sprintf("%.3f", dist(r$tnds_over_doc)), " | ",
-  sprintf("%.0f%%", 100 * near(r$tnds_over_doc)), " |")
-w("| BODS GTFS (", wl, " d) | ",
-  sprintf("%.2f", median(r$bods_over_doc, na.rm = TRUE)), " | ",
-  sprintf("%.3f", dist(r$bods_over_doc)), " | ",
-  sprintf("%.0f%%", 100 * near(r$bods_over_doc)), " |")
+zero_pen <- abs(log(1e-3))
+typ_err <- dist(nz0$tnds_over_doc)
+w("**Two tables, because one number hides the finding.** A source that")
+w("carries *nothing* at a zone has a ratio of 0, which no ratio scale can")
+w("express: floored at 0.001 it contributes |log| of ",
+  sprintf("%.1f", zero_pen), ", about ",
+  sprintf("%.0f", zero_pen / typ_err), " times the typical")
+w("error where both sources do carry the service. TNDS carries nothing on ",
+  sum(r$tnds_over_doc == 0, na.rm = TRUE), " of these")
+w("checks and BODS GTFS on ", sum(r$bods_over_doc == 0, na.rm = TRUE), ".")
+w("")
+w("* TNDS absent: ", absent_by_area("tnds_over_doc"))
+w("* BODS GTFS absent: ", absent_by_area("bods_over_doc"))
+w("")
+w("The TNDS absences are the Metrobus stub files around Crawley and the Hull")
+w("local-authority files that expired by their own \"Data Expires\" note -")
+w("defects in the source data that no conversion change can repair, and which")
+w("the October 2026 fixes did not touch. Averaged in, they swamp everything")
+w("else and the comparison becomes a count of absences. Reported separately,")
+w("the first table says how well each source describes a timetable it has,")
+w("and the second says how often it has one at all.")
+w("")
+ratio_table <- function(x, caption) {
+  w("### ", caption)
+  w("")
+  w("| Source | Median ratio | Distance | Within 15% of ", nrow(x), " |")
+  w("|---|---:|---:|---:|")
+  w("| TNDS, as published (28 d, 2.1, unpatched) | ",
+    sprintf("%.2f", median(x$tnds_over_doc_published, na.rm = TRUE)), " | ",
+    sprintf("%.3f", dist(x$tnds_over_doc_published)), " | ",
+    nnear(x$tnds_over_doc_published), " |")
+  if (has_prefix) {
+    w("| TNDS, the ", wl, "-day window alone (2.1, unpatched) | ",
+      sprintf("%.2f", median(x$tnds_over_doc_prefix, na.rm = TRUE)), " | ",
+      sprintf("%.3f", dist(x$tnds_over_doc_prefix)), " | ",
+      nnear(x$tnds_over_doc_prefix), " |")
+  }
+  w("| **TNDS, fixed** (", wl, " d, 2.5, patched) | ",
+    sprintf("%.2f", median(x$tnds_over_doc, na.rm = TRUE)), " | ",
+    sprintf("%.3f", dist(x$tnds_over_doc)), " | ",
+    nnear(x$tnds_over_doc), " |")
+  w("| BODS GTFS (", wl, " d) | ",
+    sprintf("%.2f", median(x$bods_over_doc, na.rm = TRUE)), " | ",
+    sprintf("%.3f", dist(x$bods_over_doc)), " | ",
+    nnear(x$bods_over_doc), " |")
+  w("")
+}
+nz <- nz0
+ratio_table(nz, "Where both sources carry the service")
+ratio_table(r, "Every reliable check, absences included")
+w("The two tables disagree about which source is better, and both are right.")
+w("Where both carry the service TNDS is the more accurate by a wide margin;")
+w("counting the absences, BODS GTFS is, because TNDS is the one that goes")
+w("missing. Neither the patch nor the 2.5 edition nor the shorter window")
+w("addresses an absence, so the second table barely moves.")
 w("")
 
 # The headline, stated as what the numbers support rather than as a hope.
-dp <- dist(r$tnds_over_doc_published)
-df <- dist(r$tnds_over_doc)
+dp <- dist(nz$tnds_over_doc_published)
+df <- dist(nz$tnds_over_doc)
 verb <- if (df < dp * 0.95) "closer to" else if (df > dp * 1.05) {
   "further from"
 } else "no nearer"
@@ -119,7 +166,7 @@ w("distance ", sprintf("%.3f", dp), " before, ", sprintf("%.3f", df),
   " after, a change of ",
   sprintf("%+.0f%%", 100 * (df - dp) / dp), ".")
 if (has_prefix) {
-  dx <- dist(r$tnds_over_doc_prefix)
+  dx <- dist(nz$tnds_over_doc_prefix)
   w("Of that, the window accounts for ", sprintf("%+.3f", dx - dp),
     " and the conversion fixes ", sprintf("%+.3f", df - dx), ".")
 }
@@ -170,9 +217,13 @@ w("`reports/tnds_conversion_investigation.md` traced the disagreements to")
 w("causes. These are the zones for each cause it identified, with what the")
 w("fixes did to them.")
 w("")
+# Keyed on `area`, which is the column the checks actually carry, so a zone
+# added to a place later is picked up without editing this list. An earlier
+# version named one North-east London zone by code and silently reported 3 of
+# its 15 checks.
 cases <- list(
   "North-east London (cross-region duplicate, fixed by 2.5)" =
-    quote(zone == "E01004397"),
+    quote(area %like% "North-east London"),
   "Preston (cross-region duplicate, fixed by 2.5)" =
     quote(area %like% "Preston"),
   "Chelmsford (sibling files, fixed by the patch; also weekly exports)" =
@@ -224,6 +275,18 @@ for (nm in names(cases)) {
   w("")
 }
 
+covered <- unique(unlist(lapply(cases, function(q) which(d[, eval(q)]))))
+w("### Places not listed above")
+w("")
+w(length(covered), " of the ", nrow(d), " checks fall in the places the")
+w("investigation named. The remaining ", nrow(d) - length(covered),
+  " are in ",
+  paste(sort(unique(d$area[-covered])), collapse = ", "), ".")
+w("Those were either not TNDS errors at all (Birmingham and the Black")
+w("Country, where two operators share a route number and the check counts")
+w("both) or were never traced to a cause.")
+w("")
+
 w("## What this does not settle")
 w("")
 w("* **The ", nrow(d) - nrow(r), " unreliable readings.** Where the PDF reader",
@@ -239,7 +302,22 @@ w("  not been done.")
 w("* **The causes neither fix addresses.** Hull's expired local-authority")
 w("  files, Crawley's Metrobus stubs and Brighton's missing summer edition")
 w("  are properties of the source data. A shorter window helps where a file")
-w("  ends inside it and does nothing where the file was never there.")
+w("  ends inside it and does nothing where the file was never there: Hull and")
+w("  Crawley read 0.00 before and after, and Brighton is unmoved.")
+w("")
+w("* **The weekly exports are halved, not fixed.** Reading, Chelmsford and")
+w("  Weymouth roughly doubled - Reading 0.25 to 0.49, Chelmsford 0.20 to")
+w("  0.42, Weymouth 0.28 to 0.55 - which is exactly what halving the window")
+w("  predicts and no more. They sit near 0.5 because the operators publish")
+w("  **one week** and the window is two, so the second week is still empty.")
+w("  A 7-day window would bring them to about 1.0, and that is the obvious")
+w("  thing to want, but it would hold one of each weekday instead of two:")
+w("  a single bank holiday, strike day or school-term boundary would then")
+w("  land on a weekday with nothing to average it against, and `tph_*` would")
+w("  swing on it. Two weeks is the shortest window that still holds a")
+w("  duplicate of every weekday. Getting these places right needs the")
+w("  horizon problem solved at the source - a per-operator flag, or BODS for")
+w("  the operators that publish weekly - rather than a shorter window.")
 w("")
 
 dir.create("reports", showWarnings = FALSE)
