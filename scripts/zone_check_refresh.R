@@ -134,14 +134,34 @@ gc()
 
 feeds <- list(tnds = spec$tnds, bods_gtfs = spec$bods_gtfs)
 prefix <- Sys.getenv("PREFIX_TNDS")
+staged <- NULL
 if (nzchar(prefix)) {
   if (!file.exists(prefix)) stop("PREFIX_TNDS does not exist: ", prefix)
-  feeds$tnds_prefix <- prefix
-  message("pre-fix TNDS feed: ", prefix)
+  # Staged into gtfs/ rather than read where it lies. Every feed in this repo
+  # is read through read_feed(), which is also where deduplication happens, so
+  # reading the pre-fix feed any other way would compare two feeds counted by
+  # different code and make the whole before/after meaningless. read_feed()
+  # resolves its argument with resolve_feed_path(), which prepends the data
+  # root to anything not beginning "gtfs/" - an absolute path outside the repo
+  # comes back as <data_root>/C:/Users/... and is not found. Widening
+  # resolve_feed_path() would be the tidier fix but it is reached by every
+  # target in the pipeline, so changing it would invalidate the entire
+  # rebuild to save one copy.
+  staged <- file.path(load_cfg()$gtfs_dir, "tnds_prefix_staged.zip")
+  if (!file.exists(staged) ||
+      file.size(staged) != file.size(prefix)) {
+    message("staging the pre-fix feed into ", staged)
+    ok <- file.copy(prefix, staged, overwrite = TRUE)
+    if (!ok) stop("could not stage the pre-fix feed into ", staged)
+  }
+  feeds$tnds_prefix <- staged
+  message("pre-fix TNDS feed: ", prefix, " (staged as ", staged, ")")
 } else {
   message("no PREFIX_TNDS set; the conversion fixes cannot be separated ",
           "from the window change")
 }
+# (removed at the end of the script - on.exit() registers against a function
+# frame and does nothing at top level under Rscript)
 
 cnt <- list()
 for (src in names(feeds)) {
@@ -155,6 +175,10 @@ for (src in names(feeds)) {
   gtfs <- NULL
   rr <- NULL
   gc()
+}
+if (!is.null(staged) && file.exists(staged)) {
+  unlink(staged)
+  message("removed the staged copy")
 }
 
 old[, name := toupper(trimws(route))]

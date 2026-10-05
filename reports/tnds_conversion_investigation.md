@@ -25,8 +25,11 @@ splits one timetable across several files that share operator, description,
 line, operating period and creation time, the rule treats them as competing
 registrations and keeps only one. In Chelmsford this cost X30 more than half
 its journeys (pipeline 231, raw 498), and C7, 336 and 333 lost smaller
-amounts. Nationally it drops 110 such sibling files, 91 of them live in the
-analysis window, with 2,603 vehicle journeys. The fix is a short change,
+amounts. The emulation below put the national figure at 110 such sibling
+files, 91 of them live in the analysis window, with 2,603 vehicle journeys.
+**Measured in R after the fix was applied, it is 56 files**, 43 of them in the
+South East; the emulation over-predicted for the reason given under the table.
+The fix is a short change,
 given below and in `scripts/tnds_investigation/uk2gtfs_overlap_siblings.patch`.
 
 **2. Yes, use 2.5.** The 2.5 edition is the 2.1 edition minus 240 files
@@ -165,6 +168,54 @@ Nationally, the port of the rule over the 2.1 headers gives these results:
 | W | 3 | 0 | 3 | 3 | 144 |
 | EA, WM, L | 23 | 23 | 0 | 0 | 0 |
 | **All** | **341** | **231** | **110** | **91** | **2,603** |
+
+**Measured.** The table above is the Python port of the rule. After the patch
+was applied and installed, the same quantity was measured in R by running the
+patched `txc_filter_files()` over the same 2.1 archives this snapshot's
+previous conversion had logged unpatched removals for - one variable changed,
+nothing else (`scripts/patch_effect_exact.R`):
+
+| Region | Files | Removed, unpatched | Removed, patched | Restored | Emulation predicted |
+|---|---:|---:|---:|---:|---:|
+| SE | 2,943 | 201 | 158 | **43** | 46 |
+| NE | 812 | 9 | 0 | **9** | 7 |
+| Y | 1,369 | 41 | 39 | **2** | 2 |
+| EM | 1,532 | 148 | 147 | **1** | 15 |
+| NW | 2,315 | 47 | 46 | **1** | 11 |
+| SW | 2,131 | 137 | 137 | **0** | 26 |
+| W | 844 | 19 | 19 | **0** | 3 |
+| EA | 596 | 13 | 13 | **0** | 0 |
+| L | 899 | 18 | 18 | **0** | 0 |
+| WM | 1,267 | 3 | 3 | **0** | 0 |
+| S | 2,656 | 244 | 244 | **0** | not emulated |
+| **All** | **17,364** | **880** | **824** | **56** | **110** |
+
+The pattern and the places are right - it is overwhelmingly First Essex in the
+South East, which is where the X30 case was found - but the national total is
+about half what was predicted, and South West, North West and East Midlands
+gain almost nothing against predictions of 26, 11 and 15.
+
+**Why the emulation over-predicts.** `txc_filter_files()` applies rules 1 to 3
+first and hands only the survivors to rule 4:
+
+```r
+plan <- txc_overlap_plan(meta[meta$file %in% keep, ])
+```
+
+`overlap_emulation.py` runs its port of rule 4 over every file in the region
+instead. It therefore sees files the pipeline has already discarded as
+superseded revisions of the same operator and ServiceCode, those extra files
+form extra overlapping pairs, and the emulation both drops more than the real
+rule does and restores more when the fix is applied. Where a region's sibling
+pairs are made of files that rules 1 to 3 already remove - South West is the
+clearest case, with removals identical at 137 before and after - rule 4 never
+sees them and the fix changes nothing. Feeding the emulation the survivors of
+rules 1 to 3 would make it predictive.
+
+The vehicle-journey figure (2,603) inherits the same over-count and has not
+been re-measured; treat it as an upper bound. What the fix is worth at the
+timetable is measured directly instead, against operators' published
+documents, in `reports/zone_pdf_validation_refresh.md`.
 
 A further 12 sibling files are truncated by the same-start rule instead of
 dropped. Most restored files are school-day variants, so the effect is
