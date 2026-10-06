@@ -86,15 +86,26 @@ if (!nrow(all)) {
 cat("\n=== every deduplication rate found ===\n")
 print(all[order(source, year, -trips)], nrows = 60)
 
-# One rate per source for the reported year: the largest feed read for it,
-# which is the national one rather than a windowed subset.
+# One rate per source for the reported year. The sentence this fills in sits
+# in the comparison report, so it must be the comparison's own counting
+# targets - cmp_<year>_<source> - and not a validation target that happens to
+# have read a different snapshot of the same year. In 2026 both exist: the
+# comparison counts the October TNDS snapshot and the validation the July one,
+# and "largest feed" picked July by 14,000 trips, quoting 2.40% in a report
+# that describes October's 2.25%.
 sel <- all[year == want_year]
 if (!nrow(sel)) {
   message("no rates for ", want_year, "; using the most recent year present")
   sel <- all[year == max(year, na.rm = TRUE)]
 }
-res <- sel[, .SD[which.max(trips)], by = source]
-res <- res[, list(source, year, removed, trips, pct)]
+sel[, from_cmp := grepl("^cmp_", file)]
+res <- sel[order(-from_cmp, -trips), .SD[1L], by = source]
+if (any(!res$from_cmp)) {
+  message("no cmp_ log for: ",
+          paste(res$source[!res$from_cmp], collapse = ", "),
+          " - falling back to the largest feed read for them")
+}
+res <- res[, list(source, year, removed, trips, pct, file)]
 setorder(res, -pct)
 
 cat("\n=== one rate per source, year ", want_year, " ===\n", sep = "")
