@@ -51,10 +51,19 @@ There are also six analysis reports, all rebuilt by the pipeline:
   (7 blank zones against 33). Also settles why BODS TransXChange is thin —
   London and Scotland are 86% of it, and the English residue is particular
   operators, not noise — and finds that the two archives hold *identical*
-  timetables for about seven routes in ten. Standalone, not a pipeline
-  target: `scripts/source_triangulation.R`,
-  `scripts/source_forward_horizon.R`, `scripts/txc_archive_index.py`,
-  `scripts/txc_compare_same_route.py`.
+  timetables for about seven routes in ten. Turns up two further things: a
+  run count is not like-for-like against an operator publishing *dated*
+  vehicle journeys rather than recurring patterns (Brighton & Hove, which a
+  run count undercounts ninefold), and a UK2GTFS defect the overlap patch
+  does not cover — `txc_filter_files()` reconciles files sharing a
+  ServiceCode but with **disjoint operating day sets** as if they superseded
+  one another, dropping Saturday and Sunday timetables for 8 of 36 Brighton &
+  Hove services. Standalone, not a pipeline target:
+  `scripts/source_triangulation.R`, `scripts/source_forward_horizon.R`,
+  `scripts/txc_archive_index.py`, `scripts/txc_compare_same_route.py`,
+  `scripts/txc_extract_operator.py`,
+  `scripts/bods_operator_filter_check.R`,
+  `scripts/bods_daytype_filter_check.R`.
 - [reports/pdf_validation.md](reports/pdf_validation.md) — the sources checked
   against operators' own published timetables, which is the only evidence that
   says which of them is *right* rather than only that they differ.

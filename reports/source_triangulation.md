@@ -57,6 +57,15 @@ report separates:
   comparison undercount it ninefold. So this layer is real but its size is
   overstated by the measure.
 
+**One new UK2GTFS defect falls out of this.** For Brighton & Hove,
+`txc_filter_files()` discards 167 files holding 12,035 journeys that are not
+restatements of anything it keeps, and 8 of 36 services end up with fewer day
+types than the archive holds — a Saturday or Sunday timetable dropped while
+the weekday one survives. It is reconciling files with the **same ServiceCode
+and disjoint operating day sets** as if they superseded each other. The
+overlap patch already applied does not cover this case; the fix is a rule
+that declines to reconcile files whose day sets do not intersect.
+
 **Almost nothing is missing from both TransXChange sources.** 267 service
 groups (6,914 journeys, 0.14% of the national total) are carried only by the
 DfT's GTFS — and 46% of those carry a route number *and* operator that TNDS
@@ -416,20 +425,45 @@ the shortfall for those operators. It does not affect the coverage
 conclusions, which count whether a zone or a service has any service at all,
 nor the London and Scotland findings, which are about absence.
 
-**One thing about Brighton & Hove is still open, and it points at the
-filter.** The representation difference explains why a run count collapses,
-but not the whole magnitude. The surviving files hold 13,659 journeys across
-four weekly blocks — about 3,400 departures a week — while TNDS implies
-roughly 22,900 a week for the same operator. The 818 files the filter
-discarded hold the other 55,011 journeys, which over the same four weeks is
-about 17,200 a week, much closer to TNDS. If those discarded files carry
-*different* weekdays rather than restatements of the kept ones, then the
-filter is treating complementary siblings as superseding revisions and
-removing most of the week — the same class of defect as the overlap patch in
-`reports/tnds_conversion_investigation.md`, and worth fixing. If they
-restate the same days, the operator's BODS publication is simply partial.
-Deciding that needs the discarded files' operating days compared with the
-kept ones, which is not done here.
+### And the filter is dropping complementary day types
+
+The representation difference explains why a run count collapses for Brighton
+& Hove, but not the whole magnitude, so the files the filter discards were
+compared with the ones it keeps. Restricting to the 538 files whose operating
+period actually overlaps the window — the September blocks are legitimately
+superseded by the 5 October filter date and prove nothing — it keeps 210
+files holding 9,952 journeys and discards 328 holding 23,033.
+
+Those 328 split cleanly in two:
+
+| discarded files overlapping the window | files | journeys |
+|:---|---:|---:|
+| same service, period **and** day type as a file that was kept — a genuine duplicate revision | 161 | 10,998 |
+| a service/period/day-type combination **no kept file has** | 167 | 12,035 |
+
+The second row is loss. And it is not loss of whole services: all 167 belong
+to services that survive in some other file, so nothing disappears
+altogether. What disappears is day types. Of the 36 Brighton & Hove services
+with files overlapping the window, **8 have fewer day types kept than the
+archive holds** — a Saturday or a Sunday timetable discarded while the
+weekday one survives. Per weekly block the pattern is consistent: of roughly
+47 weekday files the filter keeps most, of roughly 45 Saturday files it keeps
+11–15, and of roughly 40 Sunday files it keeps 8–11.
+
+So both mechanisms are at work, and neither alone accounts for the ninefold
+gap. `txc_filter_files()` is reconciling files that carry the **same
+ServiceCode but disjoint `RegularDayType` day sets** as though they superseded
+one another, when they are complementary parts of one timetable.
+
+This is the same family as the overlap/sibling defect in
+`reports/tnds_conversion_investigation.md` but **not the same case, and the
+patch already applied does not cover it**: that patch skips reconciliation
+when two files share a `CreationDateTime` and differ in `ServiceCode`, where
+here the `ServiceCode` is identical and the day set differs. A rule that
+declines to treat two files as superseding when their operating day sets do
+not intersect would fix it. That is a UK2GTFS change, is not made here, and
+should be measured the way the last one was — with
+`scripts/patch_effect_exact.R`, against the same archives.
 
 Two further caveats on this section. The operator-code key is imperfect: the
 two archives spell some operators differently — National Express West
@@ -556,14 +590,24 @@ double-count.
 ## Reproducing
 
 ```sh
-Rscript scripts/source_triangulation.R 2026     # the three-way tables
-Rscript scripts/source_forward_horizon.R        # the decay curves
-python  scripts/txc_archive_index.py <out_dir>  # index both raw archives
-python  scripts/txc_compare_same_route.py <out_dir> 40
+Rscript scripts/source_triangulation.R 2026       # the three-way tables
+Rscript scripts/source_forward_horizon.R          # the decay curves
+
+python  scripts/txc_archive_index.py   $IDX       # index both raw archives
+python  scripts/txc_compare_same_route.py $IDX 40 # same route, both archives
+
+python  scripts/txc_extract_operator.py $IDX $OPS BHBC,WRAY,METR
+Rscript scripts/bods_operator_filter_check.R $OPS # survivors against TNDS
+Rscript scripts/bods_daytype_filter_check.R  $OPS # what the filter discards
 ```
 
 `source_triangulation.R` reads the `cmp_2026_*` targets and writes
 `data/source_triangulation_2026.Rds`; `source_forward_horizon.R` reads the
-untrimmed conversion caches and writes `data/source_forward_horizon.Rds`.
-Neither is a pipeline target: both answer a one-off question and neither
-feeds the published outputs.
+untrimmed conversion caches and writes `data/source_forward_horizon.Rds`. The
+indexers take an output directory and write their CSVs there; the two filter
+checks read the per-operator files `txc_extract_operator.py` lays down and
+write `data/bods_operator_filter_check.Rds` and `data/bhbc_filter_detail.Rds`.
+
+None of these is a pipeline target. They answer a one-off question and none
+feeds the published outputs. The index CSVs are intermediate and are not kept
+in the repository: they are about 40 MB and are rebuilt in roughly an hour.
