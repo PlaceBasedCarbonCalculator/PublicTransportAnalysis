@@ -490,7 +490,7 @@ Table: Largest journey-count disagreements on services both sources carry, 2026
   the analysis date. Beyond that, every feed of every source passes through
   `UK2GTFS::gtfs_deduplicate()` before it is counted, which removes a journey
   the feed describes twice on the same day. On the October 2026 snapshots
-  that is not measured on this build (run `scripts/dedup_rates.R` after a conversion to fill it in).
+  that is 5.4% of BODS (GTFS)'s trips, 2.2% of TNDS (TransXChange)'s trips and 1.9% of BODS (TransXChange)'s trips.
 
 <!-- Those rates are measured, not derived from any target, so they go stale
      when a feed is reconverted. They are now read out of

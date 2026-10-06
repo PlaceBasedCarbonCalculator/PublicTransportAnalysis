@@ -9,7 +9,7 @@ Scotland as a collapse in bus service. But it was compiled by eye several
 years ago, it stops at 2023, and it records eleven regions, which is coarse
 enough to hide an entire county.
 
-This report rebuilds it by measurement, extends it to 2025, and
+This report rebuilds it by measurement, extends it to 2026, and
 puts it in the pipeline so it stays current. It is generated from the
 converted feeds themselves, so a reconversion re-measures it rather than
 leaving the assessment to drift away from the data.
@@ -42,7 +42,9 @@ present. Departures is the measure used throughout, and it is split by
 An area is judged against **its own usual level**, and on its **share of that
 year's departures** rather than the raw count. The eras are not on a common
 scale: a Bus Archive year merges four weekly snapshots, so 2014–2017 hold
-around 220 million departures against 28–71 million in an NPTDR or TNDS year.
+several times the departures of an NPTDR or TNDS year – it was about four
+times while the counting window was 28 days, and the ratio moves with the
+window length.
 Any benchmark in raw departures inherits that multiplier. A share cancels it,
 and it also cancels genuine national change — which is what is wanted here,
 because this measures coverage, not service. `absent` is no departures at
@@ -67,10 +69,10 @@ the country instead of by the authority they stand in:
 |ATCO |network                   | years with service| most stops|
 |:----|:-------------------------|------------------:|----------:|
 |900  |National - National Coach |                  7|         33|
-|910  |National - National Rail  |                 20|       2578|
+|910  |National - National Rail  |                 21|       2578|
 |920  |National - National Air   |                  7|         59|
-|930  |National - National Ferry |                 20|        298|
-|940  |National - National Tram  |                 19|       1543|
+|930  |National - National Ferry |                 21|        298|
+|940  |National - National Tram  |                 20|       1541|
 
 A tram stop is `9400…`, a rail station `9100…`, a coach stop `900…`, whatever
 town it is in. So these five rows describe **modes, not geography**, and they
@@ -100,28 +102,29 @@ the obvious case. Only `absent` is unambiguous.
 ## What each year is made of
 
 
-| year|source                    |28-day counting window   |
+| year|source                    |counting window          |
 |----:|:-------------------------|:------------------------|
-| 2004|NPTDR                     |2004-09-27 to 2004-10-24 |
-| 2005|NPTDR                     |2005-09-26 to 2005-10-23 |
-| 2006|NPTDR                     |2006-09-25 to 2006-10-22 |
-| 2007|NPTDR                     |2007-10-01 to 2007-10-28 |
-| 2008|NPTDR                     |2008-09-29 to 2008-10-26 |
-| 2009|NPTDR                     |2009-09-28 to 2009-10-25 |
-| 2010|NPTDR                     |2010-09-27 to 2010-10-24 |
-| 2011|NPTDR                     |2011-09-26 to 2011-10-23 |
-| 2014|Bus Archive (TNDS weekly) |2014-10-06 to 2014-11-02 |
-| 2015|Bus Archive (TNDS weekly) |2015-10-05 to 2015-11-01 |
-| 2016|Bus Archive (TNDS weekly) |2016-10-03 to 2016-10-30 |
-| 2017|Bus Archive (TNDS weekly) |2017-10-02 to 2017-10-29 |
-| 2018|TNDS                      |2018-05-14 to 2018-06-10 |
-| 2019|TNDS                      |2019-10-07 to 2019-11-03 |
-| 2020|TNDS                      |2020-06-29 to 2020-07-26 |
-| 2021|TNDS                      |2021-10-11 to 2021-11-07 |
-| 2022|TNDS                      |2022-10-31 to 2022-11-27 |
-| 2023|TNDS                      |2023-10-30 to 2023-11-26 |
-| 2024|TNDS + BODS Coach         |2024-09-30 to 2024-11-03 |
-| 2025|TNDS + BODS Coach         |2025-09-29 to 2025-11-02 |
+| 2004|NPTDR                     |2004-09-27 to 2004-10-10 |
+| 2005|NPTDR                     |2005-09-26 to 2005-10-09 |
+| 2006|NPTDR                     |2006-09-25 to 2006-10-08 |
+| 2007|NPTDR                     |2007-10-01 to 2007-10-14 |
+| 2008|NPTDR                     |2008-09-29 to 2008-10-12 |
+| 2009|NPTDR                     |2009-09-28 to 2009-10-11 |
+| 2010|NPTDR                     |2010-09-27 to 2010-10-10 |
+| 2011|NPTDR                     |2011-09-26 to 2011-10-09 |
+| 2014|Bus Archive (TNDS weekly) |2014-10-06 to 2014-10-19 |
+| 2015|Bus Archive (TNDS weekly) |2015-10-05 to 2015-10-18 |
+| 2016|Bus Archive (TNDS weekly) |2016-10-03 to 2016-10-16 |
+| 2017|Bus Archive (TNDS weekly) |2017-10-02 to 2017-10-15 |
+| 2018|TNDS                      |2018-05-14 to 2018-05-27 |
+| 2019|TNDS                      |2019-10-07 to 2019-10-20 |
+| 2020|TNDS                      |2020-06-29 to 2020-07-12 |
+| 2021|TNDS                      |2021-10-11 to 2021-10-24 |
+| 2022|TNDS                      |2022-10-31 to 2022-11-13 |
+| 2023|TNDS                      |2023-10-30 to 2023-11-12 |
+| 2024|TNDS + BODS Coach         |2024-09-30 to 2024-10-20 |
+| 2025|TNDS + BODS Coach         |2025-09-29 to 2025-10-19 |
+| 2026|TNDS + BODS Coach         |2026-09-28 to 2026-10-11 |
 
 There is no archive at all for 2012 and 2013: NPTDR stopped after 2011 and the Bus Archive starts in 2014. Those years are shown as a grey column throughout and are not interpolated anywhere in this pipeline.
 
@@ -183,6 +186,7 @@ manual was written, or was missed by eye.
 | 2023|              4|               2|Great Britain, South West                               |
 | 2024|              3|               2|Great Britain                                           |
 | 2025|              3|               2|Great Britain                                           |
+| 2026|              3|               3|Great Britain, Scotland                                 |
 
 
 **2004is the worst year**: 34 areas have no service at all, against 111 present.
@@ -249,7 +253,7 @@ continuous TNDS series and coverage should be complete, so anything flagged
 here is either a real reduction in service or a defect worth chasing. This
 section is the detail for those eight years.
 
-Across the eight years there are 113 area-years below six tenths of normal, involving 59 distinct areas.
+Across the eight years there are 133 area-years below six tenths of normal, involving 61 distinct areas.
 
 The national codes (National - National Air, National - National Coach, National - National Rail) are left out of this section. They are modes rather than places and their comings and goings are a question about sources, dealt with under "Great Britain is not a region" above.
 
@@ -264,30 +268,36 @@ a service reduction does not respect administrative borders so precisely.
 
 
 
-|region        |area                   |ATCO |years                              | count|lowest |status  |
-|:-------------|:----------------------|:----|:----------------------------------|-----:|:------|:-------|
-|West Midlands |Staffordshire          |380  |2018 2020 2021 2022 2023 2024 2025 |     7|46%    |partial |
-|West Midlands |Stoke-on-Trent         |389  |2018 2020 2021 2022 2023 2024 2025 |     7|32%    |partial |
-|East Midlands |Derbyshire             |100  |2021 2022 2023 2024 2025           |     5|45%    |partial |
-|East Midlands |Leicester              |269  |2021 2023 2024 2025                |     4|53%    |partial |
-|East Midlands |Leicestershire         |260  |2022 2023 2024 2025                |     4|48%    |partial |
-|East Midlands |Nottingham             |339  |2021 2022 2023 2025                |     4|48%    |partial |
-|North West    |Cheshire East          |060  |2018 2020 2022 2023                |     4|54%    |partial |
-|South East    |Slough                 |037  |2021 2022 2023 2025                |     4|43%    |partial |
-|South East    |West Berkshire         |030  |2021 2022 2023 2025                |     4|50%    |partial |
-|East Midlands |Nottinghamshire        |330  |2021 2022 2023                     |     3|49%    |partial |
-|Scotland      |Falkirk                |669  |2020 2024 2025                     |     3|40%    |partial |
-|Scotland      |West Lothian           |629  |2023 2024 2025                     |     3|44%    |partial |
-|South East    |Windsor and Maidenhead |036  |2021 2022 2023                     |     3|43%    |partial |
-|South East    |Wokingham              |035  |2021 2022 2023                     |     3|50%    |partial |
-|Wales         |Neath Port Talbot      |582  |2020 2024 2025                     |     3|48%    |partial |
-|West Midlands |Shropshire             |350  |2022 2023 2025                     |     3|55%    |partial |
-|East Midlands |Northamptonshire       |300  |2024 2025                          |     2|57%    |partial |
-|East Midlands |Rutland                |268  |2024 2025                          |     2|48%    |partial |
-|South East    |Southend-on-Sea        |158  |2023 2024                          |     2|56%    |partial |
-|South West    |Somerset               |360  |2019 2020                          |     2|46%    |partial |
-|Wales         |Bridgend               |551  |2020 2025                          |     2|51%    |partial |
-|Wales         |Newport                |531  |2020 2021                          |     2|32%    |partial |
+|region        |area                   |ATCO |years                                   | count|lowest |status  |
+|:-------------|:----------------------|:----|:---------------------------------------|-----:|:------|:-------|
+|West Midlands |Staffordshire          |380  |2018 2020 2021 2022 2023 2024 2025 2026 |     8|42%    |partial |
+|West Midlands |Stoke-on-Trent         |389  |2018 2020 2021 2022 2023 2024 2025      |     7|33%    |partial |
+|East Midlands |Derbyshire             |100  |2021 2022 2023 2024 2025 2026           |     6|41%    |partial |
+|East Midlands |Leicestershire         |260  |2022 2023 2024 2025 2026                |     5|46%    |partial |
+|South East    |West Berkshire         |030  |2021 2022 2023 2025 2026                |     5|50%    |partial |
+|Wales         |Flintshire             |512  |2020 2022 2023 2024 2025                |     5|46%    |partial |
+|West Midlands |Shropshire             |350  |2022 2023 2024 2025 2026                |     5|47%    |partial |
+|East Midlands |Leicester              |269  |2021 2023 2024 2025                     |     4|53%    |partial |
+|East Midlands |Nottingham             |339  |2022 2023 2025 2026                     |     4|50%    |partial |
+|Scotland      |Falkirk                |669  |2020 2022 2024 2025                     |     4|39%    |partial |
+|South East    |Slough                 |037  |2021 2022 2023 2025                     |     4|42%    |partial |
+|Wales         |Bridgend               |551  |2020 2024 2025 2026                     |     4|50%    |partial |
+|Wales         |Neath Port Talbot      |582  |2020 2024 2025 2026                     |     4|51%    |partial |
+|North West    |Cheshire East          |060  |2020 2022 2023                          |     3|51%    |partial |
+|Scotland      |Clackmannanshire       |668  |2019 2024 2025                          |     3|49%    |partial |
+|Scotland      |West Lothian           |629  |2024 2025 2026                          |     3|46%    |partial |
+|South East    |Windsor and Maidenhead |036  |2021 2022 2023                          |     3|44%    |partial |
+|West Midlands |Herefordshire          |209  |2024 2025 2026                          |     3|58%    |partial |
+|East Midlands |Derby                  |109  |2020 2022                               |     2|56%    |partial |
+|East Midlands |Northamptonshire       |300  |2023 2024                               |     2|54%    |partial |
+|East Midlands |Nottinghamshire        |330  |2022 2023                               |     2|51%    |partial |
+|East Midlands |Rutland                |268  |2025 2026                               |     2|50%    |partial |
+|South East    |Bedford                |020  |2025 2026                               |     2|55%    |partial |
+|South East    |Wokingham              |035  |2022 2023                               |     2|49%    |partial |
+|South West    |Somerset               |360  |2019 2020                               |     2|45%    |partial |
+|Wales         |Cardiff                |571  |2020 2026                               |     2|51%    |partial |
+|Wales         |Isle of Anglesey       |541  |2025 2026                               |     2|27%    |partial |
+|Wales         |Newport                |531  |2020 2021                               |     2|32%    |partial |
 
 Flagged in a single year only:
 
@@ -296,50 +306,47 @@ Flagged in a single year only:
 |region        |area                  |ATCO |year |share |
 |:-------------|:---------------------|:----|:----|:-----|
 |East Anglia   |Cambridgeshire        |050  |2022 |20%   |
-|East Midlands |Derby                 |109  |2020 |55%   |
 |East Midlands |Peterborough          |059  |2022 |7%    |
-|North West    |Warrington            |069  |2022 |56%   |
-|Scotland      |Aberdeenshire         |630  |2022 |58%   |
-|Scotland      |Angus                 |649  |2019 |59%   |
-|Scotland      |Argyll and Bute       |607  |2020 |59%   |
-|Scotland      |Clackmannanshire      |668  |2024 |54%   |
-|Scotland      |East Dunbartonshire   |611  |2025 |51%   |
+|North West    |Warrington            |069  |2022 |59%   |
+|Scotland      |Aberdeenshire         |630  |2022 |59%   |
+|Scotland      |Angus                 |649  |2019 |58%   |
+|Scotland      |Argyll and Bute       |607  |2020 |58%   |
+|Scotland      |East Dunbartonshire   |611  |2025 |39%   |
 |Scotland      |Edinburgh             |620  |2020 |47%   |
-|Scotland      |Fife                  |650  |2020 |45%   |
-|South East    |Bedford               |020  |2025 |55%   |
-|South East    |Reading               |039  |2022 |57%   |
-|South East    |West Sussex           |440  |2022 |58%   |
+|Scotland      |Fife                  |650  |2020 |44%   |
+|Scotland      |Shetland Islands      |603  |2026 |0%    |
+|Scotland      |Stirling              |660  |2019 |60%   |
+|South East    |Reading               |039  |2022 |59%   |
+|South East    |West Sussex           |440  |2022 |57%   |
 |South West    |Bristol               |010  |2019 |56%   |
-|South West    |Dorset                |120  |2019 |45%   |
+|South West    |Dorset                |120  |2019 |46%   |
 |South West    |North Somerset        |019  |2020 |55%   |
-|South West    |Poole                 |128  |2019 |56%   |
+|South West    |Poole                 |128  |2019 |59%   |
 |South West    |South Gloucestershire |017  |2019 |59%   |
-|South West    |Torbay                |119  |2023 |13%   |
-|Wales         |Blaenau Gwent         |532  |2020 |49%   |
+|South West    |Torbay                |119  |2023 |14%   |
+|Wales         |Blaenau Gwent         |532  |2020 |50%   |
 |Wales         |Caerphilly            |554  |2020 |47%   |
-|Wales         |Cardiff               |571  |2020 |51%   |
-|Wales         |Ceredigion            |523  |2020 |48%   |
-|Wales         |Conwy                 |513  |2020 |49%   |
-|Wales         |Flintshire            |512  |2020 |55%   |
-|Wales         |Gwynedd               |540  |2020 |53%   |
-|Wales         |Isle of Anglesey      |541  |2025 |52%   |
-|Wales         |Merthyr Tydfil        |553  |2023 |38%   |
-|Wales         |Monmouthshire         |533  |2020 |54%   |
-|Wales         |Pembrokeshire         |521  |2020 |48%   |
-|Wales         |Rhondda Cynon Taff    |552  |2020 |57%   |
-|Wales         |Torfaen               |534  |2020 |46%   |
-|Wales         |Vale of Glamorgan     |572  |2020 |56%   |
-|West Midlands |Herefordshire         |209  |2020 |59%   |
-|West Midlands |Warwickshire          |420  |2022 |59%   |
-|Yorkshire     |Kingston upon Hull    |229  |2022 |35%   |
+|Wales         |Ceredigion            |523  |2020 |47%   |
+|Wales         |Conwy                 |513  |2020 |52%   |
+|Wales         |Gwynedd               |540  |2020 |54%   |
+|Wales         |Merthyr Tydfil        |553  |2023 |39%   |
+|Wales         |Monmouthshire         |533  |2020 |55%   |
+|Wales         |Pembrokeshire         |521  |2020 |47%   |
+|Wales         |Rhondda Cynon Taff    |552  |2020 |58%   |
+|Wales         |Torfaen               |534  |2020 |48%   |
+|Wales         |Vale of Glamorgan     |572  |2020 |57%   |
+|West Midlands |Warwickshire          |420  |2022 |57%   |
+|Yorkshire     |Kingston upon Hull    |229  |2022 |34%   |
+|Yorkshire     |York                  |329  |2019 |58%   |
 
 
 **The strongest candidates for a defect**, flagged in four or more of the eight years:
 
-- *West Midlands* — Staffordshire (7 years, low 46%); Stoke-on-Trent (7 years, low 32%)
-- *East Midlands* — Derbyshire (5 years, low 45%); Leicester (4 years, low 53%); Leicestershire (4 years, low 48%); Nottingham (4 years, low 48%)
-- *North West* — Cheshire East (4 years, low 54%)
-- *South East* — Slough (4 years, low 43%); West Berkshire (4 years, low 50%)
+- *West Midlands* — Staffordshire (8 years, low 42%); Stoke-on-Trent (7 years, low 33%); Shropshire (5 years, low 47%)
+- *East Midlands* — Derbyshire (6 years, low 41%); Leicestershire (5 years, low 46%); Leicester (4 years, low 53%); Nottingham (4 years, low 50%)
+- *South East* — West Berkshire (5 years, low 50%); Slough (4 years, low 42%)
+- *Wales* — Flintshire (5 years, low 46%); Bridgend (4 years, low 50%); Neath Port Talbot (4 years, low 51%)
+- *Scotland* — Falkirk (4 years, low 39%)
 
 Several of those are adjacent pairs or blocks rather than isolated areas — Staffordshire with Stoke-on-Trent, Leicester with Leicestershire, and the four Berkshire authorities together — which is what makes them worth opening: a contiguous group of authorities short in the same set of years points at one upstream source, not at the bus networks themselves.
 
@@ -373,16 +380,16 @@ supply heavy rail from 2018 and are keyed on TIPLOC, so their stops are
 placed by coordinate rather than by code.
 
 
-|mode        |2004   |2005   |2006   |2007   |2008   |2009   |2010   |2011   |2014    |2015    |2016    |2017    |2018   |2019   |2020   |2021   |2022   |2023   |2024   |2025   |
-|:-----------|:------|:------|:------|:------|:------|:------|:------|:------|:-------|:-------|:-------|:-------|:------|:------|:------|:------|:------|:------|:------|:------|
-|tram        |94     |156    |171    |239    |218    |217    |214    |200    |883     |1,043   |1,281   |1,217   |344    |364    |175    |287    |308    |375    |540    |788    |
-|metro       |2      |8      |43     |667    |645    |651    |650    |722    |191     |316     |262     |232     |2,271  |2,368  |1,718  |1,322  |2,048  |2,168  |1,562  |1,781  |
-|rail        |2,191  |1,647  |1,692  |1,604  |1,679  |1,741  |1,773  |1,832  |2       |3       |4       |4       |3      |1      |1      |0      |0      |1      |1      |1      |
-|bus         |26,003 |41,379 |45,257 |56,996 |59,733 |57,473 |61,744 |56,529 |231,572 |220,423 |215,754 |200,590 |55,227 |68,208 |37,425 |49,937 |55,070 |48,767 |52,128 |53,153 |
-|ferry       |5      |15     |23     |27     |32     |31     |32     |26     |58      |94      |90      |93      |34     |29     |19     |28     |31     |33     |33     |52     |
-|aerial lift |–      |–      |–      |–      |–      |–      |–      |–      |–       |–       |–       |–       |2      |2      |1      |2      |2      |2      |2      |2      |
-|coach       |0      |268    |508    |751    |393    |144    |133    |202    |621     |569     |574     |466     |176    |144    |16     |60     |78     |80     |191    |109    |
-|air         |–      |10     |4      |4      |4      |7      |–      |–      |0       |–       |–       |–       |–      |–      |–      |–      |–      |–      |–      |–      |
+|mode        |2004   |2005   |2006   |2007   |2008   |2009   |2010   |2011   |2014    |2015    |2016    |2017   |2018   |2019   |2020   |2021   |2022   |2023   |2024   |2025   |2026   |
+|:-----------|:------|:------|:------|:------|:------|:------|:------|:------|:-------|:-------|:-------|:------|:------|:------|:------|:------|:------|:------|:------|:------|:------|
+|tram        |94     |156    |171    |239    |218    |217    |214    |200    |443     |431     |643     |614    |344    |364    |175    |287    |308    |375    |538    |788    |365    |
+|metro       |2      |8      |43     |667    |645    |651    |650    |722    |96      |169     |139     |115    |2,271  |2,368  |1,718  |1,322  |2,048  |2,168  |1,569  |1,782  |1,514  |
+|rail        |2,191  |1,647  |1,692  |1,604  |1,679  |1,741  |1,773  |1,832  |1       |2       |2       |2      |3      |1      |1      |0      |0      |1      |1      |1      |1      |
+|bus         |26,003 |41,379 |45,257 |56,996 |59,733 |57,473 |61,744 |56,529 |114,309 |110,818 |107,923 |99,591 |55,227 |68,208 |37,425 |49,937 |54,790 |48,194 |51,647 |52,698 |55,204 |
+|ferry       |5      |15     |23     |27     |32     |31     |32     |26     |29      |47      |45      |47     |34     |29     |19     |28     |31     |33     |33     |51     |51     |
+|aerial lift |–      |–      |–      |–      |–      |–      |–      |–      |–       |–       |–       |–      |2      |2      |1      |2      |2      |2      |2      |2      |2      |
+|coach       |0      |268    |508    |751    |393    |144    |133    |202    |309     |267     |282     |231    |176    |144    |16     |60     |78     |77     |191    |111    |122    |
+|air         |–      |10     |4      |4      |4      |7      |–      |–      |0       |–       |–       |–      |–      |–      |–      |–      |–      |–      |–      |–      |–      |
 
 *Thousands of departures in each year's bus-side feeds, by mode. An en dash
 is a mode the year's feeds do not contain at all.*
@@ -401,21 +408,21 @@ Thousands of departures, 2018 onwards.
 
 
 
-|mode  |2018  |2019  |2020  |2021  |2022  |2023  |2024  |2025  |
-|:-----|:-----|:-----|:-----|:-----|:-----|:-----|:-----|:-----|
-|bus   |256   |329   |126   |204   |265   |335   |426   |369   |
-|ferry |4     |2     |3     |2     |2     |2     |4     |2     |
-|metro |62    |43    |76    |33    |57    |54    |49    |53    |
-|rail  |3,720 |3,918 |3,158 |2,872 |3,270 |4,174 |5,232 |5,279 |
+|mode  |2018  |2019  |2020  |2021  |2022  |2023  |2024  |2025  |2026  |
+|:-----|:-----|:-----|:-----|:-----|:-----|:-----|:-----|:-----|:-----|
+|bus   |256   |329   |126   |204   |265   |335   |426   |369   |414   |
+|ferry |4     |2     |3     |2     |2     |2     |4     |2     |2     |
+|metro |62    |43    |76    |33    |57    |54    |49    |53    |54    |
+|rail  |3,720 |3,918 |3,158 |2,872 |3,270 |4,174 |5,232 |5,279 |5,752 |
 
 These feeds are not purely rail. They carry **metro**, which the pipeline drops (`drop_route_types = 1` in `year_sources()`) because TNDS holds the Underground and the Tyne and Wear Metro in full and summing both would count those stations twice; **bus**, which is rail-replacement services; and a little **ferry**. What the pipeline takes from them is the rail row.
 
 ### What the mode table says about the series
 
-- **Rail all but disappears from these feeds after 2011**: the NPTDR archives average 1,770 thousand rail departures a year, and from 2014 the bus-side feeds average 2 thousand. That is not a change in the railway. NPTDR was a multi-modal archive; TransXChange is not, and from 2018 the pipeline takes heavy rail from the CIF feeds instead. **The 2014-2017 years have neither** - no NPTDR and no CIF - so those four years carry essentially no rail at all.
-- **Air** is an NPTDR mode and only an NPTDR mode: it runs in 2005-2009 (5 years), and the only trace of it anywhere else is 48 departures in 2014. `load_pt_frequency()` in the build repo drops route type 1100 outright, so none of it reaches the published figures.
+- **Rail all but disappears from these feeds after 2011**: the NPTDR archives average 1,770 thousand rail departures a year, and from 2014 the bus-side feeds average 1 thousand. That is not a change in the railway. NPTDR was a multi-modal archive; TransXChange is not, and from 2018 the pipeline takes heavy rail from the CIF feeds instead. **The 2014-2017 years have neither** - no NPTDR and no CIF - so those four years carry essentially no rail at all.
+- **Air** is an NPTDR mode and only an NPTDR mode: it runs in 2005-2009 (5 years), and the only trace of it anywhere else is 24 departures in 2014. `load_pt_frequency()` in the build repo drops route type 1100 outright, so none of it reaches the published figures.
 - **Coach is in every year, but 2004 has essentially none** — 79 departures against 268,483 in 2005, which is why the published 2004 coach figure is zero. Its ups and downs after that are source changes rather than service: TNDS carried coach in its NCSD archive until that disappeared after February 2025, and from 2024 coach comes from the BODS Coach feed instead. The build repo folds coach back into bus for exactly this reason.
-- **Metro steps twice, and neither step is a new railway**: 43k departures in 2006 against 667k in 2007, and 232k in 2017 against 2,271k in 2018. The first is NPTDR beginning to carry the Underground, the second is the move to TNDS. The Bus Archive years in between hold almost no metro, and what they do hold is Tyne and Wear.
+- **Metro steps twice, and neither step is a new railway**: 43k departures in 2006 against 667k in 2007, and 115k in 2017 against 2,271k in 2018. The first is NPTDR beginning to carry the Underground, the second is the move to TNDS. The Bus Archive years in between hold almost no metro, and what they do hold is Tyne and Wear.
 - Where a mode's row is thin rather than empty, treat it as a coverage question and not a trend. The non-bus modes are small enough that one operator's data arriving in a different format moves the whole row; `reports/non_bus_modes.md` is the standing check on their identity.
 
 ![plot of chunk modemaps](figures/coverage-modemaps-1.png)
@@ -471,7 +478,7 @@ These feeds are not purely rail. They carry **metro**, which the pipeline drops 
 | 2005|North West    |Blackburn with Darwen     |258  |105        |0      |0%              |severe shortfall |
 | 2005|Scotland      |Falkirk                   |669  |18,002     |0      |18%             |severe shortfall |
 | 2005|Scotland      |Orkney Islands            |602  |30         |0      |0%              |severe shortfall |
-| 2005|Scotland      |Scottish Borders          |690  |7,391      |0      |18%             |severe shortfall |
+| 2005|Scotland      |Scottish Borders          |690  |7,391      |0      |19%             |severe shortfall |
 | 2005|Scotland      |Shetland Islands          |603  |1,611      |0      |23%             |severe shortfall |
 | 2006|Great Britain |National - National Tram  |940  |69,177     |0      |10%             |severe shortfall |
 | 2006|London        |Greater London            |490  |1,451,096  |0      |14%             |severe shortfall |
@@ -487,19 +494,19 @@ These feeds are not purely rail. They carry **metro**, which the pipeline drops 
 | 2011|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2011|Great Britain |National - National Coach |900  |39         |0      |20%             |severe shortfall |
 | 2011|South West    |Portsmouth                |199  |12,252     |0      |7%              |severe shortfall |
-| 2014|Great Britain |National - National Air   |920  |48         |0      |0%              |severe shortfall |
+| 2014|Great Britain |National - National Air   |920  |24         |0      |0%              |severe shortfall |
 | 2014|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
-| 2014|London        |Greater London            |490  |7,370,109  |0      |15%             |severe shortfall |
+| 2014|London        |Greater London            |490  |3,638,331  |0      |15%             |severe shortfall |
 | 2015|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2015|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
-| 2015|London        |Greater London            |490  |6,317,678  |0      |13%             |severe shortfall |
+| 2015|London        |Greater London            |490  |3,179,197  |0      |13%             |severe shortfall |
 | 2016|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2016|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
-| 2016|London        |Greater London            |490  |6,854,341  |0      |15%             |severe shortfall |
+| 2016|London        |Greater London            |490  |3,401,006  |0      |14%             |severe shortfall |
 | 2017|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2017|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
-| 2017|Great Britain |National - National Rail  |910  |152        |0      |15%             |severe shortfall |
-| 2017|London        |Greater London            |490  |5,997,190  |0      |14%             |severe shortfall |
+| 2017|Great Britain |National - National Rail  |910  |76         |0      |19%             |severe shortfall |
+| 2017|London        |Greater London            |490  |2,983,769  |0      |14%             |severe shortfall |
 | 2018|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2018|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
 | 2019|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
@@ -508,20 +515,23 @@ These feeds are not purely rail. They carry **metro**, which the pipeline drops 
 | 2020|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
 | 2021|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2021|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
-| 2022|East Anglia   |Cambridgeshire            |050  |43,056     |0      |20%             |severe shortfall |
+| 2022|East Anglia   |Cambridgeshire            |050  |42,477     |0      |20%             |severe shortfall |
 | 2022|East Midlands |Peterborough              |059  |7,998      |0      |7%              |severe shortfall |
 | 2022|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2022|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
 | 2023|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2023|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
 | 2023|Great Britain |National - National Rail  |910  |9          |0      |4%              |severe shortfall |
-| 2023|South West    |Torbay                    |119  |11,997     |0      |13%             |severe shortfall |
+| 2023|South West    |Torbay                    |119  |11,997     |0      |14%             |severe shortfall |
 | 2024|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2024|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
-| 2024|Great Britain |National - National Rail  |910  |31         |0      |12%             |severe shortfall |
+| 2024|Great Britain |National - National Rail  |910  |31         |0      |14%             |severe shortfall |
 | 2025|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
 | 2025|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
-| 2025|Great Britain |National - National Rail  |910  |29         |0      |11%             |severe shortfall |
+| 2025|Great Britain |National - National Rail  |910  |29         |0      |13%             |severe shortfall |
+| 2026|Great Britain |National - National Air   |920  |0          |0      |0%              |absent           |
+| 2026|Great Britain |National - National Coach |900  |0          |0      |0%              |absent           |
+| 2026|Scotland      |Shetland Islands          |603  |0          |0      |0%              |absent           |
 
 ## How to read the series because of this
 
@@ -552,7 +562,7 @@ A stop id whose first three characters are not a known ATCO area code. These are
 
 |prefix | years present| most stops in a year| most departures|
 |:------|-------------:|--------------------:|---------------:|
-|305    |             2|                 1253|           54800|
+|305    |             3|                 1253|          163759|
 |SPT    |             4|                  184|           10781|
 |000    |            11|                  109|            7828|
 |780    |             1|                   14|            1010|
@@ -573,4 +583,4 @@ A stop id whose first three characters are not a known ATCO area code. These are
 
 ---
 
-Generated 2026-10-03 07:59 from 22 bus feeds covering 20 years.
+Generated 2026-10-06 12:30 from 24 bus feeds covering 21 years.

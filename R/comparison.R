@@ -164,8 +164,19 @@ validation_windows <- function() {
 #' data/dedup_rates.Rds. This turns that file into a sentence, and says so
 #' plainly when the file is absent rather than printing a figure whose
 #' provenance has been lost.
-dedup_rate_text <- function(path = file.path(load_cfg()$out_dir,
-                                             "dedup_rates.Rds")) {
+dedup_rate_text <- function(path = NULL) {
+  # The reports are knitted with the working directory set to reports/, so a
+  # path relative to the repository root does not resolve from inside them -
+  # "data/dedup_rates.Rds" becomes "reports/data/dedup_rates.Rds" and the
+  # function reported the figure as unmeasured while the file sat on disk.
+  # Both are tried, as the Rmd already does for data/example_timetables.
+  if (is.null(path)) {
+    cand <- file.path(c(load_cfg()$out_dir,
+                        file.path("..", load_cfg()$out_dir)),
+                      "dedup_rates.Rds")
+    hit <- cand[file.exists(cand)]
+    path <- if (length(hit)) hit[1] else cand[1]
+  }
   if (!file.exists(path)) {
     return(paste("not measured on this build (run `scripts/dedup_rates.R`",
                  "after a conversion to fill it in)"))
