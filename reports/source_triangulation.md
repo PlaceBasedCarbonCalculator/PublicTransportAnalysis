@@ -50,7 +50,12 @@ report separates:
   shortfall is concentrated: 72% of shared services match TNDS **exactly**,
   while 11% of them sit at or below 60% of TNDS and account for 82% of the
   gap. Those are particular operators, chiefly the Arriva companies,
-  Go-Ahead's Brighton & Hove and Metrobus, and Bee Network.
+  Go-Ahead's Brighton & Hove and Metrobus, and Bee Network. Testing three of
+  them found two causes, not one: Metrobus and Arriva Yorkshire really do
+  publish less than TNDS carries, while Brighton & Hove publishes **dated**
+  vehicle journeys instead of recurring patterns, which makes a run-count
+  comparison undercount it ninefold. So this layer is real but its size is
+  overstated by the measure.
 
 **Almost nothing is missing from both TransXChange sources.** 267 service
 groups (6,914 journeys, 0.14% of the national total) are carried only by the
@@ -253,11 +258,16 @@ Three things rule out the obvious explanations:
 
 So for these operators the *converted* BODS feed describes a far smaller
 timetable than TNDS does for the same routes over the same dates, and neither
-missing services nor truncated calendars explain it. Whether the cause is
-partial publication by the operator or the revision filter discarding
-siblings it should keep is **not settled here** — see "What this does not
-settle" below. What can be said is that it is not a shortage of raw material:
-the archive holds 2,761 TransXChange files under Arriva UK Bus alone.
+missing services nor truncated calendars explain it.
+
+The cause turns out to differ by operator, and the archive section below
+settles it: for Metrobus and Arriva Yorkshire the BODS data really is thinner
+than TNDS's, while **for Brighton & Hove the ratio of 0.117 is largely an
+artefact of how it publishes** — dated journeys rather than recurring
+patterns — and not a real shortfall at all. The ratios in this table should
+therefore be read as an upper bound on the gap, not a measurement of it.
+Which operators are affected is not something this report establishes beyond
+the three tested.
 
 ## How far forward each source carries
 
@@ -350,16 +360,76 @@ matches on route number, stops and times, so it would recognise and drop the
 duplicates on about 70% of shared services. On the other 30% it would not,
 and those would double-count.
 
-### What this does *not* settle
+### The operator shortfall, settled: two different causes
 
-The archive journey counts cannot be compared with TNDS's for a single
-operator, because BODS holds many revisions per route — 3.2 files per line
-for Arriva Yorkshire, 3.3 for Metrobus, 13.7 for Brighton & Hove. Summing
-them counts the same timetable over and over. So these figures do **not**
-show that the operator shortfall in the previous section is the revision
-filter discarding service it should keep; settling that needs the filter run
-over those operators' files and the survivors counted, which is in progress
-and not reported here.
+The raw archive's journey counts cannot be compared with TNDS's directly,
+because BODS holds many revisions per route — 3.2 files per line for Arriva
+Yorkshire, 3.3 for Metrobus, 13.7 for Brighton & Hove — and summing them
+counts the same timetable over and over. The comparable number is the
+journeys in the files that *survive* the revision filter, which is what the
+conversion actually sees. Running the same `txc_filter_files()` with the same
+filter date over each operator's BODS files:
+
+| operator | BODS files | kept | journeys, all revisions | journeys kept | TNDS journeys | kept ÷ TNDS |
+|:---|---:|---:|---:|---:|---:|---:|
+| Brighton & Hove | 1,080 | 262 | 68,670 | 13,659 | 11,161 | **1.224** |
+| Arriva Yorkshire | 296 | 82 | 9,363 | 2,604 | 7,613 | **0.342** |
+| Metrobus | 240 | 72 | 7,660 | 1,815 | 14,305 | **0.127** |
+
+(The filter is run per operator rather than over the whole archive. Its rules
+key on service code and operator, so an operator's files are reconciled among
+themselves either way, but a cross-operator interaction would not show up.)
+
+**For Metrobus and Arriva Yorkshire the answer is publication, not
+filtering.** What survives the filter is a tenth and a third of TNDS's
+journeys respectively, so the data the conversion is given is genuinely
+thinner than TNDS's. There is nothing for a fix to recover.
+
+**Brighton & Hove is the opposite case, and a different problem entirely.**
+What survives holds 22% *more* journeys than TNDS, and the converted feed
+duly has 9,670 trips against TNDS's 11,161 — yet it counts 4,956 journeys in
+the window against TNDS's 45,838, a ninth. The feeds disagree by nine times
+while holding the same number of trips, because they represent time
+differently:
+
+| | TNDS | BODS TransXChange |
+|:---|:---|:---|
+| routes | 74 | 258 |
+| trips | 11,161 | 9,670 |
+| calendar rows | many | 13 |
+| operating period | 18 Aug – 16 Nov | one week at a time (4–10 Oct, 11–17 Oct, 18–24 Oct, 25 Oct – 1 Nov) |
+| weekdays flagged per trip | 1, 5, 6 or 7 | 1 (median) |
+| trips covering the whole window | 100% | **0%** |
+| trips with no day in the window | 0 | 2,383 |
+
+Brighton & Hove publishes **dated** vehicle journeys to BODS — each journey
+tied to a single weekday inside a one-week operating period, 2,335 trips per
+weekly block — where TNDS carries recurring patterns with a three-month
+calendar. Counting journeys as trips × operating days is correct for the
+second representation and collapses under the first.
+
+This is a methodological finding rather than a fact about bus service, and it
+reaches further than this report: **a run-based comparison between TNDS and
+BODS TransXChange is not like-for-like for any operator publishing dated
+journeys**, and the per-operator ratios in the previous section will overstate
+the shortfall for those operators. It does not affect the coverage
+conclusions, which count whether a zone or a service has any service at all,
+nor the London and Scotland findings, which are about absence.
+
+**One thing about Brighton & Hove is still open, and it points at the
+filter.** The representation difference explains why a run count collapses,
+but not the whole magnitude. The surviving files hold 13,659 journeys across
+four weekly blocks — about 3,400 departures a week — while TNDS implies
+roughly 22,900 a week for the same operator. The 818 files the filter
+discarded hold the other 55,011 journeys, which over the same four weeks is
+about 17,200 a week, much closer to TNDS. If those discarded files carry
+*different* weekdays rather than restatements of the kept ones, then the
+filter is treating complementary siblings as superseding revisions and
+removing most of the week — the same class of defect as the overlap patch in
+`reports/tnds_conversion_investigation.md`, and worth fixing. If they
+restate the same days, the operator's BODS publication is simply partial.
+Deciding that needs the discarded files' operating days compared with the
+kept ones, which is not done here.
 
 Two further caveats on this section. The operator-code key is imperfect: the
 two archives spell some operators differently — National Express West
