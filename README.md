@@ -43,6 +43,18 @@ There are also six analysis reports, all rebuilt by the pipeline:
 - [reports/bus_source_comparison.md](reports/bus_source_comparison.md) — a
   three-way comparison of the bus timetable sources (TNDS, BODS
   TransXChange, BODS GTFS), one snapshot per year for 2022–2026.
+- [reports/source_triangulation.md](reports/source_triangulation.md) — all
+  three sources at once rather than in pairs, and the test of whether
+  converting TNDS and BODS TransXChange **together** would beat the DfT's
+  GTFS. It would not: the merge adds 0.5% to the national mean, and for
+  filling zones where TNDS has no service the DfT's GTFS is strictly better
+  (7 blank zones against 33). Also settles why BODS TransXChange is thin —
+  London and Scotland are 86% of it, and the English residue is particular
+  operators, not noise — and finds that the two archives hold *identical*
+  timetables for about seven routes in ten. Standalone, not a pipeline
+  target: `scripts/source_triangulation.R`,
+  `scripts/source_forward_horizon.R`, `scripts/txc_archive_index.py`,
+  `scripts/txc_compare_same_route.py`.
 - [reports/pdf_validation.md](reports/pdf_validation.md) — the sources checked
   against operators' own published timetables, which is the only evidence that
   says which of them is *right* rather than only that they differ.
