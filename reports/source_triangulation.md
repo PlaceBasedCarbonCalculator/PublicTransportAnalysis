@@ -451,18 +451,40 @@ weekday one survives. Per weekly block the pattern is consistent: of roughly
 11–15, and of roughly 40 Sunday files it keeps 8–11.
 
 So both mechanisms are at work, and neither alone accounts for the ninefold
-gap. `txc_filter_files()` is reconciling files that carry the **same
-ServiceCode but disjoint `RegularDayType` day sets** as though they superseded
-one another, when they are complementary parts of one timetable.
+gap.
 
-This is the same family as the overlap/sibling defect in
-`reports/tnds_conversion_investigation.md` but **not the same case, and the
-patch already applied does not cover it**: that patch skips reconciliation
-when two files share a `CreationDateTime` and differ in `ServiceCode`, where
-here the `ServiceCode` is identical and the day set differs. A rule that
-declines to treat two files as superseding when their operating day sets do
-not intersect would fix it. That is a UK2GTFS change, is not made here, and
-should be measured the way the last one was — with
+### Which rule, exactly
+
+It is **rule 1**, not the overlap reconciliation. Rule 1 deduplicates on
+operator + `ServiceCode` + `StartDate` + line, keeping the file with the
+highest `RevisionNumber`, and **the operating day set is not in that key — nor
+in the metadata `txc_filter_files()` reads at all.** Brighton & Hove publishes
+one file per day type for the same service, line and weekly operating period,
+so all of them collide on that key and one survives.
+
+Simulating rule 1 on its own over the 497 Brighton files whose period
+overlaps the window: it keeps 212 and drops 285. Of those 285,
+
+| dropped by rule 1, against the survivor that displaced it | files |
+|:---|---:|
+| identical day set — a true duplicate, correctly dropped | 22 |
+| **different day set — complementary, wrongly dropped** | 263 |
+| no survivor carrying those lines | 0 |
+
+The full filter keeps 210 where rule 1 alone keeps 212, so rules 2 to 4
+account for two files and rule 1 for everything else. A representative case:
+service `PK0001213:1`, line 2, period 4–10 October — the Sunday file is
+dropped and the Monday-to-Friday file kept, both at `RevisionNumber` 47.
+
+This is a different defect from the overlap/sibling one in
+`reports/tnds_conversion_investigation.md`, and **the patch already applied
+does not cover it**: that patch skips rule 4's reconciliation when two files
+share a `CreationDateTime` and differ in `ServiceCode`, whereas here the
+`ServiceCode` is identical, the day set differs, and the loss happens in rule
+1 before rule 4 is reached. The fix is to read the day set and add it to rule
+1's key, which is the same "a finer key can only split a group" move that the
+operator was added to the key for. That is a UK2GTFS change, is not made here,
+and should be measured the way the last one was — with
 `scripts/patch_effect_exact.R`, against the same archives.
 
 Two further caveats on this section. The operator-code key is imperfect: the

@@ -55,10 +55,12 @@ There are also six analysis reports, all rebuilt by the pipeline:
   run count is not like-for-like against an operator publishing *dated*
   vehicle journeys rather than recurring patterns (Brighton & Hove, which a
   run count undercounts ninefold), and a UK2GTFS defect the overlap patch
-  does not cover — `txc_filter_files()` reconciles files sharing a
-  ServiceCode but with **disjoint operating day sets** as if they superseded
-  one another, dropping Saturday and Sunday timetables for 8 of 36 Brighton &
-  Hove services. Standalone, not a pipeline target:
+  does not cover — rule 1 of `txc_filter_files()` deduplicates on operator +
+  ServiceCode + StartDate + line and **the operating day set is not in that
+  key, nor in the metadata it reads**, so an operator publishing one file per
+  day type loses all but one: 263 of the 285 files rule 1 drops for Brighton &
+  Hove carry a different day set from the file that displaced it, and 8 of 36
+  services end up without a Saturday or Sunday timetable. Standalone, not a pipeline target:
   `scripts/source_triangulation.R`, `scripts/source_forward_horizon.R`,
   `scripts/txc_archive_index.py`, `scripts/txc_compare_same_route.py`,
   `scripts/txc_extract_operator.py`,
