@@ -55,12 +55,16 @@ There are also six analysis reports, all rebuilt by the pipeline:
   run count is not like-for-like against an operator publishing *dated*
   vehicle journeys rather than recurring patterns (Brighton & Hove, which a
   run count undercounts ninefold), and a UK2GTFS defect the overlap patch
-  does not cover — rule 1 of `txc_filter_files()` deduplicates on operator +
-  ServiceCode + StartDate + line and **the operating day set is not in that
-  key, nor in the metadata it reads**, so an operator publishing one file per
-  day type loses all but one: 263 of the 285 files rule 1 drops for Brighton &
-  Hove carry a different day set from the file that displaced it, and 8 of 36
-  services end up without a Saturday or Sunday timetable. Standalone, not a pipeline target:
+  did not cover, **now fixed**: rule 1 of `txc_filter_files()` deduplicated on
+  operator + ServiceCode + StartDate + line with the operating day set absent
+  from the key *and* from the metadata it read, so a publisher filing one
+  document per day type lost all but one. It hit TNDS as well as BODS.
+  Reconverting on the fix raises BODS TransXChange 18% at zone level, halves
+  its distance to the DfT's feed, and repairs Manchester Metrolink from 476
+  journeys a day to 1,463 against the DfT's independent 1,432 — TNDS had been
+  carrying a third of Manchester's tram service. TNDS bus moves 0.08%, no
+  route group loses runs, and deduplication removes exactly the same 32,895
+  TNDS duplicates as before, so nothing was double-counted back in. Standalone, not a pipeline target:
   `scripts/source_triangulation.R`, `scripts/source_forward_horizon.R`,
   `scripts/txc_archive_index.py`, `scripts/txc_compare_same_route.py`,
   `scripts/txc_extract_operator.py`,

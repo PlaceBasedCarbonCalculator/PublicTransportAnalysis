@@ -5,6 +5,15 @@ window). Sources: TNDS TransXChange (extracted 2 October), the BODS
 TransXChange change archive (3 October), and the DfT's own BODS GTFS
 rendering (3 October).
 
+> **The defect this report found has since been fixed.** Investigating why
+> BODS TransXChange looked thin turned up a `txc_filter_files()` defect that
+> was deleting whole day types from *both* TransXChange sources. It is fixed
+> in UK2GTFS and both feeds have been reconverted. The diagnostic sections
+> below describe the data as it was with the defect present — that is the
+> evidence that motivated the fix, so the tables are left as measured and
+> marked **(pre-fix)**. "The fix, and what it changed" near the end reports
+> the result. The report's conclusions about the combined feed survive it.
+
 ## The question
 
 The DfT describes its BODS GTFS as BODS TransXChange with TNDS filling the
@@ -24,20 +33,22 @@ random?
 
 ## Answers, up front
 
-**The combined feed is not worth building.** It adds 0.5% to the national
+**The combined feed is not worth building.** It adds 0.65% to the national
 zone-level mean over TNDS alone, and for the one purpose where a merge
 genuinely helps — filling zones where TNDS has no service at all — BODS
 TransXChange is strictly worse than the DfT's GTFS:
 
-| blank zones (no bus service counted) | zones |
-|---|---:|
-| TNDS alone | 91 |
-| TNDS + BODS TransXChange | 33 |
-| **TNDS + BODS GTFS** | **7** |
-| all three | 7 |
+| blank zones (no bus service counted) | pre-fix | after the fix |
+|---|---:|---:|
+| TNDS alone | 91 | 92 |
+| TNDS + BODS TransXChange | 33 | 34 |
+| **TNDS + BODS GTFS** | **7** | **7** |
+| all three | 7 | 7 |
 
 Adding BODS TransXChange on top of TNDS + BODS GTFS changes nothing. If the
-aim is coverage, the pairing to use is TNDS + BODS GTFS.
+aim is coverage, the pairing to use is TNDS + BODS GTFS. Fixing the filter
+defect raised BODS TransXChange's national mean by 18% and still did not
+change this: its gaps are where TNDS is strong, so closing them adds little.
 
 **BODS TransXChange's thinness is regional first and operator-specific
 second, and not random.** Two separate mechanisms, which the rest of this
@@ -57,14 +68,14 @@ report separates:
   comparison undercount it ninefold. So this layer is real but its size is
   overstated by the measure.
 
-**One new UK2GTFS defect falls out of this.** For Brighton & Hove,
-`txc_filter_files()` discards 167 files holding 12,035 journeys that are not
-restatements of anything it keeps, and 8 of 36 services end up with fewer day
-types than the archive holds — a Saturday or Sunday timetable dropped while
-the weekday one survives. It is reconciling files with the **same ServiceCode
-and disjoint operating day sets** as if they superseded each other. The
-overlap patch already applied does not cover this case; the fix is a rule
-that declines to reconcile files whose day sets do not intersect.
+**One new UK2GTFS defect falls out of this, and it is now fixed.** Rule 1 of
+`txc_filter_files()` keyed on operator + ServiceCode + StartDate + line, with
+the operating day set absent from the key and from the metadata it read at
+all, so a publisher filing one document per day type lost all but one. It
+affected TNDS as well as BODS. See "The fix, and what it changed" for what
+reconverting on the fix produced — in short, BODS TransXChange gained 18% at
+zone level, TNDS's bus counts moved 0.08%, and Manchester Metrolink went from
+67% short of the independent reading to within 2% of it.
 
 **Almost nothing is missing from both TransXChange sources.** 267 service
 groups (6,914 journeys, 0.14% of the national total) are carried only by the
@@ -109,7 +120,7 @@ Regions come from the ATCO prefix of the stops each service calls at, not
 from operator names — "Arriva" operates in nine traveline regions and the
 question is geographic. 99.8% of running services resolve to a region.
 
-## Which sources hold which services
+## Which sources hold which services (pre-fix)
 
 18,709 service groups. `T` is TNDS, `X` is BODS TransXChange, `G` is the
 DfT's BODS GTFS.
@@ -176,7 +187,7 @@ The `T--` and `-X-` counts are upper bounds, for the reason
 the two sources number differently, so one service can be counted as
 exclusive to each source twice over.
 
-## Why BODS TransXChange is thin: two separate mechanisms
+## Why BODS TransXChange is thin: two separate mechanisms (pre-fix)
 
 Splitting the TNDS-minus-BODS-TransXChange gap by region, and within each
 region into service BODS TransXChange never carries, service it carries but
@@ -228,7 +239,7 @@ DfT's GTFS has London and Scotland only because it ingests TNDS: it counts
 106.0% and 102.5% of TNDS's journeys there, against BODS TransXChange's 4.7%
 and 5.2%. TNDS is the primary source for both, however the feed is assembled.
 
-### Mechanism two: particular English operators, and it is journeys not files
+### Mechanism two: particular English operators (pre-fix)
 
 In England outside London, BODS TransXChange holds 77.2% of TNDS's journeys.
 That residue is not spread evenly. Of 8,246 services both sources run there:
@@ -369,7 +380,7 @@ matches on route number, stops and times, so it would recognise and drop the
 duplicates on about 70% of shared services. On the other 30% it would not,
 and those would double-count.
 
-### The operator shortfall, settled: two different causes
+### The operator shortfall: filter, not archive
 
 The raw archive's journey counts cannot be compared with TNDS's directly,
 because BODS holds many revisions per route — 3.2 files per line for Arriva
@@ -389,10 +400,24 @@ filter date over each operator's BODS files:
 key on service code and operator, so an operator's files are reconciled among
 themselves either way, but a cross-operator interaction would not show up.)
 
-**For Metrobus and Arriva Yorkshire the answer is publication, not
-filtering.** What survives the filter is a tenth and a third of TNDS's
-journeys respectively, so the data the conversion is given is genuinely
-thinner than TNDS's. There is nothing for a fix to recover.
+**The low two rows are the filter, not the archive.** This table originally
+read as showing that Metrobus and Arriva Yorkshire simply publish less than
+TNDS carries, with nothing for a fix to recover. That was wrong, and the fix
+in "Which rule, exactly" below is what shows it: once rule 1 stops deleting
+day types, the same files and the same filter date give
+
+| operator | files kept | journeys kept | journeys ÷ TNDS |
+|:---|---:|---:|---:|
+| Brighton & Hove | 262 → **571** | 13,659 → 36,636 | 1.224 → 3.283 |
+| Arriva Yorkshire | 82 → **199** | 2,604 → 7,140 | 0.342 → **0.938** |
+| Metrobus | 72 → **144** | 1,815 → 4,893 | 0.127 → 0.342 |
+
+Arriva Yorkshire reaches parity with TNDS, so its shortfall was the filter
+throughout. Metrobus trebles but still holds a third of TNDS's journeys, so it
+is part defect and part genuine under-publication. Brighton & Hove rises to
+3.3 times TNDS, which is what its dated-journey representation implies — each
+journey appears once per weekly block, and the archive holds four blocks — not
+over-retention.
 
 **Brighton & Hove is the opposite case, and a different problem entirely.**
 What survives holds 22% *more* journeys than TNDS, and the converted feed
@@ -583,6 +608,196 @@ journey identically. The previous section measures how often they do: about
 70% of the time, which leaves roughly 2,600 services on which a merge would
 double-count.
 
+## The fix, and what it changed
+
+Two changes to `txc_filter_files()` (UK2GTFS `cb6c1d7`):
+
+1. **Rule 1 keys on the operating day set** alongside the line. Day sets are
+   read from `DaysOfWeek` and expanded first, so `MondayToFriday` and the five
+   days listed separately compare equal rather than looking like two
+   timetables.
+2. **Rule 4 leaves files whose operating days do not intersect alone.**
+   Without this the first change would have been undone: one file per day type
+   shares an operating period exactly, and rule 4's identical-period branch
+   would have kept the newest and called the rest duplicate registrations. The
+   test is disjointness, not inequality, so a successor registration that
+   merely drops Saturday still shares the weekdays with the file it replaces
+   and reconciles as before.
+
+Rules 2 and 3 are deliberately unchanged. They split on the ServiceCode alone
+and keep the version operative on the filter date; adding the day type there
+would stop a revision that *withdraws* Saturday service from closing its
+predecessor, resurrecting the withdrawn journeys. That is a worse failure than
+the one being fixed and not one the data shows.
+
+Seven tests added; the suite is 1,104 passing, 0 failing.
+
+### How it was measured
+
+Both TransXChange feeds were reconverted from the same archives over the same
+window with the same filter date, and the comparison rebuilt. **The DfT's BODS
+GTFS was deliberately not reconverted** — `txc_filter_files()` never touches
+it — so its column is a fixed point. Its largest per-zone change across 40,834
+zones is **exactly zero**, which is what establishes that everything below is
+the fix and not the pipeline drifting underneath. `scripts/daytype_fix_effect.R`
+asserts this.
+
+### Feed size
+
+| | routes | trips | trips in window |
+|:---|:---|:---|:---|
+| TNDS | 16,706 → 16,842 (+0.8%) | 1,427,557 → 1,444,062 (+1.2%) | 1,205,154 → 1,217,780 (+1.0%) |
+| BODS TransXChange | 12,555 → **15,605 (+24.3%)** | 677,837 → **798,061 (+17.7%)** | 537,670 → **648,081 (+20.5%)** |
+| BODS GTFS | unchanged | unchanged | unchanged |
+
+The revision filter now keeps **13,816** of the BODS archive's 20,203 files
+where it kept about 9,400. On the TNDS side its removals fell to 255 files
+nationally, and to zero in the North East and West Midlands.
+
+### What moved, by mode
+
+Runs — trips times the days they operate, which is what the published measure
+counts — in the TNDS feed:
+
+| mode | runs before | runs after | change |
+|:---|---:|---:|---:|
+| bus | 4,900,457 | 4,904,339 | +0.08% |
+| tram | 70,621 | 84,444 | **+19.57%** |
+| metro | 165,135 | 165,135 | 0.00% |
+| rail | 544 | 544 | 0.00% |
+| ferry | 50,938 | 50,938 | 0.00% |
+| coach | 2,043 | 2,043 | 0.00% |
+
+**No route group anywhere lost runs.** The change is purely additive: 47 route
+groups gained, none lost.
+
+So the honest answer on TNDS is in two parts. Its **bus** counts barely move —
+0.08% nationally, because the recovered files are small weekend services on
+rural routes. Its **tram** counts move a great deal, and that is the finding
+worth having.
+
+### Manchester Metrolink: a two-thirds undercount, repaired
+
+Metrolink's trips nearly quadrupled, which looked like inflation until checked
+against the DfT's GTFS — which carries Metrolink and which the fix does not
+touch:
+
+| Metrolink, journeys per day in the window | |
+|:---|---:|
+| TNDS **before** the fix | 475.6 |
+| TNDS **after** the fix | **1,463.0** |
+| BODS GTFS (independent, untouched) | 1,431.9 |
+
+TNDS was carrying a third of Manchester's tram service. It now agrees with the
+independent reading to 2.2%. Per line the pattern is the same: BlueLine's runs
+went from 146 in a fortnight — ten a day, for a Manchester tram line — to
+2,335. This is in the published outputs, because tram is counted in
+`trips_<year>`.
+
+### Zone level, and agreement with the DfT's feed
+
+| mean daytime trips per hour | before | after |
+|:---|---:|---:|
+| TNDS | 9.5443 | 9.5499 (+0.06%) |
+| BODS TransXChange | 4.1932 | **4.9676 (+18.47%)** |
+| BODS GTFS | 9.8757 | 9.8757 (0.00%) |
+
+Distance to the DfT's feed, as mean `|log(ratio)|` over zones both carry —
+lower is closer:
+
+| | before | after |
+|:---|---:|---:|
+| TNDS vs BODS GTFS | 0.0876 | 0.0864 |
+| BODS TransXChange vs BODS GTFS | 0.4943 | **0.2675** |
+
+BODS TransXChange halves its distance to the DfT's own rendering of the same
+upstream data, which is the strongest single sign the fix is right: the two
+should agree, and they now agree twice as closely.
+
+### The gain is where the defect predicted it
+
+The defect deleted Saturday and Sunday files, so a real fix must show up on
+those days and not spread evenly. Change in BODS TransXChange runs by day:
+
+| Sat | Sun | Mon | Tue | Wed | Thu | Fri |
+|---:|---:|---:|---:|---:|---:|---:|
+| **+44.3%** | **+20.1%** | +13.7% | +14.8% | +14.8% | +14.8% | +14.6% |
+
+Saturday gains three times what a weekday does. This is the prediction the
+diagnosis made, tested after the fact.
+
+### Agreement between the two TransXChange sources
+
+| services both run | before | after |
+|:---|---:|---:|
+| identical run counts | 72.2% | **81.5%** |
+| within 5% | 73.8% | 84.7% |
+| BODS TransXChange lower than TNDS | 24.2% | **14.4%** |
+| identical stop sets | 69.7% | 70.5% |
+
+### Regions: the English shortfall largely dissolves
+
+BODS TransXChange as a percentage of TNDS's journeys:
+
+| region | before | after |
+|:---|---:|---:|
+| South East | 63.2 | **86.4** |
+| North West | 63.7 | **86.0** |
+| Yorkshire | 83.6 | **95.4** |
+| East Midlands | 85.8 | **94.6** |
+| West Midlands | 81.7 | 88.2 |
+| North East | 65.0 | 73.9 |
+| East Anglia | 94.8 | 96.1 |
+| South West | 99.6 | 100.0 |
+| Wales | 44.7 | 48.3 |
+| London | 4.7 | 4.9 |
+| Scotland | 5.2 | 5.3 |
+
+The "mechanism two" layer of this report — a 77% English shortfall
+concentrated on particular operators — was substantially the defect, not the
+data. What survives is **mechanism one**: London and Scotland, which are a
+statutory boundary and which the fix cannot and does not touch.
+
+### No duplicate inflation
+
+The risk of keying rule 1 more finely is that files which *are* alternative
+versions of one timetable both survive and the service is counted twice.
+Deduplication is where that would show:
+
+| | removed / trips, before | after |
+|:---|---:|---:|
+| TNDS | 32,895 / 1,460,452 = 2.25% | **32,895** / 1,476,957 = 2.23% |
+| BODS TransXChange | 13,066 / 690,903 = 1.89% | 13,326 / 811,387 = 1.64% |
+
+TNDS removed **exactly the same 32,895 duplicates** while gaining 16,505
+trips: the recovered files introduced none at all. BODS TransXChange's
+duplicate count rose by 260 against 120,484 trips gained, so 0.2% of what came
+back was duplicate. Both rates fell.
+
+### The one side effect
+
+178 stops changed position between the two feeds, 141 by more than 200 m and
+112 by more than a kilometre — one by 100 km. This is the stop-identity
+non-determinism already on record: a `stop_id` can carry several TransXChange
+definitions with different coordinates, so **which files survive filtering
+decides where the stop lands**, and a stop that moves far enough crosses a
+zone boundary and takes its departures with it. Keeping more files exercises
+it harder.
+
+At zone level that shows as 322 zones up and 31 down, 266 tph gained against
+38 tph redistributed — so about an eighth of the gross movement is
+redistribution rather than recovery, and no zone lost service because a route
+lost runs. It is worth knowing that a zone-level before-and-after of any
+filtering change carries this much noise; the mode and route totals above do
+not, because they do not depend on where a stop is.
+
+### What this leaves outdated
+
+`trips_2026` — the published output — along with `coverage` and `non_bus` and
+their reports. Since the fix changes TNDS, **every year of the published
+series would change if rebuilt**, most visibly in tram. Only 2026 has been
+rebuilt here.
+
 ## Caveats
 
 - **The exclusive counts are upper bounds.** Route matching cannot link a
@@ -621,6 +836,10 @@ python  scripts/txc_compare_same_route.py $IDX 40 # same route, both archives
 python  scripts/txc_extract_operator.py $IDX $OPS BHBC,WRAY,METR
 Rscript scripts/bods_operator_filter_check.R $OPS # survivors against TNDS
 Rscript scripts/bods_daytype_filter_check.R  $OPS # what the filter discards
+python  scripts/txc_rule1_daytype_sim.py  $OPS/BHBC  # which rule drops them
+python  scripts/txc_daytype_collisions.py tnds       # does TNDS collide too?
+
+Rscript scripts/daytype_fix_effect.R              # the fix, end to end
 ```
 
 `source_triangulation.R` reads the `cmp_2026_*` targets and writes

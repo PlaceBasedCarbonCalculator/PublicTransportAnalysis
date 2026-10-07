@@ -30,11 +30,15 @@ OPS <- ops_dir()
 FILTER_DATE <- as.Date("2026-10-05")
 TNDS_J <- c(BHBC = 11161L, WRAY = 7613L, METR = 14305L)
 
+# Counting <VehicleJourney> openings in the raw bytes rather than parsing the
+# document. Parsing 1,080 Brighton & Hove files with xml2 takes over half an
+# hour; this takes seconds, and an element count needs no tree.
 count_j <- function(f) {
-  x <- tryCatch(read_xml(f), error = function(e) NULL)
-  if (is.null(x)) return(0L)
-  xml_ns_strip(x)
-  length(xml_find_all(x, "//VehicleJourney"))
+  txt <- tryCatch(readChar(f, file.size(f), useBytes = TRUE),
+                  error = function(e) NULL)
+  if (is.null(txt)) return(0L)
+  length(gregexpr("<VehicleJourney[ >]", txt, fixed = FALSE)[[1]][
+    gregexpr("<VehicleJourney[ >]", txt, fixed = FALSE)[[1]] > 0])
 }
 
 res <- rbindlist(lapply(list.dirs(OPS, recursive = FALSE), function(d) {
