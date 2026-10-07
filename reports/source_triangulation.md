@@ -554,33 +554,41 @@ takes, per service, whichever source counts more journeys — what a perfect
 merge with perfect de-duplication would yield. "Naive sum" adds them, which
 is what a merge whose de-duplication fails would yield.
 
-| | journeys in window |
-|:---|---:|
-| TNDS alone | 4,868,159 |
-| BODS TransXChange alone | 2,402,575 |
-| DfT BODS GTFS | 5,041,768 |
-| union, best-of | 4,951,759 |
-| union, naive sum | 7,270,734 |
+| journeys in window | pre-fix | after the fix |
+|:---|---:|---:|
+| TNDS alone | 4,868,159 | 4,872,041 |
+| BODS TransXChange alone | 2,402,575 | 2,784,219 |
+| DfT BODS GTFS | 5,041,768 | 5,041,768 |
+| union, best-of | 4,951,759 | 4,963,481 |
+| union, naive sum | 7,270,734 | 7,656,260 |
 
-- union / BODS GTFS = **0.982**
-- union / TNDS alone = **1.017**
-- naive sum / BODS GTFS = **1.442**
+| | pre-fix | after the fix |
+|:---|---:|---:|
+| union / BODS GTFS | 0.982 | **0.985** |
+| union / TNDS alone | 1.017 | **1.019** |
+| naive sum / BODS GTFS | 1.442 | **1.519** |
 
 At zone level, on the measure the pipeline actually publishes
-(time-weighted daytime trips per hour, mean over 40,833 zones):
+(time-weighted daytime trips per hour, mean over 40,834 zones):
 
-| | mean tph |
-|:---|---:|
-| TNDS | 9.5443 |
-| BODS TransXChange | 4.1932 |
-| DfT BODS GTFS | 9.8757 |
-| union, best-of | 9.5941 |
+| | pre-fix | after the fix |
+|:---|---:|---:|
+| TNDS | 9.5443 | 9.5497 |
+| BODS TransXChange | 4.1932 | 4.9675 |
+| DfT BODS GTFS | 9.8757 | 9.8754 |
+| union, best-of | 9.5941 | 9.6118 |
 
-The merge buys **+0.52%**. 7.2% of zones gain anything at all; where there is
-a gain it averages 0.69 tph. And the gain is shrinking as the two sources
-converge — it was +1.32% in 2022:
+The merge buys **+0.65%** after the fix, against +0.52% before — the fix makes
+BODS TransXChange a better feed without making it a more useful *addition*,
+because what it gained was service TNDS already had. 9.4% of zones gain
+anything at all, up from 7.2%.
 
-| year | TNDS | BODS TXC | BODS GTFS | union | TXC as % of TNDS | union gain |
+The gain was also shrinking year on year as the two sources converged. That
+table is left on the unfixed filter throughout, because only 2026 was
+reconverted and mixing a fixed 2026 row into four unfixed ones would not be a
+trend:
+
+| year (pre-fix) | TNDS | BODS TXC | BODS GTFS | union | TXC as % of TNDS | union gain |
 |:---|---:|---:|---:|---:|---:|---:|
 | 2022 | 9.380 | 3.578 | 9.374 | 9.504 | 38.1 | +1.32% |
 | 2023 | 9.162 | 3.672 | 9.090 | 9.249 | 40.1 | +0.95% |
@@ -592,7 +600,7 @@ converge — it was +1.32% in 2022:
 
 BODS TransXChange's coverage is almost exactly nested inside TNDS's. Where it
 is strong (England outside London) TNDS is strong too, and on 72% of shared
-services the two agree to the journey. Where TNDS is weak it is weak as well.
+services the two agree to the journey — 82% after the fix. Where TNDS is weak it is weak as well.
 The 58 zones a merge fills are all in England and all already covered by the
 DfT's GTFS. BODS TransXChange contributes 59,739 journeys that TNDS lacks —
 1.2% of TNDS's total — against the 1,993,422 journeys TNDS has that it is
@@ -811,7 +819,7 @@ rebuilt here.
   read as describing running service, which is what they are used for.
 - **The DfT's GTFS count is inflated by its own duplication.**
   `reports/bus_source_comparison.md` measures 3.7% of its bus runs as one bus
-  counted twice. The union/GTFS ratio of 0.982 should be read against that:
+  counted twice. The union/GTFS ratio of 0.985 should be read against that:
   on a like-for-like basis the union is marginally ahead, not behind. This
   does not change the coverage conclusion, which is about blank zones rather
   than totals.
