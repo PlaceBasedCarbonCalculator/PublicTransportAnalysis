@@ -64,12 +64,18 @@ There are also six analysis reports, all rebuilt by the pipeline:
   journeys a day to 1,463 against the DfT's independent 1,432 — TNDS had been
   carrying a third of Manchester's tram service. TNDS bus moves 0.08%, no
   route group loses runs, and deduplication removes exactly the same 32,895
-  TNDS duplicates as before, so nothing was double-counted back in. Standalone, not a pipeline target:
+  TNDS duplicates as before, so nothing was double-counted back in. Along the
+  way it records a measurement trap worth knowing: reinstalling UK2GTFS to
+  apply a code change resets `inst/extdata/date.txt` and so re-downloads the
+  separately versioned package data, which moved 178 stops between the two
+  builds and makes any zone-level before-and-after partly a data refresh
+  rather than the change under test. Standalone, not a pipeline target:
   `scripts/source_triangulation.R`, `scripts/source_forward_horizon.R`,
   `scripts/txc_archive_index.py`, `scripts/txc_compare_same_route.py`,
   `scripts/txc_extract_operator.py`,
   `scripts/bods_operator_filter_check.R`,
-  `scripts/bods_daytype_filter_check.R`.
+  `scripts/bods_daytype_filter_check.R`,
+  `scripts/stop_move_attribution.R`.
 - [reports/pdf_validation.md](reports/pdf_validation.md) — the sources checked
   against operators' own published timetables, which is the only evidence that
   says which of them is *right* rather than only that they differ.

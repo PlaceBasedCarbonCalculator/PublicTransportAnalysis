@@ -782,22 +782,67 @@ trips: the recovered files introduced none at all. BODS TransXChange's
 duplicate count rose by 260 against 120,484 trips gained, so 0.2% of what came
 back was duplicate. Both rates fell.
 
-### The one side effect
+### The one side effect, and why it is not the filter
 
 178 stops changed position between the two feeds, 141 by more than 200 m and
-112 by more than a kilometre — one by 100 km. This is the stop-identity
-non-determinism already on record: a `stop_id` can carry several TransXChange
-definitions with different coordinates, so **which files survive filtering
-decides where the stop lands**, and a stop that moves far enough crosses a
-zone boundary and takes its departures with it. Keeping more files exercises
-it harder.
+112 by more than a kilometre — one by 100 km. I first read this as the
+stop-identity non-determinism already on record and attributed it to the
+filter keeping more files. **That was wrong.** Traced to source, the moves are
+UK2GTFS's own stop-location patch tables being applied in the rebuild where
+the earlier feed had not had them, and the two builds did not use the same
+packaged data: reinstalling UK2GTFS to pick up the fix reset
+`inst/extdata/date.txt`, which forces a fresh download of the separately
+versioned package datasets, so `naptan_replace` and `naptan_missing` differ
+between the before and after feeds.
 
-At zone level that shows as 322 zones up and 31 down, 266 tph gained against
-38 tph redistributed — so about an eighth of the gross movement is
-redistribution rather than recovery, and no zone lost service because a route
-lost runs. It is worth knowing that a zone-level before-and-after of any
-filtering change carries this much noise; the mode and route totals above do
-not, because they do not depend on where a stop is.
+| the 178 moved stops | n | of which > 1 km | at the authoritative position before | after |
+|:---|---:|---:|---:|---:|
+| in `naptan_replace` (503 known-bad NaPTAN locations) | 143 | 96 | 1 | **143** |
+| in `naptan_missing` (42,031 stops absent from NaPTAN) | 22 | 16 | 8 | **14** |
+| in neither | 13 | 0 | — | — |
+
+**Both groups move towards correctness, and 165 of the 178 are repairs.**
+Every one of the 143 lands on the position `naptan_replace` publishes as the
+correct one, against one that was already there; counting all
+`naptan_replace` stops present in both feeds, 61 of 246 sat at the corrected
+position before and 203 after. The 22 in `naptan_missing` are the other way
+round — all 22 have since been added to NaPTAN proper, so that table is stale
+for them, and the after feed puts 14 of them on the live NaPTAN position
+against 8 before. (This is the group containing the 100 km move,
+`1100DEA11988`, which NaPTAN and the TransXChange both call Mannings Way and
+which the earlier feed had as Start Point Car Park on the opposite coast — a
+stop already on record as flipping between the September and October
+editions.) `naptan_replace` is
+concentrated exactly where the movement is — 270 of its 503 rows are
+Leicestershire (ATCO 260), 123 are national ferry terminals (930) and 93 are
+Leicester (269), which is 108, 17 and 19 of the movers respectively. The 13 in
+neither table are all Hertfordshire and all under 250 m, and they are the
+only candidates for the stop-identity mechanism I originally blamed for all
+178.
+
+A per-region check settles the attribution. In each freshly converted regional
+feed, **every** `naptan_replace` stop present is patched — EM 126 of 126, SW
+18 of 18, L 2 of 2 — so which files survive filtering cannot leave one
+unpatched, and the before feed's 185 stops at raw NaPTAN positions can only
+come from a different patch table. (Scotland is 57 of 97, the exception being
+ferry terminals sitting 4–163 m off the published correction, which is the
+ferry stop-identity question already on record rather than anything new.)
+
+**No service moved with them.** The 178 stops carry exactly 24,192
+`stop_times` calls in *both* feeds — 0.042% of 57.5 million — and the 112 that
+moved more than a kilometre carry 10,686, or 0.019%. Nothing was gained or
+lost at a moved stop; the same departures are now attributed to a different
+place.
+
+The consequence for the measurement is that the zone-level before-and-after —
+322 zones up and 31 down, 266 tph gained against 38 tph redistributed — is
+substantially this data refresh and not the filter. No zone lost service
+because a route lost runs, which is the claim that matters, and the mode and
+route totals above are unaffected because they do not depend on where a stop
+is. The general lesson is sharper than the one I first drew: **a zone-level
+before-and-after is only clean if both feeds were built against the same
+packaged UK2GTFS data**, and reinstalling the package to apply a code change
+silently breaks that.
 
 ### What this leaves outdated
 
