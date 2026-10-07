@@ -854,7 +854,8 @@ place.
 
 The consequence for the measurement is that the zone-level before-and-after —
 322 zones up and 31 down, 266 tph gained against 38 tph redistributed — is
-substantially this data refresh and not the filter. No zone lost service
+substantially these corrections landing and not the filter. No zone lost
+service
 because a route lost runs, which is the claim that matters, and the mode and
 route totals above are unaffected because they do not depend on where a stop
 is. The general lesson is sharper than the one I first drew: **a zone-level
