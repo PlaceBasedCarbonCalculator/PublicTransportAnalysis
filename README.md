@@ -65,11 +65,13 @@ There are also six analysis reports, all rebuilt by the pipeline:
   carrying a third of Manchester's tram service. TNDS bus moves 0.08%, no
   route group loses runs, and deduplication removes exactly the same 32,895
   TNDS duplicates as before, so nothing was double-counted back in. Along the
-  way it records a measurement trap worth knowing: reinstalling UK2GTFS to
-  apply a code change resets `inst/extdata/date.txt` and so re-downloads the
-  separately versioned package data, which moved 178 stops between the two
-  builds and makes any zone-level before-and-after partly a data refresh
-  rather than the change under test. Standalone, not a pipeline target:
+  way it records a measurement trap worth knowing: the stop-location
+  corrections UK2GTFS ships as separately versioned package data landed
+  differently in the two builds, moving 178 stops, so a zone-level
+  before-and-after is partly that rather than the change under test. It is not
+  the filter — the TransXChange files carry no coordinates at all — and 165 of
+  the 178 moves are repairs, but why the earlier build applied fewer of the
+  corrections is still open. Standalone, not a pipeline target:
   `scripts/source_triangulation.R`, `scripts/source_forward_horizon.R`,
   `scripts/txc_archive_index.py`, `scripts/txc_compare_same_route.py`,
   `scripts/txc_extract_operator.py`,

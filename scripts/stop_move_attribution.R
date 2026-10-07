@@ -1,12 +1,19 @@
 # Why did 178 stops change position between two builds of the same snapshot?
 #
 # The first reading was that keeping more TransXChange files had exercised the
-# stop-identity non-determinism (one stop_id, several definitions). It had not.
-# UK2GTFS ships its stop-location corrections as separately versioned package
-# data, and reinstalling the package to apply a code change resets
-# inst/extdata/date.txt, which forces a fresh download of that data. So the two
-# feeds were built against different naptan_replace/naptan_missing tables and
-# the moves are the corrections landing, not the filter.
+# stop-identity non-determinism (one stop_id, several definitions). It had not:
+# the TransXChange files carry no coordinates at all, so surviving-file choice
+# cannot vote on a position. The moves are UK2GTFS's own stop-location
+# corrections (naptan_replace, naptan_missing) landing where the earlier build
+# did not have them. Why the earlier build applied fewer of them is still open
+# - the leading explanation is that reinstalling the package to apply a code
+# change resets inst/extdata/date.txt and so re-downloads the separately
+# versioned package data, but both build logs do report patch_naptan() running.
+#
+# The naptan_missing column below is measured against that table, which is
+# stale for every stop it flags here (all 22 have since been added to NaPTAN
+# proper); measured against live NaPTAN the group moves 8 -> 14 correct, which
+# the last block reports.
 #
 # Usage: Rscript scripts/stop_move_attribution.R <before.zip> <after.zip>
 suppressMessages(library(data.table))
@@ -86,10 +93,12 @@ for (lab in c("before", "after")) {
               lab, nrow(s), s[d <= 1, .N]))
 }
 
-# 3. the filter cannot be the cause: within a regional feed the patch is
-#    applied to every entry present, so which files survive is irrelevant
+# 3. how much of this the filter could own: patch_naptan() runs per regional
+#    feed and the merge keeps the first contributing region's copy, so the
+#    filter could matter only for stops present in more than one region
 cat("\n=== patch coverage inside each region of the AFTER build ===\n")
-for (z in list.files(CACHE, pattern = "[.]zip$", full.names = TRUE)) {
+zips <- list.files(CACHE, pattern = "[.]zip$", full.names = TRUE)
+for (z in zips) {
   s <- try(stops_of(z), silent = TRUE)
   if (inherits(s, "try-error")) next
   s <- merge(s, replace_tbl[, list(stop_id, t_lat = stop_lat,
@@ -100,7 +109,49 @@ for (z in list.files(CACHE, pattern = "[.]zip$", full.names = TRUE)) {
               sub("[.]zip$", "", basename(z)), nrow(s), s[d <= 1, .N]))
 }
 
-# 4. did any service move with them? the departures are what the published
+# 3b. can merge order decide the patched state? only for a stop present in
+#     more than one regional feed, and there are very few of those
+reg <- rbindlist(lapply(seq_along(zips), function(i) {
+  st <- try(stops_of(zips[i]), silent = TRUE)
+  if (inherits(st, "try-error")) return(NULL)
+  st <- merge(st, replace_tbl[, list(stop_id, t_lat = stop_lat,
+                                     t_lon = stop_lon)], by = "stop_id")
+  if (!nrow(st)) return(NULL)
+  st[, list(stop_id, ord = i,
+            patched = metres(stop_lat, stop_lon, t_lat, t_lon) <= 1)]
+}))
+cat("\n=== merge order: can it decide the patched state? ===\n")
+cat("  naptan_replace stops across the regions:", uniqueN(reg$stop_id),
+    " present in >1 region:", reg[, .N, by = stop_id][N > 1, .N], "\n")
+mg <- merge(a, replace_tbl[, list(stop_id, t_lat = stop_lat,
+                                  t_lon = stop_lon)], by = "stop_id")
+mg[, merged_patched := metres(stop_lat, stop_lon, t_lat, t_lon) <= 1]
+first <- reg[order(ord), list(first_patched = patched[1],
+                              any_patched = any(patched)), by = stop_id]
+cmp <- merge(mg[, list(stop_id, merged_patched)], first, by = "stop_id")
+cat("  merged follows the first region:",
+    cmp[first_patched == merged_patched, .N], "of", nrow(cmp), "\n")
+cat("  merged-unpatched stops that no region patched:",
+    cmp[merged_patched == FALSE & any_patched == FALSE, .N], "\n")
+
+# 4. the naptan_missing group against LIVE naptan, since that table is stale
+#    for them - this is the number the report quotes
+nm_mv <- mv[group == "naptan_missing"]
+nm_mv <- merge(nm_mv, naptan[, list(stop_id, n_lat = stop_lat,
+                                    n_lon = stop_lon)],
+               by = "stop_id", all.x = TRUE)
+cat("
+=== naptan_missing movers against live NaPTAN ===
+")
+cat("  n:", nrow(nm_mv), " present in live NaPTAN:", nm_mv[!is.na(n_lat), .N],
+    "
+")
+cat("  on the live NaPTAN position before:",
+    nm_mv[metres(lat_b, lon_b, n_lat, n_lon) <= 1, .N],
+    " after:", nm_mv[metres(lat_a, lon_a, n_lat, n_lon) <= 1, .N], "
+")
+
+# 5. did any service move with them? the departures are what the published
 #    measure counts, so identical call counts means nothing was gained or lost
 calls <- function(zip) read_tbl(zip, "stop_times.txt", "stop_id")[, .N,
                                                                   by = stop_id]

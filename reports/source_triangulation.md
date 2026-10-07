@@ -782,18 +782,21 @@ trips: the recovered files introduced none at all. BODS TransXChange's
 duplicate count rose by 260 against 120,484 trips gained, so 0.2% of what came
 back was duplicate. Both rates fell.
 
-### The one side effect, and why it is not the filter
+### The one side effect, and why it is not the filter choosing definitions
 
 178 stops changed position between the two feeds, 141 by more than 200 m and
 112 by more than a kilometre — one by 100 km. I first read this as the
 stop-identity non-determinism already on record and attributed it to the
-filter keeping more files. **That was wrong.** Traced to source, the moves are
-UK2GTFS's own stop-location patch tables being applied in the rebuild where
-the earlier feed had not had them, and the two builds did not use the same
-packaged data: reinstalling UK2GTFS to pick up the fix reset
-`inst/extdata/date.txt`, which forces a fresh download of the separately
-versioned package datasets, so `naptan_replace` and `naptan_missing` differ
-between the before and after feeds.
+filter keeping more files. **That was wrong**, and the first
+thing that kills it is that the TransXChange files **carry no coordinates at
+all** — searching the whole October archive for the largest movers returns a
+`CommonName` and nothing else. Positions come from a single join to NaPTAN
+applied once to the merged feed, and then from `patch_naptan()`, which
+overwrites known-bad locations from `UK2GTFS::naptan_replace`. Surviving files
+cannot vote on a coordinate they never state.
+
+What the moves actually are is UK2GTFS's own stop-location patch tables
+landing in the rebuild where the earlier feed did not have them.
 
 | the 178 moved stops | n | of which > 1 km | at the authoritative position before | after |
 |:---|---:|---:|---:|---:|
@@ -820,13 +823,28 @@ neither table are all Hertfordshire and all under 250 m, and they are the
 only candidates for the stop-identity mechanism I originally blamed for all
 178.
 
-A per-region check settles the attribution. In each freshly converted regional
-feed, **every** `naptan_replace` stop present is patched — EM 126 of 126, SW
-18 of 18, L 2 of 2 — so which files survive filtering cannot leave one
-unpatched, and the before feed's 185 stops at raw NaPTAN positions can only
-come from a different patch table. (Scotland is 57 of 97, the exception being
-ferry terminals sitting 4–163 m off the published correction, which is the
-ferry stop-identity question already on record rather than anything new.)
+Two further checks bound how much of this the filter could possibly own.
+`patch_naptan()` runs per regional feed and the merge then keeps the first
+contributing region's copy — which it does in **246 of 246** cases, 203
+patched and 43 not. But only **5** of the 246 are present in more than one
+region at all, so which region supplies a stop can account for at most 5 of
+the 178 moves, not 178. And every one of the 43 that remain unpatched is
+unpatched in *every* region holding it: 40 Scottish ferry terminals sitting
+4–163 m off the published correction, which is the ferry stop-identity
+question already on record, and 3 in the West Midlands.
+
+**What is not established is why the earlier build patched only 61 of the 246
+when this one patched 203.** The leading explanation is that the two builds
+did not use the same packaged data — reinstalling UK2GTFS to pick up the fix
+resets `inst/extdata/date.txt`, which forces a fresh download of the
+separately versioned datasets, and the installed bundle was indeed rewritten
+during the session. But the build logs weaken it: *both* builds report
+`patch_naptan()` replacing stop locations, so the table was not simply absent
+from the first. The per-region counts those logs give (13, 126, 6, 284, 435,
+6, 22, 18, 72, 2, 5) also do not reconcile with the 251 `naptan_replace` rows
+actually present across the region caches, which is unexplained and may be a
+separate defect in how the patch is applied or counted. That is worth its own
+look and is recorded as open.
 
 **No service moved with them.** The 178 stops carry exactly 24,192
 `stop_times` calls in *both* feeds — 0.042% of 57.5 million — and the 112 that
@@ -842,7 +860,9 @@ route totals above are unaffected because they do not depend on where a stop
 is. The general lesson is sharper than the one I first drew: **a zone-level
 before-and-after is only clean if both feeds were built against the same
 packaged UK2GTFS data**, and reinstalling the package to apply a code change
-silently breaks that.
+can break that silently. Whatever the precise cause of the 61-to-203 change
+turns out to be, it is not the filter choosing between TransXChange
+definitions, because the files hold no coordinates to choose between.
 
 ### What this leaves outdated
 
