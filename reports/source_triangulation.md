@@ -833,18 +833,35 @@ unpatched in *every* region holding it: 40 Scottish ferry terminals sitting
 4–163 m off the published correction, which is the ferry stop-identity
 question already on record, and 3 in the West Midlands.
 
-**What is not established is why the earlier build patched only 61 of the 246
-when this one patched 203.** The leading explanation is that the two builds
-did not use the same packaged data — reinstalling UK2GTFS to pick up the fix
-resets `inst/extdata/date.txt`, which forces a fresh download of the
-separately versioned datasets, and the installed bundle was indeed rewritten
-during the session. But the build logs weaken it: *both* builds report
-`patch_naptan()` replacing stop locations, so the table was not simply absent
-from the first. The per-region counts those logs give (13, 126, 6, 284, 435,
-6, 22, 18, 72, 2, 5) also do not reconcile with the 251 `naptan_replace` rows
-actually present across the region caches, which is unexplained and may be a
-separate defect in how the patch is applied or counted. That is worth its own
-look and is recorded as open.
+**Why did the earlier build patch only 61 of the 246 when this one patched
+203?** The answer is the conversion cache, and it is worth stating plainly
+because it governs how any UK2GTFS change reaches this pipeline.
+`post_convert()` — which is what calls `patch_naptan()` — runs **before** the
+cache is written, and `convert_txc_cached()` skips conversion altogether when
+the cache already exists. So the package version and the patch state are
+**baked into each regional cache when it is written and never revisited**. The
+earlier feed's caches were written at various times over several sessions;
+this one's were written fresh. Nothing about the data differed between them.
+
+That it is not a data difference is now settled rather than inferred.
+Reinstalling UK2GTFS does reset `inst/extdata/date.txt` and force a fresh
+download of the separately versioned datasets, which was the earlier
+hypothesis here — but doing it deliberately and diffing the result shows the
+bundle is release v0.1.6 (2026-08-02) before and after and all eight `.rda`
+files are **byte-identical**. There was no data refresh to blame.
+
+The corollary matters more than the stop positions: **a UK2GTFS fix cannot
+reach a converted feed on its own.** Reinstalling the package and re-running
+the pipeline will reuse every cache and change nothing. The caches have to be
+deleted, which is what `scripts/invalidate_daytype_series.R` does.
+
+One thing does remain open. Even in a freshly converted feed the patch misses
+43 stops — 40 Scottish ferry terminals sitting 4–163 m off their published
+correction and 3 in the West Midlands — and `patch_naptan()`'s own per-region
+log counts (13, 126, 6, 284, 435, 6, 22, 18, 72, 2, 5) do not reconcile with
+the 251 `naptan_replace` rows actually present across the region caches. That
+looks like a separate defect in how the patch is applied or counted, it
+survives reconversion, and it is recorded here as unresolved.
 
 **No service moved with them.** The 178 stops carry exactly 24,192
 `stop_times` calls in *both* feeds — 0.042% of 57.5 million — and the 112 that
@@ -855,15 +872,13 @@ place.
 The consequence for the measurement is that the zone-level before-and-after —
 322 zones up and 31 down, 266 tph gained against 38 tph redistributed — is
 substantially these corrections landing and not the filter. No zone lost
-service
-because a route lost runs, which is the claim that matters, and the mode and
-route totals above are unaffected because they do not depend on where a stop
-is. The general lesson is sharper than the one I first drew: **a zone-level
-before-and-after is only clean if both feeds were built against the same
-packaged UK2GTFS data**, and reinstalling the package to apply a code change
-can break that silently. Whatever the precise cause of the 61-to-203 change
-turns out to be, it is not the filter choosing between TransXChange
-definitions, because the files hold no coordinates to choose between.
+service because a route lost runs, which is the claim that matters, and the
+mode and route totals above are unaffected because they do not depend on where
+a stop is. The general lesson is sharper than the one I first drew: **a
+before-and-after is only clean if both feeds' caches were written by the same
+package build**, and because the patch state is baked in at cache-write time,
+comparing a freshly converted feed against a cached one measures the age of
+the cache as much as the change under test.
 
 ### What this leaves outdated
 

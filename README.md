@@ -65,13 +65,16 @@ There are also six analysis reports, all rebuilt by the pipeline:
   carrying a third of Manchester's tram service. TNDS bus moves 0.08%, no
   route group loses runs, and deduplication removes exactly the same 32,895
   TNDS duplicates as before, so nothing was double-counted back in. Along the
-  way it records a measurement trap worth knowing: the stop-location
-  corrections UK2GTFS ships as separately versioned package data landed
-  differently in the two builds, moving 178 stops, so a zone-level
-  before-and-after is partly that rather than the change under test. It is not
-  the filter — the TransXChange files carry no coordinates at all — and 165 of
-  the 178 moves are repairs, but why the earlier build applied fewer of the
-  corrections is still open. Standalone, not a pipeline target:
+  way it settles something that governs every UK2GTFS change: **a package fix
+  cannot reach a converted feed on its own.** `post_convert()` applies
+  `patch_naptan()` before the conversion cache is written and
+  `convert_txc_cached()` skips conversion when the cache exists, so the
+  package version is baked into each cache and never revisited — reinstalling
+  and re-running reuses everything and changes nothing. That is also what
+  moved 178 stops between the two 2026 builds (165 of them repairs, and not
+  the filter, which cannot see a coordinate the TransXChange files never
+  state), so a before-and-after measures the age of the cache as much as the
+  change under test. Standalone, not a pipeline target:
   `scripts/source_triangulation.R`, `scripts/source_forward_horizon.R`,
   `scripts/txc_archive_index.py`, `scripts/txc_compare_same_route.py`,
   `scripts/txc_extract_operator.py`,
