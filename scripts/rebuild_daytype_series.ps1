@@ -60,7 +60,25 @@ function Say($m) {
   Write-Output $line
 }
 
+# UK2GTFS refreshes its packaged data from .onLoad(), in every worker, and on
+# an API failure downloads a hardcoded older release over the top of the good
+# one - see .Rprofile. That happened four minutes into the first attempt at
+# this rebuild and left patch_naptan() correcting nothing. So the data is
+# asserted before anything is converted, and again after every target, which
+# costs a couple of seconds and bounds the damage to one target.
+function Check-Data($when) {
+  & Rscript scripts\check_uk2gtfs_data.R 1> "logs\targets\_datacheck.out.log" 2>&1
+  if ($LASTEXITCODE -ne 0) {
+    Say "ABORT: UK2GTFS packaged data check failed $when"
+    Get-Content "logs\targets\_datacheck.out.log" | ForEach-Object { Say "    $_" }
+    return $false
+  }
+  return $true
+}
+
 Say "=== driver start (pid $PID) ==="
+if (-not (Check-Data "before starting")) { Say "=== driver aborted ==="; exit 1 }
+Say "packaged data check passed"
 $built = 0; $failed = 0
 foreach ($stage in $stages.Keys) {
   if ($Only -and $stage -ne $Only) { continue }
@@ -79,6 +97,10 @@ foreach ($stage in $stages.Keys) {
     if ($code -eq 0) { $built++ } else { $failed++ }
     Add-Content $status "$(Get-Date -Format 'yyyy-MM-ddTHH:mm:ss'),$stage,$t,$st,$secs" -Encoding ascii
     Say "$t -> $st in $secs s"
+    if (-not (Check-Data "after $t")) {
+      Say "=== driver aborted after ${t}: $built ok, $failed failed ==="
+      exit 1
+    }
   }
 }
 Say "=== driver done: $built ok, $failed failed ==="
