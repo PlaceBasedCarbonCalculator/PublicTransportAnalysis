@@ -21,9 +21,16 @@ $ErrorActionPreference = 'Continue'
 $log    = "logs\rebuild_daytype.log"
 $status = "logs\rebuild_daytype_status.csv"
 New-Item -ItemType Directory -Force -Path logs\targets | Out-Null
+if (-not (Test-Path $log)) { Set-Content $log "" -Encoding ascii }
 if (-not (Test-Path $status)) {
   Set-Content $status "timestamp,stage,target,status,seconds" -Encoding ascii
 }
+# AppendAllText needs a full path; Resolve-Path after the files exist
+$logPath    = (Resolve-Path $log).Path
+$statusPath = (Resolve-Path $status).Path
+# per-run temp scripts, so a leftover handle from a previous run cannot block
+$drvDir = Join-Path $env:TEMP "uk2gtfs_drv_$PID"
+New-Item -ItemType Directory -Force -Path $drvDir | Out-Null
 
 $stages = [ordered]@{
   # the fix, measured where there is independent evidence to measure it against
@@ -54,10 +61,22 @@ $stages = [ordered]@{
   '4-audits'     = @('non_bus','non_bus_report','coverage','coverage_report')
 }
 
+# Append tolerantly. A reader holding the log open - a `tail -f` watching
+# progress, which on Windows takes a share mode that locks out writers - must
+# not be able to stop a thirty-hour conversion, so a failed append is retried
+# briefly and then given up on. Write-Output always carries the line to the
+# driver's own stdout regardless.
 function Say($m) {
   $line = "$(Get-Date -Format 'yyyy-MM-ddTHH:mm:ss')  $m"
-  Add-Content $log $line -Encoding ascii
   Write-Output $line
+  for ($i = 0; $i -lt 5; $i++) {
+    try {
+      [System.IO.File]::AppendAllText($logPath, $line + [Environment]::NewLine)
+      return
+    } catch {
+      Start-Sleep -Milliseconds 200
+    }
+  }
 }
 
 # UK2GTFS refreshes its packaged data from .onLoad(), in every worker, and on
@@ -87,8 +106,9 @@ foreach ($stage in $stages.Keys) {
     $sw = [Diagnostics.Stopwatch]::StartNew()
     Say "building $t"
     $r = "library(targets); tar_make(names = all_of('$t'), reporter = 'verbose')"
-    Set-Content "$env:TEMP\drv_$t.R" -Value $r -Encoding ascii
-    & Rscript "$env:TEMP\drv_$t.R" `
+    $drv = Join-Path $drvDir "drv_$t.R"
+    Set-Content $drv -Value $r -Encoding ascii
+    & Rscript $drv `
         1> "logs\targets\$t.out.log" 2> "logs\targets\$t.err.log"
     $code = $LASTEXITCODE
     $sw.Stop()
