@@ -19,6 +19,8 @@
 # naptan_replace.rda holding a byte-identical copy of naptan_missing, so the
 # 503 genuine stop-location corrections silently stopped being applied.
 #
+# Reported upstream as ITSLeeds/UK2GTFS#91.
+#
 # The data is pinned deliberately instead. Refresh it on purpose, in a single
 # process with nothing else running, and check the result:
 #   Rscript -e 'options(UK2GTFS_opt_updateCachedDataOnLibaryLoad=FALSE);

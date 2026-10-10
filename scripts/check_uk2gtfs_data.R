@@ -16,7 +16,8 @@
 # has already appended. patch_naptan() then silently corrects nothing.
 #
 # On 2026-10-08 this happened four minutes into a series reconversion and was
-# caught only because a stop-count did not reconcile. .Rprofile now sets
+# caught only because a stop-count did not reconcile. Reported upstream as
+# ITSLeeds/UK2GTFS#91. .Rprofile now sets
 # options(UK2GTFS_opt_updateCachedDataOnLibaryLoad = FALSE) to stop the
 # automatic refresh; this script is the check that it held.
 
