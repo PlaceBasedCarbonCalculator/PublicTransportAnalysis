@@ -10,8 +10,9 @@
 # default_tag = "v0.1.2", unzips it into the shared library folder, and
 # stamps date.txt with today so the result looks current.
 #
-# v0.1.2's all.zip is also bad in its own right: naptan_replace.rda in it is
-# a byte-identical copy of naptan_missing.rda, so the 503 genuine
+# v0.1.2's all.zip is also bad in its own right: naptan_replace.rda in it holds
+# the naptan_missing table (the two files differ in CRC, the data frames inside
+# them are identical), so the 503 genuine
 # stop-location corrections are replaced by 41,955 rows that get_naptan()
 # has already appended. patch_naptan() then silently corrects nothing.
 #

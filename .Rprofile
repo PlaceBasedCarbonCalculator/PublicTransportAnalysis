@@ -16,7 +16,8 @@
 #     up to date.
 #
 # On 2026-10-08 that downgraded the installed data mid-conversion and left
-# naptan_replace.rda holding a byte-identical copy of naptan_missing, so the
+# naptan_replace.rda holding an identical copy of the naptan_missing TABLE (the
+# two .rda files differ in CRC; the data frames inside them do not), so the
 # 503 genuine stop-location corrections silently stopped being applied.
 #
 # Reported upstream as ITSLeeds/UK2GTFS#91.
