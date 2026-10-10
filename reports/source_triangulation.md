@@ -583,18 +583,27 @@ BODS TransXChange a better feed without making it a more useful *addition*,
 because what it gained was service TNDS already had. 9.4% of zones gain
 anything at all, up from 7.2%.
 
-The gain was also shrinking year on year as the two sources converged. That
-table is left on the unfixed filter throughout, because only 2026 was
-reconverted and mixing a fixed 2026 row into four unfixed ones would not be a
-trend:
+The gain was also shrinking year on year as the two sources converged. The
+union columns below were measured before the fix and are left that way,
+because recomputing them means re-running `scripts/source_triangulation.R` for
+each year; the last column is recomputed from the rebuilt
+`bus_source_comparison.md` and shows what the fix did to the one quantity that
+drives them:
 
-| year (pre-fix) | TNDS | BODS TXC | BODS GTFS | union | TXC as % of TNDS | union gain |
+| year | TNDS | BODS TXC | BODS GTFS | union | union gain | TXC as % of TNDS, pre-fix → rebuilt |
 |:---|---:|---:|---:|---:|---:|---:|
-| 2022 | 9.380 | 3.578 | 9.374 | 9.504 | 38.1 | +1.32% |
-| 2023 | 9.162 | 3.672 | 9.090 | 9.249 | 40.1 | +0.95% |
-| 2024 | 9.450 | 3.850 | 9.685 | 9.506 | 40.7 | +0.59% |
-| 2025 | 9.522 | 4.040 | 9.692 | 9.557 | 42.4 | +0.36% |
-| 2026 | 9.544 | 4.193 | 9.876 | 9.594 | 43.9 | +0.52% |
+| 2022 | 9.380 | 3.578 | 9.374 | 9.504 | +1.32% | 38.1 → **43.9** |
+| 2023 | 9.162 | 3.672 | 9.090 | 9.249 | +0.95% | 40.1 → **46.9** |
+| 2024 | 9.450 | 3.850 | 9.685 | 9.506 | +0.59% | 40.7 → **48.5** |
+| 2025 | 9.522 | 4.040 | 9.692 | 9.557 | +0.36% | 42.4 → **48.9** |
+| 2026 | 9.544 | 4.193 | 9.876 | 9.594 | +0.52% | 43.9 → **50.6** |
+
+BODS TransXChange gains about six percentage points on TNDS in every year, so
+the union gain after the fix would be somewhat larger than the figures above —
+2026, which was measured both ways, went +0.52% to +0.65%. That does not
+approach the margin the verdict rests on: BODS GTFS still fills blank zones
+far better than BODS TransXChange does, and the convergence trend is
+unchanged.
 
 ### Why it is so small, and why that was predictable
 
@@ -880,12 +889,73 @@ package build**, and because the patch state is baked in at cache-write time,
 comparing a freshly converted feed against a cached one measures the age of
 the cache as much as the change under test.
 
-### What this leaves outdated
+### The whole series, reconverted
 
-`trips_2026` — the published output — along with `coverage` and `non_bus` and
-their reports. Since the fix changes TNDS, **every year of the published
-series would change if rebuilt**, most visibly in tram. Only 2026 has been
-rebuilt here.
+Done on 2026-10-08 to 2026-10-10: all 22 TransXChange conversions redone from
+deleted caches and every downstream count and report rebuilt, 57 targets, 43
+hours, no failures (`scripts/rebuild_daytype_series.ps1`). NPTDR and rail were
+left alone, `txc_filter_files()` being reachable only from
+`transxchange2gtfs()`, so `trips_2004`–`trips_2011` and every rail feed stand
+as they were. `tar_outdated()` is now empty.
+
+**The published series barely moves, and bus moves least of all.** Runs by
+mode against the previously published figures:
+
+| year | all modes | bus | tram |
+|:---|---:|---:|---:|
+| 2014 | 0.00% | 0.00% | 0.00% |
+| 2015–2017 | 0.00% | 0.00% | −0.55% to 0.00% |
+| 2018 | +0.04% | +0.04% | −0.28% |
+| 2019 | +0.08% | +0.07% | −0.18% |
+| 2020 | +0.07% | +0.08% | −0.18% |
+| 2021 | +0.05% | +0.06% | −0.22% |
+| 2022–2025 | +0.00% to +0.01% | +0.01% | −0.23% to −0.33% |
+| 2026 | **+0.35%** | +0.04% | **+36.09%** |
+
+2014 is identical to the byte. The gain is concentrated in 2026 because that
+is where the one-file-per-day-type publishing pattern is, which is also why
+TNDS bus — the headline measure — is unchanged to two decimal places in every
+year.
+
+**Where the fix pays is BODS TransXChange, in every year.** From
+`reports/bus_source_comparison.md`, rebuilt:
+
+| year | routes in window | trips in window | zone departures vs BODS GTFS |
+|:---|:---|:---|:---|
+| 2022 | 10,213 → **12,934** | 460,140 → **530,601** | −62.9% → **−56.1%** |
+| 2023 | 11,248 → **14,394** | 520,146 → **604,896** | −60.8% → **−52.8%** |
+| 2024 | 10,994 → **14,159** | 489,381 → **593,789** | −61.3% → **−52.7%** |
+| 2025 | 12,036 → **15,283** | 477,447 → **581,177** | −59.4% → **−52.0%** |
+
+Agreement with the DfT's own rendering improves with it: zones within 10% go
+29.9% → 38.0% in 2022 and 33.6% → **47.8%** in 2025, and the median absolute
+difference halves, 1.29 → **0.55** tph in 2025. TNDS gains 3 to 5 routes a
+year and 0.01% of zone departures, which is the same answer as the mode table.
+
+**The combined-feed verdict is unaffected.** BODS TransXChange is still about
+half of BODS GTFS at zone level after the fix, and TNDS is within a few per
+cent of it, so the pairing already in use remains the right one.
+
+**Nothing of substance regressed.** Across thirteen years and ~43,000 zones,
+zones gaining service outnumber those losing it in every year — 1,197 up
+against 9 down in 2019, 676 against 35 in 2026 — **exactly one** zone lost all
+service in one year (2023), and four zones gained service where they had none.
+
+The one real regression is the 0.18–0.55% of tram runs lost in nine years, and
+it is worth naming precisely because it is *not* the stop-location patch: the
+same **four** zones fall and three rise in every one of those years, 724 of
+731 tram zones are untouched, and **none** of the 650 tram stops in the 2025
+feed is a `naptan_replace` entry (that table is 270 Leicestershire, 123 ferry
+and 93 Leicester stops, with no tram or metro entry at all). What it looks like
+instead is the fix changing which files survive and so which stop code a tram
+route calls at, where a service is published at two NaPTAN granularities — the
+defect already on record. Tram is 1.2% of runs and the affected zones are
+seven; it does not touch the bus series.
+
+The audits move in the right direction too: Manchester Metrolink 5,642 →
+**21,280** journeys in 2026, Tyne and Wear Metro 3,286 → **4,354** in 2019,
+London Underground up in six years, and the areas below six tenths of normal
+coverage 133 → 132.
 
 ## Caveats
 

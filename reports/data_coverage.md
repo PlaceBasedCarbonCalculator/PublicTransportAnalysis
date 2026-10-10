@@ -253,7 +253,7 @@ continuous TNDS series and coverage should be complete, so anything flagged
 here is either a real reduction in service or a defect worth chasing. This
 section is the detail for those eight years.
 
-Across the eight years there are 133 area-years below six tenths of normal, involving 61 distinct areas.
+Across the eight years there are 132 area-years below six tenths of normal, involving 60 distinct areas.
 
 The national codes (National - National Air, National - National Coach, National - National Rail) are left out of this section. They are modes rather than places and their comings and goings are a question about sources, dealt with under "Great Britain is not a region" above.
 
@@ -288,11 +288,11 @@ a service reduction does not respect administrative borders so precisely.
 |Scotland      |West Lothian           |629  |2024 2025 2026                          |     3|46%    |partial |
 |South East    |Windsor and Maidenhead |036  |2021 2022 2023                          |     3|44%    |partial |
 |West Midlands |Herefordshire          |209  |2024 2025 2026                          |     3|58%    |partial |
-|East Midlands |Derby                  |109  |2020 2022                               |     2|56%    |partial |
+|East Midlands |Derby                  |109  |2020 2022                               |     2|55%    |partial |
 |East Midlands |Northamptonshire       |300  |2023 2024                               |     2|54%    |partial |
 |East Midlands |Nottinghamshire        |330  |2022 2023                               |     2|51%    |partial |
-|East Midlands |Rutland                |268  |2025 2026                               |     2|50%    |partial |
-|South East    |Bedford                |020  |2025 2026                               |     2|55%    |partial |
+|East Midlands |Rutland                |268  |2025 2026                               |     2|51%    |partial |
+|South East    |Bedford                |020  |2025 2026                               |     2|54%    |partial |
 |South East    |Wokingham              |035  |2022 2023                               |     2|49%    |partial |
 |South West    |Somerset               |360  |2019 2020                               |     2|45%    |partial |
 |Wales         |Cardiff                |571  |2020 2026                               |     2|51%    |partial |
@@ -310,7 +310,6 @@ Flagged in a single year only:
 |North West    |Warrington            |069  |2022 |59%   |
 |Scotland      |Aberdeenshire         |630  |2022 |59%   |
 |Scotland      |Angus                 |649  |2019 |58%   |
-|Scotland      |Argyll and Bute       |607  |2020 |58%   |
 |Scotland      |East Dunbartonshire   |611  |2025 |39%   |
 |Scotland      |Edinburgh             |620  |2020 |47%   |
 |Scotland      |Fife                  |650  |2020 |44%   |
@@ -321,7 +320,7 @@ Flagged in a single year only:
 |South West    |Bristol               |010  |2019 |56%   |
 |South West    |Dorset                |120  |2019 |46%   |
 |South West    |North Somerset        |019  |2020 |55%   |
-|South West    |Poole                 |128  |2019 |59%   |
+|South West    |Poole                 |128  |2019 |58%   |
 |South West    |South Gloucestershire |017  |2019 |59%   |
 |South West    |Torbay                |119  |2023 |14%   |
 |Wales         |Blaenau Gwent         |532  |2020 |50%   |
@@ -382,10 +381,10 @@ placed by coordinate rather than by code.
 
 |mode        |2004   |2005   |2006   |2007   |2008   |2009   |2010   |2011   |2014    |2015    |2016    |2017   |2018   |2019   |2020   |2021   |2022   |2023   |2024   |2025   |2026   |
 |:-----------|:------|:------|:------|:------|:------|:------|:------|:------|:-------|:-------|:-------|:------|:------|:------|:------|:------|:------|:------|:------|:------|:------|
-|tram        |94     |156    |171    |239    |218    |217    |214    |200    |443     |431     |643     |614    |344    |364    |175    |287    |308    |375    |538    |788    |365    |
-|metro       |2      |8      |43     |667    |645    |651    |650    |722    |96      |169     |139     |115    |2,271  |2,368  |1,718  |1,322  |2,048  |2,168  |1,569  |1,782  |1,514  |
+|tram        |94     |156    |171    |239    |218    |217    |214    |200    |443     |431     |643     |614    |344    |364    |175    |287    |308    |375    |538    |788    |658    |
+|metro       |2      |8      |43     |667    |645    |651    |650    |722    |96      |169     |139     |115    |2,279  |2,396  |1,718  |1,322  |2,048  |2,168  |1,569  |1,782  |1,514  |
 |rail        |2,191  |1,647  |1,692  |1,604  |1,679  |1,741  |1,773  |1,832  |1       |2       |2       |2      |3      |1      |1      |0      |0      |1      |1      |1      |1      |
-|bus         |26,003 |41,379 |45,257 |56,996 |59,733 |57,473 |61,744 |56,529 |114,309 |110,818 |107,923 |99,591 |55,227 |68,208 |37,425 |49,937 |54,790 |48,194 |51,647 |52,698 |55,204 |
+|bus         |26,003 |41,379 |45,257 |56,996 |59,733 |57,473 |61,744 |56,529 |114,309 |110,818 |107,923 |99,591 |55,256 |68,265 |37,454 |49,969 |54,797 |48,204 |51,652 |52,701 |55,226 |
 |ferry       |5      |15     |23     |27     |32     |31     |32     |26     |29      |47      |45      |47     |34     |29     |19     |28     |31     |33     |33     |51     |51     |
 |aerial lift |–      |–      |–      |–      |–      |–      |–      |–      |–       |–       |–       |–      |2      |2      |1      |2      |2      |2      |2      |2      |2      |
 |coach       |0      |268    |508    |751    |393    |144    |133    |202    |309     |267     |282     |231    |176    |144    |16     |60     |78     |77     |191    |111    |122    |
@@ -422,7 +421,7 @@ These feeds are not purely rail. They carry **metro**, which the pipeline drops 
 - **Rail all but disappears from these feeds after 2011**: the NPTDR archives average 1,770 thousand rail departures a year, and from 2014 the bus-side feeds average 1 thousand. That is not a change in the railway. NPTDR was a multi-modal archive; TransXChange is not, and from 2018 the pipeline takes heavy rail from the CIF feeds instead. **The 2014-2017 years have neither** - no NPTDR and no CIF - so those four years carry essentially no rail at all.
 - **Air** is an NPTDR mode and only an NPTDR mode: it runs in 2005-2009 (5 years), and the only trace of it anywhere else is 24 departures in 2014. `load_pt_frequency()` in the build repo drops route type 1100 outright, so none of it reaches the published figures.
 - **Coach is in every year, but 2004 has essentially none** — 79 departures against 268,483 in 2005, which is why the published 2004 coach figure is zero. Its ups and downs after that are source changes rather than service: TNDS carried coach in its NCSD archive until that disappeared after February 2025, and from 2024 coach comes from the BODS Coach feed instead. The build repo folds coach back into bus for exactly this reason.
-- **Metro steps twice, and neither step is a new railway**: 43k departures in 2006 against 667k in 2007, and 115k in 2017 against 2,271k in 2018. The first is NPTDR beginning to carry the Underground, the second is the move to TNDS. The Bus Archive years in between hold almost no metro, and what they do hold is Tyne and Wear.
+- **Metro steps twice, and neither step is a new railway**: 43k departures in 2006 against 667k in 2007, and 115k in 2017 against 2,279k in 2018. The first is NPTDR beginning to carry the Underground, the second is the move to TNDS. The Bus Archive years in between hold almost no metro, and what they do hold is Tyne and Wear.
 - Where a mode's row is thin rather than empty, treat it as a coverage question and not a trend. The non-bus modes are small enough that one operator's data arriving in a different format moves the whole row; `reports/non_bus_modes.md` is the standing check on their identity.
 
 ![plot of chunk modemaps](figures/coverage-modemaps-1.png)
@@ -583,4 +582,4 @@ A stop id whose first three characters are not a known ATCO area code. These are
 
 ---
 
-Generated 2026-10-06 12:30 from 24 bus feeds covering 21 years.
+Generated 2026-10-10 02:05 from 24 bus feeds covering 21 years.
