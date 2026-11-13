@@ -85,6 +85,21 @@ The left-hand side is not one country's story either way. Of the **9,280 zones**
 
 So the answer to "a few extreme zones or many moderate ones" is both, and the two facts have to be held together: the tail is heavy enough that a tenth of zones account for 80.3% of all disagreement, yet **6.3% of zones** differ by more than 71 departures a day, which is not a rounding error in any of them. The choice of source changes the answer over most of the country, and changes it drastically in a small part of it.
 
+### Where the disagreement is
+
+The curve says how the disagreement is distributed; it cannot say where. The
+map colours every zone by the same bands as the histogram above: blue where
+TNDS counts more, red where BODS GTFS does, grey where they agree exactly, and
+white where neither source counts a bus at all.
+
+
+
+![plot of chunk map-gb](figures/lsoagap-map-gb-1.png)
+
+By country: in England, 40.3% of zones with bus service agree exactly and the country holds 95.2% of the absolute disagreement; in Wales, 65.3% of zones with bus service agree exactly and the country holds 3.3% of the absolute disagreement; in Scotland, 91.4% of zones with bus service agree exactly and the country holds 1.5% of the absolute disagreement. Large rural zones dominate the national view by area, so the grey of the Highlands and mid-Wales covers fewer bus zones than it seems. Most of the disagreement by volume is in towns and cities, where the zones are too small to read at this scale; the close-ups below show four of them.
+
+![plot of chunk map-cities](figures/lsoagap-map-cities-1.png)
+
 ## The zones that disagree most
 
 Ranked on the absolute difference in trip-runs, both directions. The last three

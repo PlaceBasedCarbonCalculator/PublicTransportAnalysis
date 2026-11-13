@@ -281,7 +281,8 @@ list(
                                          plain_zones_file,
                                          val_2026_tnds, val_2026_bods_gtfs),
              format = "file"),
-  tar_target(lsoa_gap_report, render_lsoa_gap_report(lsoa_gap),
+  tar_target(lsoa_gap_report, render_lsoa_gap_report(lsoa_gap,
+                                                      plain_zones_file),
              format = "file"),
 
   # --- Near-duplicate journeys ---
@@ -296,6 +297,48 @@ list(
              format = "file"),
   tar_target(near_duplicates_report,
              render_near_duplicate_report(near_duplicates), format = "file"),
+
+  # --- Stop-level disagreement ---
+  #
+  # The LSOA report's companion, one level down: the NaPTAN stop rather than
+  # the zone, counted by UK2GTFS::gtfs_stop_frequency() over the same July
+  # 2026 validation window and over a single day at its start
+  # (stop_gap_day()), so a timetable that stops early can be told apart from a
+  # genuinely different one. See R/stop_gap.R.
+  #
+  # targets does not look inside installed packages, so a UK2GTFS fix would
+  # otherwise leave the stop counts stale with nothing reported outdated.
+  # uk2gtfs_code is the installed package's code database as a file target:
+  # it goes stale only when the package is reinstalled. stop_freq_impl then
+  # reads the source of the functions the counts actually use, and only a
+  # change in *that* source invalidates the counts - a reinstall that leaves
+  # them alone rebuilds nothing. (A cue = "always" target would do the same
+  # job but makes tar_outdated() list everything downstream on every run.)
+  #
+  # The two count targets are the only ones that read a national feed (about
+  # seven and eleven minutes); everything after them works from the compact
+  # timetables they save. The Rmd is a file target so that editing it alone
+  # rebuilds the report.
+  tar_target(uk2gtfs_code,
+             system.file("R", "UK2GTFS.rdb", package = "UK2GTFS"),
+             format = "file"),
+  tar_target(stop_freq_impl, stop_frequency_impl(uk2gtfs_code)),
+  tar_target(stopfreq_tnds,
+             stop_frequency_source("tnds", validation_snapshot(),
+                                   stop_gap_day(), stop_freq_impl,
+                                   tnds_20260726),
+             format = "file"),
+  tar_target(stopfreq_bods_gtfs,
+             stop_frequency_source("bods_gtfs", validation_snapshot(),
+                                   stop_gap_day(), stop_freq_impl),
+             format = "file"),
+  tar_target(stop_gap, stop_gap_analysis(stopfreq_tnds, stopfreq_bods_gtfs,
+                                         plain_zones_file),
+             format = "file"),
+  tar_target(stop_gap_rmd, "reports/stop_disagreement.Rmd", format = "file"),
+  tar_target(stop_gap_report,
+             render_stop_gap_report(stop_gap, stop_gap_rmd, plain_zones_file),
+             format = "file"),
 
   # Everything that is not a bus.
   #

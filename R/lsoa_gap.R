@@ -800,13 +800,38 @@ lsoa_gap_analysis <- function(spec, year, zones_path, cmp_tnds, cmp_bods,
 }
 
 #' Knit the LSOA disagreement report to markdown
-render_lsoa_gap_report <- function(gap_path, cfg = load_cfg()) {
+#'
+#' @param zones_path the plain LSOA21/DZ22 polygons (`plain_zones_file`), for
+#'   the disagreement map. Optional: without it the report knits minus the map.
+render_lsoa_gap_report <- function(gap_path, zones_path = NULL,
+                                   cfg = load_cfg()) {
   dir.create(cfg$report_dir, showWarnings = FALSE, recursive = TRUE)
   env <- new.env(parent = globalenv())
   env$gap_path <- normalizePath(gap_path)
+  env$map_zones_path <- if (!is.null(zones_path)) {
+    map_zones_file(zones_path)
+  }
   old_wd <- setwd(cfg$report_dir)
   on.exit(setwd(old_wd), add = TRUE)
   knitr::knit(input = "lsoa_disagreement.Rmd",
               output = "lsoa_disagreement.md", envir = env, quiet = TRUE)
   file.path(cfg$report_dir, "lsoa_disagreement.md")
+}
+
+#' A simplified copy of the zone polygons, for drawing maps
+#'
+#' The plain boundaries are 575 MB in memory and take minutes to draw; simplified
+#' to 25 m they are 65 MB, which is invisible at the scale of a national or city
+#' map. Simplifying takes about 40 seconds, so the result is cached beside the
+#' source and rebuilt only when the source is newer. Map use only - never join
+#' stops to these.
+map_zones_file <- function(zones_path, tolerance = 25) {
+  dest <- sub("[.]Rds$", sprintf("_map%dm.Rds", tolerance), zones_path)
+  if (file.exists(dest) && file.mtime(dest) >= file.mtime(zones_path)) {
+    return(normalizePath(dest))
+  }
+  z <- readRDS(zones_path)
+  z <- sf::st_simplify(z, dTolerance = tolerance, preserveTopology = TRUE)
+  saveRDS(z, dest)
+  normalizePath(dest)
 }

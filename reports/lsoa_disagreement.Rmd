@@ -29,6 +29,10 @@ has_verdict <- all(c("trips_tnds", "days_full_tnds") %in% names(top))
 has_modes <- !is.null(g$modes)
 has_expiry <- !is.null(g$expiry)
 has_daily <- !is.null(g$daily) && nrow(as.data.table(g$daily)) > 0
+# The map needs the zone polygons, which render_lsoa_gap_report() passes in as
+# map_zones_path; knitting without them drops the map rather than failing.
+has_map <- exists("map_zones_path") && !is.null(map_zones_path) &&
+  file.exists(map_zones_path)
 
 # The verdict is re-derived here from the measurements stored in the analysis
 # output rather than read from it. The analysis measures; this interprets. The
@@ -204,6 +208,31 @@ side_cols <- c("TNDS higher" = gap_cols[1], "BODS GTFS higher" = gap_cols[2],
                "equal" = "grey75")
 comma <- function(x) format(x, big.mark = ",", scientific = FALSE, trim = TRUE)
 
+# Zoom the y axis to where the bars can actually be seen. With ~40,000 zones
+# across the page each bar is a fraction of a pixel wide, so the handful of
+# extreme zones at either end are invisible yet still set the axis: on the July
+# 2026 snapshot the lowest zone is -37,032 but nothing visible goes past about
+# -10,000. The limits come from the data rather than being written down: the
+# plot is about 1,000 pixels wide, so the outermost 0.1% of zones at each end
+# are roughly one pixel of bars, and the axis stops at the zone that far in,
+# rounded out to 2,500. coord_cartesian() clips the off-scale bars instead of
+# dropping them, and the subtitle says how many there are and how far they go,
+# so the zoom is never silent.
+n_tail <- max(1L, ceiling(0.001 * nrow(zc)))
+step <- 2500
+ylo <- min(0, floor(sort(zc$gap)[min(n_tail, nrow(zc))] / step) * step)
+yhi <- max(0, ceiling(sort(zc$gap, decreasing = TRUE)[min(n_tail, nrow(zc))] /
+                        step) * step)
+off_lo <- zc[gap < ylo]
+off_hi <- zc[gap > yhi]
+off_txt <- c(
+  if (nrow(off_hi)) sprintf("%d zone%s above the axis, up to +%s",
+                            nrow(off_hi), if (nrow(off_hi) > 1) "s" else "",
+                            comma(max(off_hi$gap))),
+  if (nrow(off_lo)) sprintf("%d zone%s below it, down to %s",
+                            nrow(off_lo), if (nrow(off_lo) > 1) "s" else "",
+                            comma(min(off_lo$gap))))
+
 ggplot(zc, aes(x = rank, y = gap, fill = side)) +
   geom_col(width = 1) +
   geom_hline(yintercept = 0, colour = "grey25", linewidth = 0.4) +
@@ -211,9 +240,13 @@ ggplot(zc, aes(x = rank, y = gap, fill = side)) +
   scale_x_continuous(expand = expansion(mult = c(0.005, 0.005)),
                      labels = comma) +
   scale_y_continuous(labels = comma) +
+  coord_cartesian(ylim = c(ylo, yhi), expand = FALSE) +
   labs(title = "Every zone, ordered by how far the two sources disagree",
        subtitle = paste0("TNDS minus BODS GTFS bus trip-runs in the ", wl, "-day ",
-                         "window; above the line TNDS counts more"),
+                         "window; above the line TNDS counts more",
+                         if (length(off_txt))
+                           paste0("\nAxis cut at the visible range: ",
+                                  paste(off_txt, collapse = "; "))),
        x = paste0("Zones, ordered by difference (", comma(nrow(zc)), " in all)"),
        y = "TNDS − BODS GTFS") +
   theme_report
@@ -320,6 +353,110 @@ cat(sprintf(paste0(
   "error in any of them. The choice of source changes the answer over most of ",
   "the country, and changes it drastically in a small part of it.\n\n"),
   pct(share(0.10)), pct(band(1000, Inf) / nrow(zc)), 1000 / wl))
+```
+
+### Where the disagreement is
+
+The curve says how the disagreement is distributed; it cannot say where. The
+map colours every zone by the same bands as the histogram above: blue where
+TNDS counts more, red where BODS GTFS does, grey where they agree exactly, and
+white where neither source counts a bus at all.
+
+```{r map-prep, eval=has_map}
+library(sf)
+mz <- readRDS(map_zones_path)
+# The polygons carry LSOA21CD for Scottish Data Zones too
+names(mz)[names(mz) == "LSOA21CD"] <- "zone_id"
+map_lv <- c("BODS higher by > 2,000", "BODS higher by 500 to 2,000",
+            "BODS higher by 100 to 500", "BODS higher by 1 to 100",
+            "equal",
+            "TNDS higher by 1 to 100", "TNDS higher by 100 to 500",
+            "TNDS higher by 500 to 2,000", "TNDS higher by > 2,000",
+            "no bus in either")
+# Diverging: the report's two source colours at full strength in the 500-2,000
+# band, a darker step beyond it and two lighter ones inside, meeting at a
+# neutral grey. White is kept for zones with no service, so "agree on zero"
+# and "agree on a busy timetable" are not the same colour.
+map_cols <- setNames(c("#8f2340", gap_cols[2], "#eb98ab", "#f6d6de",
+                       "#e3e3e3",
+                       "#d3e2f5", "#92b9ea", gap_cols[1], "#164a8c",
+                       "#ffffff"), map_lv)
+zb <- z[, list(zone_id, gap,
+               band = as.character(cut(gap, c(-Inf, -2000, -500, -100, -0.5,
+                                              0.5, 100, 500, 2000, Inf),
+                                       labels = map_lv[1:9])))]
+mz <- merge(mz, zb, by = "zone_id", all.x = TRUE)
+mz$band[is.na(mz$band)] <- "no bus in either"
+mz$band <- factor(mz$band, levels = map_lv)
+
+map_theme <- theme_void(base_size = 11) +
+  theme(plot.title.position = "plot",
+        plot.title = element_text(face = "plain", size = 13),
+        legend.key.size = unit(0.45, "cm"),
+        legend.text = element_text(size = 9))
+map_fill <- scale_fill_manual(values = map_cols, drop = FALSE, name = NULL,
+                              guide = guide_legend(override.aes = list(
+                                colour = "grey70", linewidth = 0.2)))
+```
+
+```{r map-gb, fig.width=8, fig.height=9.5, eval=has_map}
+ggplot(mz) +
+  # show.legend = TRUE: without it, bands absent from the data get a blank key
+  geom_sf(aes(fill = band), colour = NA, show.legend = TRUE) +
+  map_fill +
+  coord_sf(datum = NA, expand = FALSE) +
+  labs(title = "How far TNDS and BODS GTFS disagree, zone by zone",
+       subtitle = sprintf(paste0("TNDS minus BODS GTFS bus trip-runs in the ",
+                                 "%d-day window, plain LSOA21 / DZ22 ",
+                                 "boundaries"), wl)) +
+  map_theme
+```
+
+```{r map-text, results="asis", eval=has_map}
+# Per country: how many zones agree exactly, and where the absolute
+# disagreement sits. Measured, so the paragraph follows the snapshot.
+bc <- z[, list(zones = .N, equal = sum(gap == 0), abs_gap = sum(abs(gap))),
+        by = country][order(-abs_gap)]
+bc[, share_abs := abs_gap / sum(abs_gap)]
+bc_txt <- paste(sprintf(
+  "in %s, %s of zones with bus service agree exactly and the country holds %s of the absolute disagreement",
+  ifelse(is.na(cn[bc$country]), "unknown", cn[bc$country]),
+  pct(bc$equal / bc$zones), pct(bc$share_abs)), collapse = "; ")
+cat(sprintf(paste0(
+  "By country: %s. Large rural zones dominate the national view by area, so ",
+  "the grey of the Highlands and mid-Wales covers fewer bus zones than it ",
+  "seems. Most of the disagreement by volume is in towns and cities, where ",
+  "the zones are too small to read at this scale; the close-ups below show ",
+  "four of them.\n\n"), bc_txt))
+```
+
+```{r map-cities, fig.width=9, fig.height=7, eval=has_map && requireNamespace("patchwork", quietly = TRUE)}
+# Extents in British National Grid metres
+cities <- list(
+  "London"             = c(503000, 156000, 562000, 201000),
+  "West Midlands"      = c(388000, 268000, 432000, 305000),
+  "Greater Manchester" = c(364000, 382000, 406000, 417000),
+  "Glasgow"            = c(240000, 648000, 282000, 683000))
+city_map <- function(nm) {
+  b <- cities[[nm]]
+  bb <- sf::st_bbox(c(xmin = b[1], ymin = b[2], xmax = b[3], ymax = b[4]),
+                    crs = sf::st_crs(mz))
+  d <- suppressWarnings(sf::st_crop(mz, bb))
+  ggplot(d) +
+    # show.legend = TRUE so every panel draws an identical legend, which is
+    # what lets patchwork collect them into one; a panel lacking a band
+    # otherwise draws a blank key and the legends are not merged
+    geom_sf(aes(fill = band), colour = NA, show.legend = TRUE) +
+    map_fill +
+    coord_sf(datum = NA, expand = FALSE) +
+    labs(title = nm) +
+    map_theme
+}
+patchwork::wrap_plots(lapply(names(cities), city_map), ncol = 2,
+                      guides = "collect") +
+  patchwork::plot_annotation(
+    title = "The same map, close up on four conurbations",
+    theme = theme(plot.title = element_text(size = 13)))
 ```
 
 ## The zones that disagree most

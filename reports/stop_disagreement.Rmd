@@ -1,0 +1,733 @@
+# Where TNDS and the DfT's BODS GTFS disagree, stop by stop
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, error = FALSE,
+                      fig.path = "figures/stopgap-", dpi = 110,
+                      fig.width = 9, fig.height = 5)
+library(ggplot2)
+library(data.table)
+
+# The case figures are numbered by position, and which stops are cases changes
+# whenever the data does. Clear the previous run's figures so that a shorter
+# case list does not leave stale images beside the report.
+unlink(Sys.glob("figures/stopgap-*"))
+
+g <- readRDS(gap_path)
+s <- as.data.table(g$stops)
+win <- g$window
+day <- g$day
+wl <- as.integer(win$enddate - win$startdate) + 1L
+tol_min <- g$tol / 60
+
+has_map <- exists("map_zones_path") && !is.null(map_zones_path) &&
+  file.exists(map_zones_path)
+has_patchwork <- requireNamespace("patchwork", quietly = TRUE)
+
+fmt <- function(x) format(round(x), big.mark = ",", scientific = FALSE,
+                          trim = TRUE)
+pct <- function(x) ifelse(is.finite(x), sprintf("%.1f%%", 100 * x), "—")
+dfmt <- function(d) ifelse(is.na(d), "—", format(as.Date(d), "%a %e %b"))
+cn <- c(E = "England", W = "Wales", S = "Scotland")
+
+periods <- c(win = sprintf("%d-day window", wl),
+             day = format(day, "single day (%A %e %B %Y)"))
+periods_short <- c(win = "window", day = "day")
+types <- c("TNDS only", "BODS only", "TNDS higher", "BODS higher")
+type_lv <- c(types, "equal")
+type_cols <- c("TNDS only" = "#164a8c", "TNDS higher" = "#7fa9e0",
+               "BODS higher" = "#e88aa0", "BODS only" = "#8f2340",
+               "equal" = "#bdbdbd")
+src_cols <- c(TNDS = "#2a78d6", `BODS GTFS` = "#d94f70")
+src_lab <- c(tnds = "TNDS", bods_gtfs = "BODS GTFS")
+
+theme_report <- theme_minimal(base_size = 12) +
+  theme(panel.grid.minor = element_blank(),
+        panel.grid.major.x = element_blank(),
+        legend.position = "top",
+        plot.title.position = "plot")
+map_theme <- theme_void(base_size = 11) +
+  theme(legend.position = "right", plot.title.position = "plot",
+        plot.title = element_text(face = "bold"),
+        plot.background = element_rect(fill = "white", colour = NA))
+
+col <- function(what, p) paste0(what, "_", p)
+nm <- function(x) ifelse(is.na(x) | x == "", "(unnamed)", x)
+# "Area, zone": the ATCO administrative area a reader recognises, then the
+# LSOA/Data Zone code that links the stop to the LSOA report. An analysis
+# output from before `area` was added still knits, with the zone alone.
+loc_of <- function(d) {
+  area <- if ("area" %in% names(d)) d$area else NA_character_
+  zone <- ifelse(is.na(d$zone_id), "", d$zone_id)
+  out <- ifelse(is.na(area), zone, ifelse(zone == "", area,
+                                          paste0(area, ", ", zone)))
+  ifelse(out == "", "—", out)
+}
+upfirst <- function(x) paste0(toupper(substr(x, 1, 1)), substring(x, 2))
+```
+
+```{r intro, results="asis"}
+cat(sprintf(paste0(
+  "The LSOA report (`lsoa_disagreement.md`) finds the zones where the choice ",
+  "between TNDS and the DfT's BODS GTFS matters most. A zone still hides a lot ",
+  "— a bus station's stands, the two sides of a road, a stop code one source ",
+  "has replaced — so this report takes the same comparison down to the ",
+  "**individual NaPTAN stop**, the finest unit the two sources share.\n\n",
+  "Both sources are the same feeds as the LSOA report — `%s` and `%s` — after ",
+  "`UK2GTFS::gtfs_deduplicate()`, buses only. Each stop is counted by ",
+  "`UK2GTFS::gtfs_stop_frequency()` **twice**:\n\n",
+  "- over the LSOA report's %d-day window, **%s to %s**; and\n",
+  "- on **%s** alone, the second day of that window.\n\n",
+  "A timetable that stops early — a TNDS registration expiring inside the ",
+  "window, a BODS calendar cut short — makes the sources disagree over the ",
+  "window but not on a day both still cover. Genuinely different timetables ",
+  "disagree on any day. Comparing the two periods is what tells those apart.\n\n"),
+  basename(g$feeds[["tnds"]]),
+  sub(".*GTFS/([0-9]+)/.*", "BODS GTFS \\1", g$feeds[["bods_gtfs"]]),
+  wl, format(win$startdate, "%e %B %Y"), format(win$enddate, "%e %B %Y"),
+  format(day, "%A %e %B %Y")))
+```
+
+The measure is **bus departures at the stop**: every stop-time of every
+journey, multiplied by the number of times the journey runs in the period. A
+journey that calls at a stop twice (a loop) counts twice there, and every stop
+is counted whether or not it is a timing point, because UK2GTFS interpolates
+the times of the rest. That is why stop totals do not add up to the LSOA
+report's zone totals, which count each journey once per zone.
+
+Each stop with service in either source falls into one of four kinds of
+disagreement, or agrees:
+
+- **TNDS only** — departures in TNDS, none at all in BODS GTFS;
+- **BODS only** — the reverse;
+- **TNDS higher** / **BODS higher** — both serve it, one more often;
+- **equal** — the same count in both.
+
+```{r check, results="asis"}
+ck <- g$check
+same <- ck$mismatch_tnds == 0 && ck$mismatch_bods == 0
+cat(sprintf(paste0(
+  "**Check.** The per-date departures behind the case charts are counted ",
+  "separately from `gtfs_stop_frequency()`, from each source's service dates ",
+  "in the window. Summed over the window they %s: %s of %s stops differ in ",
+  "TNDS and %s in BODS GTFS (totals %s against %s, and %s against %s).\n\n"),
+  if (same) "reproduce its counts exactly" else "do **not** reproduce its counts",
+  fmt(ck$mismatch_tnds), fmt(ck$stops), fmt(ck$mismatch_bods),
+  fmt(ck$total_tnds[["stop_frequency"]]), fmt(ck$total_tnds[["by_date"]]),
+  fmt(ck$total_bods[["stop_frequency"]]), fmt(ck$total_bods[["by_date"]])))
+```
+
+## The four kinds of disagreement
+
+```{r summary-table, results="asis"}
+summ <- rbindlist(lapply(names(periods), function(p) {
+  d <- s[get(col("type", p)) != "neither"]
+  d[, type := factor(get(col("type", p)), levels = type_lv)]
+  out <- d[, list(Stops = .N,
+                  TNDS = sum(get(paste0(p, "_tnds"))),
+                  BODS = sum(get(paste0(p, "_bods"))),
+                  abs_gap = sum(abs(get(col("gap", p))))),
+           by = type][order(type)]
+  out[, `Share of absolute difference` := pct(abs_gap / sum(abs_gap))]
+  out[, Period := periods_short[[p]]]
+  out[]
+}))
+tab <- summ[, list(Period, Kind = as.character(type), Stops = fmt(Stops),
+                   `TNDS departures` = fmt(TNDS),
+                   `BODS GTFS departures` = fmt(BODS),
+                   `Absolute difference` = fmt(abs_gap),
+                   `Share of absolute difference`)]
+knitr::kable(tab, align = c("l", "l", rep("r", 5)))
+```
+
+```{r summary-text, results="asis"}
+sw <- summ[Period == "window"]
+sd <- summ[Period == "day"]
+tot_w <- s[, c(sum(win_tnds), sum(win_bods))]
+tot_d <- s[, c(sum(day_tnds), sum(day_bods))]
+one_w <- sw[type %in% c("TNDS only", "BODS only"), sum(abs_gap)] / sum(sw$abs_gap)
+one_d <- sd[type %in% c("TNDS only", "BODS only"), sum(abs_gap)] / sum(sd$abs_gap)
+eq_w <- sw[type == "equal", Stops] / sum(sw$Stops)
+eq_d <- sd[type == "equal", Stops] / sum(sd$Stops)
+cat(sprintf(paste0(
+  "Over the window TNDS counts %s bus departures and BODS GTFS %s (%+.1f%%); ",
+  "on the single day %s and %s (%+.1f%%). %s of the %s served stops agree ",
+  "exactly over the window and %s on the day.\n\n",
+  "Stops served by one source only account for **%s** of the absolute ",
+  "stop-level difference over the window and %s on the day. The rest is stops ",
+  "both sources serve at different frequencies.\n\n"),
+  fmt(tot_w[1]), fmt(tot_w[2]), 100 * (tot_w[1] / tot_w[2] - 1),
+  fmt(tot_d[1]), fmt(tot_d[2]), 100 * (tot_d[1] / tot_d[2] - 1),
+  pct(eq_w), fmt(sum(sw$Stops)), pct(eq_d), pct(one_w), pct(one_d)))
+```
+
+## Window against day: an early stop, or a different timetable?
+
+```{r nat-daily, fig.height=4.6}
+nd <- as.data.table(g$nat_daily)[, list(n = sum(n)), by = list(date, source)]
+nd[, Source := factor(src_lab[source], levels = names(src_cols))]
+ggplot(nd, aes(date, n, colour = Source)) +
+  annotate("rect", xmin = day - 0.5, xmax = day + 0.5, ymin = -Inf, ymax = Inf,
+           fill = "grey92") +
+  annotate("text", x = day, y = Inf, label = "single day", vjust = 1.5,
+           size = 3.3, colour = "grey35") +
+  geom_line(linewidth = 0.8) +
+  geom_point(size = 2) +
+  scale_colour_manual(values = src_cols, name = NULL) +
+  scale_y_continuous(labels = function(x) format(x, big.mark = ",",
+                                                 scientific = FALSE),
+                     limits = c(0, NA), expand = expansion(mult = c(0, 0.08))) +
+  scale_x_date(date_breaks = "1 day", date_labels = "%a\n%e") +
+  labs(title = "Bus departures at every stop, date by date",
+       subtitle = "All stops served by either source", x = NULL,
+       y = "Departures") +
+  theme_report
+```
+
+```{r nat-daily-text, results="asis"}
+ndw <- dcast(nd, date ~ source, value.var = "n")
+ndw[, ratio := tnds / bods_gtfs]
+r0 <- ndw[date == day, ratio]
+wk <- ndw[!weekdays(date) %in% c("Saturday", "Sunday")]
+rl <- wk[date == max(date), ratio]
+cat(sprintf(paste0(
+  "On the single day TNDS counts %s the departures BODS GTFS does; on the ",
+  "window's last weekday (%s) the ratio is %s. %s\n\n"),
+  sprintf("%.3f times", r0), dfmt(max(wk$date)), sprintf("%.3f", rl),
+  if (rl < r0 - 0.005) paste0(
+    "TNDS loses ground across the window relative to BODS GTFS, which is the ",
+    "signature of TNDS registrations expiring inside it.")
+  else if (rl > r0 + 0.005) paste0(
+    "BODS GTFS loses ground across the window relative to TNDS, which is the ",
+    "signature of BODS calendars ending inside it.")
+  else "The ratio barely moves, so neither source tails off across the window."))
+```
+
+How each stop's kind of disagreement over the window compares with the kind
+it shows on the single day. A stop that disagrees over the window but agrees
+on the day disagrees only on other dates — an expiry, a cut-short calendar, or
+a difference confined to some days of the week. A stop that disagrees the same
+way on both is a different timetable.
+
+```{r crosstab, results="asis"}
+ct <- s[type_win != "neither"]
+ct[, type_day := ifelse(type_day == "neither", "no service on the day", type_day)]
+xt <- dcast(ct[, .N, by = list(type_win, type_day)], type_win ~ type_day,
+            value.var = "N", fill = 0)
+xt <- xt[match(intersect(type_lv, xt$type_win), type_win)]
+ord <- c(intersect(type_lv, names(xt)), setdiff(names(xt), c("type_win", type_lv)))
+xt <- xt[, c("type_win", ord), with = FALSE]
+setnames(xt, "type_win", "Window \\ day")
+xt[, (ord) := lapply(.SD, fmt), .SDcols = ord]
+knitr::kable(xt, align = c("l", rep("r", length(ord))))
+```
+
+```{r crosstab-text, results="asis"}
+# The share of each window kind's absolute difference that sits at stops
+# which agree exactly on the single day, or show the same kind there
+agg <- ct[type_win %in% types, list(
+  abs_gap = sum(abs(gap_win)),
+  same_kind = sum(abs(gap_win)[type_day == type_win]),
+  agree_day = sum(abs(gap_win)[type_day %in% c("equal")])),
+  by = type_win]
+agg <- agg[match(types, type_win)]
+lines <- agg[, sprintf(paste0(
+  "- **%s**: %s of the window difference is at stops showing the same kind on ",
+  "the day, and %s at stops where the two agree exactly on the day."),
+  type_win, pct(same_kind / abs_gap), pct(agree_day / abs_gap))]
+cat(lines, sep = "\n")
+cat("\n\n")
+```
+
+## Stop codes: missing, or filed under a neighbour?
+
+A stop served by only one source may be a stop the other genuinely does not
+serve. Or the same buses may be filed under a neighbouring stop code: another
+stand at a bus station, the stop across the road, a code one source has
+retired. For each one-source stop the test below looks for the nearest stop
+within 100 m where the **other** source runs more departures than this one's
+does, and compares that surplus with this stop's own count. A surplus within a
+third of it is "similar": almost certainly the same buses under two codes.
+
+```{r neighbours, results="asis"}
+nbt <- rbindlist(lapply(names(periods), function(p) {
+  rbindlist(lapply(c("TNDS only", "BODS only"), function(ty) {
+    d <- s[get(col("type", p)) == ty]
+    n_own <- if (ty == "TNDS only") d[[paste0(p, "_tnds")]] else d[[paste0(p, "_bods")]]
+    dist <- d[[paste0("nb_m_", p)]]
+    nbn <- d[[paste0("nb_n_", p)]]
+    w30 <- !is.na(dist) & dist <= 30
+    w100 <- !is.na(dist)
+    # "similar": the neighbour's surplus in the other source is within a
+    # third of this stop's count - the same buses rather than another service
+    sim <- w100 & !is.na(nbn) & abs(nbn - n_own) <= n_own / 3
+    data.table(Period = periods_short[[p]], Kind = ty, Stops = nrow(d),
+               `Neighbour ≤ 30 m` = pct(mean(w30)),
+               `Neighbour ≤ 100 m` = pct(mean(w100)),
+               `… with similar departures` = pct(mean(sim)),
+               `Departures at those stops` = pct(sum(n_own[sim]) / sum(n_own)))
+  }))
+}))
+nbt[, Stops := fmt(Stops)]
+knitr::kable(nbt, align = c("l", "l", rep("r", 5)))
+```
+
+```{r neighbours-text, results="asis"}
+w <- s[type_win == "TNDS only" & !is.na(nb_m_win) &
+         abs(nb_n_win - win_tnds) <= win_tnds / 3]
+cat(sprintf(paste0(
+  "Over the window %s TNDS-only stops pair up with a neighbour this way, ",
+  "carrying %s TNDS departures. Each such pair inflates the one-source count ",
+  "at one stop and the frequency difference at the other at the same time. ",
+  "The pairs are not reconciled anywhere in this report: they are listed in the ",
+  "tables and named in the case notes, because which code is right is a ",
+  "question for NaPTAN, not for either timetable.\n\n"),
+  fmt(nrow(w)), fmt(sum(w$win_tnds))))
+```
+
+## Where the disagreement is
+
+```{r map-prep, eval=has_map}
+library(sf)
+zmap <- readRDS(map_zones_path)
+# A light outline of Great Britain for the stop maps: the zone polygons
+# dissolved by country would be ideal but is slow, so the zones are drawn
+# with no borders and a pale fill, which reads as the land.
+zmap <- st_transform(zmap, 27700)
+gb_layer <- geom_sf(data = zmap, fill = "grey95", colour = NA)
+stop_map <- function(p, bbox = NULL, min_gap = 1, title = NULL, size_max = 2.2,
+                     legend = TRUE) {
+  d <- s[get(col("type", p)) %in% types & abs(get(col("gap", p))) >= min_gap]
+  if (!is.null(bbox)) d <- d[x >= bbox[1] & y >= bbox[2] & x <= bbox[3] & y <= bbox[4]]
+  d[, type := factor(get(col("type", p)), levels = type_lv)]
+  d[, mag := abs(get(col("gap", p)))]
+  setorder(d, mag)
+  base <- if (is.null(bbox)) gb_layer else
+    geom_sf(data = st_crop(zmap, st_bbox(c(xmin = bbox[1], ymin = bbox[2],
+                                           xmax = bbox[3], ymax = bbox[4]),
+                                         crs = st_crs(27700))),
+            fill = "grey95", colour = "white", linewidth = 0.1)
+  ggplot() + base +
+    geom_point(data = d, aes(x, y, colour = type, size = mag), alpha = 0.8,
+               stroke = 0, show.legend = legend) +
+    scale_colour_manual(values = type_cols[types], limits = types, name = NULL,
+                        guide = guide_legend(override.aes = list(size = 3))) +
+    scale_size_area(max_size = size_max, guide = "none") +
+    coord_sf(crs = 27700, datum = NA, expand = FALSE,
+             xlim = if (!is.null(bbox)) bbox[c(1, 3)],
+             ylim = if (!is.null(bbox)) bbox[c(2, 4)]) +
+    labs(title = title, x = NULL, y = NULL) +
+    map_theme
+}
+cities <- list(
+  London = c(503000, 156000, 562000, 201000),
+  `West Midlands` = c(388000, 268000, 432000, 305000),
+  `Greater Manchester` = c(364000, 382000, 406000, 417000),
+  Glasgow = c(240000, 648000, 282000, 683000))
+# A stop shows on the national maps if it differs by at least one departure a
+# day on average: over the window that is `wl` departures, on the day one.
+min_gap <- c(win = wl, day = 1)
+```
+
+Every stop that differs by at least one departure a day on average, coloured
+by its kind and sized by the difference. Points are drawn smallest first, so
+the largest differences sit on top.
+
+```{r map-gb, eval=has_map, fig.width=11, fig.height=8.5}
+mw <- stop_map("win", min_gap = min_gap[["win"]], title = upfirst(periods[["win"]]),
+               legend = TRUE)
+mdy <- stop_map("day", min_gap = min_gap[["day"]], title = upfirst(periods[["day"]]),
+                legend = TRUE)
+if (has_patchwork) {
+  patchwork::wrap_plots(mw, mdy, ncol = 2, guides = "collect") +
+    patchwork::plot_annotation(
+      title = "Stops where TNDS and BODS GTFS disagree",
+      subtitle = "At least one departure a day different, on average")
+} else {
+  print(mw); print(mdy)
+}
+```
+
+```{r map-cities, eval=has_map && has_patchwork, fig.width=10, fig.height=8, results="asis"}
+for (p in names(periods)) {
+  cat(sprintf("\n\n**Close-ups, %s.**\n\n", periods[[p]]))
+  pl <- lapply(names(cities), function(nm) {
+    stop_map(p, bbox = cities[[nm]], min_gap = min_gap[[p]], title = nm,
+             size_max = 3)
+  })
+  print(patchwork::wrap_plots(pl, ncol = 2, guides = "collect"))
+}
+```
+
+## The stops that disagree most
+
+```{r ranked-tables, results="asis"}
+lists <- as.data.table(g$lists)
+for (p in names(periods)) {
+  cat(sprintf("\n\n### %s\n\n", upfirst(periods[[p]])))
+  for (ty in types) {
+    ids <- lists[period == p & type == ty][order(rank), stop_id]
+    if (!length(ids)) {
+      cat(sprintf("\n\n**%s.** No stops.\n\n", ty)); next
+    }
+    d <- s[match(ids, stop_id)]
+    q <- setdiff(names(periods), p)
+    nb_col <- paste0("nb_", p)
+    nb_txt <- ifelse(is.na(d[[nb_col]]), "",
+                     sprintf("%s (%.0f m, %s)", d[[nb_col]], d[[paste0("nb_m_", p)]],
+                             fmt(d[[paste0("nb_n_", p)]])))
+    tab <- data.frame(
+      `#` = seq_along(ids), Stop = d$stop_id,
+      Name = substr(d$stop_name, 1, 36), `Area, zone` = loc_of(d),
+      TNDS = fmt(d[[paste0(p, "_tnds")]]), `BODS GTFS` = fmt(d[[paste0(p, "_bods")]]),
+      Difference = fmt(d[[col("gap", p)]]),
+      `Other period` = sprintf("%s / %s", fmt(d[[paste0(q, "_tnds")]]),
+                               fmt(d[[paste0(q, "_bods")]])),
+      `Nearby stop where the other source runs more (surplus)` = nb_txt,
+      check.names = FALSE)
+    if (all(nb_txt == "")) tab$`Nearby stop where the other source runs more (surplus)` <- NULL
+    cat(sprintf("\n\n**%s.**\n\n", ty))
+    cat(knitr::kable(tab, align = c("r", "l", "l", "l", "r", "r", "r", "r", "l")),
+        sep = "\n")
+  }
+}
+```
+
+"Other period" gives TNDS / BODS GTFS departures in the period not ranked on.
+
+## The worst cases, route by route
+
+```{r case-intro, results="asis"}
+cat(sprintf(paste0(
+  "The top %d stops of each kind in each period. For each one:\n\n",
+  "- **Routes.** Every route calling at the stop in either source, in **both ",
+  "directions** — so the opposite direction is drawn even where it uses the ",
+  "stop across the road. Added to those, every route of the *other* source ",
+  "whose stop sequence shares at least half its consecutive stop pairs with ",
+  "one of them. Route and trip identifiers are not shared between the sources, ",
+  "and route numbers are not reliably shared, but the stop sequence is. ",
+  "Matching on ordered pairs keeps the two directions apart, and a source ",
+  "that files one stop under another code loses two pairs, not the whole ",
+  "route.\n",
+  "- **Groups.** Patterns linked that way form directional groups. Within ",
+  "each group, journeys at the stop are matched date by date on departure ",
+  "time, within **%g minutes** either way: UK2GTFS interpolates the times of ",
+  "non-timing points, and a stop that is a timing point in one source may be ",
+  "interpolated in the other.\n",
+  "- **Charts.** Departures at the stop on every date of the window, which ",
+  "shows a source that stops part way through. Departures by hour on the ",
+  "single day, which shows whether the difference is the whole day or one ",
+  "part of it. A close-up of the stops within 400 m, which shows a ",
+  "neighbouring code carrying the missing buses.\n\n",
+  "The note at the head of each case is generated from those measurements by ",
+  "fixed rules (`case_findings()` in this report). It says what the data ",
+  "show, not which source is right.\n\n"),
+  g$top_n, tol_min))
+```
+
+```{r case-helpers}
+# Route numbers from several groups, each listing several, as one short list:
+# directional groups chain the routes sharing a corridor, so the same number
+# turns up in several of them and in both sources' names
+route_list <- function(labels, n = 6) {
+  r <- unique(trimws(unlist(strsplit(labels, ",| / "))))
+  r <- r[r != ""]
+  if (!length(r)) return("(unnamed routes)")
+  out <- paste(utils::head(r, n), collapse = ", ")
+  if (length(r) > n) out <- paste0(out, sprintf(" and %d more", length(r) - n))
+  out
+}
+# One operator per group: the sources spell the same one differently
+# ("Brighton & Hove" / "Brighton & Hove Bus and Coach")
+first_operator <- function(x) {
+  ifelse(is.na(x) | x == "", "—", sub(" / .*$", "", x))
+}
+
+case_findings <- function(cs, p) {
+  st <- cs$stop
+  gp <- as.data.table(cs$groups)
+  dl <- as.data.table(cs$daily)
+  ty <- st[[col("type", p)]]
+  hi <- if (grepl("^TNDS", ty)) "tnds" else "bods_gtfs"
+  lo <- setdiff(c("tnds", "bods_gtfs"), hi)
+  out <- character(0)
+
+  # 1. a source that stops part way through the window
+  last_dep <- function(src) {
+    x <- dl[source == src & departures > 0, date]
+    if (length(x)) max(x) else as.Date(NA)
+  }
+  l_hi <- last_dep(hi); l_lo <- last_dep(lo)
+  if (!is.na(l_lo) && !is.na(l_hi) && l_lo < l_hi - 1) {
+    out <- c(out, sprintf(
+      "%s has no departures here after **%s**; %s continues to %s.",
+      src_lab[[lo]], dfmt(l_lo), src_lab[[hi]], dfmt(l_hi)))
+  }
+  # A source whose weekday service changes between the window's two weeks:
+  # a registration that expires and is not replaced leaves a trickle rather
+  # than nothing (Chelmsford: TNDS falls from 430 a weekday to 30 while BODS
+  # GTFS moves to a new timetable), which the rule above cannot see.
+  wd <- dl[!weekdays(date) %in% c("Saturday", "Sunday")]
+  wk1 <- wd[date < win$startdate + 7]; wk2 <- wd[date >= win$startdate + 7]
+  m1 <- wk1[, list(m = mean(departures)), by = source]
+  m2 <- wk2[, list(m = mean(departures)), by = source]
+  mm <- merge(m1, m2, by = "source", suffixes = c("1", "2"))
+  mm[, change := (m2 - m1) / pmax(m1, m2, 1)]
+  if (nrow(mm) && any(abs(mm$change) > 0.25)) {
+    first_change <- function(src) {
+      r <- mm[source == src]
+      x <- wd[source == src & date >= win$startdate + 1]
+      x <- x[abs(departures - r$m1) > 0.25 * max(r$m1, r$m2, 1)]
+      if (nrow(x)) min(x$date) else as.Date(NA)
+    }
+    mover <- mm[order(-abs(change))]$source[1]
+    cat_src <- function(src) {
+      r <- mm[source == src]
+      sprintf("%s %s a weekday", src_lab[[src]],
+              if (abs(r$change) <= 0.05) sprintf("steady at about %s", fmt(r$m1))
+              else sprintf("%s to %s", fmt(r$m1), fmt(r$m2)))
+    }
+    out <- c(out, sprintf(
+      "The two part company between the window's weeks: from **%s**, %s, while %s.",
+      dfmt(first_change(mover)), cat_src(mover),
+      cat_src(setdiff(c("tnds", "bods_gtfs"), mover))))
+  }
+
+  dd <- st$day_tnds - st$day_bods
+  if (p == "win" && abs(dd) <= 0.1 * max(st$day_tnds, st$day_bods, 1)) {
+    out <- c(out, sprintf(
+      "On the single day the two nearly agree (%s against %s), so the window difference comes from other dates.",
+      fmt(st$day_tnds), fmt(st$day_bods)))
+  }
+
+  # 2. the same buses filed under a neighbouring code
+  nb <- st[[paste0("nb_", p)]]
+  if (ty %in% c("TNDS only", "BODS only") && !is.na(nb)) {
+    own <- st[[paste0(p, if (ty == "TNDS only") "_tnds" else "_bods")]]
+    nbn <- st[[paste0("nb_n_", p)]]
+    nbname <- s[stop_id == nb, stop_name]
+    out <- c(out, sprintf(
+      "%s runs more at **%s** (%s) %.0f m away: %s departures more than the other source there, against this stop's %s in %s%s.",
+      src_lab[[lo]], nb, nbname[1], st[[paste0("nb_m_", p)]], fmt(nbn),
+      fmt(own), src_lab[[hi]],
+      if (abs(nbn - own) <= own / 3) ": very likely the same buses under two stop codes" else ""))
+  }
+
+  # 3. how the difference divides across route groups
+  dcol <- paste0("dep_", p, "_"); mcol <- paste0("matched_", p, "_")
+  gp[, dt := get(paste0(dcol, "tnds"))][, db := get(paste0(dcol, "bods_gtfs"))]
+  gp[, mt := get(paste0(mcol, "tnds"))]
+  gp[, kind := fcase(
+    dt > 0 & db == 0 & patterns_bods == 0, "absent_b",
+    db > 0 & dt == 0 & patterns_tnds == 0, "absent_t",
+    dt > 0 & db == 0, "elsewhere_b",
+    db > 0 & dt == 0, "elsewhere_t",
+    dt > 0 & db > 0, "both",
+    default = "none")]
+  gp[, label := ifelse(names_tnds != "" & names_bods != "" & names_tnds != names_bods,
+                       paste0(names_tnds, " / ", names_bods),
+                       ifelse(names_tnds != "", names_tnds, names_bods))]
+  gap_tot <- abs(sum(gp$dt) - sum(gp$db))
+  say <- function(k, txt) {
+    x <- gp[kind == k][order(-abs(dt - db))]
+    if (!nrow(x)) return(NULL)
+    sprintf(txt, route_list(x$label), fmt(sum(abs(x$dt - x$db))))
+  }
+  out <- c(out,
+    say("absent_b", "Only in TNDS, with no route in BODS GTFS sharing their stop sequence: **%s** (%s departures)."),
+    say("absent_t", "Only in BODS GTFS, with no route in TNDS sharing their stop sequence: **%s** (%s departures)."),
+    say("elsewhere_b", "BODS GTFS has a route with the same stop sequence as **%s** but it does not call at this stop code (%s departures)."),
+    say("elsewhere_t", "TNDS has a route with the same stop sequence as **%s** but it does not call at this stop code (%s departures)."))
+  both <- gp[kind == "both"]
+  if (nrow(both)) {
+    mt <- sum(both$mt); ut <- sum(both$dt) - mt; ub <- sum(both$db) - mt
+    out <- c(out, sprintf(
+      "Routes in both (%s): %s journeys match within %g minutes; %s TNDS and %s BODS GTFS journeys have no counterpart.",
+      route_list(both[order(-(dt + db))]$label),
+      fmt(mt), tol_min, fmt(ut), fmt(ub)))
+  }
+  out
+}
+
+case_figure <- function(cs, p) {
+  st <- cs$stop
+  ln <- as.data.table(cs$lines)
+  pt <- as.data.table(cs$patterns)
+  dl <- as.data.table(cs$daily)
+  hr <- as.data.table(cs$hourly)
+  nr <- as.data.table(cs$near)
+
+  # Route map: one colour per service (both directions of the same routes),
+  # the six busiest named, the rest grey
+  svc_runs <- pt[, list(runs = sum(runs),
+                        label = paste(unique(na.omit(route_short_name))[1:min(2, uniqueN(na.omit(route_short_name)))],
+                                      collapse = "/")),
+                 by = service][order(-runs)]
+  svc_runs[, key := ifelse(seq_len(.N) <= 6, paste0(seq_len(.N), ". ", nm(label)), "other")]
+  pal <- c("#2a78d6", "#d94f70", "#e09a1a", "#2e9e6b", "#7b52c7", "#4c4c4c")
+  keys <- svc_runs$key[svc_runs$key != "other"]
+  cols <- c(stats::setNames(pal[seq_along(keys)], keys), other = "grey75")
+  ln <- merge(ln, pt[, list(node, service, source)], by = "node")
+  ln <- merge(ln, svc_runs[, list(service, key)], by = "service")
+  ln[, Source := factor(src_lab[source], levels = names(src_cols))]
+  ln[, key := factor(key, levels = names(cols))]
+  setorder(ln, node, seq)
+  ln <- ln[order(key == "other", decreasing = TRUE)]
+  lsf <- st_as_sf(ln, coords = c("lon", "lat"), crs = 4326)
+  lsf <- aggregate(lsf$geometry, by = list(node = lsf$node), FUN = function(g) {
+    st_cast(st_combine(g), "LINESTRING")
+  })
+  lsf <- st_sf(lsf)
+  lsf <- merge(lsf, unique(ln[, list(node, key, Source)]), by = "node")
+  lsf <- st_transform(lsf, 27700)
+  bb <- st_bbox(lsf)
+  pad <- max(bb[3] - bb[1], bb[4] - bb[2]) * 0.05 + 300
+  bb <- bb + c(-pad, -pad, pad, pad)
+  ctx <- st_crop(zmap, bb)
+  fp <- data.frame(x = st$x, y = st$y)
+  m1 <- ggplot() +
+    geom_sf(data = ctx, fill = "grey96", colour = "white", linewidth = 0.1) +
+    geom_sf(data = lsf, aes(colour = key), linewidth = 0.7) +
+    geom_point(data = fp, aes(x, y), shape = 21, size = 3.2, fill = "black",
+               colour = "white", stroke = 1.2) +
+    facet_wrap(~Source, drop = FALSE) +
+    scale_colour_manual(values = cols, name = NULL, drop = FALSE) +
+    coord_sf(crs = 27700, datum = NA, expand = FALSE, xlim = bb[c(1, 3)],
+             ylim = bb[c(2, 4)]) +
+    labs(title = "Routes through the stop, both directions") +
+    map_theme + theme(legend.position = "bottom",
+                      strip.text = element_text(face = "bold", size = 11))
+
+  # Close-up: stops within 400 m, coloured by kind in this period
+  nr[, type := factor(ifelse(get(col("type", p)) == "neither", "equal",
+                             get(col("type", p))), levels = type_lv)]
+  nr[, n := pmax(get(paste0(p, "_tnds")), get(paste0(p, "_bods")))]
+  lsl <- st_crop(lsf, st_bbox(c(xmin = st$x - 400, ymin = st$y - 400,
+                                xmax = st$x + 400, ymax = st$y + 400),
+                              crs = st_crs(27700)))
+  m2 <- ggplot() +
+    geom_sf(data = lsl, colour = "grey80", linewidth = 0.4) +
+    geom_point(data = nr, aes(x, y, colour = type, size = n), alpha = 0.9,
+               show.legend = TRUE) +
+    geom_point(data = fp, aes(x, y), shape = 21, size = 6, colour = "black",
+               fill = NA, stroke = 1) +
+    scale_colour_manual(values = type_cols, drop = FALSE, name = NULL) +
+    scale_size_area(max_size = 6, guide = "none") +
+    coord_sf(crs = 27700, datum = NA, expand = FALSE,
+             xlim = st$x + c(-400, 400), ylim = st$y + c(-400, 400)) +
+    labs(title = "Stops within 400 m") +
+    map_theme + theme(legend.position = "bottom", legend.text = element_text(size = 8)) +
+    guides(colour = guide_legend(nrow = 2, override.aes = list(size = 3)))
+
+  dl[, Source := factor(src_lab[source], levels = names(src_cols))]
+  c1 <- ggplot(dl, aes(date, departures, colour = Source)) +
+    annotate("rect", xmin = day - 0.5, xmax = day + 0.5, ymin = -Inf,
+             ymax = Inf, fill = "grey92") +
+    geom_line(linewidth = 0.7) + geom_point(size = 1.6) +
+    scale_colour_manual(values = src_cols, name = NULL, drop = FALSE) +
+    scale_x_date(date_breaks = "2 days", date_labels = "%e %b") +
+    scale_y_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.1))) +
+    labs(title = "Departures per date", subtitle = "shaded: the single day",
+         x = NULL, y = NULL) +
+    theme_report + theme(legend.position = "none")
+
+  hr <- merge(CJ(source = c("tnds", "bods_gtfs"), hour = 0:27), hr,
+              by = c("source", "hour"), all.x = TRUE)
+  hr[is.na(departures), departures := 0]
+  hr <- hr[hour <= max(23, hr[departures > 0, max(hour, 23)])]
+  hr[, Source := factor(src_lab[source], levels = names(src_cols))]
+  c2 <- ggplot(hr, aes(hour, departures, fill = Source)) +
+    geom_col(position = position_dodge(width = 0.8), width = 0.75) +
+    scale_fill_manual(values = src_cols, name = NULL, drop = FALSE) +
+    scale_x_continuous(breaks = seq(0, 27, 3)) +
+    scale_y_continuous(expand = expansion(mult = c(0, 0.1))) +
+    labs(title = "By hour, single day", x = NULL, y = NULL) +
+    theme_report + theme(legend.position = "bottom")
+
+  layout <- "
+AAA
+BCD
+"
+  patchwork::wrap_plots(A = m1, B = m2, C = c1, D = c2, design = layout,
+                        heights = c(1.25, 1))
+}
+
+group_table <- function(cs, p) {
+  gp <- as.data.table(cs$groups)
+  dc <- function(src) gp[[paste0("dep_", p, "_", src)]]
+  gp[, dt := dc("tnds")][, db := dc("bods_gtfs")]
+  gp[, mt := get(paste0("matched_", p, "_tnds"))]
+  gp <- gp[dt > 0 | db > 0 | runs_tnds + runs_bods > 0]
+  gp <- gp[order(-(abs(dt - db)), -(dt + db))]
+  gp <- utils::head(gp, 10)
+  data.frame(
+    `TNDS route` = ifelse(gp$patterns_tnds == 0, "—", nm(gp$names_tnds)),
+    `BODS route` = ifelse(gp$patterns_bods == 0, "—", nm(gp$names_bods)),
+    Operator = substr(first_operator(gp$operator), 1, 30),
+    `From → to` = substr(sprintf("%s → %s", gp$from, gp$to), 1, 52),
+    `TNDS here` = fmt(gp$dt), `BODS here` = fmt(gp$db),
+    Matched = fmt(gp$mt),
+    `Last date T / B` = sprintf("%s / %s", dfmt(gp$last_tnds), dfmt(gp$last_bods)),
+    check.names = FALSE)
+}
+```
+
+```{r cases, eval=has_map && has_patchwork, results="asis", fig.width=11, fig.height=10}
+cases <- as.data.table(g$cases)
+shown <- character(0)
+for (p in names(periods)) {
+  cat(sprintf("\n\n### Cases: %s\n\n", periods[[p]]))
+  if (p == "day") {
+    dc <- cases[period == "day"]
+    rep_n <- sum(dc$stop_id %in% cases[period == "win", stop_id])
+    cat(sprintf(
+      "%d of these %d stops are also among the window's cases, and are not drawn again. %s\n\n",
+      rep_n, nrow(dc),
+      if (rep_n >= nrow(dc) / 2) paste0(
+        "For most of the worst stops, then, what makes them disagree over a ",
+        "fortnight is already there on a single ordinary weekday: a different ",
+        "timetable, not one cut short.")
+      else paste0(
+        "Most of the worst stops on the day are not the worst over the window, ",
+        "so much of the window's worst disagreement comes from other dates.")))
+  }
+  for (ty in types) {
+    cat(sprintf("\n\n#### %s\n\n", ty))
+    ids <- cases[period == p & type == ty][order(rank), stop_id]
+    if (!length(ids)) { cat("No stops of this kind.\n\n"); next }
+    for (i in seq_along(ids)) {
+      id <- ids[i]
+      cs <- g$case[[id]]
+      st <- s[stop_id == id]
+      cat(sprintf("\n\n**%d. %s — `%s`**, %s. TNDS %s, BODS GTFS %s (%s); %s, TNDS %s, BODS GTFS %s.\n\n",
+                  i, st$stop_name, id, loc_of(st),
+                  fmt(st[[paste0(p, "_tnds")]]), fmt(st[[paste0(p, "_bods")]]),
+                  periods_short[[p]],
+                  c(win = "over the window", day = "on the day")[[setdiff(names(periods), p)]],
+                  fmt(st[[paste0(setdiff(names(periods), p), "_tnds")]]),
+                  fmt(st[[paste0(setdiff(names(periods), p), "_bods")]])))
+      key <- paste(id)
+      if (key %in% shown) {
+        cat("Shown in full above.\n\n")
+        next
+      }
+      shown <- c(shown, key)
+      if (is.null(cs)) { cat("No routes found for this stop.\n\n"); next }
+      f <- case_findings(cs, p)
+      if (length(f)) cat(paste0("- ", f), sep = "\n")
+      cat("\n\n")
+      print(case_figure(cs, p))
+      cat("\n\n")
+      cat(knitr::kable(group_table(cs, p),
+                       align = c("l", "l", "l", "l", "r", "r", "r", "l")),
+          sep = "\n")
+      cat("\n\n")
+    }
+  }
+}
+```
+
+"TNDS here" and "BODS here" are departures at the stop itself in the period. A
+route can show zero there and still be drawn: it is the opposite direction, or
+the other source's matching route, which calls at a neighbouring stop code
+instead. "Matched" counts journeys found in both within the tolerance; "Last
+date" is the last date in the window on which the group calls at the stop.
