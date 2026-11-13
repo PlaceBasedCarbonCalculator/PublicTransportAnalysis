@@ -287,7 +287,7 @@ window_expiry_stats <- function(gtfs, win) {
 
   trimmed <- UK2GTFS::gtfs_trim_dates(gtfs, startdate = win$startdate,
                                       enddate = win$enddate)
-  runs <- as.data.frame(trip_runs_in_window(trimmed))
+  runs <- as.data.frame(trip_runs_in_window(trimmed, win))
   rm(trimmed)
 
   cal <- as.data.frame(gtfs$calendar)

@@ -250,7 +250,11 @@ list(
 
   tar_target(pdf_validation, validate_published_timetables(tnds_20260726),
              format = "file"),
-  tar_target(pdf_validation_report, render_validation_report(pdf_validation),
+  tar_target(pdf_validation_rmd,
+             c("reports/pdf_validation.Rmd", "reports/pdf_validation_stops.Rmd"),
+             format = "file"),
+  tar_target(pdf_validation_report,
+             render_validation_report(pdf_validation, stop_pdf, pdf_validation_rmd),
              format = "file"),
 
   comparison_targets,
@@ -338,6 +342,18 @@ list(
   tar_target(stop_gap_rmd, "reports/stop_disagreement.Rmd", format = "file"),
   tar_target(stop_gap_report,
              render_stop_gap_report(stop_gap, stop_gap_rmd, plain_zones_file),
+             format = "file"),
+
+  # The routes through the case stops, against published timetables. The
+  # readings are a fixed input (data/stop_pdf_documents.csv, written by
+  # scripts/stop_pdf_validation/read_docs.py from data/example_timetables);
+  # the feed counts and the list of routes still needing a document follow
+  # the stop targets. Reported in reports/pdf_validation.md.
+  tar_target(stop_pdf_docs, "data/stop_pdf_documents.csv", format = "file"),
+  tar_target(stop_pdf,
+             stop_pdf_check(stop_gap, c(tnds = stopfreq_tnds,
+                                        bods_gtfs = stopfreq_bods_gtfs),
+                            stop_pdf_docs),
              format = "file"),
 
   # Everything that is not a bus.

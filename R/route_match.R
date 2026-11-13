@@ -30,97 +30,34 @@ route_short_key <- function(routes) {
 
 #' Vehicle journeys operated by each trip within the study window
 #'
-#' Reproduces the run-counting semantics of UK2GTFS::gtfs_trips_per_zone():
-#' weekday counts from calendar.txt, then calendar_dates exceptions applied
-#' with GTFS semantics (a cancellation only removes a day the calendar
-#' operates; an extra only adds a day it does not). `gtfs` must already be
-#' trimmed to the window, so calendar dates are clipped to it.
+#' The number of dates in `win` on which each trip's service runs, by the GTFS
+#' rules, from service_dates_in_window(): a calendar.txt row runs a service on
+#' the dates its weekday flags *and* its date range cover; calendar_dates.txt
+#' then adds and removes individual dates. Services defined only in
+#' calendar_dates.txt run on the dates they add.
+#'
+#' This used to apply calendar_dates by weekday instead, reproducing
+#' UK2GTFS::gtfs_trips_per_zone() at the time: weekday counts from the row,
+#' then a cancellation counted where the row ran that weekday and an addition
+#' only where it did not. That is right only when the row covers the whole
+#' window. An addition after the row's end_date, on a weekday the row flags,
+#' was taken for a no-op and lost. gtfs_trips_per_zone() was changed to count
+#' date by date in November 2026 and this follows it, so the two still agree.
+#' Measured then on all 35 feeds behind the published outputs, the case did
+#' not occur, so no figure moved.
 #'
 #' Unlike the zone counts, this is a count of vehicle journeys, not of stop
 #' departures: a journey is counted once however many stops or zones it
 #' serves.
-trip_runs_in_window <- function(gtfs) {
-  dow <- c("monday", "tuesday", "wednesday", "thursday", "friday",
-           "saturday", "sunday")
-
-  keep_cols <- c("service_id", dow, "start_date", "end_date")
-  cal <- as.data.frame(gtfs$calendar)
-  cal <- if (all(keep_cols %in% names(cal))) cal[, keep_cols] else
-    data.frame(service_id = character(0),
-               matrix(integer(0), ncol = 7, dimnames = list(NULL, dow)),
-               start_date = as.Date(character(0)),
-               end_date = as.Date(character(0)),
-               stringsAsFactors = FALSE)
-  cal$service_id <- as.character(cal$service_id)
-  cal$start_date <- as.Date(cal$start_date)
-  cal$end_date <- as.Date(cal$end_date)
-
-  cd_raw <- as.data.frame(gtfs$calendar_dates)
-
-  # GTFS allows a service_id to exist only in calendar_dates.txt, running on
-  # exactly the dates added there. The DfT's BODS GTFS uses this for
-  # school-holiday timetables (1,544 services, 4.9% of trips in the 2026-02-04
-  # feed). Give each one a synthetic all-zero calendar row so it reaches the
-  # exception handling below, where `extra` supplies its run count. Without
-  # this they count as zero and the feed is understated.
-  if (nrow(cd_raw) > 0) {
-    dates_only <- setdiff(unique(as.character(cd_raw$service_id)),
-                          cal$service_id)
-    if (length(dates_only) > 0) {
-      pad <- data.frame(service_id = dates_only, stringsAsFactors = FALSE)
-      # Every weekday flag zero, so the base run count is zero whatever the
-      # (unused, NA) date range, and the exception handling supplies the runs.
-      for (d in dow) pad[[d]] <- 0L
-      pad$start_date <- as.Date(NA)
-      pad$end_date <- as.Date(NA)
-      cal <- rbind(cal, pad[, keep_cols])
-    }
-  }
-
-  if (nrow(cal) == 0) {
-    return(data.table::data.table(trip_id = character(0), runs = numeric(0)))
-  }
-
-  # Occurrences of each weekday in [start_date, end_date]: step forward from
-  # start_date to the first matching weekday, then count whole weeks.
-  start_dow <- as.integer(lubridate::wday(cal$start_date, week_start = 1))
-  span <- as.integer(cal$end_date - cal$start_date)
-  n_dow <- vapply(seq_along(dow), function(i) {
-    offset <- (i - start_dow) %% 7L
-    as.numeric(pmax((span - offset) %/% 7L + 1L, 0L))
-  }, numeric(nrow(cal)))
-  n_dow[is.na(n_dow)] <- 0
-  n_dow <- matrix(n_dow, nrow = nrow(cal))
-
-  runs <- as.matrix(cal[, dow]) * n_dow
-  colnames(runs) <- dow
-
-  # calendar_dates exceptions, counted per weekday so the GTFS semantics can
-  # be applied against the matching calendar.txt day flag
-  cd <- cd_raw
-  if (!is.null(cd) && nrow(cd) > 0) {
-    cd$date <- as.Date(cd$date)
-    # A date can only be added or cancelled once per service
-    cd <- cd[!duplicated(paste(cd$service_id, cd$date, cd$exception_type)), ]
-    cd$dow <- as.integer(lubridate::wday(cd$date, week_start = 1))
-    cd <- data.table::as.data.table(cd)
-    exc <- cd[, list(extra = sum(exception_type == 1),
-                     canceled = sum(exception_type == 2)),
-              by = list(service_id, dow)]
-    idx <- match(exc$service_id, cal$service_id)
-    keep <- !is.na(idx)
-    exc <- exc[keep]; idx <- idx[keep]
-    cell <- cbind(idx, exc$dow)
-    operates <- runs[cell] > 0
-    runs[cell] <- ifelse(operates,
-                         pmax(runs[cell] - exc$canceled, 0),
-                         exc$extra)
-  }
-
-  svc <- data.table::data.table(service_id = cal$service_id,
-                                runs = rowSums(runs))
+#'
+#' @param gtfs a feed, usually already trimmed to `win` by gtfs_trim_dates()
+#' @param win the study window, list(startdate, enddate)
+trip_runs_in_window <- function(gtfs, win) {
+  sdates <- service_dates_in_window(gtfs, win)
+  svc <- sdates[, list(runs = as.numeric(.N)), by = service_id]
   trips <- data.table::as.data.table(
     as.data.frame(gtfs$trips)[, c("trip_id", "service_id")])
+  trips[, service_id := as.character(service_id)]
   out <- merge(trips, svc, by = "service_id", all.x = TRUE)
   out[is.na(runs), runs := 0]
 
@@ -162,7 +99,7 @@ gtfs_secs <- function(x) {
 route_window_summary <- function(gtfs, win, keep_type = 3L) {
   gtfs <- UK2GTFS::gtfs_trim_dates(gtfs, startdate = win$startdate,
                                    enddate = win$enddate)
-  runs <- trip_runs_in_window(gtfs)
+  runs <- trip_runs_in_window(gtfs, win)
 
   routes <- data.table::as.data.table(as.data.frame(gtfs$routes))
   routes[, route_id := as.character(route_id)]

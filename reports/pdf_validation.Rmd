@@ -15,6 +15,9 @@ the documents in `data/example_timetables/`.
 The section "The zones where TNDS and BODS GTFS disagree most", near the end, turns the
 same documents on the 60 zones of `lsoa_disagreement.md` and says, area by
 area, which source the operators' timetables support.
+The section "The stops where TNDS and BODS GTFS disagree most" does the same
+for the routes through the case stops of `stop_disagreement.md`, and lists
+the documents still needed.
 
 Published timetables are easy to obtain for the current week and hard to
 obtain for the past, so this uses a **current snapshot** rather than one of
@@ -1168,6 +1171,9 @@ The same table, with the per-day counts and the document file names, is in
   folder — `missing_timetables.md` lists every document still wanted, with
   links; the scripts that collected and read everything here
   are in `scripts/zone_pdf_validation/`.
+
+```{r stop-section, child = "pdf_validation_stops.Rmd", eval = exists("stop_check_path") && !is.null(stop_check_path)}
+```
 
 ## Notes on each document
 

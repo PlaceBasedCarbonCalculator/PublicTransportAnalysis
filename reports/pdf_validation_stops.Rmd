@@ -1,0 +1,235 @@
+```{r stops-setup}
+sc <- readRDS(stop_check_path)
+st_routes <- sc$routes
+st_checks <- sc$checks
+fmt <- function(x, d = 0) formatC(x, format = "f", digits = d, big.mark = ",")
+fmed <- function(x) { x <- x[is.finite(x)]; if (length(x)) median(x) else NA_real_ }
+ratio_txt <- function(x) ifelse(is.na(x) | !is.finite(x), "—", sprintf("%.2f", x))
+dis <- st_routes[disagree == TRUE]
+n_case <- uniqueN(dis$case_stop)
+n_route <- nrow(unique(dis[, .(area, route)]))
+ch <- st_checks[chosen == TRUE]
+ch <- merge(ch, st_routes[, .(case_stop, route, stop_name, area, disagree)],
+            by = c("case_stop", "route"))
+ch <- ch[disagree == TRUE]
+# one row per area, route and reading place: the case stops of a hub share it
+chu <- ch[, .SD[1], by = .(area, route, document, read_at)]
+# an Arriva timetable is six HTML pages (three day types, two directions)
+n_docs <- uniqueN(sub("_(MF|Sa|Su)_(in|out)\\.html$", "",
+                      unlist(strsplit(ch$document, "; "))))
+n_rel <- nrow(unique(chu[reliable == TRUE, .(area, route)]))
+n_force <- nrow(unique(chu[reliable == TRUE & edition_status == "in force", .(area, route)]))
+```
+
+## The stops where TNDS and BODS GTFS disagree most
+
+*Built by the pipeline: `stop_pdf_check()` in `R/stop_pdf_validation.R` counts
+the feeds, from the readings in `data/stop_pdf_documents.csv`, which
+`scripts/stop_pdf_validation/read_docs.py` takes from the documents. When the
+feeds, the conversion or the case list change, this section changes with
+them.*
+
+`stop_disagreement.md` ranks the stops where the two feeds disagree most and
+draws the routes through each; it says what the feeds contain, not which is
+right. This section asks the operators' timetables. It takes every route at
+those `r n_case` case stops on which the feeds disagree, at the stop and its
+neighbours within `r sc$radius_m` m, by at least `r sc$min_week` journeys a
+week and `r round(100 * sc$min_share)`% of the larger: **`r n_route` routes**.
+`r n_rel` of them have a reliable reading from `r n_docs` documents;
+`r n_force` of those readings are from an edition **in force over the
+window**.
+
+**How a document is read.** Documents print timing points, and most case
+stops are not one. Each reading names a place: the case stop, or the nearest
+timing point every route through it prints (Hull Interchange, for two stops
+1.3 km east of it), with a radius. A journey is counted once if it calls
+anywhere there, in the document and in each feed alike, so the two sides
+count the same thing. Readings carried over from the zone checks below were
+taken over a whole zone, and for those the feeds are counted over the same
+zone.
+
+**Which edition.** Operators publish the current edition and few keep old
+ones. The window is 27 July – 9 August 2026; it is now November.
+
+* *In force*: the Go-Ahead group's archive (Brighton & Hove, Metrobus, East
+  Yorkshire, Go North East) keeps every edition, and the one picked is the
+  latest dated on or before the window with none starting inside it. Three
+  NXWM summer editions (6, 50, 74) were collected in July.
+* *Later edition*: First, National Express West Midlands, Stagecoach and
+  Arriva serve only their current timetable. Arriva publishes no PDFs at all:
+  its timetables are web pages, one operating date and direction at a time,
+  saved whole as HTML (`scripts/stop_pdf_validation/arriva_dl.py`) and read
+  the same way, row by row and journey by journey. First's API takes a date but no
+  longer answers for an edition that has ended. These are 30 August to
+  2 November editions. They cannot settle a difference of a few journeys,
+  but they can settle a factor of two: timetables are not halved or doubled
+  between editions, and where they were, the feeds of the later period show
+  it.
+* *Earlier edition*: the newest a site still offers, dated before the window.
+
+**Window and day.** `stop_disagreement.md` found Chelmsford's TNDS stopping
+part way through the window. A source that stops reads short over the window
+and right on a day before it stops, so each check is made twice: per-day
+means over the window, and the single day (Tuesday 28 July) against the
+document's Monday–Friday column.
+
+A source is **right** within `r round(100 * sc$tol)`% of the document,
+*absent* when it carries nothing; "neither" names the nearer.
+
+```{r stops-tally}
+tally <- function(v) {
+  t <- chu[reliable == TRUE, .N, by = .(v = fcoalesce(get(v), "no verdict (no weekday service in the document)"))][order(-N)]
+  setNames(t, c("Verdict", "Routes"))
+}
+tw <- tally("verdict"); td <- tally("verdict_day")
+tt <- merge(tw, td, by = "Verdict", all = TRUE, suffixes = c(" (window)", " (day)"))
+tt[is.na(tt)] <- 0
+setorder(tt, -`Routes (window)`)
+knitr::kable(tt)
+```
+
+```{r stops-codes}
+# Routes that disagree at the case stop but agree with the document at the
+# reading place: the place is wider than the 100 m round the case stop, so
+# the two feeds carry the same journeys and file them under different stops.
+codes <- chu[reliable == TRUE & verdict == "both agree" & verdict_day == "both agree"]
+codes_by <- codes[, .(n = .N, routes = paste(sort(unique(route)), collapse = ", ")), by = area]
+codes_txt <- if (nrow(codes)) sprintf(paste0(
+  "**%d routes are a stop-code difference, not a timetable one.** They ",
+  "disagree at the case stop, yet both feeds match the document where it is ",
+  "read, over the window and on the day: %s. The buses are the same; the ",
+  "sources file them under different stop codes within a few hundred metres, ",
+  "which is what stop_disagreement.md found for several of its one-source ",
+  "stops. No timetable can say which code is right; NaPTAN can."),
+  nrow(codes), paste(sprintf("%s (%s)", codes_by$area, codes_by$routes),
+                     collapse = "; ")) else ""
+```
+
+`r codes_txt`
+
+### Area by area
+
+```{r stops-area}
+area_sum <- chu[reliable == TRUE, .(
+  Routes = .N,
+  `In force` = sum(edition_status == "in force"),
+  `TNDS ÷ doc, median` = sprintf("%.2f", fmed(tnds_ratio)),
+  `BODS ÷ doc, median` = sprintf("%.2f", fmed(bods_ratio)),
+  `TNDS ÷ doc, day` = sprintf("%.2f", fmed(tnds_day_ratio)),
+  `BODS ÷ doc, day` = sprintf("%.2f", fmed(bods_day_ratio)),
+  `TNDS right (window/day)` = sprintf("%d / %d", sum(grepl("^TNDS right|both", verdict)),
+                                      sum(grepl("^TNDS right|both", verdict_day))),
+  `BODS right (window/day)` = sprintf("%d / %d", sum(grepl("^BODS GTFS right|both", verdict)),
+                                      sum(grepl("^BODS GTFS right|both", verdict_day)))),
+  by = .(Area = area)]
+setorder(area_sum, -Routes)
+knitr::kable(area_sum, align = "lrrrrrrrr")
+```
+
+```{r stops-findings, results = "asis"}
+# Generated from the table above by fixed rules, so it follows the data.
+# Twice-the-timetable is the duplicate signature (bods_gtfs duplicates in
+# near_duplicate_journeys.md); about half over the window but right on the day
+# is the cut-off signature.
+for (a in area_sum$Area) {
+  x <- chu[reliable == TRUE & area == a]
+  mt <- fmed(x$tnds_ratio); mb <- fmed(x$bods_ratio)
+  dt <- fmed(x$tnds_day_ratio); db <- fmed(x$bods_day_ratio)
+  say <- character(0)
+  if (all(x$tnds_ratio == 0)) say <- c(say, "TNDS carries none of these routes here")
+  if (all(x$bods_ratio == 0)) say <- c(say, "BODS GTFS carries none of these routes here")
+  if (isTRUE(mb >= 1.4 && abs(mt - 1) <= 0.15))
+    say <- c(say, sprintf("BODS GTFS runs %.1f times the timetable while TNDS matches it: extra journeys in BODS GTFS, the pattern of duplicated registrations", mb))
+  if (isTRUE(mt <= 0.7 && abs(dt - 1) <= 0.2))
+    say <- c(say, sprintf("TNDS reads %.2f of the timetable over the window but %.2f on the day: it stops part way through the window, not a different timetable", mt, dt))
+  if (isTRUE(mb >= 1.4 && db >= 1.4 && !(abs(mt - 1) <= 0.15)))
+    say <- c(say, sprintf("BODS GTFS is %.1f times the document on the day as well as over the window (%.1f)", db, mb))
+  if (length(say) == 0)
+    say <- sprintf("median TNDS %.2f and BODS GTFS %.2f of the documents over the window", mt, mb)
+  ed <- if (all(x$edition_status == "in force")) "editions in force" else
+    if (any(x$edition_status == "in force")) "some editions in force, the rest later" else
+      "later editions only"
+  cat(sprintf("* **%s** (%d routes, %s): %s.\n", a, nrow(x), ed,
+              paste(say, collapse = "; ")))
+}
+```
+
+```{r stops-figure, fig.width = 9, fig.height = 5.5}
+library(ggplot2)
+pd <- rbind(chu[reliable == TRUE, .(area, route, edition_status, source = "TNDS", r = tnds_ratio)],
+            chu[reliable == TRUE, .(area, route, edition_status, source = "BODS GTFS", r = bods_ratio)])
+pd[, r := pmax(pmin(r, 4), 0.125)]
+pd[, ed := ifelse(edition_status == "in force", "edition in force", "other edition")]
+ggplot(pd, aes(r, reorder(area, r), colour = source, shape = ed)) +
+  annotate("rect", xmin = 1 - sc$tol, xmax = 1 + sc$tol, ymin = -Inf, ymax = Inf,
+           alpha = 0.12) +
+  geom_vline(xintercept = 1, colour = "grey40") +
+  geom_point(position = position_jitter(height = 0.18, width = 0, seed = 1),
+             size = 2.2, alpha = 0.8) +
+  scale_x_log10(breaks = c(0.125, 0.25, 0.5, 1, 2, 4),
+                labels = c("≤⅛", "¼", "½", "1", "2", "≥4")) +
+  scale_colour_manual(values = c(TNDS = "#1b6ca8", `BODS GTFS` = "#c2571a")) +
+  scale_shape_manual(values = c(`edition in force` = 16, `other edition` = 1)) +
+  labs(x = "Journeys in the feed ÷ journeys in the document (window, per day type)",
+       y = NULL, colour = NULL, shape = NULL,
+       title = "Each route through a case stop, against its timetable",
+       subtitle = "Shaded: within the tolerance. A source carrying none of a route sits at the left edge.") +
+  theme_minimal(base_size = 11) + theme(legend.position = "bottom")
+```
+
+### Every reading
+
+`Read at` is the document's own row label. Ratios are feed ÷ document: over
+the window, from per-day means by day type; and on the single day, against
+the Monday–Friday column. A route read at several case stops of one place is
+shown once.
+
+```{r stops-table}
+tab <- chu[order(area, route), .(
+  Area = area, Route = route,
+  Document = sub("; .*", " …", document),
+  Edition = paste(edition_from, sprintf("(%s)", edition_status)),
+  `Read at` = substr(sub(";.*", "", read_at), 1, 32),
+  `Doc MF/Sa/Su` = sprintf("%s/%s/%s", fmt(doc_MF), fmt(doc_Sa), fmt(doc_Su)),
+  `TNDS MF` = fmt(at_tnds_MF, 1), `BODS MF` = fmt(at_bods_gtfs_MF, 1),
+  `T÷doc` = ratio_txt(tnds_ratio), `B÷doc` = ratio_txt(bods_ratio),
+  `T÷doc day` = ratio_txt(tnds_day_ratio), `B÷doc day` = ratio_txt(bods_day_ratio),
+  Verdict = ifelse(reliable, verdict, "reading unreliable"),
+  `Verdict, day` = ifelse(reliable, verdict_day, "—"))]
+knitr::kable(tab)
+```
+
+### Routes still needing a document
+
+Every disagreeing route at a case stop without a reliable reading, and every
+one whose only reading is from an edition not in force. The bustimes.org link
+is the case stop's page, which lists the services there and links each to
+its operator. bustimes.org is not itself a referee: it is built from the same
+operator TransXChange as BODS and shows only current and future timetables.
+
+```{r stops-missing}
+have <- unique(ch[reliable == TRUE, .(case_stop, route, edition_status)])
+need <- merge(dis[, .(case_stop, stop_name, area, route, operators,
+                      tnds_MF, bods_gtfs_MF)],
+              have, by = c("case_stop", "route"), all.x = TRUE)
+need[, why := fcase(is.na(edition_status), "no reliable reading",
+                    edition_status != "in force", "only a later or earlier edition",
+                    default = NA_character_)]
+need <- need[!is.na(why)]
+nd <- need[, .(`Case stops` = paste(unique(sprintf("[%s](https://bustimes.org/stops/%s)",
+                                                   stop_name, case_stop)), collapse = ", "),
+               Operator = paste(unique(unlist(strsplit(operators, " / "))), collapse = " / "),
+               `TNDS MF` = fmt(max(tnds_MF), 1), `BODS MF` = fmt(max(bods_gtfs_MF), 1),
+               Needed = why[1]),
+           by = .(Area = area, Route = route)]
+nd[, Needed := factor(Needed, c("no reliable reading",
+                                "only a later or earlier edition"))]
+setorder(nd, Needed, Area, Route)
+cat_n <- nd[, .N, by = Needed]
+```
+
+`r paste(sprintf("%d %s", cat_n$N, cat_n$Needed), collapse = "; ")`.
+
+```{r stops-missing-table}
+knitr::kable(nd)
+```

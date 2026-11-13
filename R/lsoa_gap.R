@@ -209,7 +209,7 @@ feed_stops_in_zones <- function(gtfs, zones) {
 #'   dup = duplicate runs per zone, daily = zone x date trip-days)
 zone_route_runs <- function(gtfs, zones, win, route_types = 3L) {
   sz <- feed_stops_in_zones(gtfs, zones)
-  runs <- trip_runs_in_window(gtfs)
+  runs <- trip_runs_in_window(gtfs, win)
 
   routes <- data.table::as.data.table(as.data.frame(gtfs$routes))
   routes <- routes[route_type %in% as.integer(route_types)]

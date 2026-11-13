@@ -767,7 +767,7 @@ feed_route_departures <- function(gtfs, short_name, operator, win,
 
   trimmed <- UK2GTFS::gtfs_trim_dates(gtfs, startdate = win$startdate,
                                       enddate = win$enddate)
-  runs <- trip_runs_in_window(trimmed)
+  runs <- trip_runs_in_window(trimmed, win)
   trips <- data.table::as.data.table(as.data.frame(trimmed$trips))
   trips[, `:=`(trip_id = as.character(trip_id), route_id = as.character(route_id))]
   trips <- trips[route_id %in% ids, list(trip_id, route_id)]
@@ -876,10 +876,15 @@ validate_published_timetables <- function(..., cfg = load_cfg()) {
 }
 
 #' Knit the validation report to markdown
-render_validation_report <- function(validation_path, cfg = load_cfg()) {
+render_validation_report <- function(validation_path, stop_check_path = NULL,
+                                     rmd = NULL, cfg = load_cfg()) {
   dir.create(cfg$report_dir, showWarnings = FALSE, recursive = TRUE)
   env <- new.env(parent = globalenv())
   env$validation_path <- normalizePath(validation_path)
+  # The stop-level section (reports/pdf_validation_stops.Rmd) is knitted only
+  # when the stop check is passed in. `rmd` is unused: it is the report's
+  # source files, passed so that editing them rebuilds the report.
+  env$stop_check_path <- if (!is.null(stop_check_path)) normalizePath(stop_check_path)
   old_wd <- setwd(cfg$report_dir)
   on.exit(setwd(old_wd), add = TRUE)
   knitr::knit(input = "pdf_validation.Rmd", output = "pdf_validation.md",
