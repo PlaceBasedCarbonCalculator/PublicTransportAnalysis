@@ -69,6 +69,7 @@ HUBS = {
     # the case stop) and Durham Bus Station (177 m from Millburngate)
     'STEV': (['210021200945'], '210021200945', 250, None,
              r'(Bus Station|Railway Station|Interchange)[^,]*, Stevenage$', None),
+    'GATWICK': (['4400CY0389'], '4400CY0389', 200, None, r'North Terminal', None),
     'DUR': (['13005999D'], '13005999D', 250, None,
             r'(Bus Station|Millburngate)[^,]*, Durham$', None),
 }
@@ -159,6 +160,41 @@ READS.append(('REGENT', 'Q3X', ex('gonortheast_GNE_Q3-timetable-20260719-9bd7f95
               {'routes': ['Q3X']}))
 # Keighley: Transdev's archive stops in 2023
 READS.append(('KEIGHLEY', 'K7', ex('transdevblazefield_KDT_K7-timetable-20230903-9581cd03.pdf'), {}))
+# Sheffield: Travel South Yorkshire sheets. Each table is headed by its route
+# numbers, a glyph and the day ("SC1 <glyph> Saturday"); one sheet can hold
+# several routes (SC1 and SC2), and bold headings can come out with every
+# letter doubled ("MMoonnddaayy"). So the day patterns are built per route:
+# the route's own headings get its day type, any other route's heading the
+# uncounted code 'X', which also keeps that route's tables from being read as
+# the previous heading's. The 95/95s sheet (29 August 2026) is held but not
+# read: its Sheffield Interchange rows print symbols, not times.
+def tfsy_days(route):
+    mf = r'm+o+n+d+a+y+\W+t+o+\W+f+r+i+d+a+y+'
+    sa = r's+a+t+u+r+d+a+y+'
+    su = r's+u+n+d+a+y+'
+    own = r'^%s(?![a-z0-9])[^a-z]*' % re.escape(route.lower())
+    other = r'^[a-z]*\d+[a-z]*(?![a-z0-9])[^a-z]*'
+    return [('MF', own + mf), ('Sa', own + sa), ('Su', own + su),
+            ('X', other + '(' + mf + '|' + sa + '|' + su + ')')]
+
+
+for r, f, ed in [('181', '181-Sheffield-valid-from-24-July-2023-(PDF-360kb).pdf', '2023-07-24'),
+                 ('SC1', 'SC1-SC2-Sheffield-valid-from-17-November-2024-(PDF-541kb).pdf', '2024-11-17'),
+                 ('SC2', 'SC1-SC2-Sheffield-valid-from-17-November-2024-(PDF-541kb).pdf', '2024-11-17')]:
+    READS.append(('SHEF', r, ex(f), {'day_extra': tfsy_days(r), 'edition': ed}))
+# Hull: Stagecoach editions of 6 September 2026 ("060926" in the file name);
+# the current XGAO015 sheet prints no Interchange row for the 14. The 7/8
+# sheet (Hu_007 008 060926.pdf) is held but not read: the 7 and 8 run through
+# at Hull Interchange ("continues as service 8") and the 8 is printed with
+# its 8C short workings, so its journeys at the Interchange cannot be counted
+# by route without guessing how the feeds file the 8C.
+for r, f in [('14', 'Hu_014 016 060926.pdf')]:
+    READS.append(('HULL', r, ex(f), {'routes': [r], 'edition': '2026-09-06'}))
+# Gatwick Hoppa: the operator's Ticketer widget, for Tuesday 28 July 2026
+# (ticketer_dl.py). Weekday only: the portal's firewall refused the weekend.
+READS.append(('GATWICK', 'GH1', {'MF': os.path.join(EX, 'gatwickhoppa', 'GH1_MF.html')},
+              {'format': 'ticketer', 'edition': '2026-07-28', 'in_force': True}))
+
 # Arriva: HTML timetables, one file per day type and direction, saved by
 # arriva_dl.py (no PDFs are published). Current editions only.
 ARR = os.path.join(EX, 'arriva')
@@ -288,7 +324,38 @@ def read_arriva(files, pat, excl, routes=None):
     return per.get('MF', 0), per.get('Sa', 0), per.get('Su', 0), quals, labs, ok
 
 
+def read_ticketer(files, pat, excl):
+    """Journeys per day type at rows matching `pat` in a Ticketer widget
+    timetable. The day is split into groups (<tbody>) of up to 15 journeys
+    that repeat the stop list; a journey is a column within its group."""
+    import html as H
+    rp = re.compile(pat)
+    per, labs = {}, set()
+    for day, f in files.items():
+        s = open(f, encoding='utf-8', errors='ignore').read()
+        n = 0
+        for body in re.findall(r'<tbody[^>]*>(.*?)</tbody>', s, re.S):
+            cols = set()
+            for tr in re.findall(r'<tr[^>]*>(.*?)</tr>', body, re.S):
+                m = re.search(r'th-text.*?</span>\s*([^<]+)</a>', tr, re.S)
+                if not m:
+                    continue
+                lab = H.unescape(m.group(1)).strip()
+                if not rp.search(lab):
+                    continue
+                labs.add(lab)
+                tds = re.findall(r'<td[^>]*>\s*([^<]*?)\s*</td>', tr)
+                cols |= {j for j, x in enumerate(tds) if re.match(r'\d{1,2}:\d{2}', x)}
+            n += len(cols)
+        per[day] = n
+    if not labs:
+        return None, None, None, set(), labs, False
+    return per.get('MF'), per.get('Sa'), per.get('Su'), set(), labs, True
+
+
 def read_one(files, pat, excl, opt):
+    if opt.get('format') == 'ticketer':
+        return read_ticketer(files, pat, excl)
     if opt.get('format') == 'arriva':
         return read_arriva(files, pat, excl, opt.get('routes'))
     per, quals, labs = {}, set(), set()
@@ -352,6 +419,25 @@ def zone_rows():
     return out
 
 
+def notice_rows():
+    """Readings from an operator's own notice rather than a timetable.
+
+    Gatwick Hoppa's GH1 page (saved as "Gatwick Hoppa LTD _ GH1.htm"): "New
+    updated timetable will go live 23rd May 2026 ... just the GH1 route". The
+    GH2 is withdrawn from before the window, so its timetable is zero
+    journeys; both feeds still carry it. The widget has no GH2 for July."""
+    out = []
+    for cs in HUBS['GATWICK'][0]:
+        out.append(dict(case_stop=cs, route='GH2',
+                        document='Gatwick Hoppa LTD _ GH1.htm (service notice)',
+                        edition_from='2026-05-23', edition_status='in force',
+                        read_at='operator notice: just the GH1 route from 23 May 2026',
+                        read_centre=HUBS['GATWICK'][1], read_radius_m=HUBS['GATWICK'][2],
+                        read_name='', read_zone='', MF=0, Sa=0, Su=0,
+                        basis='operator notice', reliable=True, note='withdrawn'))
+    return out
+
+
 def main(show=None):
     rows = []
     for hub, route, files, opt in READS:
@@ -364,7 +450,7 @@ def main(show=None):
         path = list(files.values())[0]
         ed = opt.get('edition') or edition_of(path)
         arch = (bool(re.search(r'-timetable-\d{8}-', os.path.basename(path))) or
-                os.path.basename(path) in COLLECTED_IN_WINDOW)
+                os.path.basename(path) in COLLECTED_IN_WINDOW or bool(opt.get('in_force')))
         doc = '; '.join(sorted(os.path.basename(p) for p in files.values()))
         print(hub, route, doc[:50], 'MF', mf, 'Sa', sa, 'Su', su, ed, sorted(quals)[:2],
               '| rows:', '; '.join(sorted(labs))[:120], flush=True)
@@ -372,14 +458,15 @@ def main(show=None):
             continue
         for cs in cases:
             rows.append(dict(case_stop=cs, route=route, document=doc, edition_from=ed,
-                             edition_status=edition_status(ed, arch),
+                             edition_status=('in force' if opt.get('in_force')
+                                             else edition_status(ed, arch)),
                              read_at='; '.join(sorted(labs))[:200], read_centre=centre,
                              read_radius_m=radius, read_name=fname or '', read_zone='', MF=round(mf, 2), Sa=sa, Su=su,
                              basis='expanded' if any('expanded' in q for q in quals) else 'explicit',
                              reliable=ok, note='; '.join(sorted(quals))[:200]))
     if show:
         return
-    rows += zone_rows()
+    rows += zone_rows() + notice_rows()
     cols = ['case_stop', 'route', 'document', 'edition_from', 'edition_status', 'read_at',
             'read_centre', 'read_radius_m', 'read_name', 'read_zone', 'MF', 'Sa', 'Su', 'basis',
             'reliable', 'note']

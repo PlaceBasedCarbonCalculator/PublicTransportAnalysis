@@ -222,6 +222,12 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 41000008REGE,Q3X,gonortheast_GNE_Q3-timetable-20260719-9bd7f957.pdf,2026-07-19,in force,Regent Centre Metro stand A; Regent Centre Metro stand E,410000060407,400,,,14,0,0,explicit,True,
 41000008REGB,Q3X,gonortheast_GNE_Q3-timetable-20260719-9bd7f957.pdf,2026-07-19,in force,Regent Centre Metro stand A; Regent Centre Metro stand E,410000060407,400,,,14,0,0,explicit,True,
 450026807,K7,transdevblazefield_KDT_K7-timetable-20230903-9581cd03.pdf,2023-09-03,in force,Keighley bus station; Keighley bus station mins 25 37 49 01 13; Keighley bus station stand K,450026807,200,,,0,0,0,explicit,False,gap-without-zone-times:every mins 12 12 19 24 31 43 3
+370070005,181,181-Sheffield-valid-from-24-July-2023-(PDF-360kb).pdf,2023-07-24,earlier edition,"Sheffield, Interchange",370070005,150,,,5,0,0,explicit,True,
+370070005,SC1,SC1-SC2-Sheffield-valid-from-17-November-2024-(PDF-541kb).pdf,2024-11-17,earlier edition,"Sheffield, Interchange",370070005,150,,,110,110,65,explicit,True,
+370070005,SC2,SC1-SC2-Sheffield-valid-from-17-November-2024-(PDF-541kb).pdf,2024-11-17,earlier edition,"Sheffield, Interchange",370070005,150,,,50,50,34,explicit,True,
+2290YHA00295,14,Hu_014 016 060926.pdf,2026-09-06,later edition,Hull Interchange; Hull Interchange Bay 27; Hull Interchange Bay 33,2290YHA01551,150,Interchange,,58,35,29,explicit,True,
+2290YHA00296,14,Hu_014 016 060926.pdf,2026-09-06,later edition,Hull Interchange; Hull Interchange Bay 27; Hull Interchange Bay 33,2290YHA01551,150,Interchange,,58,35,29,explicit,True,
+4400CY0389,GH1,GH1_MF.html,2026-07-28,in force,North Terminal Bus Station,4400CY0389,200,,,79,,,explicit,True,
 410000060407,43,NMS_BH_43_MF_in.html; NMS_BH_43_MF_out.html; NMS_BH_43_Sa_in.html; NMS_BH_43_Sa_out.html; NMS_BH_43_Su_in.html; NMS_BH_43_Su_out.html,2026-11-17,later edition,"Interchange (Stand B), Regent Centre; Interchange (Stand E), Regent Centre",410000060407,400,,,105,93,54,explicit,True,
 410000060406,43,NMS_BH_43_MF_in.html; NMS_BH_43_MF_out.html; NMS_BH_43_Sa_in.html; NMS_BH_43_Sa_out.html; NMS_BH_43_Su_in.html; NMS_BH_43_Su_out.html,2026-11-17,later edition,"Interchange (Stand B), Regent Centre; Interchange (Stand E), Regent Centre",410000060407,400,,,105,93,54,explicit,True,
 41000008REGE,43,NMS_BH_43_MF_in.html; NMS_BH_43_MF_out.html; NMS_BH_43_Sa_in.html; NMS_BH_43_Sa_out.html; NMS_BH_43_Su_in.html; NMS_BH_43_Su_out.html,2026-11-17,later edition,"Interchange (Stand B), Regent Centre; Interchange (Stand E), Regent Centre",410000060407,400,,,105,93,54,explicit,True,
@@ -328,3 +334,4 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 1500IM2089,336,first_essex_336_mf.pdf; first_essex_336_sa.pdf; first_essex_336_su.pdf,2026-08-31,later edition,zone E01034092 (same journeys as E01034091),,,,E01034092,42,27,13,zone check,True,
 1500AA160,351,first_essex_351_mf.pdf; first_essex_351_sa.pdf; first_essex_351_su.pdf,2026-08-31,later edition,zone E01034092 (same journeys as E01034091),,,,E01034092,35,25,11,zone check,True,
 1500IM2089,351,first_essex_351_mf.pdf; first_essex_351_sa.pdf; first_essex_351_su.pdf,2026-08-31,later edition,zone E01034092 (same journeys as E01034091),,,,E01034092,35,25,11,zone check,True,
+4400CY0389,GH2,Gatwick Hoppa LTD _ GH1.htm (service notice),2026-05-23,in force,operator notice: just the GH1 route from 23 May 2026,4400CY0389,200,,,0,0,0,operator notice,True,withdrawn

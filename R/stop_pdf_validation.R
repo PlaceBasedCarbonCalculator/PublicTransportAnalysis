@@ -155,6 +155,12 @@ stop_pdf_check <- function(gap_path, freq_paths, docs_path,
   checks[, doc_week := week_journeys(doc_MF, doc_Sa, doc_Su)]
   checks[, `:=`(tnds_ratio = at_tnds_week / doc_week,
                 bods_ratio = at_bods_gtfs_week / doc_week)]
+  # A document printing no journeys (a route withdrawn before the window, as
+  # an operator's notice can say) makes a source right only if it carries
+  # none either; any journeys in the feed are infinitely far off.
+  zero_ratio <- function(feed) ifelse(feed == 0, 1, Inf)
+  checks[doc_week == 0, `:=`(tnds_ratio = zero_ratio(at_tnds_week),
+                             bods_ratio = zero_ratio(at_bods_gtfs_week))]
   checks[, verdict := stop_doc_verdict(tnds_ratio, bods_ratio, tol)]
   # The same on the single day against the document's weekday column. A
   # source that stops part way through the window reads short over the
@@ -163,6 +169,8 @@ stop_pdf_check <- function(gap_path, freq_paths, docs_path,
   # weekday (stop_gap_day()), so it is compared with the Monday-Friday count.
   checks[, `:=`(tnds_day_ratio = at_tnds_day / doc_MF,
                 bods_day_ratio = at_bods_gtfs_day / doc_MF)]
+  checks[doc_MF == 0, `:=`(tnds_day_ratio = zero_ratio(at_tnds_day),
+                           bods_day_ratio = zero_ratio(at_bods_gtfs_day))]
   checks[, verdict_day := stop_doc_verdict(tnds_day_ratio, bods_day_ratio, tol)]
   checks[reliable == FALSE, `:=`(verdict = NA_character_, verdict_day = NA_character_)]
   checks[, chosen := stop_doc_rank(edition_status, edition_from, win, reliable) ==
@@ -238,7 +246,7 @@ stop_doc_verdict <- function(rt, rb, tol = 0.15) {
   ok_b <- !is.na(rb) & abs(rb - 1) <= tol
   dist <- function(r) abs(log(pmax(r, 1e-3)))
   data.table::fcase(
-    is.na(rt) | is.na(rb) | !is.finite(rt) | !is.finite(rb), NA_character_,
+    is.na(rt) | is.na(rb), NA_character_,
     ok_t & ok_b, "both agree",
     ok_t & rb == 0, "TNDS right; BODS GTFS absent",
     ok_b & rt == 0, "BODS GTFS right; TNDS absent",
