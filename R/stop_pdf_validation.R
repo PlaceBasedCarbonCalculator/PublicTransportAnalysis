@@ -98,11 +98,20 @@ stops_near <- function(tt, centre_id, radius_m, name_regex = NULL, gap = NULL) {
 #' @return path of data/stop_pdf_validation.Rds
 stop_pdf_check <- function(gap_path, freq_paths, docs_path,
                            out_path = "data/stop_pdf_validation.Rds",
-                           min_week = 20, min_share = 0.1, tol = 0.15) {
+                           min_week = 20, min_share = 0.1, tol = 0.15,
+                           win = NULL, day = NULL) {
   gap <- readRDS(gap_path)
+  # A second snapshot (stop_check_snapshots()) reuses July's case stops but
+  # counts its own window, and re-decides which edition is in force there.
+  restatus <- !is.null(win)
+  if (restatus) {
+    gap$window <- win
+    gap$day <- day
+  }
   win <- gap$window
   ids <- unique(gap$cases$stop_id)
   docs <- read_stop_documents(docs_path)
+  if (restatus) docs[, edition_status := stop_doc_status(docs, win)]
   places <- unique(docs[, list(read_centre, read_radius_m, read_name, read_zone)])
   places[, place := seq_len(.N)]
   docs <- merge(docs, places, by = c("read_centre", "read_radius_m", "read_name",
@@ -155,6 +164,19 @@ stop_pdf_check <- function(gap_path, freq_paths, docs_path,
   checks[, doc_week := week_journeys(doc_MF, doc_Sa, doc_Su)]
   checks[, `:=`(tnds_ratio = at_tnds_week / doc_week,
                 bods_ratio = at_bods_gtfs_week / doc_week)]
+  # any further feed (BODS TransXChange through UK2GTFS, a combined feed) is
+  # measured the same way but takes no part in the two-source verdict
+  extra <- setdiff(names(freq_paths), c("tnds", "bods_gtfs"))
+  for (src in extra) {
+    wk <- checks[[paste0("at_", src, "_week")]]
+    dy <- checks[[paste0("at_", src, "_day")]]
+    data.table::set(checks, j = paste0(src, "_ratio"),
+                    value = ifelse(checks$doc_week == 0, ifelse(wk == 0, 1, Inf),
+                                   wk / checks$doc_week))
+    data.table::set(checks, j = paste0(src, "_day_ratio"),
+                    value = ifelse(checks$doc_MF == 0, ifelse(dy == 0, 1, Inf),
+                                   dy / checks$doc_MF))
+  }
   # A document printing no journeys (a route withdrawn before the window, as
   # an operator's notice can say) makes a source right only if it carries
   # none either; any journeys in the feed are infinitely far off.
@@ -222,6 +244,57 @@ stop_doc_rank <- function(status, from, win, reliable) {
   base + ifelse(status == "in force", 0, d) + ifelse(reliable, 0, 1e5)
 }
 
+#' Which edition of each document is in force over another window
+#'
+#' read_docs.py decides edition status for the July window. For another
+#' window it is re-decided from the edition date and when the file was
+#' collected:
+#'
+#'  * dated after the window: a later edition; inside it: changed in window;
+#'  * otherwise, of the documents held for a case stop and route, only the
+#'    latest edition dated on or before the window start can be in force, and
+#'    only if it was collected no more than `fresh_days` before the window -
+#'    a timetable taken from an operator's current site, or Go-Ahead's
+#'    every-edition bucket, then shows what was running. An older collection
+#'    is an "earlier edition": something may have replaced it since.
+#'
+#' The collection date is the file's modification time in `doc_dir`, which
+#' the downloads set (the July collection, 4 October, 13 November).
+stop_doc_status <- function(docs, win, doc_dir = "data/example_timetables",
+                            fresh_days = 60) {
+  w0 <- as.Date(win$startdate); w1 <- as.Date(win$enddate)
+  ed <- suppressWarnings(as.Date(docs$edition_from))
+  first <- trimws(sub(";.*", "", sub(" [(].*", "", docs$document)))
+  f <- file.path(doc_dir, first)
+  f2 <- file.path(doc_dir, "arriva", first)
+  f <- ifelse(file.exists(f), f, f2)
+  collected <- as.Date(file.info(f)$mtime)
+  st <- data.table::fcase(is.na(ed), "unknown edition",
+                          ed > w1, "later edition",
+                          ed > w0, "changed in window",
+                          default = "candidate")
+  d <- data.table::data.table(k = paste(docs$case_stop, docs$route), ed, st, collected)
+  # An archive edition is also superseded by a later edition held on disk
+  # that gave no reading (East Yorkshire's 6 September 2026 56 and 57 are
+  # images without text): same operator prefix and route, dated on or before
+  # the window start.
+  held <- list.files(doc_dir, pattern = "-timetable-\\d{8}-")
+  held_stem <- sub("-timetable-\\d{8}-.*$", "", held)
+  held_ed <- as.Date(sub("^.*-timetable-(\\d{8})-.*$", "\\1", held), "%Y%m%d")
+  arch <- grepl("-timetable-\\d{8}-", first)
+  stem <- sub("-timetable-\\d{8}-.*$", "", first)
+  newer <- vapply(seq_along(first), function(i) {
+    if (!arch[i] || is.na(ed[i])) return(FALSE)
+    any(held_stem == stem[i] & held_ed > ed[i] & held_ed <= w0)
+  }, logical(1))
+  d[newer & st == "candidate", st := "earlier edition"]
+  d[, latest := st == "candidate" & ed == max(ed[st == "candidate"]), by = k]
+  d[st == "candidate", st := data.table::fifelse(
+    latest & !is.na(collected) & collected >= w0 - fresh_days, "in force",
+    "earlier edition")]
+  d$st
+}
+
 #' The documents, as read by scripts/stop_pdf_validation/read_docs.py
 read_stop_documents <- function(path) {
   d <- data.table::fread(path, colClasses = list(
@@ -257,3 +330,27 @@ stop_doc_verdict <- function(rt, rb, tol = 0.15) {
     dist(rb) < dist(rt), "neither; BODS GTFS closer",
     default = "neither")
 }
+
+#' The November 2026 stop check
+#'
+#' Most documents in data/example_timetables were collected in October and
+#' November 2026 from operators' current sites, so they are later editions
+#' against the July window and cannot say whether a July feed is right. The
+#' November snapshots (11 November: TNDS, the DfT's BODS GTFS and the BODS
+#' TransXChange archive) are counted over the window that opens the Monday
+#' after, which those documents are in force for.
+#'
+#' Three feeds, not two: the BODS TransXChange archive converted by UK2GTFS
+#' is the same upstream data as the DfT's GTFS through a different converter,
+#' and the same converter as TNDS on different data, which is what separates
+#' a converter fault from a data fault (see validation_sources() for why the
+#' July check leaves it out).
+stop_check_snapshot_nov <- function() {
+  list(ref = "2026-11-16", snapshot_date = "2026-11-11",
+       tnds = "gtfs/tnds_20261111_merged.zip",
+       bods_gtfs = "OpenBusData/GTFS/20261111/itm_all_gtfs.zip",
+       bods_txc = "gtfs/bods_txc_20261111.zip")
+}
+
+#' The single weekday the November check also counts (Tuesday)
+stop_check_day_nov <- function() as.Date("2026-11-17")

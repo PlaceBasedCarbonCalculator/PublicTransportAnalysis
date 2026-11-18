@@ -1,0 +1,259 @@
+           used  (Mb) gc trigger   (Mb)  max used   (Mb)
+Ncells  1246474  66.6    3705556  197.9   4631945  247.4
+Vcells 15763277 120.3  240526080 1835.1 295854993 2257.2
+nodes 31851 
+         src     N
+      <char> <int>
+1:      tnds 11558
+2:  bods_txc  8863
+3: bods_gtfs 11430
+routes 12565 written data/route_subset/seed_routes.csv 
+                                              class     N
+                                             <char> <int>
+ 1:                                           agree  7269
+ 2: not in BODS TXC; BODS GTFS carries TNDS (L/S/W)  2153
+ 3:                   bods absent: no file in force  1197
+ 4:                   tnds absent: no file in force   686
+ 5:          agree; bods gtfs high (dft duplicates)   574
+ 6:                       bods txc low: raw smaller   164
+ 7:                      tnds low: filter candidate   159
+ 8:                           tnds low: raw smaller   146
+ 9:                  bods txc low: filter candidate   119
+10:                            agree; bods gtfs low    59
+11:  bods txc low: raw smaller but BODS GTFS has it    39
+                                              class  ease     n   gap
+                                             <char> <int> <int> <num>
+ 1: not in BODS TXC; BODS GTFS carries TNDS (L/S/W)     3   422 36370
+ 2: not in BODS TXC; BODS GTFS carries TNDS (L/S/W)     2   330 34846
+ 3: not in BODS TXC; BODS GTFS carries TNDS (L/S/W)     1   557 27855
+ 4:                   bods absent: no file in force     1   301 22890
+ 5:                   bods absent: no file in force     2   137 18893
+ 6:                   tnds absent: no file in force     2    55  3462
+ 7:                           tnds low: raw smaller     3    27  2607
+ 8:                   tnds absent: no file in force     1    82  2518
+ 9:                   bods absent: no file in force     3    25  2014
+10:                  bods txc low: filter candidate     3    27  1636
+11:                       bods txc low: raw smaller     2    28  1285
+12:                   tnds absent: no file in force     3    18  1055
+13:                       bods txc low: raw smaller     1    34  1009
+14:  bods txc low: raw smaller but BODS GTFS has it     1    10   856
+15:                  bods txc low: filter candidate     2    10   804
+16:                           tnds low: raw smaller     1    27   801
+17:                  bods txc low: filter candidate     1    19   707
+18:                      tnds low: filter candidate     2    16   684
+19:                           tnds low: raw smaller     2    13   650
+20:                      tnds low: filter candidate     1    23   554
+21:                       bods txc low: raw smaller     3    10   468
+22:  bods txc low: raw smaller but BODS GTFS has it     3    13   457
+23:                      tnds low: filter candidate     3     8   366
+24:          agree; bods gtfs high (dft duplicates)     1   249   132
+25:                            agree; bods gtfs low     1    17    24
+26:          agree; bods gtfs high (dft duplicates)     3   157    20
+27:          agree; bods gtfs high (dft duplicates)     2    28    11
+28:                            agree; bods gtfs low     3     7     2
+29:                                           agree     2     1     0
+                                              class  ease     n   gap
+    trips_diff
+         <num>
+ 1:      36370
+ 2:      34849
+ 3:      27856
+ 4:      23130
+ 5:      19086
+ 6:       3573
+ 7:       3122
+ 8:       2528
+ 9:       2674
+10:       1837
+11:       1300
+12:       1089
+13:       1009
+14:        900
+15:        804
+16:       1042
+17:       1497
+18:        722
+19:        863
+20:        561
+21:        468
+22:        457
+23:        384
+24:      40421
+25:        640
+26:      22936
+27:       5813
+28:        417
+29:         14
+    trips_diff
+                                        op     n   gap
+                                    <char> <int> <num>
+ 1:                               Metrobus    41  1892
+ 2:                            Bee Network    15   824
+ 3:                            trentbarton     4   559
+ 4:                      West Midlands Bus     8   339
+ 5:          LONDON UNITED BUSWAYS LIMITED     3   315
+ 6:      Stagecoach Cumbria and Lancashire     5   274
+ 7:                      ARRIVA North East     6   225
+ 8:                     Rotala Preston Bus     3   167
+ 9:                       Dartline Coaches     2   151
+10:                 Arriva Kent and Surrey     4   137
+11:                                Redline     6   109
+12:                                 Arriva     5   102
+13:                           Border Buses     6   100
+14:                               Hodgsons    10    92
+15:                Gateshead Central taxis     4    91
+16:                            Banga Buses     1    85
+17:                               more Bus     4    80
+18:                           Grant Palmer     1    59
+19:                        First Berkshire     1    50
+20:                              Centrebus     4    50
+21:                    Kempsford Transport     3    38
+22:                    Select Bus Services     3    36
+23:                 Stagecoach South Wales     1    35
+24:                                  First     5    34
+25:                        Liberty Coaches     2    32
+26:                         Salisbury Reds     2    31
+27:                              Red Eagle     4    31
+28:            Diamond Bus (West Midlands)    15    31
+29:                   Arriva West Midlands     1    29
+30:                    Stagecoach Midlands     3    29
+31:                         FALCON COACHES     1    26
+32:                              D & G Bus     3    26
+33:                        Brylaine Travel     3    25
+34:                         East Yorkshire     8    25
+35: Central Connect (formerly Konectbuses)     2    23
+36:                        Sargeants Bros.     1    23
+37:         Kirkby Lonsdale Coach Hire Ltd     3    22
+38:                           Arriva Derby     1    20
+39:                        Southern Vectis     4    17
+40:                       Arriva Yorkshire     2    17
+                                        op     n   gap
+      line                                operators
+    <char>                                   <char>
+ 1:     10                                 Metrobus
+ 2:    125 Stagecoach Cumbria and Lancashire ; Stag
+ 3:    100                                 Metrobus
+ 4:      2                                 Metrobus
+ 5:    IGO                              trentbarton
+ 6:     I4                              trentbarton
+ 7:    143                              Bee Network
+ 8:     20                                 Metrobus
+ 9:      3                                 Metrobus
+10:    406 LONDON UNITED BUSWAYS LIMITED ; FIRST CA
+11:    200                                 Metrobus
+12:      1                                 Metrobus
+13:     98                                 Metrobus
+14:     15                              trentbarton
+15:    117 LONDON UNITED BUSWAYS LIMITED ; London U
+16:    411 LONDON UNITED BUSWAYS LIMITED ; London U
+17:    400                                 Metrobus
+18:      5                                 Metrobus
+19:      4                                 Metrobus
+20:    E10                                 Metrobus
+21:     22 more Bus ; Bluestar ; Bluestar / morebus
+22:    101 Arriva Kent and Surrey ; Arriva Kent & S
+23:     35         Rotala Preston Bus ; Preston Bus
+24:     23                                 Metrobus
+25:    111                              Bee Network
+26:      7 First Berkshire ; First Berkshire & The 
+27:    410                                 Metrobus
+28:    101                              Bee Network
+29:    460                                 Metrobus
+30:    480                                 Metrobus
+31:     85                              Bee Network
+32:      8         Rotala Preston Bus ; Preston Bus
+33:    PR1              Dartline Coaches ; Dartline
+34:     31 Stagecoach Cumbria and Lancashire ; Metr
+35:    500                                 Metrobus
+36:     26                   Stagecoach South Wales
+37:     2A Stagecoach Cumbria and Lancashire ; Stag
+38:     61 West Midlands Bus ; National Express Wes
+39:    291                                 Metrobus
+40:    409                                 Metrobus
+      line                                operators
+                                             class  tnds bods_txc bods_gtfs
+                                            <char> <num>    <num>     <num>
+ 1:                 bods txc low: filter candidate   268        0       268
+ 2:                     tnds low: filter candidate     0      182       182
+ 3:                 bods txc low: filter candidate   143        0       143
+ 4:                 bods txc low: filter candidate   145        2       145
+ 5:                 bods txc low: filter candidate   214        0         0
+ 6:                 bods txc low: filter candidate   186        0         0
+ 7: bods txc low: raw smaller but BODS GTFS has it   435       69       435
+ 8:                 bods txc low: filter candidate   122        1       122
+ 9:                 bods txc low: filter candidate   106        1       106
+10:                 bods txc low: filter candidate   103        0       304
+11:                 bods txc low: filter candidate    84        0        84
+12:                 bods txc low: filter candidate    82        0        82
+13: bods txc low: raw smaller but BODS GTFS has it    92       11        92
+14:                 bods txc low: filter candidate   117        0         0
+15:                     tnds low: filter candidate   106      212       222
+16:                     tnds low: filter candidate   119      225       225
+17: bods txc low: raw smaller but BODS GTFS has it    66        2        66
+18: bods txc low: raw smaller but BODS GTFS has it    64        0        64
+19: bods txc low: raw smaller but BODS GTFS has it    64        0        64
+20:                 bods txc low: filter candidate    63        0        63
+21:                     tnds low: filter candidate    73      132       132
+22:                 bods txc low: filter candidate   155       74       155
+23:                     tnds low: filter candidate    84      164       164
+24:                 bods txc low: filter candidate    56        3        56
+25: bods txc low: raw smaller but BODS GTFS has it   153        0       153
+26:                     tnds low: filter candidate   104      154       172
+27: bods txc low: raw smaller but BODS GTFS has it    51        5        51
+28: bods txc low: raw smaller but BODS GTFS has it   128        0       128
+29:                 bods txc low: filter candidate    45        3        45
+30:                 bods txc low: filter candidate    40        0        40
+31: bods txc low: raw smaller but BODS GTFS has it   118        0       118
+32:                     tnds low: filter candidate    61      120       120
+33:                     tnds low: filter candidate   117      234       234
+34:                 bods txc low: filter candidate   189      151       151
+35:                 bods txc low: filter candidate    36        0        36
+36:                 bods txc low: filter candidate    69       34        69
+37:                 bods txc low: filter candidate    37        2         2
+38:                 bods txc low: filter candidate   279      180       360
+39:                 bods txc low: filter candidate    39        6        39
+40:                 bods txc low: filter candidate    39        6        39
+                                             class  tnds bods_txc bods_gtfs
+    tnds_raw_max bods_raw_max  ease    pdf
+           <int>        <int> <int> <lgcl>
+ 1:            0          268     3   TRUE
+ 2:          369          371     3  FALSE
+ 3:            0          143     3   TRUE
+ 4:            0          143     3  FALSE
+ 5:            0          619     2  FALSE
+ 6:            0          468     2  FALSE
+ 7:          957          383     1  FALSE
+ 8:            0          121     3  FALSE
+ 9:            0          108     3  FALSE
+10:          380          380     3  FALSE
+11:            0           84     3   TRUE
+12:            0           82     3  FALSE
+13:          225           92     3  FALSE
+14:            0          286     2  FALSE
+15:          281          281     2  FALSE
+16:          288          288     2  FALSE
+17:          158           66     3  FALSE
+18:          160           64     3  FALSE
+19:          160           64     3  FALSE
+20:            0           63     3  FALSE
+21:          612          140     3  FALSE
+22:            0          127     2  FALSE
+23:          175          164     2  FALSE
+24:            0           56     3  FALSE
+25:          363          153     1  FALSE
+26:          380          426     3  FALSE
+27:          116           53     3  FALSE
+28:          333          128     1  FALSE
+29:            0           45     3  FALSE
+30:            0           44     3  FALSE
+31:          295          118     1  FALSE
+32:          139          120     2  FALSE
+33:          216          216     1  FALSE
+34:          484          506     3  FALSE
+35:            0           36     3  FALSE
+36:          166          165     3  FALSE
+37:           93          199     3  FALSE
+38:          713         2440     1  FALSE
+39:            0           38     3  FALSE
+40:           32           41     3  FALSE
+    tnds_raw_max bods_raw_max  ease    pdf

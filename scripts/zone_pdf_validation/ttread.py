@@ -75,6 +75,7 @@ def parse(path, day_override=None, day_extra=None, label_max_x=None, pages=None)
             cur = None
             pending = []
             last_lab = None
+            last_hdr = None  # latest service-number header line on the page
             for ln in lines_of(page):
                 ws = ln['words']
                 d0 = None if day_override else classify_day(ln['text'], day_extra)
@@ -84,6 +85,9 @@ def parse(path, day_override=None, day_extra=None, label_max_x=None, pages=None)
                     cur = None
                     continue
                 times = [w for w in ws if TIME.match(w['text'])]
+                # "Timetable valid from 1 Nov 2026": the year is not a time
+                if times and re.search(r'valid (from|until)|until further notice', ln['text'], re.I):
+                    times = []
                 # label: words left of the first time token
                 first_tx = times[0]['x0'] if times else 1e9
                 lab_words = [w for w in ws if w['x1'] <= first_tx + 0.5 and not TIME.match(w['text'])]
@@ -96,6 +100,8 @@ def parse(path, day_override=None, day_extra=None, label_max_x=None, pages=None)
                     last_lab = (ln['text'], ln['top'])
                 elif times:
                     last_lab = None
+                if not times and is_route_header(ws):
+                    last_hdr = ln
                 if not times:
                     d = None if day_override else classify_day(ln['text'], day_extra)
                     if d and len(ln['text']) < 120:
@@ -119,6 +125,10 @@ def parse(path, day_override=None, day_extra=None, label_max_x=None, pages=None)
                            'head': [p for p in pending if p['top'] > ln['top'] - 45]}
                     if not cur['head'] and prev_head:
                         cur['head'] = prev_head
+                    # the table's header can sit well above the first row a
+                    # block starts at (First Essex prints rows of "----"
+                    # between), so keep the page's latest one as a fallback
+                    cur['svc_head'] = last_hdr
                     blocks.append(cur)
                 pending = []
                 cur['rows'].append({'label': label, 'top': ln['top'], 'times': times, 'words': ws})
@@ -156,6 +166,14 @@ def ampm_map(block, cols):
     return m
 
 
+ROUTE_TOK = r'[A-Z]{0,3}\d{1,3}[A-Za-z]{0,2}'
+
+
+def is_route_header(words):
+    toks = [w for w in words if re.fullmatch(ROUTE_TOK, w['text']) and not TIME.match(w['text'])]
+    return len(toks) >= 2 and len(toks) >= 0.5 * len(words)
+
+
 def route_cols(block, cols, routes):
     """Columns whose service-number header is in `routes` (None when the block
     carries no header row). The header is the line with the most tokens that
@@ -167,6 +185,13 @@ def route_cols(block, cols, routes):
         if len(toks) >= 2 and len(toks) >= 0.5 * len(ln['words']):
             if best is None or len(toks) > len(best):
                 best = toks
+    if best is None and block.get('svc_head') is not None:
+        # a header from further up the page, used only when it names exactly
+        # one route per column of this block
+        toks = [w for w in block['svc_head']['words']
+                if re.fullmatch(ROUTE_TOK, w['text']) and not TIME.match(w['text'])]
+        if len(toks) == len(cols):
+            best = toks
     if best is None:
         return None
     keep = set()
@@ -177,7 +202,7 @@ def route_cols(block, cols, routes):
 
 
 def count(blocks, row_pat, drop_note=None, routes=None, note_pat=r'^(notes?|days? of operation|service no\.?:?)',
-          ignore_filler=True, row_exclude=None, debug=False):
+          ignore_filler=True, row_exclude=None, debug=False, distinct_times=False):
     """Journeys per day type calling at any row whose label matches row_pat.
 
     Returns {day: {'n': explicit+expanded, 'explicit': .., 'expanded': ..,
@@ -222,6 +247,13 @@ def count(blocks, row_pat, drop_note=None, routes=None, note_pat=r'^(notes?|days
                 t = tmin(w['text'], ap.get(c))
                 hit_cols.setdefault(c, t)
         d = out[b['day']]
+        if distinct_times:
+            # columns that repeat a journey at the same time count once
+            seen, keep_c = set(), {}
+            for c, t in sorted(hit_cols.items()):
+                if t not in seen:
+                    seen.add(t); keep_c[c] = t
+            hit_cols = keep_c
         d['explicit'] += len(hit_cols)
         d['dropped'] += len(dropped)
         d['rows'].update(r['label'] for r in hit_rows)

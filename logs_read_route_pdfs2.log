@@ -1,0 +1,36 @@
+ARRIVA North X4    arriva   MF=49 Sa=49 Su=40 feeds 49/98/98 ref=49/49/49 rows: Bus Stn Stand 2 (2), Whitby 
+ARRIVA North X93   arriva   MF=80 Sa=80 Su=52 feeds 32/80/80 ref=32/56/56 rows: Bus Station (adj), Whitby | Bus Station Stand 11 (11), Middl 
+ARRIVA North 13A   arriva   MF= Sa= Su= feeds 78/39/39 ref=78/39/39 rows:  stop not found
+ARRIVA North 13B   arriva   MF= Sa= Su= feeds 78/39/39 ref=78/39/39 rows:  stop not found
+ARRIVA North 4     arriva   MF=42 Sa=41 Su=15 feeds 81/42/42 ref=77/77/77 rows: Northgate (Stand A), Darlington | Northgate (Stand B), Darli 
+ARRIVA North X4A   arriva   MF=11 Sa=11 Su=6 feeds 12/23/23 ref=11/11/11 rows: Bus Stn Stand 2 (2), Whitby 
+Arriva Kent  101   arriva   MF=152 Sa=124 Su=54 feeds 155/74/155 ref=0/71/152 rows: Chequers Bus Station (Stop H2), Maidstone 
+Arriva Kent  146   arriva   MF=23 Sa=20 Su=30 feeds 50/23/23 ref=50/46/46 rows: Waterfront Bus Station (Stop C15), Chatham 
+Arriva Kent  71    arriva   MF=48 Sa=32 Su=22 feeds 68/48/48 ref=68/48/48 rows: Lunsford Park Tesco (adj), Larkfield 
+Arriva Kent  176   arriva   MF=48 Sa=48 Su=20 feeds 41/50/50 ref=39/48/48 rows: Village Centre (adj), Walderslade 
+Banga Buses  530   20261116 MF=70 Sa=58 Su= feeds 70/155/143 ref=70/155/143 rows: Rocket Pool, Meldon Drive (adj)
+Border Buses 67    20261005 MF=36 Sa=31 Su=14 feeds 31/0/31 ref=31/0/31 rows: Galashiels Interchange
+Border Buses 60    20260619 MF=33 Sa=26 Su=8 feeds 26/0/0 ref=26/0/0 rows: Berwick, Railway Station | Berwick, Railway Station — — | Be
+Border Buses 253   20261005 MF= Sa= Su= feeds 18/0/18 ref=16/0/16 rows: Dunbar, Grahame Place
+Border Buses 235   20231023 MF= Sa= Su=10 feeds 16/0/16 ref=16/0/16 rows: Berwick, Chapel St
+Border Buses 32    20231023 MF=13 Sa= Su= feeds 7/0/7 ref=7/0/7 rows: Berwick, Chapel St
+Border Buses B2    20260727 MF= Sa= Su= feeds 11/16/7 ref=21/30/12 rows: West End Place
+Border Buses 267   20260903 MF=14 Sa=12 Su= feeds 12/10/10 ref=12/10/10 rows: Berwick, Railway Street
+Diamond Bus  63    arriva   MF= Sa= Su= feeds 21/42/42 ref=21/21/21 rows:  stop not found
+Diamond Bus  65    arriva   MF= Sa= Su= feeds 38/57/57 ref=20/40/40 rows:  stop not found
+Diamond Bus  247   arriva   MF= Sa= Su= feeds 14/20/20 ref=13/15/15 rows:  stop not found
+Diamond Bus  24    arriva   MF= Sa= Su= feeds 5/8/8 ref=5/8/8 rows:  stop not found
+Diamond Bus  76C   arriva   MF= Sa= Su= feeds 11/13/13 ref=11/13/13 rows:  stop not found
+Red Eagle    361   20250901 MF=46 Sa=25 Su= feeds 31/53/53 ref=27/46/46 rows: Hanstead Park, Percy Drive/Redland Way
+Red Eagle    W20   20240901 MF=9 Sa=6 Su= feeds 11/17/17 ref=9/17/17 rows: Town Centre, High Street, Stop F [arrive] | Town Centre, Hig
+Red Eagle    88    20210901 MF=12 Sa=8 Su= feeds 10/12/12 ref=10/12/12 rows: Cockernhoe, Luton Rd, The Green | Cockernhoe, Luton Road, op
+Red Eagle    885   20240901 MF=1 Sa= Su= feeds 2/3/3 ref=2/2/2 rows: Bushey, Bushey Meads School
+Rotala Prest 35    arriva   MF= Sa= Su= feeds 84/164/164 ref=84/164/164 rows:  stop not found
+Rotala Prest 8     arriva   MF= Sa= Su= feeds 61/120/120 ref=61/120/120 rows:  stop not found
+Rotala Prest 31    arriva   MF= Sa= Su= feeds 30/58/58 ref=58/58/58 rows:  stop not found
+West Midland 61     MF= Sa= Su= feeds 279/180/360 ref=279/180/360 NOT FOUND Moor Street Queensway
+West Midland 63     MF= Sa= Su= feeds 279/187/374 ref=279/187/374 NOT FOUND Moor Street Queensway
+West Midland 10     MF=147 Sa=100 Su=48 feeds 233/190/538 ref=147/147/419 rows: Brownhills West Rising Sun
+West Midland 59     MF=262 Sa=252 Su=182 feeds 184/144/432 ref=321/281/843 rows: Wolverhampton Bus Station
+West Midland 10A    MF= Sa= Su= feeds 76/38/108 ref=76/38/108 NOT FOUND Stephenson Drive
+Diamond Bus  24    arriva   MF= Sa= Su= feeds 26/26/26 ref=26/26/26 rows:  stop not found

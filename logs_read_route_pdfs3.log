@@ -1,0 +1,103 @@
+ARRIVA North X4    arriva   MF=49 Sa=49 Su=40 feeds 49/98/98 ref=49/49/49 rows: Bus Stn Stand 2 (2), Whitby 
+ARRIVA North X93   arriva   MF=56 Sa=56 Su=38 feeds 32/80/80 ref=32/56/56 rows: Bus Station (adj), Whitby 
+ARRIVA North 13A   arriva   MF= Sa= Su= feeds 78/39/39 ref=78/39/39 rows:  stop not found
+ARRIVA North 13B   arriva   MF= Sa= Su= feeds 78/39/39 ref=78/39/39 rows:  stop not found
+ARRIVA North 4     arriva   MF=40 Sa=40 Su=15 feeds 81/42/42 ref=77/77/77 rows: Northgate (Stand B), Darlington 
+ARRIVA North X4A   arriva   MF=11 Sa=11 Su=6 feeds 12/23/23 ref=11/11/11 rows: Bus Stn Stand 2 (2), Whitby 
+Arriva Kent  101   arriva   MF=152 Sa=124 Su=54 feeds 155/74/155 ref=0/71/152 rows: Chequers Bus Station (Stop H2), Maidstone 
+Arriva Kent  146   arriva   MF=23 Sa=20 Su=30 feeds 50/23/23 ref=50/46/46 rows: Waterfront Bus Station (Stop C15), Chatham 
+Arriva Kent  71    arriva   MF=48 Sa=32 Su=22 feeds 68/48/48 ref=68/48/48 rows: Lunsford Park Tesco (adj), Larkfield 
+Arriva Kent  176   arriva   MF=48 Sa=48 Su=20 feeds 41/50/50 ref=39/48/48 rows: Village Centre (adj), Walderslade 
+Banga Buses  530   20261116 MF=70 Sa=58 Su= feeds 70/155/143 ref=70/155/143 rows: Rocket Pool, Meldon Drive (adj)
+Border Buses 67    20261005 MF=36 Sa=31 Su=14 feeds 31/0/31 ref=31/0/31 rows: Galashiels Interchange
+Border Buses 60    20260619 MF=33 Sa=26 Su=8 feeds 26/0/0 ref=26/0/0 rows: Berwick, Railway Station | Berwick, Railway Station — — | Be
+Border Buses 253   20261005 MF= Sa= Su= feeds 18/0/18 ref=16/0/16 rows: Dunbar, Grahame Place
+Border Buses 235   20231023 MF= Sa= Su=10 feeds 16/0/16 ref=16/0/16 rows: Berwick, Chapel St
+Border Buses 32    20231023 MF=13 Sa= Su= feeds 7/0/7 ref=7/0/7 rows: Berwick, Chapel St
+Border Buses 267   20260903 MF=14 Sa=12 Su= feeds 12/10/10 ref=12/10/10 rows: Berwick, Railway Street
+Diamond Bus  247   arriva   MF=0 Sa=0 Su=0 feeds 14/20/20 ref=13/15/15 rows: header-width> Evesham Bus Station Evesham (Stand A) print timetable go to top <
+Diamond Bus  24    arriva   MF= Sa= Su= feeds 5/8/8 ref=5/8/8 rows:  stop not found
+First        64     MF=31 Sa=24 Su= feeds 47/58/58 ref=26/33/33 rows: Ipswich,Old Cattle Market
+First        88     MF=44 Sa=34 Su= feeds 37/45/46 ref=37/45/46 rows: Ipswich,Old Cattle Market
+First        73     MF=19 Sa=17 Su= feeds 16/21/21 ref=15/20/20 rows: Martlesham Heath,Tesco
+First        116    MF=12 Sa=10 Su= feeds 8/13/13 ref=8/13/13 rows: Resource Centre
+First        70     MF=20 Sa=19 Su= feeds 24/29/29 ref=18/22/22 rows: Ipswich,Old Cattle Market | Ipswich,Old Cattle Market ----
+First Berksh 7      MF=101 Sa=91 Su=76 feeds 104/154/172 ref=101/149/167 rows: Axis Park | Axis Park ----
+Metrobus     10    20250201 MF= Sa= Su= feeds 268/0/268 ref=268/0/268 NOT FOUND North Terminal Bus Station
+Metrobus     100   20260112 MF= Sa= Su= feeds 143/0/143 ref=141/0/141 NOT FOUND Oriel School
+Metrobus     2     20250201 MF= Sa= Su= feeds 145/2/145 ref=144/1/144 NOT FOUND Yewlands Walk
+Metrobus     20    20250927 MF= Sa= Su= feeds 122/1/122 ref=118/0/118 NOT FOUND Orchard Drive
+Metrobus     3     20260505 MF= Sa= Su= feeds 106/1/106 ref=106/1/106 NOT FOUND Dorsten Square
+Metrobus     200   20251215 MF= Sa= Su= feeds 84/0/84 ref=84/0/84 NOT FOUND Dorsten Square
+Metrobus     1     20250201 MF= Sa= Su= feeds 82/0/82 ref=82/0/82 NOT FOUND Broadfield Barton North
+Metrobus     98    20260905 MF= Sa= Su= feeds 92/11/92 ref=91/11/91 NOT FOUND Naldrett Close
+Metrobus     400   20260808 MF= Sa= Su= feeds 66/2/66 ref=59/2/59 NOT FOUND Three Arch Road
+Metrobus     5     20260905 MF= Sa= Su= feeds 64/0/64 ref=64/0/64 NOT FOUND Pound Hill Parade
+Metrobus     4     20260905 MF= Sa= Su= feeds 64/0/64 ref=64/0/64 NOT FOUND Atlantic House
+Metrobus     E10   20250201 MF= Sa= Su= feeds 63/0/63 ref=62/0/62 NOT FOUND Epsom Railway Station
+Metrobus     23    20260917 MF= Sa= Su= feeds 56/3/56 ref=56/3/56 NOT FOUND Dorsten Square
+Metrobus     410   20260808 MF= Sa= Su= feeds 51/5/51 ref=50/4/50 NOT FOUND Redhill Bus Station
+Metrobus     460   20260509 MF= Sa= Su= feeds 45/3/45 ref=45/3/45 NOT FOUND Three Arch Road
+Metrobus     480   20250927 MF= Sa= Su= feeds 40/0/40 ref=40/0/40 NOT FOUND Headley Drive
+Metrobus     500   20260509 MF=18 Sa=18 Su=12 feeds 36/0/36 ref=18/0/18 rows: Hailsham Tesco arr | Hailsham Tesco dep
+Metrobus     291   20240831 MF= Sa= Su= feeds 39/6/39 ref=37/5/37 NOT FOUND East Grinstead Station
+Metrobus     409   20250830 MF= Sa= Su= feeds 39/6/39 ref=27/5/27 NOT FOUND Great Park
+Metrobus     71    20260530 MF= Sa= Su= feeds 32/0/32 ref=16/0/16 NOT FOUND Moat Road
+Metrobus     420   20260509 MF= Sa= Su= feeds 31/0/31 ref=21/0/21 NOT FOUND Three Arch Road
+Metrobus     273   20260509 MF= Sa= Su= feeds 28/0/28 ref=28/0/14 NOT FOUND Bus Station
+Metrobus     65    20250510 MF= Sa= Su= feeds 27/1/27 ref=27/1/27 NOT FOUND Plovers Road
+Metrobus     93    20210828 MF= Sa= Su= feeds 28/3/28 ref=27/2/27 NOT FOUND Glory Mead
+Metrobus     424   20260509 MF= Sa= Su= feeds 26/4/26 ref=23/4/23 NOT FOUND Park 25
+Metrobus     281   20250510 MF= Sa= Su= feeds 28/6/28 ref=22/4/22 NOT FOUND Lingfield Railway Station
+Metrobus     271   20260509 MF= Sa= Su= feeds 20/2/20 ref=20/2/20 NOT FOUND The Black Swan
+Metrobus     594   20250927 MF= Sa= Su= feeds 18/2/18 ref=11/1/11 NOT FOUND The Carpenters Arms
+Metrobus     21    20251215 MF= Sa= Su= feeds 14/0/14 ref=13/0/13 NOT FOUND The Orchard
+Metrobus     61    20210828 MF= Sa= Su= feeds 13/0/13 ref=13/0/13 NOT FOUND Wimblehurst Road
+Metrobus     84    20240511 MF= Sa= Su= feeds 12/0/12 ref=12/0/12 NOT FOUND The Crown
+Metrobus     22    20240831 MF= Sa= Su= feeds 16/5/16 ref=11/1/11 NOT FOUND Dorking Railway Station
+Metrobus     595   20250927 MF= Sa= Su= feeds 9/0/9 ref=8/0/8 NOT FOUND Chalkpit Wood
+Metrobus     23X   20260509 MF= Sa= Su= feeds 8/0/8 ref=8/0/8 NOT FOUND Dorsten Square
+Metrobus     411   20240928 MF= Sa= Su= feeds 13/5/13 ref=13/5/13 NOT FOUND Redhill Bus Station
+Metrobus     318   20260324 MF= Sa= Su= feeds 8/1/8 ref=8/1/8 NOT FOUND Nork Way
+Metrobus     236   20250831 MF= Sa= Su= feeds 8/1/8 ref=7/1/7 NOT FOUND Oxted Railway Station
+Metrobus     485   20240928 MF= Sa= Su= feeds 7/1/7 ref=4/0/4 NOT FOUND War Memorial
+Metrobus     231   20231127 MF= Sa= Su= feeds 10/4/10 ref=7/2/7 NOT FOUND Post Office
+Metrobus     51    20240511 MF= Sa= Su= feeds 5/0/5 ref=5/0/5 NOT FOUND The Coot
+Metrobus     820   20250927 MF= Sa= Su= feeds 4/3/4 ref=2/2/2 NOT FOUND St Bede's School
+Red Eagle    361   20250901 MF=46 Sa=25 Su= feeds 31/53/53 ref=27/46/46 rows: Hanstead Park, Percy Drive/Redland Way
+Red Eagle    W20   20240901 MF=9 Sa=6 Su= feeds 11/17/17 ref=9/17/17 rows: Town Centre, High Street, Stop F [arrive] | Town Centre, Hig
+Red Eagle    88    20210901 MF=12 Sa=8 Su= feeds 10/12/12 ref=10/12/12 rows: Cockernhoe, Luton Rd, The Green | Cockernhoe, Luton Road, op
+Red Eagle    885   20240901 MF=1 Sa= Su= feeds 2/3/3 ref=2/2/2 rows: Bushey, Bushey Meads School
+Redline      X20   20260905 MF= Sa= Su= feeds 98/0/0 ref=98/0/0 NOT FOUND Railway Station
+Redline      12    20251211 MF= Sa= Su= feeds 3/0/0 ref=3/0/0 NOT FOUND Coventon Road
+Redline      130B  20251217 MF=127 Sa=102 Su=48 feeds 2/0/0 ref=2/0/0 rows: S M Hospital, Main Gate | Stoke Mandeville, Station Road | S
+Redline      130D  20251217 MF=4 Sa= Su= feeds 2/0/0 ref=2/0/0 rows: Princes Risborough School | | | | | | | | | Princes Risborou
+Redline      300M  20251217 MF=127 Sa=102 Su=48 feeds 2/0/0 ref=2/0/0 rows: Aylesbury Bus Station | Aylesbury, Oxford Road
+Redline      130M  20251217 MF=127 Sa=102 Su=48 feeds 2/0/0 ref=2/0/0 rows: Aylesbury Bus Station | Aylesbury, Oxford Road
+Rotala Prest 35    arriva   MF=0 Sa=0 Su=0 feeds 84/164/164 ref=84/164/164 rows: header-width> Threefields Tanterton (NE) print timetable go to top <
+Rotala Prest 8     arriva   MF=0 Sa=0 Su=0 feeds 61/120/120 ref=61/120/120 rows: header-width> Moor Nook Shops Moor Nook (by) print timetable go to top <
+Rotala Prest 31    arriva   MF=0 Sa=0 Su=0 feeds 30/58/58 ref=58/58/58 rows: header-width> Turning Circle Savick (by) print timetable go to top <
+Stagecoach M 84    20261107 MF=126 Sa=83 Su=0 route trips 30/16/28 (row layout, route total)
+Stagecoach M 8A    20260829 MF=220 Sa=192 Su=0 route trips 53/42/42 (row layout, route total)
+Stagecoach M 85    20261107 MF=192 Sa=111 Su=0 route trips 25/21/24 (row layout, route total)
+Stagecoach S 26    20260105 MF=0 Sa=40 Su=0 route trips 69/34/69 (row layout, route total)
+West Midland 61     MF= Sa= Su= feeds 279/180/360 ref=279/180/360 NOT FOUND Moor Street Queensway
+West Midland 63     MF= Sa= Su= feeds 279/187/374 ref=279/187/374 NOT FOUND Moor Street Queensway
+West Midland 10     MF=147 Sa=100 Su=48 feeds 233/190/538 ref=147/147/419 rows: Brownhills West Rising Sun
+West Midland 59     MF=262 Sa=252 Su=182 feeds 184/144/432 ref=321/281/843 rows: Wolverhampton Bus Station
+West Midland 10A    MF= Sa= Su= feeds 76/38/108 ref=76/38/108 NOT FOUND Stephenson Drive
+more Bus     22    20260523 MF=57 Sa=37 Su=32 feeds 73/132/132 ref=64/64/64 rows: Bournemouth Westover Road | Bournemouth Westover Road Stand 
+more Bus     X6    20260523 MF=28 Sa=32 Su= feeds 29/38/38 ref=25/25/25 rows: Poole Bus Station | Poole Bus Station Stand N
+more Bus     32    20260518 MF= Sa= Su= feeds 5/11/11 ref=0/10/10 rows: Bear Cross Anchor Road Parade | Bearwood Co-op | Bournemouth
+more Bus     33    20260523 MF=41 Sa= Su= feeds 18/24/24 ref=18/18/18 rows: Alum Chine
+Bluestar     18    20251107 MF= Sa= Su= feeds 231/230/233 ref=187/187/189 NOT FOUND Irving Road
+Diamond Bus  65    arriva   MF= Sa= Su= feeds 38/37/37 ref=20/20/20 rows:  stop not found
+Diamond Bus  24    arriva   MF= Sa= Su= feeds 26/26/26 ref=26/26/26 rows:  stop not found
+Diamond Bus  63    arriva   MF= Sa= Su= feeds 21/21/21 ref=21/21/21 rows:  stop not found
+Redline      130   20251217 MF=127 Sa=102 Su=48 feeds 60/58/58 ref=59/57/57 rows: Aylesbury Bus Station | Aylesbury, Oxford Road
+Stagecoach S 6     20261002 MF=25 Sa=0 Su=5 route trips 47/47/47 (row layout, route total)
+Stagecoach S X1    20261002 MF=0 Sa=0 Su=0 route trips 7/7/7 (row layout, route total)
+Stagecoach S 173   20261002 MF=10 Sa=10 Su=0 route trips 9/9/9 (row layout, route total)
+Stagecoach S 1     20261002 MF=21 Sa=0 Su=3 route trips 68/68/68 (row layout, route total)
+Stagecoach S C16   20261002 MF=0 Sa=14 Su=0 route trips 9/9/9 (row layout, route total)
+Stagecoach S C18   20261002 MF=0 Sa=0 Su=4 route trips 2/2/2 (row layout, route total)

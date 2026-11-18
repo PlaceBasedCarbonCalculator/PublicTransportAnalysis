@@ -1,0 +1,871 @@
+feed,agency,route,type,trips,stops,other_agency,other_route,other_type,shared_stops
+TNDS,Nottingham Express Transit,TRAM,tram,1941,97,,,NOT FOUND,0
+TNDS,London Underground,Northern,metro,6135,102,London Underground (TfL),Northern,metro,102
+TNDS,London Underground,Piccadilly,metro,3141,102,London Underground (TfL),Piccadilly,metro,102
+TNDS,London Underground,Central,metro,3967,95,London Underground (TfL),Central,metro,95
+TNDS,London Underground,Central,metro,3967,95,London Underground (TfL),Central,metro,95
+TNDS,London Underground,Northern,metro,5234,102,London Underground (TfL),Northern,metro,102
+TNDS,London Underground,District,metro,3004,116,London Underground (TfL),District,metro,116
+TNDS,London Underground,Jubilee,metro,3485,52,London Underground (TfL),Jubilee,metro,52
+TNDS,London Underground,Circle,metro,743,116,London Underground (TfL),Circle,metro,116
+TNDS,London Underground,Piccadilly,metro,805,102,London Underground (TfL),Piccadilly,metro,102
+TNDS,London Underground,Central,metro,1046,95,London Underground (TfL),Central,metro,95
+TNDS,London Underground,Metropolitan,metro,2721,67,London Underground (TfL),Metropolitan,metro,67
+TNDS,London Underground,Victoria,metro,4161,30,London Underground (TfL),Victoria,metro,30
+TNDS,Docklands Light Railway,DLR,metro,4218,81,London Docklands Light Railway - TfL,DLR,rail,81
+TNDS,London Underground,Bakerloo,metro,1691,50,London Underground (TfL),Bakerloo,metro,50
+TNDS,London Underground,Hammersmith&City,metro,673,73,London Underground (TfL),Hammersmith & City,metro,73
+TNDS,Docklands Light Railway,DLR,metro,2626,69,London Docklands Light Railway - TfL,DLR,rail,69
+TNDS,London Underground,Bakerloo,metro,617,50,London Underground (TfL),Bakerloo,metro,50
+TNDS,London Underground,Bakerloo,metro,617,50,London Underground (TfL),Bakerloo,metro,50
+TNDS,London Trams,Tram,tram,1881,66,London Tramlink,Tram,tram,66
+TNDS,MBNA THAMES CLIPPERS,RB6,ferry,103,37,Thames Clippers,RB6,ferry,37
+TNDS,London Underground,Bakerloo,metro,1004,32,London Underground (TfL),Bakerloo,metro,32
+TNDS,Docklands Light Railway,DLR,metro,1206,80,London Docklands Light Railway - TfL,DLR,rail,80
+TNDS,MBNA THAMES CLIPPERS,RB1,ferry,106,27,Thames Clippers,RB1,ferry,27
+TNDS,London Cable Car,LondonCableCar,gondola,1016,2,IFS Cloud Cable Car,London Cable Car,gondola,2
+TNDS,London Underground,Waterloo&City,metro,531,4,London Underground (TfL),Waterloo & City,metro,4
+TNDS,MBNA THAMES CLIPPERS,RB4,ferry,254,2,Thames Clippers,RB4,ferry,2
+TNDS,London Cable Car,LondonCableCar,gondola,230,2,IFS Cloud Cable Car,London Cable Car,gondola,2
+TNDS,Woolwich Ferry,WoolwichFerry,ferry,128,2,Woolwich Free Ferry,Woolwich Ferry,ferry,2
+TNDS,Woolwich Ferry,WoolwichFerry,ferry,69,2,Woolwich Free Ferry,Woolwich Ferry,ferry,2
+TNDS,NEXUS,YEL,metro,501,83,Tyne and Wear Metro,YEL,metro,83
+TNDS,NEXUS,GRN,metro,510,61,Tyne and Wear Metro,GRN,metro,61
+TNDS,NEXUS,YEL,metro,138,83,Tyne and Wear Metro,YEL,metro,83
+TNDS,NEXUS,GRN,metro,144,60,Tyne and Wear Metro,GRN,metro,60
+TNDS,NEXUS Ferry,FERRY,ferry,210,2,Nexus Ferry,FERRY,ferry,2
+TNDS,NEXUS,YEL,metro,1,20,Tyne and Wear Metro,YEL,metro,20
+TNDS,Metrolink,PinkLine,tram,286,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,PinkLine,tram,292,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,PinkLine,tram,292,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,PinkLine,tram,286,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,PinkLine,tram,286,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,PinkLine,tram,264,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,PinkLine,tram,264,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,GreenLine,tram,327,47,Metrolink,Green Line,tram,43
+TNDS,Metrolink,YellowLine,tram,315,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,PinkLine,tram,156,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,BlueLine,tram,167,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,PinkLine,tram,182,66,Metrolink,Pink Line,tram,66
+TNDS,Metrolink,YellowLine,tram,331,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,BlueLine,tram,174,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,BlueLine,tram,174,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,BlueLine,tram,157,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,BlueLine,tram,174,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,BlueLine,tram,174,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,BlueLine,tram,167,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,BlueLine,tram,167,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,YellowLine,tram,331,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,YellowLine,tram,331,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,YellowLine,tram,315,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,BlueLine,tram,163,54,Metrolink,Blue Line,tram,54
+TNDS,Metrolink,NavyLine,tram,155,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,YellowLine,tram,315,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,YellowLine,tram,331,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,NavyLine,tram,146,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,NavyLine,tram,163,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,NavyLine,tram,163,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,NavyLine,tram,163,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,NavyLine,tram,163,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,GreenLine,tram,119,49,Metrolink,Green Line,tram,49
+TNDS,Metrolink,NavyLine,tram,155,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,NavyLine,tram,155,47,Metrolink,Navy Line,tram,43
+TNDS,Metrolink,NavyLine,tram,146,49,Metrolink,Navy Line,tram,49
+TNDS,Metrolink,YellowLine,tram,288,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,GreenLine,tram,119,49,Metrolink,Green Line,tram,49
+TNDS,Metrolink,GreenLine,tram,119,49,Metrolink,Green Line,tram,49
+TNDS,Metrolink,GreenLine,tram,119,49,Metrolink,Green Line,tram,49
+TNDS,Metrolink,RedLine,tram,164,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,GreenLine,tram,120,49,Metrolink,Green Line,tram,49
+TNDS,Blackpool Transport Services Ltd,Tram,tram,416,78,Blackpool Transport,Tram,tram,75
+TNDS,Metrolink,PurpleLine,tram,159,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,YellowLine,tram,288,33,Metrolink,Yellow Line,tram,33
+TNDS,Metrolink,GreenLine,tram,91,49,Metrolink,Green Line,tram,49
+TNDS,Metrolink,RedLine,tram,154,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,RedLine,tram,172,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,RedLine,tram,172,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,RedLine,tram,172,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,RedLine,tram,172,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,RedLine,tram,164,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,PurpleLine,tram,150,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,RedLine,tram,164,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,PurpleLine,tram,166,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,PurpleLine,tram,166,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,PurpleLine,tram,166,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,PurpleLine,tram,166,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,PurpleLine,tram,159,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,RedLine,tram,160,31,Metrolink,Red Line,tram,31
+TNDS,Metrolink,PurpleLine,tram,159,33,Metrolink,Purple Line,tram,33
+TNDS,Metrolink,PurpleLine,tram,150,33,Metrolink,Purple Line,tram,33
+TNDS,Mersey Ferries,FER,ferry,46,2,Mersey Ferries,FER,ferry,2
+TNDS,Mersey Ferries,FER,ferry,26,2,Mersey Ferries,FER,ferry,2
+TNDS,SPT Subway,SUB,metro,2496,30,SPT Subway,SUB,tram,30
+TNDS,Edinburgh Trams,T50,tram,893,44,Edinburgh Trams,T50,tram,44
+TNDS,Xplore Dundee,FLY,coach,144,2,Xplore Dundee,FLY,coach,2
+TNDS,Western Ferries,WF1,ferry,590,2,Western Ferries,WF1,ferry,2
+TNDS,Shetland Ferries,SF2,ferry,308,3,Shetland Ferries,SF2,ferry,3
+TNDS,Ember,E12,coach,86,3,Ember,E12,coach,3
+TNDS,Ember,E12,coach,86,3,Ember,E12,coach,3
+TNDS,Shetland Ferries,SF4,ferry,314,2,Shetland Ferries,SF4,ferry,2
+TNDS,Ember,E12,coach,86,3,Ember,E12,coach,3
+TNDS,Ember,E12,coach,86,3,Ember,E12,coach,3
+TNDS,Argyll + Bute Council Ferries,LUI,ferry,284,2,Argyll & Bute Council Ferries,LUI,ferry,2
+TNDS,Shetland Ferries,SF1,ferry,281,2,Shetland Ferries,SF1,ferry,2
+TNDS,Argyll + Bute Council Ferries,EAS,ferry,274,2,Argyll & Bute Council Ferries,EAS,ferry,2
+TNDS,Shetland Ferries,SF5,ferry,227,2,Shetland Ferries,SF5,ferry,2
+TNDS,Highland Council,F9,ferry,242,2,Highland Council,F9,ferry,2
+TNDS,Caledonian MacBrayne,CM4,ferry,220,2,Caledonian MacBrayne,CM4,ferry,2
+TNDS,Caledonian MacBrayne,CM1,ferry,184,2,Caledonian MacBrayne,CM1,ferry,2
+TNDS,Caledonian MacBrayne,CM4,ferry,180,2,Caledonian MacBrayne,CM4,ferry,2
+TNDS,Caledonian MacBrayne,CM4,ferry,180,2,Caledonian MacBrayne,CM4,ferry,2
+TNDS,Caledonian MacBrayne,CM4,ferry,180,2,Caledonian MacBrayne,CM4,ferry,2
+TNDS,Argyll + Bute Council Ferries,JUR,ferry,172,2,Argyll & Bute Council Ferries,JUR,ferry,2
+TNDS,Caledonian MacBrayne,CM4,ferry,180,2,Caledonian MacBrayne,CM4,ferry,2
+TNDS,Caledonian MacBrayne,CM7,ferry,164,2,Caledonian MacBrayne,CM7,ferry,2
+TNDS,Argyll + Bute Council Ferries,LIS,ferry,152,2,Argyll & Bute Council Ferries,LIS,ferry,2
+TNDS,Northlink Ferries,NL2,ferry,4,3,Northlink Ferries,NL2,ferry,3
+TNDS,Caledonian MacBrayne,CM7,ferry,126,2,Caledonian MacBrayne,CM7,ferry,2
+TNDS,Caledonian MacBrayne,CM7,ferry,126,2,Caledonian MacBrayne,CM7,ferry,2
+TNDS,Caledonian MacBrayne,CM7,ferry,126,2,Caledonian MacBrayne,CM7,ferry,2
+TNDS,Orkney Ferries,OF5,ferry,42,6,Orkney Ferries,OF5,ferry,6
+TNDS,Caledonian MacBrayne,CM7,ferry,126,2,Caledonian MacBrayne,CM7,ferry,2
+TNDS,Caledonian MacBrayne,CM1,ferry,98,2,Caledonian MacBrayne,CM1,ferry,2
+TNDS,Caledonian MacBrayne,CM1,ferry,98,2,Caledonian MacBrayne,CM1,ferry,2
+TNDS,Caledonian MacBrayne,CM1,ferry,98,2,Caledonian MacBrayne,CM1,ferry,2
+TNDS,Orkney Ferries,OF3,ferry,15,4,Orkney Ferries,OF3,ferry,4
+TNDS,Caledonian MacBrayne,CM1,ferry,98,2,Caledonian MacBrayne,CM1,ferry,2
+TNDS,Caledonian MacBrayne,CM9,ferry,66,4,Caledonian MacBrayne,CM9,ferry,4
+TNDS,Caledonian MacBrayne,CM3,ferry,80,2,Caledonian MacBrayne,CM3,ferry,2
+TNDS,Caledonian MacBrayne,CM3,ferry,80,2,Caledonian MacBrayne,CM3,ferry,2
+TNDS,Caledonian MacBrayne,CM3,ferry,80,2,Caledonian MacBrayne,CM3,ferry,2
+TNDS,Shetland Ferries,SF3,ferry,31,5,Shetland Ferries,SF3,ferry,5
+TNDS,Caledonian MacBrayne,CM3,ferry,80,2,Caledonian MacBrayne,CM3,ferry,2
+TNDS,Caledonian MacBrayne,CM3,ferry,80,2,Caledonian MacBrayne,CM3,ferry,2
+TNDS,Caledonian MacBrayne,15A,ferry,74,2,Caledonian MacBrayne,15A,ferry,2
+TNDS,Caledonian MacBrayne,15A,ferry,74,2,Caledonian MacBrayne,15A,ferry,2
+TNDS,Caledonian MacBrayne,CM9,ferry,55,4,Caledonian MacBrayne,CM9,ferry,4
+TNDS,Caledonian MacBrayne,15A,ferry,74,2,Caledonian MacBrayne,15A,ferry,2
+TNDS,Caledonian MacBrayne,15A,ferry,74,2,Caledonian MacBrayne,15A,ferry,2
+TNDS,Caledonian MacBrayne,CM19,ferry,5,5,Caledonian MacBrayne,CM19,ferry,5
+TNDS,Caledonian MacBrayne,CM9,ferry,55,4,Caledonian MacBrayne,CM9,ferry,4
+TNDS,Northlink Ferries,NL1,ferry,16,2,Northlink Ferries,NL1,ferry,2
+TNDS,Caledonian MacBrayne,CM11,ferry,64,2,Caledonian MacBrayne,CM11,ferry,2
+TNDS,Caledonian MacBrayne,15A,ferry,74,2,Caledonian MacBrayne,15A,ferry,2
+TNDS,Caledonian MacBrayne,CM13,ferry,50,2,Caledonian MacBrayne,CM13,ferry,2
+TNDS,Caledonian MacBrayne,CM19,ferry,5,5,Caledonian MacBrayne,CM19,ferry,5
+TNDS,Caledonian MacBrayne,CM19,ferry,5,5,Caledonian MacBrayne,CM19,ferry,5
+TNDS,Caledonian MacBrayne,CM9,ferry,47,4,Caledonian MacBrayne,CM9,ferry,4
+TNDS,Caledonian MacBrayne,CM8,ferry,60,2,Caledonian MacBrayne,CM8,ferry,2
+TNDS,Caledonian MacBrayne,CM4,ferry,64,2,Caledonian MacBrayne,CM4,ferry,2
+TNDS,Caledonian MacBrayne,CM19,ferry,4,5,Caledonian MacBrayne,CM19,ferry,5
+TNDS,Caledonian MacBrayne,CM19,ferry,4,5,Caledonian MacBrayne,CM19,ferry,5
+TNDS,Caledonian MacBrayne,CM22,ferry,25,3,Caledonian MacBrayne,CM22,ferry,3
+TNDS,Caledonian MacBrayne,CM12,ferry,46,2,Caledonian MacBrayne,CM12,ferry,2
+TNDS,Caledonian MacBrayne,CM22,ferry,21,3,Caledonian MacBrayne,CM22,ferry,3
+TNDS,Caledonian MacBrayne,CM22,ferry,21,3,Caledonian MacBrayne,CM22,ferry,3
+TNDS,Caledonian MacBrayne,CM11,ferry,54,2,Caledonian MacBrayne,CM11,ferry,2
+TNDS,Caledonian MacBrayne,CM9,ferry,31,4,Caledonian MacBrayne,CM9,ferry,4
+TNDS,Caledonian MacBrayne,CM22,ferry,21,3,Caledonian MacBrayne,CM22,ferry,3
+TNDS,Caledonian MacBrayne,CM12,ferry,46,2,Caledonian MacBrayne,CM12,ferry,2
+TNDS,Caledonian MacBrayne,CM12,ferry,46,2,Caledonian MacBrayne,CM12,ferry,2
+TNDS,Caledonian MacBrayne,CM12,ferry,46,2,Caledonian MacBrayne,CM12,ferry,2
+TNDS,Caledonian MacBrayne,CM17,ferry,48,2,Caledonian MacBrayne,CM17,ferry,2
+TNDS,Caledonian MacBrayne,CM13,ferry,34,2,Caledonian MacBrayne,CM13,ferry,2
+TNDS,Caledonian MacBrayne,CM11,ferry,50,2,Caledonian MacBrayne,CM11,ferry,2
+TNDS,Caledonian MacBrayne,CM20,ferry,13,3,Caledonian MacBrayne,CM20,ferry,3
+TNDS,Caledonian MacBrayne,CM2,ferry,46,2,Caledonian MacBrayne,CM2,ferry,2
+TNDS,Caledonian MacBrayne,CM17,ferry,46,2,Caledonian MacBrayne,CM17,ferry,2
+TNDS,Orkney Ferries,OF7,ferry,18,2,Orkney Ferries,OF7,ferry,2
+TNDS,Caledonian MacBrayne,CM17,ferry,46,2,Caledonian MacBrayne,CM17,ferry,2
+TNDS,Caledonian MacBrayne,CM22,ferry,16,3,Caledonian MacBrayne,CM22,ferry,3
+TNDS,Caledonian MacBrayne,CM17,ferry,46,2,Caledonian MacBrayne,CM17,ferry,2
+TNDS,Caledonian MacBrayne,CM8,ferry,48,2,Caledonian MacBrayne,CM8,ferry,2
+TNDS,Caledonian MacBrayne,CM8,ferry,48,2,Caledonian MacBrayne,CM8,ferry,2
+TNDS,Caledonian MacBrayne,CM12,ferry,46,2,Caledonian MacBrayne,CM12,ferry,2
+TNDS,Caledonian MacBrayne,CM2,ferry,46,2,Caledonian MacBrayne,CM2,ferry,2
+TNDS,Caledonian MacBrayne,CM2,ferry,46,2,Caledonian MacBrayne,CM2,ferry,2
+TNDS,Caledonian MacBrayne,CM2,ferry,46,2,Caledonian MacBrayne,CM2,ferry,2
+TNDS,Caledonian MacBrayne,CM19,ferry,1,4,Caledonian MacBrayne,CM19,ferry,4
+TNDS,Caledonian MacBrayne,CM2,ferry,46,2,Caledonian MacBrayne,CM2,ferry,2
+TNDS,Caledonian MacBrayne,CM17,ferry,46,2,Caledonian MacBrayne,CM17,ferry,2
+TNDS,Caledonian MacBrayne,CM11,ferry,44,2,Caledonian MacBrayne,CM11,ferry,2
+TNDS,Caledonian MacBrayne,CM11,ferry,44,2,Caledonian MacBrayne,CM11,ferry,2
+TNDS,Caledonian MacBrayne,CM13,ferry,34,2,Caledonian MacBrayne,CM13,ferry,2
+TNDS,Caledonian MacBrayne,CM8,ferry,48,2,Caledonian MacBrayne,CM8,ferry,2
+TNDS,Caledonian MacBrayne,CM20,ferry,8,3,Caledonian MacBrayne,CM20,ferry,3
+TNDS,Caledonian MacBrayne,CM7,ferry,44,2,Caledonian MacBrayne,CM7,ferry,2
+TNDS,Pentland Ferries,PF1,ferry,36,2,Pentland Ferries,PF1,ferry,2
+TNDS,Caledonian MacBrayne,CM13,ferry,32,2,Caledonian MacBrayne,CM13,ferry,2
+TNDS,Caledonian MacBrayne,CM13,ferry,32,2,Caledonian MacBrayne,CM13,ferry,2
+TNDS,Caledonian MacBrayne,CM1A,ferry,46,2,Caledonian MacBrayne,CM1A,ferry,2
+TNDS,Orkney Ferries,OF1,ferry,2,2,Orkney Ferries,OF1,ferry,2
+TNDS,Caledonian MacBrayne,CM1A,ferry,46,2,Caledonian MacBrayne,CM1A,ferry,2
+TNDS,Caledonian MacBrayne,CM1A,ferry,46,2,Caledonian MacBrayne,CM1A,ferry,2
+TNDS,Caledonian MacBrayne,CM1A,ferry,46,2,Caledonian MacBrayne,CM1A,ferry,2
+TNDS,Orkney Ferries,OF4,ferry,34,2,Orkney Ferries,OF4,ferry,2
+TNDS,Caledonian MacBrayne,CM8,ferry,36,2,Caledonian MacBrayne,CM8,ferry,2
+TNDS,Caledonian MacBrayne,CM22,ferry,6,3,Caledonian MacBrayne,CM22,ferry,3
+TNDS,Caledonian MacBrayne,CM6,ferry,30,2,Caledonian MacBrayne,CM6,ferry,2
+TNDS,Western Isles Cruises,KN1,ferry,17,3,Western Isles Cruises,KN1,ferry,3
+TNDS,Caledonian MacBrayne,CM20,ferry,2,3,Caledonian MacBrayne,CM20,ferry,3
+TNDS,Caledonian MacBrayne,CM1A,ferry,46,2,Caledonian MacBrayne,CM1A,ferry,2
+TNDS,Caledonian MacBrayne,CM6,ferry,30,2,Caledonian MacBrayne,CM6,ferry,2
+TNDS,Caledonian MacBrayne,CM6,ferry,30,2,Caledonian MacBrayne,CM6,ferry,2
+TNDS,Caledonian MacBrayne,CM5,ferry,30,2,Caledonian MacBrayne,CM5,ferry,2
+TNDS,Caledonian MacBrayne,CM6,ferry,30,2,Caledonian MacBrayne,CM6,ferry,2
+TNDS,Caledonian MacBrayne,CM5,ferry,28,2,Caledonian MacBrayne,CM5,ferry,2
+TNDS,Caledonian MacBrayne,CM6,ferry,30,2,Caledonian MacBrayne,CM6,ferry,2
+TNDS,Caledonian MacBrayne,CM5,ferry,28,2,Caledonian MacBrayne,CM5,ferry,2
+TNDS,Caledonian MacBrayne,CM1,ferry,30,2,Caledonian MacBrayne,CM1,ferry,2
+TNDS,Caledonian MacBrayne,CM5,ferry,28,2,Caledonian MacBrayne,CM5,ferry,2
+TNDS,Caledonian MacBrayne,CM9,ferry,8,2,Caledonian MacBrayne,CM9,ferry,2
+TNDS,Caledonian MacBrayne,CM3,ferry,28,2,Caledonian MacBrayne,CM3,ferry,2
+TNDS,Caledonian MacBrayne,CM5,ferry,28,2,Caledonian MacBrayne,CM5,ferry,2
+TNDS,Caledonian MacBrayne,CM21,ferry,26,2,Caledonian MacBrayne,CM21,ferry,2
+TNDS,Caledonian MacBrayne,CM16,ferry,10,3,Caledonian MacBrayne,CM16,ferry,3
+TNDS,Caledonian MacBrayne,CM21,ferry,24,2,Caledonian MacBrayne,CM21,ferry,2
+TNDS,Caledonian MacBrayne,15A,ferry,26,2,Caledonian MacBrayne,15A,ferry,2
+TNDS,Caledonian MacBrayne,CM21,ferry,24,2,Caledonian MacBrayne,CM21,ferry,2
+TNDS,Caledonian MacBrayne,CM21,ferry,24,2,Caledonian MacBrayne,CM21,ferry,2
+TNDS,Caledonian MacBrayne,CM15,ferry,20,2,Caledonian MacBrayne,CM15,ferry,2
+TNDS,Caledonian MacBrayne,CM12,ferry,20,2,Caledonian MacBrayne,CM12,ferry,2
+TNDS,Caledonian MacBrayne,CM21,ferry,24,2,Caledonian MacBrayne,CM21,ferry,2
+TNDS,Caledonian MacBrayne,CM15,ferry,20,2,Caledonian MacBrayne,CM15,ferry,2
+TNDS,Caledonian MacBrayne,CM14,ferry,16,2,Caledonian MacBrayne,CM14,ferry,2
+TNDS,Caledonian MacBrayne,CM16,ferry,7,3,Caledonian MacBrayne,CM16,ferry,3
+TNDS,Caledonian MacBrayne,CM15,ferry,20,2,Caledonian MacBrayne,CM15,ferry,2
+TNDS,Caledonian MacBrayne,CM15,ferry,20,2,Caledonian MacBrayne,CM15,ferry,2
+TNDS,Caledonian MacBrayne,CM16,ferry,7,3,Caledonian MacBrayne,CM16,ferry,3
+TNDS,Caledonian MacBrayne,CM16,ferry,6,3,Caledonian MacBrayne,CM16,ferry,3
+TNDS,Caledonian MacBrayne,CM16,ferry,6,3,Caledonian MacBrayne,CM16,ferry,3
+TNDS,Caledonian MacBrayne,CM15,ferry,20,2,Caledonian MacBrayne,CM15,ferry,2
+TNDS,Caledonian MacBrayne,CM17,ferry,18,2,Caledonian MacBrayne,CM17,ferry,2
+TNDS,Caledonian MacBrayne,CM5B,ferry,18,2,Caledonian MacBrayne,CM5B,ferry,2
+TNDS,Caledonian MacBrayne,CM18,ferry,16,2,Caledonian MacBrayne,CM18,ferry,2
+TNDS,Caledonian MacBrayne,CM1A,ferry,24,2,Caledonian MacBrayne,CM1A,ferry,2
+TNDS,Shetland Ferries,SF6,ferry,16,2,Shetland Ferries,SF6,ferry,2
+TNDS,Caledonian MacBrayne,CM18,ferry,16,2,Caledonian MacBrayne,CM18,ferry,2
+TNDS,Caledonian MacBrayne,CM23,ferry,10,2,Caledonian MacBrayne,CM23,ferry,2
+TNDS,Caledonian MacBrayne,CM18,ferry,16,2,Caledonian MacBrayne,CM18,ferry,2
+TNDS,Caledonian MacBrayne,CM14,ferry,16,2,Caledonian MacBrayne,CM14,ferry,2
+TNDS,Caledonian MacBrayne,CM14,ferry,16,2,Caledonian MacBrayne,CM14,ferry,2
+TNDS,Caledonian MacBrayne,CM14,ferry,16,2,Caledonian MacBrayne,CM14,ferry,2
+TNDS,Caledonian MacBrayne,CM14,ferry,16,2,Caledonian MacBrayne,CM14,ferry,2
+TNDS,Caledonian MacBrayne,CM25,ferry,12,2,Caledonian MacBrayne,CM25,ferry,2
+TNDS,Caledonian MacBrayne,CM8,ferry,18,2,Caledonian MacBrayne,CM8,ferry,2
+TNDS,Caledonian MacBrayne,CM18,ferry,14,2,Caledonian MacBrayne,CM18,ferry,2
+TNDS,Caledonian MacBrayne,CM2,ferry,16,2,Caledonian MacBrayne,CM2,ferry,2
+TNDS,Caledonian MacBrayne,CM18,ferry,14,2,Caledonian MacBrayne,CM18,ferry,2
+TNDS,Caledonian MacBrayne,CM23,ferry,8,2,Caledonian MacBrayne,CM23,ferry,2
+TNDS,Caledonian MacBrayne,CM23,ferry,8,2,Caledonian MacBrayne,CM23,ferry,2
+TNDS,Caledonian MacBrayne,20A,ferry,6,2,Caledonian MacBrayne,CM20,ferry,2
+TNDS,Caledonian MacBrayne,CM11,ferry,12,2,Caledonian MacBrayne,CM11,ferry,2
+TNDS,Caledonian MacBrayne,CM13,ferry,15,2,Caledonian MacBrayne,CM13,ferry,2
+TNDS,Caledonian MacBrayne,CM23,ferry,8,2,Caledonian MacBrayne,CM23,ferry,2
+TNDS,Highland Ferries,F10,ferry,16,2,Highland Ferries,F10,ferry,2
+TNDS,Caledonian MacBrayne,CM25,ferry,10,2,Caledonian MacBrayne,CM25,ferry,2
+TNDS,Caledonian MacBrayne,CM16,ferry,2,3,Caledonian MacBrayne,CM16,ferry,3
+TNDS,Caledonian MacBrayne,CM25,ferry,10,2,Caledonian MacBrayne,CM25,ferry,2
+TNDS,Caledonian MacBrayne,CM23,ferry,8,2,Caledonian MacBrayne,CM23,ferry,2
+TNDS,Caledonian MacBrayne,CM25,ferry,10,2,Caledonian MacBrayne,CM25,ferry,2
+TNDS,Caledonian MacBrayne,CM25,ferry,10,2,Caledonian MacBrayne,CM25,ferry,2
+TNDS,Caledonian MacBrayne,20A,ferry,8,2,Caledonian MacBrayne,20A,ferry,2
+TNDS,Caledonian MacBrayne,CM10,ferry,4,2,Caledonian MacBrayne,CM10,ferry,2
+TNDS,Caledonian MacBrayne,20A,ferry,8,2,Caledonian MacBrayne,20A,ferry,2
+TNDS,Caledonian MacBrayne,CM10,ferry,4,2,Caledonian MacBrayne,CM10,ferry,2
+TNDS,Caledonian MacBrayne,CM10,ferry,4,2,Caledonian MacBrayne,CM10,ferry,2
+TNDS,Caledonian MacBrayne,CM20,ferry,4,2,Caledonian MacBrayne,CM20,ferry,2
+TNDS,Caledonian MacBrayne,CM20,ferry,4,2,Caledonian MacBrayne,CM20,ferry,2
+TNDS,Caledonian MacBrayne,CM20,ferry,4,2,Caledonian MacBrayne,CM20,ferry,2
+TNDS,Caledonian MacBrayne,CM5,ferry,10,2,Caledonian MacBrayne,CM5,ferry,2
+TNDS,Caledonian MacBrayne,CM6,ferry,10,2,Caledonian MacBrayne,CM6,ferry,2
+TNDS,Caledonian MacBrayne,CM23,ferry,4,2,Caledonian MacBrayne,CM23,ferry,2
+TNDS,Caledonian MacBrayne,CM15,ferry,8,2,Caledonian MacBrayne,CM15,ferry,2
+TNDS,Orkney Ferries,OF6,ferry,2,2,Orkney Ferries,OF6,ferry,2
+TNDS,Caledonian MacBrayne,CM10,ferry,2,2,Caledonian MacBrayne,CM10,ferry,2
+TNDS,Caledonian MacBrayne,CM10,ferry,2,2,Caledonian MacBrayne,CM10,ferry,2
+TNDS,Atlantic Ferries,SF8,ferry,2,2,BK Marine,SF8,ferry,2
+TNDS,Caledonian MacBrayne,CM21,ferry,10,2,Caledonian MacBrayne,CM21,ferry,2
+TNDS,Caledonian MacBrayne,CM10,ferry,2,2,Caledonian MacBrayne,CM10,ferry,2
+TNDS,Caledonian MacBrayne,CM25,ferry,4,2,Caledonian MacBrayne,CM25,ferry,2
+TNDS,Caledonian MacBrayne,CM14,ferry,6,2,Caledonian MacBrayne,CM14,ferry,2
+TNDS,Shetland Ferries,SF7,ferry,2,2,Shetland Ferries,SF7,ferry,2
+TNDS,Caledonian MacBrayne,CM18,ferry,4,2,Caledonian MacBrayne,CM18,ferry,2
+TNDS,Luton DART,DART,tram,3520,2,FlixBus,UK950,coach,1
+TNDS,Green Line (operated by Arriva),757,coach,640,86,Arriva Beds and Bucks,757,bus,86
+TNDS,Gatwick Interterminal Shuttle,SHTL,tram,984,2,Gatwick Airport inter-terminal Shuttle,SHTL,tram,2
+TNDS,Itchenor Ferry,IF,ferry,144,2,Itchenor Ferry,IF,ferry,2
+TNDS,Nauticalia Ferry,NF,ferry,276,2,Nauticalia Ferry,NF,ferry,2
+TNDS,Romney Hythe and Dymchurch Light Railway,RHDR,rail,74,6,,,NOT FOUND,0
+TNDS,Kent & East Sussex Railway,KESR,rail,20,5,,,NOT FOUND,0
+TNDS,Bluebell Railway,BBR,rail,26,4,,,NOT FOUND,0
+TNDS,Spa Valley Railway,SVR,rail,20,4,,,NOT FOUND,0
+TNDS,IoW Floating Bridge,CowesFloatingBridge,ferry,1836,2,Cowes Ferry,Cowes Floating Bridge,ferry,2
+TNDS,Torpoint Ferry,TorpointFerry,ferry,1519,2,Tamar Bridge & Torpoint Ferry Joint Committee,Torpoint Ferry,ferry,2
+TNDS,Gosport Ferry,GosportFerry,ferry,1184,2,Gosport-Portsmouth Ferry,Gosport Ferry,ferry,2
+TNDS,C Toms & Sons,Fowey-BodinnickFerry,ferry,1100,2,"Polruan Passenger Ferry, Bodinnick Vehicle Ferry",Fowey - Bodinnick Ferry,ferry,2
+TNDS,Dartmouth Steam Railway And River Boat Company,DartmouthLowerFerry,ferry,952,2,River Link,Dartmouth Lower Ferry,ferry,2
+TNDS,Dartmouth Higher Ferry,DartmouthHigherFerry,ferry,774,2,Dartmouth Higher Ferry,Dartmouth Higher Ferry,ferry,2
+TNDS,Number Seven Boat Trips,BristolCrossHarbourFerry,ferry,558,2,Number Seven Boat Trips,Bristol Cross Harbour Ferry,ferry,2
+TNDS,C Toms & Sons,Fowey-PolruanFerry,ferry,691,2,Polruan Ferry Co Ltd,Fowey - Polruan Ferry,ferry,2
+TNDS,Berrys Coaches,SF1,coach,32,2,Berry's Coaches,SF1,coach,2
+TNDS,King Harry Ferry Co,Feock-PhilleighFerry,ferry,590,2,Fal River Links,Feock - Philleigh Ferry,ferry,2
+TNDS,Berrys Coaches,SF2,coach,32,2,Berry's Coaches,SF2,coach,2
+TNDS,Mountbatten Water Taxis,MountbattenFerry,ferry,456,2,Mountbatten Water Taxis,Mountbatten Ferry,ferry,2
+TNDS,Padstow Harbour Commissioners,Padstow-RockFerry,ferry,408,2,Padstow Harbour Commissioners,Padstow - Rock Ferry,ferry,2
+TNDS,Plymouth Boat Trips,CremyllFerry,ferry,362,2,Plymouth Boat Trips,Cremyll Ferry,ferry,2
+TNDS,Berrys Coaches,SF3,coach,16,2,Berry's Coaches,SF3,coach,2
+TNDS,Salcombe Ferry,SalcombeFerry,ferry,282,2,Salcombe Ferry,Salcombe Ferry,ferry,2
+TNDS,Hayling Ferry,HaylingFerry,ferry,236,2,Hayling Ferry Limited,Hayling Ferry,ferry,2
+TNDS,Hovertravel,IOWHovercraft,ferry,209,2,Hovertravel,IOW Hovercraft,ferry,2
+TNDS,Red Funnel,EastCowesFerry,ferry,194,2,Red Funnel,East Cowes Ferry,ferry,2
+TNDS,St Mawes Ferry,StMawesFerry,ferry,140,2,St Mawes Ferry,St Mawes Ferry,ferry,2
+TNDS,Flushing Ferry,Flushing-FalmouthFerry,ferry,138,2,Flushing Ferry,Flushing - Falmouth Ferry,ferry,2
+TNDS,Bristol Ferry Boat Company,BristolFerryBoats,ferry,56,7,Bristol Ferry Boat Company,Bristol Ferry Boats,ferry,7
+TNDS,Red Funnel,RedJetWestCowes,ferry,118,2,Red Funnel,RedJet West Cowes,ferry,2
+TNDS,Wightlink,YarmouthFerry,ferry,73,2,WightLink,Yarmouth Ferry,ferry,2
+TNDS,Wightlink,FishbourneFerry,ferry,111,3,WightLink,Fishbourne Ferry,ferry,3
+TNDS,Mudeford Ferry,MudefordFerry,ferry,60,2,Mudeford Ferry,Mudeford Ferry,ferry,2
+TNDS,Red Funnel,RedJetWestCowes,ferry,86,2,Red Funnel,RedJet West Cowes,ferry,2
+TNDS,Air-Rail Link,AIR,tram,3786,2,Air-Rail Link,AIR,tram,2
+TNDS,West Midlands Metro,Metro,tram,752,67,West Midlands Metro,Metro,tram,67
+TNDS,South Yorkshire Supertram,BLUE,tram,676,85,South Yorkshire Future Tram,BLUE,tram,85
+TNDS,South Yorkshire Supertram,YELL,tram,690,48,South Yorkshire Future Tram,YELL,tram,48
+TNDS,South Yorkshire Supertram,BLUE,tram,415,50,South Yorkshire Future Tram,BLUE,tram,50
+TNDS,South Yorkshire Supertram,YELL,tram,421,48,South Yorkshire Future Tram,YELL,tram,48
+TNDS,South Yorkshire Supertram,YELL,tram,415,34,South Yorkshire Future Tram,YELL,tram,34
+TNDS,South Yorkshire Supertram,TT,tram,318,28,South Yorkshire Future Tram,TT,tram,28
+TNDS,South Yorkshire Supertram,PURP,tram,159,30,South Yorkshire Future Tram,BLUE,tram,30
+TNDS,South Yorkshire Supertram,TT,tram,210,28,South Yorkshire Future Tram,TT,tram,28
+TNDS,South Yorkshire Supertram,PURP,tram,19,30,South Yorkshire Future Tram,BLUE,tram,30
+TNDS,South Yorkshire Supertram,PURP,tram,14,30,South Yorkshire Future Tram,BLUE,tram,30
+TNDS,South Yorkshire Supertram,BLUE,tram,15,30,South Yorkshire Future Tram,BLUE,tram,30
+BODS_GTFS,National Express,025,coach,70,33,,,NOT FOUND,0
+BODS_GTFS,National Express,444,coach,98,13,,,NOT FOUND,0
+BODS_GTFS,National Express,007,coach,92,19,,,NOT FOUND,0
+BODS_GTFS,National Express,022,coach,206,37,,,NOT FOUND,0
+BODS_GTFS,Highland Council,F9,ferry,242,2,Highland Council,F9,ferry,2
+BODS_GTFS,Edinburgh Trams,T50,tram,893,44,Edinburgh Trams,T50,tram,44
+BODS_GTFS,Tamar Bridge & Torpoint Ferry Joint Committee,Torpoint Ferry,ferry,2446,2,Torpoint Ferry,TorpointFerry,ferry,2
+BODS_GTFS,Dartmouth Higher Ferry,Dartmouth Higher Ferry,ferry,1251,2,Dartmouth Higher Ferry,DartmouthHigherFerry,ferry,2
+BODS_GTFS,River Link,Dartmouth Lower Ferry,ferry,1538,2,Dartmouth Steam Railway And River Boat Company,DartmouthLowerFerry,ferry,2
+BODS_GTFS,Salcombe Ferry,Salcombe Ferry,ferry,458,2,Salcombe Ferry,SalcombeFerry,ferry,2
+BODS_GTFS,Cowes Ferry,Cowes Floating Bridge,ferry,2970,2,IoW Floating Bridge,CowesFloatingBridge,ferry,2
+BODS_GTFS,Gosport-Portsmouth Ferry,Gosport Ferry,ferry,1924,2,Gosport Ferry,GosportFerry,ferry,2
+BODS_GTFS,Hayling Ferry Limited,Hayling Ferry,ferry,382,2,Hayling Ferry,HaylingFerry,ferry,2
+BODS_GTFS,National Express,210,coach,133,11,,,NOT FOUND,0
+BODS_GTFS,National Express,727,coach,122,14,,,NOT FOUND,0
+BODS_GTFS,National Express,401,coach,100,22,,,NOT FOUND,0
+BODS_GTFS,National Express,560,coach,8,8,,,NOT FOUND,0
+BODS_GTFS,Nexus Ferry,FERRY,ferry,210,2,NEXUS Ferry,FERRY,ferry,2
+BODS_GTFS,National Express,564,coach,48,20,,,NOT FOUND,0
+BODS_GTFS,National Express,404,coach,20,27,,,NOT FOUND,0
+BODS_GTFS,Red Funnel,RedJet West Cowes,ferry,118,2,Red Funnel,RedJetWestCowes,ferry,2
+BODS_GTFS,Red Funnel,East Cowes Ferry,ferry,330,2,Red Funnel,EastCowesFerry,ferry,2
+BODS_GTFS,WightLink,Ryde FastCat,ferry,132,2,Wightlink,FishbourneFerry,ferry,1
+BODS_GTFS,South Yorkshire Future Tram,BLUE,tram,1047,85,South Yorkshire Supertram,BLUE,tram,85
+BODS_GTFS,South Yorkshire Future Tram,PURP,tram,159,30,South Yorkshire Supertram,PURP,tram,30
+BODS_GTFS,South Yorkshire Future Tram,TT,tram,480,28,South Yorkshire Supertram,TT,tram,28
+BODS_GTFS,South Yorkshire Future Tram,YELL,tram,1063,48,South Yorkshire Supertram,YELL,tram,48
+BODS_GTFS,National Express,717,coach,30,9,,,NOT FOUND,0
+BODS_GTFS,Orkney Ferries,OF6,ferry,6,2,Orkney Ferries,OF6,ferry,2
+BODS_GTFS,National Express,502,coach,41,23,,,NOT FOUND,0
+BODS_GTFS,FlixBus,1710,coach,5,5,,,NOT FOUND,0
+BODS_GTFS,FlixBus,N700,coach,38,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,N824,coach,26,13,,,NOT FOUND,0
+BODS_GTFS,FlixBus,N1710,coach,11,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,N1328,coach,18,13,,,NOT FOUND,0
+BODS_GTFS,FlixBus,700,coach,24,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,N814,coach,34,11,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK001,coach,6,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,N1700,coach,28,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK010,coach,20,9,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK003,coach,72,5,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK007,coach,90,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK002,coach,147,10,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK004,coach,150,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK005,coach,144,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK024,coach,100,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK030,coach,14,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK021,coach,75,9,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK043,coach,120,14,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK020,coach,151,3,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK044,coach,96,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK047,coach,31,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK046,coach,48,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK042,coach,170,11,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK045,coach,36,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK023,coach,144,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK049,coach,24,11,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK070,coach,73,4,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK071,coach,91,3,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK072,coach,40,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK041,coach,168,5,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK075,coach,25,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK076,coach,64,5,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK074,coach,38,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK073,coach,84,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK077,coach,24,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK079,coach,38,4,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK078,coach,36,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK093,coach,79,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK094,coach,77,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK900,coach,180,10,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN30,coach,14,5,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN31,coach,14,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK092,coach,199,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN21,coach,13,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN10,coach,14,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN11,coach,14,12,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN23,coach,27,10,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN02,coach,18,9,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK910,coach,96,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK920,coach,283,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN49,coach,12,10,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK091,coach,389,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK940,coach,324,11,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKX010,coach,14,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKXN10,coach,14,5,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK090,coach,166,17,,,NOT FOUND,0
+BODS_GTFS,National Express,030,coach,104,16,,,NOT FOUND,0
+BODS_GTFS,National Express,100,coach,46,7,,,NOT FOUND,0
+BODS_GTFS,National Express,104,coach,72,31,,,NOT FOUND,0
+BODS_GTFS,National Express,101,coach,15,15,,,NOT FOUND,0
+BODS_GTFS,National Express,111,coach,36,9,,,NOT FOUND,0
+BODS_GTFS,National Express,032,coach,136,10,,,NOT FOUND,0
+BODS_GTFS,National Express,035,coach,217,21,,,NOT FOUND,0
+BODS_GTFS,National Express,112,coach,60,29,,,NOT FOUND,0
+BODS_GTFS,National Express,040,coach,221,15,,,NOT FOUND,0
+BODS_GTFS,National Express,121,coach,82,7,,,NOT FOUND,0
+BODS_GTFS,National Express,120,coach,48,8,,,NOT FOUND,0
+BODS_GTFS,National Express,133,coach,18,6,,,NOT FOUND,0
+BODS_GTFS,National Express,131,coach,168,8,,,NOT FOUND,0
+BODS_GTFS,National Express,151,coach,8,8,,,NOT FOUND,0
+BODS_GTFS,National Express,150,coach,12,3,,,NOT FOUND,0
+BODS_GTFS,National Express,177,coach,8,6,,,NOT FOUND,0
+BODS_GTFS,National Express,180,coach,2,12,,,NOT FOUND,0
+BODS_GTFS,National Express,181,coach,4,10,,,NOT FOUND,0
+BODS_GTFS,National Express,196,coach,11,5,,,NOT FOUND,0
+BODS_GTFS,National Express,183,coach,6,8,,,NOT FOUND,0
+BODS_GTFS,National Express,152,coach,8,9,,,NOT FOUND,0
+BODS_GTFS,National Express,406,coach,12,32,,,NOT FOUND,0
+BODS_GTFS,National Express,172,coach,58,10,,,NOT FOUND,0
+BODS_GTFS,National Express,170,coach,256,23,,,NOT FOUND,0
+BODS_GTFS,National Express,160,coach,10,7,,,NOT FOUND,0
+BODS_GTFS,National Express,240,coach,33,13,,,NOT FOUND,0
+BODS_GTFS,National Express,195,coach,8,6,,,NOT FOUND,0
+BODS_GTFS,National Express,409,coach,20,16,,,NOT FOUND,0
+BODS_GTFS,National Express,200,coach,32,6,,,NOT FOUND,0
+BODS_GTFS,National Express,421,coach,5,10,,,NOT FOUND,0
+BODS_GTFS,National Express,216,coach,83,7,,,NOT FOUND,0
+BODS_GTFS,National Express,403,coach,67,20,Faresaver,231,bus,10
+BODS_GTFS,National Express,202,coach,129,13,,,NOT FOUND,0
+BODS_GTFS,National Express,422,coach,6,15,,,NOT FOUND,0
+BODS_GTFS,National Express,400,coach,72,13,,,NOT FOUND,0
+BODS_GTFS,National Express,230,coach,149,17,,,NOT FOUND,0
+BODS_GTFS,National Express,424,coach,6,13,,,NOT FOUND,0
+BODS_GTFS,National Express,201,coach,139,16,,,NOT FOUND,0
+BODS_GTFS,National Express,426,coach,32,13,,,NOT FOUND,0
+BODS_GTFS,National Express,455,coach,3,5,,,NOT FOUND,0
+BODS_GTFS,National Express,451,coach,12,9,,,NOT FOUND,0
+BODS_GTFS,National Express,445,coach,66,15,,,NOT FOUND,0
+BODS_GTFS,National Express,460,coach,41,9,,,NOT FOUND,0
+BODS_GTFS,National Express,490,coach,8,7,,,NOT FOUND,0
+BODS_GTFS,National Express,450,coach,108,21,,,NOT FOUND,0
+BODS_GTFS,National Express,501,coach,45,15,,,NOT FOUND,0
+BODS_GTFS,National Express,491,coach,16,9,,,NOT FOUND,0
+BODS_GTFS,National Express,440,coach,190,19,,,NOT FOUND,0
+BODS_GTFS,National Express,507,coach,133,19,,,NOT FOUND,0
+BODS_GTFS,National Express,508,coach,64,28,,,NOT FOUND,0
+BODS_GTFS,National Express,590,coach,14,10,,,NOT FOUND,0
+BODS_GTFS,National Express,509,coach,186,13,,,NOT FOUND,0
+BODS_GTFS,National Express,591,coach,5,15,,,NOT FOUND,0
+BODS_GTFS,National Express,594,coach,2,8,,,NOT FOUND,0
+BODS_GTFS,National Express,561,coach,72,14,,,NOT FOUND,0
+BODS_GTFS,National Express,540,coach,159,24,,,NOT FOUND,0
+BODS_GTFS,National Express,595,coach,2,9,,,NOT FOUND,0
+BODS_GTFS,National Express,598,coach,8,11,,,NOT FOUND,0
+BODS_GTFS,National Express,504,coach,183,46,,,NOT FOUND,0
+BODS_GTFS,National Express,728,coach,34,11,,,NOT FOUND,0
+BODS_GTFS,National Express,777,coach,34,7,,,NOT FOUND,0
+BODS_GTFS,National Express,A40,coach,2,14,NATIONAL EXPRESS OPERATIONS LIMITED,N40,bus,9
+BODS_GTFS,National Express,786,coach,14,3,,,NOT FOUND,0
+BODS_GTFS,National Express,707,coach,85,13,,,NOT FOUND,0
+BODS_GTFS,National Express,A31,coach,44,15,Green Line (operated by Arriva),757,coach,9
+BODS_GTFS,National Express,A1,coach,53,19,,,NOT FOUND,0
+BODS_GTFS,National Express,B10,coach,3,5,,,NOT FOUND,0
+BODS_GTFS,National Express,B1,coach,12,2,,,NOT FOUND,0
+BODS_GTFS,National Express,A2,coach,68,22,,,NOT FOUND,0
+BODS_GTFS,National Express,N40,coach,8,16,NATIONAL EXPRESS OPERATIONS LIMITED,N40,bus,14
+BODS_GTFS,National Express,737,coach,66,14,,,NOT FOUND,0
+BODS_GTFS,National Express,B14,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,B17,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,B12,coach,3,4,,,NOT FOUND,0
+BODS_GTFS,National Express,B18,coach,5,3,,,NOT FOUND,0
+BODS_GTFS,National Express,B11,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,B19,coach,3,2,,,NOT FOUND,0
+BODS_GTFS,National Express,A6,coach,139,19,,,NOT FOUND,0
+BODS_GTFS,National Express,B20,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,B2,coach,5,2,Metrobus,272,bus,1
+BODS_GTFS,National Express,B21,coach,3,4,,,NOT FOUND,0
+BODS_GTFS,National Express,A8,coach,212,20,,,NOT FOUND,0
+BODS_GTFS,National Express,B22,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,B23,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,B26,coach,2,2,,,NOT FOUND,0
+BODS_GTFS,National Express,B25,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,B24,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,B4,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,B3,coach,6,2,,,NOT FOUND,0
+BODS_GTFS,National Express,A9,coach,229,12,,,NOT FOUND,0
+BODS_GTFS,National Express,CP6,coach,6,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CP8,coach,4,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CP5,coach,6,6,,,NOT FOUND,0
+BODS_GTFS,National Express,B9,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,B5,coach,5,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CP9,coach,4,5,,,NOT FOUND,0
+BODS_GTFS,National Express,B7,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,B8,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,B6,coach,4,3,,,NOT FOUND,0
+BODS_GTFS,National Express,G1,coach,84,3,,,NOT FOUND,0
+BODS_GTFS,National Express,G10,coach,22,4,,,NOT FOUND,0
+BODS_GTFS,National Express,G12,coach,13,5,,,NOT FOUND,0
+BODS_GTFS,National Express,G15,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,G35,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,G22,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,G28,coach,4,6,,,NOT FOUND,0
+BODS_GTFS,National Express,G24,coach,20,3,,,NOT FOUND,0
+BODS_GTFS,National Express,G3,coach,2,8,,,NOT FOUND,0
+BODS_GTFS,National Express,G29,coach,2,6,,,NOT FOUND,0
+BODS_GTFS,National Express,G30,coach,2,8,,,NOT FOUND,0
+BODS_GTFS,National Express,G39,coach,2,7,,,NOT FOUND,0
+BODS_GTFS,National Express,G33,coach,4,5,,,NOT FOUND,0
+BODS_GTFS,National Express,G37,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,G18,coach,88,2,,,NOT FOUND,0
+BODS_GTFS,National Express,G23,coach,6,5,,,NOT FOUND,0
+BODS_GTFS,National Express,G61,coach,2,9,,,NOT FOUND,0
+BODS_GTFS,National Express,G44,coach,3,5,,,NOT FOUND,0
+BODS_GTFS,National Express,G42,coach,9,2,,,NOT FOUND,0
+BODS_GTFS,National Express,G45,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,G7,coach,9,6,,,NOT FOUND,0
+BODS_GTFS,National Express,G5,coach,2,12,,,NOT FOUND,0
+BODS_GTFS,National Express,G41,coach,17,2,Stagecoach South West,FAL,bus,1
+BODS_GTFS,National Express,G9,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,G4,coach,22,11,,,NOT FOUND,0
+BODS_GTFS,National Express,G60,coach,56,2,,,NOT FOUND,0
+BODS_GTFS,National Express,GN1,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,GN4,coach,2,6,,,NOT FOUND,0
+BODS_GTFS,National Express,GN2,coach,2,7,,,NOT FOUND,0
+BODS_GTFS,National Express,GN5,coach,2,6,,,NOT FOUND,0
+BODS_GTFS,National Express,G19,coach,18,2,,,NOT FOUND,0
+BODS_GTFS,National Express,G2,coach,12,7,,,NOT FOUND,0
+BODS_GTFS,National Express,MC1,coach,4,4,,,NOT FOUND,0
+BODS_GTFS,National Express,MC2,coach,4,4,,,NOT FOUND,0
+BODS_GTFS,National Express,N02,coach,2,6,,,NOT FOUND,0
+BODS_GTFS,National Express,MC6,coach,4,4,,,NOT FOUND,0
+BODS_GTFS,National Express,N01,coach,2,6,,,NOT FOUND,0
+BODS_GTFS,National Express,N03,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,MC4,coach,4,4,,,NOT FOUND,0
+BODS_GTFS,National Express,N08,coach,2,7,,,NOT FOUND,0
+BODS_GTFS,National Express,N05,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,N07,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,N16,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,N18,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,S1,coach,13,2,,,NOT FOUND,0
+BODS_GTFS,National Express,S2,coach,6,5,,,NOT FOUND,0
+BODS_GTFS,National Express,S4,coach,4,5,,,NOT FOUND,0
+BODS_GTFS,National Express,S3,coach,4,4,,,NOT FOUND,0
+BODS_GTFS,National Express,S5,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,S6,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,S7,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,S8,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,S9,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,T52,coach,10,4,,,NOT FOUND,0
+BODS_GTFS,National Express,W10,coach,10,6,,,NOT FOUND,0
+BODS_GTFS,National Express,W12,coach,10,6,,,NOT FOUND,0
+BODS_GTFS,National Express,W11,coach,6,4,,,NOT FOUND,0
+BODS_GTFS,National Express,W13,coach,6,4,,,NOT FOUND,0
+BODS_GTFS,National Express,SCA,coach,2,2,,,NOT FOUND,0
+BODS_GTFS,National Express,W15,coach,10,4,,,NOT FOUND,0
+BODS_GTFS,National Express,W29,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,W14,coach,4,5,,,NOT FOUND,0
+BODS_GTFS,National Express,W19,coach,6,7,,,NOT FOUND,0
+BODS_GTFS,National Express,W16,coach,4,6,,,NOT FOUND,0
+BODS_GTFS,National Express,W25,coach,8,5,,,NOT FOUND,0
+BODS_GTFS,National Express,W18,coach,6,7,,,NOT FOUND,0
+BODS_GTFS,National Express,W24,coach,10,5,,,NOT FOUND,0
+BODS_GTFS,National Express,W28,coach,8,5,,,NOT FOUND,0
+BODS_GTFS,National Express,W17,coach,6,5,,,NOT FOUND,0
+BODS_GTFS,National Express,W20,coach,6,7,,,NOT FOUND,0
+BODS_GTFS,London Underground (TfL),Waterloo & City,metro,531,4,London Underground,Waterloo&City,metro,4
+BODS_GTFS,Woolwich Free Ferry,Woolwich Ferry,ferry,128,2,Woolwich Ferry,WoolwichFerry,ferry,2
+BODS_GTFS,Tyne and Wear Metro,GRN,metro,510,61,NEXUS,GRN,metro,61
+BODS_GTFS,Tyne and Wear Metro,YEL,metro,501,83,NEXUS,YEL,metro,83
+BODS_GTFS,Green Line (operated by Arriva),757,coach,1040,86,Green Line (operated by Arriva),757,coach,86
+BODS_GTFS,Flushing Ferry,Flushing - Falmouth Ferry,ferry,224,2,Flushing Ferry,Flushing-FalmouthFerry,ferry,2
+BODS_GTFS,Polruan Ferry Co Ltd,Fowey - Polruan Ferry,ferry,1098,2,C Toms & Sons,Fowey-PolruanFerry,ferry,2
+BODS_GTFS,St Mawes Ferry,St Mawes Ferry,ferry,226,2,St Mawes Ferry,StMawesFerry,ferry,2
+BODS_GTFS,Hovertravel,IOW Hovercraft,ferry,339,2,Hovertravel,IOWHovercraft,ferry,2
+BODS_GTFS,Mudeford Ferry,Mudeford Ferry,ferry,60,2,Mudeford Ferry,MudefordFerry,ferry,2
+BODS_GTFS,Red Funnel,RedJet West Cowes,ferry,86,2,Red Funnel,RedJetWestCowes,ferry,2
+BODS_GTFS,WightLink,Fishbourne Ferry,ferry,111,3,Wightlink,FishbourneFerry,ferry,3
+BODS_GTFS,WightLink,Yarmouth Ferry,ferry,80,2,Wightlink,YarmouthFerry,ferry,2
+BODS_GTFS,Scottish Citylink,961,coach,10,12,D+E Coaches,61,bus,11
+BODS_GTFS,Scottish Citylink,915,coach,70,210,Shiel Buses,510,bus,37
+BODS_GTFS,Scottish Citylink,926,coach,36,132,West Coast Motors,449,bus,57
+BODS_GTFS,Scottish Citylink,976,coach,24,91,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,978,coach,6,115,Midland Bluebird,S60,bus,47
+BODS_GTFS,Fal River Links,Feock - Philleigh Ferry,ferry,949,2,King Harry Ferry Co,Feock-PhilleighFerry,ferry,2
+BODS_GTFS,Plymouth Boat Trips,Cremyll Ferry,ferry,583,2,Plymouth Boat Trips,CremyllFerry,ferry,2
+BODS_GTFS,Padstow Harbour Commissioners,Padstow - Rock Ferry,ferry,663,2,Padstow Harbour Commissioners,Padstow-RockFerry,ferry,2
+BODS_GTFS,Blackpool Transport,Tram,tram,272,78,Blackpool Transport Services Ltd,Tram,tram,75
+BODS_GTFS,FlixBus,1700,coach,41,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK061,coach,202,12,,,NOT FOUND,0
+BODS_GTFS,Caledonian MacBrayne,15A,ferry,792,2,Caledonian MacBrayne,15A,ferry,2
+BODS_GTFS,Caledonian MacBrayne,20A,ferry,48,3,Caledonian MacBrayne,CM20,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM10,ferry,40,2,Caledonian MacBrayne,CM9,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM11,ferry,568,2,Caledonian MacBrayne,CM11,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM12,ferry,552,2,Caledonian MacBrayne,CM12,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM13,ferry,530,2,Caledonian MacBrayne,CM13,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM14,ferry,184,2,Caledonian MacBrayne,CM14,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM15,ferry,220,2,Caledonian MacBrayne,CM15,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM16,ferry,75,3,Caledonian MacBrayne,CM16,ferry,3
+BODS_GTFS,Caledonian MacBrayne,CM17,ferry,498,2,Caledonian MacBrayne,CM17,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM18,ferry,168,2,Caledonian MacBrayne,CM18,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM19,ferry,85,5,Caledonian MacBrayne,CM19,ferry,5
+BODS_GTFS,Caledonian MacBrayne,CM1A,ferry,508,2,Caledonian MacBrayne,CM1A,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM1,ferry,1186,2,Caledonian MacBrayne,CM1,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM20,ferry,68,3,Caledonian MacBrayne,CM20,ferry,3
+BODS_GTFS,Caledonian MacBrayne,CM21,ferry,264,2,Caledonian MacBrayne,CM21,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM22,ferry,204,3,Caledonian MacBrayne,CM22,ferry,3
+BODS_GTFS,Caledonian MacBrayne,CM23,ferry,96,2,Caledonian MacBrayne,CM23,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM25,ferry,114,2,Caledonian MacBrayne,CM25,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM2,ferry,492,2,Caledonian MacBrayne,CM2,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM3,ferry,884,2,Caledonian MacBrayne,CM3,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM4,ferry,2008,2,Caledonian MacBrayne,CM4,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM5B,ferry,18,2,Caledonian MacBrayne,CM5B,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM5,ferry,311,2,Caledonian MacBrayne,CM5,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM6,ferry,336,2,Caledonian MacBrayne,CM6,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM7,ferry,1424,2,Caledonian MacBrayne,CM7,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM8,ferry,528,2,Caledonian MacBrayne,CM8,ferry,2
+BODS_GTFS,Caledonian MacBrayne,CM9,ferry,434,4,Caledonian MacBrayne,CM9,ferry,4
+BODS_GTFS,IFS Cloud Cable Car,London Cable Car,gondola,1016,2,London Cable Car,LondonCableCar,gondola,2
+BODS_GTFS,Highland Ferries,CF1,ferry,110,2,,,NOT FOUND,0
+BODS_GTFS,Ember,E1,coach,972,64,,,NOT FOUND,0
+BODS_GTFS,Ember,E4,coach,56,59,,,NOT FOUND,0
+BODS_GTFS,Argyll & Bute Council Ferries,EAS,ferry,274,2,Argyll + Bute Council Ferries,EAS,ferry,2
+BODS_GTFS,Highland Ferries,F10,ferry,54,2,Highland Ferries,F10,ferry,2
+BODS_GTFS,Ember,E10,coach,1008,11,,,NOT FOUND,0
+BODS_GTFS,Ember,E3,coach,504,32,,,NOT FOUND,0
+BODS_GTFS,Argyll & Bute Council Ferries,JUR,ferry,172,2,Argyll + Bute Council Ferries,JUR,ferry,2
+BODS_GTFS,Argyll & Bute Council Ferries,LIS,ferry,152,2,Argyll + Bute Council Ferries,LIS,ferry,2
+BODS_GTFS,Argyll & Bute Council Ferries,LUI,ferry,284,2,Argyll + Bute Council Ferries,LUI,ferry,2
+BODS_GTFS,Orkney Ferries,OF2,ferry,71,4,,,NOT FOUND,0
+BODS_GTFS,Orkney Ferries,OF1,ferry,40,3,Orkney Ferries,OF1,ferry,2
+BODS_GTFS,Orkney Ferries,OF4,ferry,96,2,Orkney Ferries,OF4,ferry,2
+BODS_GTFS,Orkney Ferries,OF3,ferry,77,4,Orkney Ferries,OF3,ferry,4
+BODS_GTFS,Orkney Ferries,OF5,ferry,108,6,Orkney Ferries,OF5,ferry,6
+BODS_GTFS,Shetland Ferries,SF1,ferry,282,2,Shetland Ferries,SF1,ferry,2
+BODS_GTFS,Shetland Ferries,SF2,ferry,315,3,Shetland Ferries,SF2,ferry,3
+BODS_GTFS,Shetland Ferries,SF6,ferry,16,2,Shetland Ferries,SF6,ferry,2
+BODS_GTFS,Shetland Ferries,SF3,ferry,31,5,Shetland Ferries,SF3,ferry,5
+BODS_GTFS,Shetland Ferries,SF5,ferry,227,2,Shetland Ferries,SF3,ferry,2
+BODS_GTFS,Shetland Ferries,SF4,ferry,314,2,Shetland Ferries,SF4,ferry,2
+BODS_GTFS,Shetland Ferries,SF7,ferry,2,2,Shetland Ferries,SF7,ferry,2
+BODS_GTFS,SPT Subway,SUB,tram,2496,30,SPT Subway,SUB,metro,30
+BODS_GTFS,Western Ferries,WF1,ferry,590,2,Western Ferries,WF1,ferry,2
+BODS_GTFS,Scottish Citylink,M10,coach,54,14,,,NOT FOUND,0
+BODS_GTFS,Park's of Hamilton,M91,coach,6,54,Stagecoach Bluebird,139,bus,19
+BODS_GTFS,Scottish Citylink,M90,coach,81,26,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,909,coach,52,75,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,917,coach,24,118,Stagecoach Bluebird,17,bus,33
+BODS_GTFS,Scottish Citylink,M8,coach,56,50,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,923,coach,24,5,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,M9,coach,252,54,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,AIR,coach,288,17,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,919,coach,84,89,Shiel Buses,510,bus,33
+BODS_GTFS,Scottish Citylink,M92,coach,216,51,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,902,coach,98,62,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,900,coach,444,57,,,NOT FOUND,0
+BODS_GTFS,Xplore Dundee,FLY,coach,144,2,Xplore Dundee,FLY,coach,2
+BODS_GTFS,Western Isles Cruises,KN1,ferry,17,3,Western Isles Cruises,KN1,ferry,3
+BODS_GTFS,Northlink Ferries,NL2,ferry,5,3,Northlink Ferries,NL2,ferry,3
+BODS_GTFS,Northlink Ferries,NL1,ferry,16,2,Northlink Ferries,NL1,ferry,2
+BODS_GTFS,Pentland Ferries,PF1,ferry,36,2,Pentland Ferries,PF1,ferry,2
+BODS_GTFS,Ulva Ferry,ULV,ferry,68,2,,,NOT FOUND,0
+BODS_GTFS,Number Seven Boat Trips,Bristol Cross Harbour Ferry,ferry,904,2,Number Seven Boat Trips,BristolCrossHarbourFerry,ferry,2
+BODS_GTFS,Orkney Ferries,OF7,ferry,134,2,Orkney Ferries,OF7,ferry,2
+BODS_GTFS,Metrolink,Green Line,tram,119,49,Metrolink,GreenLine,tram,49
+BODS_GTFS,Scottish Citylink,913,coach,6,109,Stagecoach East Scotland,15,bus,56
+BODS_GTFS,FlixBus,N280,coach,18,14,,,NOT FOUND,0
+BODS_GTFS,Metrolink,Red Line,tram,154,31,Metrolink,RedLine,tram,31
+BODS_GTFS,Metrolink,Red Line,tram,172,31,Metrolink,RedLine,tram,31
+BODS_GTFS,Metrolink,Red Line,tram,172,31,Metrolink,RedLine,tram,31
+BODS_GTFS,Metrolink,Green Line,tram,119,49,Metrolink,GreenLine,tram,49
+BODS_GTFS,Metrolink,Green Line,tram,91,49,Metrolink,GreenLine,tram,49
+BODS_GTFS,Ember,E5,coach,171,53,,,NOT FOUND,0
+BODS_GTFS,Ember,E7,coach,308,74,Stagecoach Bluebird,10,bus,52
+BODS_GTFS,FlixBus,UK066,coach,126,7,,,NOT FOUND,0
+BODS_GTFS,National Express,209,coach,1,5,,,NOT FOUND,0
+BODS_GTFS,National Express,N04,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,N06,coach,2,6,,,NOT FOUND,0
+BODS_GTFS,Ember,E6,coach,162,88,,,NOT FOUND,0
+BODS_GTFS,National Express,T57,coach,10,4,,,NOT FOUND,0
+BODS_GTFS,National Express,T78,coach,6,4,,,NOT FOUND,0
+BODS_GTFS,National Express,T54,coach,10,5,,,NOT FOUND,0
+BODS_GTFS,National Express,T55,coach,10,5,,,NOT FOUND,0
+BODS_GTFS,National Express,T53,coach,10,6,,,NOT FOUND,0
+BODS_GTFS,National Express,T65,coach,10,5,,,NOT FOUND,0
+BODS_GTFS,National Express,T29,coach,6,4,,,NOT FOUND,0
+BODS_GTFS,Ember,E11,coach,40,68,,,NOT FOUND,0
+BODS_GTFS,London Tramlink,Tram,tram,1880,66,London Trams,Tram,tram,66
+BODS_GTFS,Ember,E4X,coach,12,14,,,NOT FOUND,0
+BODS_GTFS,National Express,802,coach,8,7,,,NOT FOUND,0
+BODS_GTFS,National Express,801,coach,12,10,,,NOT FOUND,0
+BODS_GTFS,National Express,803,coach,12,7,,,NOT FOUND,0
+BODS_GTFS,National Express,804,coach,30,11,,,NOT FOUND,0
+BODS_GTFS,National Express,805,coach,22,29,,,NOT FOUND,0
+BODS_GTFS,National Express,807,coach,12,6,,,NOT FOUND,0
+BODS_GTFS,National Express,806,coach,12,7,,,NOT FOUND,0
+BODS_GTFS,National Express,808,coach,16,7,,,NOT FOUND,0
+BODS_GTFS,National Express,812,coach,6,5,,,NOT FOUND,0
+BODS_GTFS,National Express,814,coach,8,11,,,NOT FOUND,0
+BODS_GTFS,National Express,813,coach,10,9,,,NOT FOUND,0
+BODS_GTFS,National Express,810,coach,46,7,,,NOT FOUND,0
+BODS_GTFS,National Express,811,coach,26,21,,,NOT FOUND,0
+BODS_GTFS,National Express,816,coach,4,7,,,NOT FOUND,0
+BODS_GTFS,National Express,815,coach,4,8,,,NOT FOUND,0
+BODS_GTFS,National Express,819,coach,8,5,,,NOT FOUND,0
+BODS_GTFS,National Express,820,coach,16,8,,,NOT FOUND,0
+BODS_GTFS,National Express,821,coach,74,4,Newbury & District,730,bus,2
+BODS_GTFS,National Express,817,coach,46,4,,,NOT FOUND,0
+BODS_GTFS,National Express,825,coach,4,5,,,NOT FOUND,0
+BODS_GTFS,National Express,823,coach,49,3,,,NOT FOUND,0
+BODS_GTFS,National Express,824,coach,48,10,Green Line (operated by Arriva),757,coach,5
+BODS_GTFS,National Express,826,coach,8,5,,,NOT FOUND,0
+BODS_GTFS,National Express,830,coach,3,9,,,NOT FOUND,0
+BODS_GTFS,National Express,828,coach,2,9,,,NOT FOUND,0
+BODS_GTFS,National Express,829,coach,6,15,,,NOT FOUND,0
+BODS_GTFS,National Express,832,coach,1,10,,,NOT FOUND,0
+BODS_GTFS,National Express,838,coach,1,5,,,NOT FOUND,0
+BODS_GTFS,National Express,839,coach,2,9,,,NOT FOUND,0
+BODS_GTFS,National Express,CF2,coach,3,5,,,NOT FOUND,0
+BODS_GTFS,National Express,CF3,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,CF6,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,CF4,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,CF5,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CF8,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CFB,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,CF9,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CFC,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,Park's of Hamilton,M90,coach,12,24,,,NOT FOUND,0
+BODS_GTFS,Park's of Hamilton,M9,coach,60,41,,,NOT FOUND,0
+BODS_GTFS,Park's of Hamilton,M8,coach,36,46,,,NOT FOUND,0
+BODS_GTFS,Ember,E8,coach,240,24,,,NOT FOUND,0
+BODS_GTFS,National Express,CP7,coach,2,3,,,NOT FOUND,0
+BODS_GTFS,National Express,SCB,coach,11,2,,,NOT FOUND,0
+BODS_GTFS,Ember,E9,coach,264,35,,,NOT FOUND,0
+BODS_GTFS,FlixBus,N870,coach,51,15,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK980,coach,61,8,,,NOT FOUND,0
+BODS_GTFS,Ember,E12,coach,240,3,Ember,E12,coach,3
+BODS_GTFS,FlixBus,UK025,coach,24,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK014,coach,37,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK026,coach,20,8,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK083,coach,38,4,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK084,coach,12,6,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK905,coach,54,10,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK930,coach,67,11,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK950,coach,84,7,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN14,coach,18,7,,,NOT FOUND,0
+BODS_GTFS,National Express,231,coach,4,4,Newbury & District,730,bus,2
+BODS_GTFS,National Express,N22,coach,2,6,,,NOT FOUND,0
+BODS_GTFS,National Express,N23,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,N25,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK087,coach,26,10,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK998,coach,48,8,,,NOT FOUND,0
+BODS_GTFS,Ember,E14,coach,210,93,West Coast Motors,918,bus,44
+BODS_GTFS,Ember,E16,coach,56,53,,,NOT FOUND,0
+BODS_GTFS,National Express,410,coach,20,5,,,NOT FOUND,0
+BODS_GTFS,National Express,541,coach,104,13,,,NOT FOUND,0
+BODS_GTFS,Mountbatten Water Taxis,Mountbatten Ferry,ferry,741,2,Mountbatten Water Taxis,MountbattenFerry,ferry,2
+BODS_GTFS,FlixBus,N380,coach,10,11,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK008,coach,73,9,,,NOT FOUND,0
+BODS_GTFS,London Underground (TfL),Bakerloo,metro,1691,50,London Underground,Bakerloo,metro,50
+BODS_GTFS,London Underground (TfL),Jubilee,metro,3485,52,London Underground,Jubilee,metro,52
+BODS_GTFS,London Underground (TfL),Northern,metro,6135,102,London Underground,Northern,metro,102
+BODS_GTFS,Ember,E17,coach,334,88,Stagecoach East Scotland,X7,bus,42
+BODS_GTFS,Ember,E18,coach,30,31,D+E Coaches,61,bus,25
+BODS_GTFS,Ember,E15,coach,72,64,,,NOT FOUND,0
+BODS_GTFS,London Docklands Light Railway - TfL,DLR,rail,4218,91,Docklands Light Railway,DLR,metro,81
+BODS_GTFS,South Yorkshire Future Tram,BLUE,tram,15,30,South Yorkshire Supertram,PURP,tram,30
+BODS_GTFS,Metrolink,Yellow Line,tram,315,33,Metrolink,YellowLine,tram,33
+BODS_GTFS,Metrolink,Yellow Line,tram,331,33,Metrolink,YellowLine,tram,33
+BODS_GTFS,Metrolink,Yellow Line,tram,288,33,Metrolink,YellowLine,tram,33
+BODS_GTFS,West Midlands Metro,Metro,tram,752,67,West Midlands Metro,Metro,tram,67
+BODS_GTFS,Air-Rail Link,AIR,tram,3786,2,Air-Rail Link,AIR,tram,2
+BODS_GTFS,Ember,E19,coach,2243,51,,,NOT FOUND,0
+BODS_GTFS,BK Marine,SF8,ferry,2,2,Atlantic Ferries,SF8,ferry,2
+BODS_GTFS,National Express,105,coach,30,24,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UKN13,coach,14,4,,,NOT FOUND,0
+BODS_GTFS,National Express,467,coach,14,13,,,NOT FOUND,0
+BODS_GTFS,Mersey Ferries,FER,ferry,26,2,Mersey Ferries,FER,ferry,2
+BODS_GTFS,Metrolink,Blue Line,tram,157,54,Metrolink,BlueLine,tram,54
+BODS_GTFS,Metrolink,Navy Line,tram,146,49,Metrolink,NavyLine,tram,49
+BODS_GTFS,Metrolink,Purple Line,tram,150,33,Metrolink,PurpleLine,tram,33
+BODS_GTFS,Metrolink,Red Line,tram,164,31,Metrolink,RedLine,tram,31
+BODS_GTFS,Metrolink,Yellow Line,tram,331,33,Metrolink,YellowLine,tram,33
+BODS_GTFS,Gatwick Airport inter-terminal Shuttle,SHTL,tram,492,2,Gatwick Interterminal Shuttle,SHTL,tram,2
+BODS_GTFS,Itchenor Ferry,IF,ferry,72,2,Itchenor Ferry,IF,ferry,2
+BODS_GTFS,Nauticalia Ferry,NF,ferry,207,2,Nauticalia Ferry,NF,ferry,2
+BODS_GTFS,London Underground (TfL),Victoria,metro,4161,30,London Underground,Victoria,metro,30
+BODS_GTFS,London Underground (TfL),Central,metro,3967,95,London Underground,Central,metro,95
+BODS_GTFS,Metrolink,Pink Line,tram,292,66,Metrolink,PinkLine,tram,66
+BODS_GTFS,Metrolink,Navy Line,tram,163,49,Metrolink,NavyLine,tram,49
+BODS_GTFS,Metrolink,Blue Line,tram,174,54,Metrolink,BlueLine,tram,54
+BODS_GTFS,Metrolink,Purple Line,tram,166,33,Metrolink,PurpleLine,tram,33
+BODS_GTFS,Metrolink,Pink Line,tram,156,66,Metrolink,PinkLine,tram,66
+BODS_GTFS,London Underground (TfL),Hammersmith & City,metro,673,73,London Underground,Hammersmith&City,metro,73
+BODS_GTFS,London Underground (TfL),Metropolitan,metro,2721,68,London Underground,Metropolitan,metro,67
+BODS_GTFS,London Underground (TfL),Circle,metro,743,116,London Underground,Circle,metro,116
+BODS_GTFS,London Underground (TfL),District,metro,3004,116,London Underground,District,metro,116
+BODS_GTFS,London Underground (TfL),Piccadilly,metro,3141,102,London Underground,Piccadilly,metro,102
+BODS_GTFS,Ember,E20,coach,954,14,,,NOT FOUND,0
+BODS_GTFS,Metrolink,Blue Line,tram,167,54,Metrolink,BlueLine,tram,54
+BODS_GTFS,Metrolink,Blue Line,tram,174,54,Metrolink,BlueLine,tram,54
+BODS_GTFS,Metrolink,Navy Line,tram,163,49,Metrolink,NavyLine,tram,49
+BODS_GTFS,Metrolink,Navy Line,tram,155,49,Metrolink,NavyLine,tram,49
+BODS_GTFS,Metrolink,Pink Line,tram,286,66,Metrolink,PinkLine,tram,66
+BODS_GTFS,Metrolink,Pink Line,tram,264,66,Metrolink,PinkLine,tram,66
+BODS_GTFS,Metrolink,Purple Line,tram,159,33,Metrolink,PurpleLine,tram,33
+BODS_GTFS,National Express,840,coach,8,13,,,NOT FOUND,0
+BODS_GTFS,"Polruan Passenger Ferry, Bodinnick Vehicle Ferry",Fowey - Bodinnick Ferry,ferry,1777,2,C Toms & Sons,Fowey-BodinnickFerry,ferry,2
+BODS_GTFS,National Express,CP1,coach,2,5,,,NOT FOUND,0
+BODS_GTFS,National Express,CP3,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CP4,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,National Express,CP2,coach,2,4,,,NOT FOUND,0
+BODS_GTFS,Metrolink,Purple Line,tram,166,33,Metrolink,PurpleLine,tram,33
+BODS_GTFS,London Docklands Light Railway - TfL,DLR,rail,1206,89,Docklands Light Railway,DLR,metro,80
+BODS_GTFS,IFS Cloud Cable Car,London Cable Car,gondola,230,2,London Cable Car,LondonCableCar,gondola,2
+BODS_GTFS,FlixBus,UK931,coach,16,9,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,M6,coach,24,37,,,NOT FOUND,0
+BODS_GTFS,London Underground (TfL),Northern,metro,5234,102,London Underground,Northern,metro,102
+BODS_GTFS,Ember,E21,coach,18,31,Stagecoach Bluebird,150,bus,9
+BODS_GTFS,Berry's Coaches,SF1,coach,52,2,Berrys Coaches,SF1,coach,2
+BODS_GTFS,Berry's Coaches,SF2,coach,52,2,Berrys Coaches,SF2,coach,2
+BODS_GTFS,Berry's Coaches,SF3,coach,26,17,Berrys Coaches,SF3,bus,16
+BODS_GTFS,FlixBus,UK068,coach,104,9,,,NOT FOUND,0
+BODS_GTFS,Scottish Citylink,903,coach,93,55,,,NOT FOUND,0
+BODS_GTFS,London Docklands Light Railway - TfL,DLR,rail,2626,79,Docklands Light Railway,DLR,metro,69
+BODS_GTFS,Thames Clippers,RB6,ferry,103,37,MBNA THAMES CLIPPERS,RB6,ferry,37
+BODS_GTFS,Thames Clippers,RB1,ferry,106,27,MBNA THAMES CLIPPERS,RB1,ferry,27
+BODS_GTFS,Thames Clippers,RB4,ferry,254,2,MBNA THAMES CLIPPERS,RB4,ferry,2
+BODS_GTFS,Woolwich Free Ferry,Woolwich Ferry,ferry,69,2,Woolwich Ferry,WoolwichFerry,ferry,2
+BODS_GTFS,Skye Ferry,F01,ferry,72,2,,,NOT FOUND,0
+BODS_GTFS,Ardlui Hotel,LL6,ferry,114,2,,,NOT FOUND,0
+BODS_GTFS,Balmaha Boatyard,LL7,ferry,96,2,,,NOT FOUND,0
+BODS_GTFS,Historic Scotland,LL,ferry,78,2,,,NOT FOUND,0
+BODS_GTFS,FlixBus,UK095,coach,144,6,,,NOT FOUND,0
+BODS_GTFS,Bristol Ferry Boat Company,Bristol Ferry Boats,ferry,96,7,Bristol Ferry Boat Company,BristolFerryBoats,ferry,7
+BODS_GTFS,London Underground (TfL),Bakerloo,metro,1004,32,London Underground,Bakerloo,metro,32
+BODS_GTFS,London Underground (TfL),Bakerloo,metro,617,50,London Underground,Bakerloo,metro,50
+BODS_GTFS,London Underground (TfL),Bakerloo,metro,617,50,London Underground,Bakerloo,metro,50
+BODS_GTFS,Mersey Ferries,FER,ferry,46,2,Mersey Ferries,FER,ferry,2

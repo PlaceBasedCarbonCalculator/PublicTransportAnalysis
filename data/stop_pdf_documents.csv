@@ -1,5 +1,5 @@
 case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_radius_m,read_name,read_zone,MF,Sa,Su,basis,reliable,note
-149000006355,12A,brightonhove_BH_12A-timetable-20251109-ccc2ebdc.pdf,2025-11-09,in force,Clock Tower T1; Clock Tower T2,149000006355,400,,,130,217,58,expanded,True,past-hour expanded
+149000006355,12A,brightonhove_BH_12A-timetable-20251109-ccc2ebdc.pdf,2025-11-09,in force,Clock Tower T1; Clock Tower T2,149000006355,400,,,130,203,58,expanded,True,past-hour expanded
 149000006355,18,brightonhove_BH_18-timetable-20251019-61d850f3.pdf,2025-10-19,in force,"Churchill Square Stop C4; North Street Stop N4; Waitrose, Western Road; Waitrose, Western Road t; Waitrose, Western Road t t t; Waitrose, Western Road t t t t t t t; Waitrose, Western Road t t t t t t",149000006355,400,,,65,23,39,explicit,True,
 149000006355,20,brightonhove_BH_20-timetable-20260614-f218c7e8.pdf,2026-06-14,in force,"Brighton, Imperial Arcade C7; Brighton, Imperial Arcade C8",149000006355,400,,,126,120,66,explicit,True,
 149000006355,50,brightonhove_BH_50-timetable-20251019-41bf41ae.pdf,2025-10-19,in force,Churchill Square C3; Churchill Square C7; Churchill Square C7 t t t t t t t; Churchill Square C7 t t t t t t t t t t,149000006355,400,,,107,101,59,explicit,True,
@@ -21,9 +21,9 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 1500AA160,C7,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,32,32,21,explicit,True,
 1500IM2089,C7,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,32,32,21,explicit,True,
 15003411303,C7,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,32,32,21,explicit,True,
-1500AA160,C7E,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,14,16,13,explicit,True,
-1500IM2089,C7E,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,14,16,13,explicit,True,
-15003411303,C7E,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,14,16,13,explicit,True,
+1500AA160,C7E,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,4,6,3,explicit,True,
+1500IM2089,C7E,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,4,6,3,explicit,True,
+15003411303,C7E,first_essex_C7-C7E_mf.pdf; first_essex_C7-C7E_sa.pdf; first_essex_C7-C7E_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [5]",1500AA160,600,,,4,6,3,explicit,True,
 1500AA160,C8,first_essex_C8_mf.pdf; first_essex_C8_sa.pdf; first_essex_C8_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn [7] arr; Chelmsford, Bus Stn [7] arr ----; Chelmsford, Bus Stn [7] arr ---- ----; Chelmsford, Bus Stn [7] dep",1500AA160,600,,,48,36,18,explicit,True,
 1500IM2089,C8,first_essex_C8_mf.pdf; first_essex_C8_sa.pdf; first_essex_C8_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn [7] arr; Chelmsford, Bus Stn [7] arr ----; Chelmsford, Bus Stn [7] arr ---- ----; Chelmsford, Bus Stn [7] dep",1500AA160,600,,,48,36,18,explicit,True,
 15003411303,C8,first_essex_C8_mf.pdf; first_essex_C8_sa.pdf; first_essex_C8_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn [7] arr; Chelmsford, Bus Stn [7] arr ----; Chelmsford, Bus Stn [7] arr ---- ----; Chelmsford, Bus Stn [7] dep",1500AA160,600,,,48,36,18,explicit,True,
@@ -42,9 +42,9 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 1500AA160,702,first_essex_nov_702_mf.pdf,2026-11-02,later edition,Careers Office; High Chelmer; Job Centre; Victoria Road South,1500AA160,600,,,53,0,0,explicit,True,
 1500IM2089,702,first_essex_nov_702_mf.pdf,2026-11-02,later edition,Careers Office; High Chelmer; Job Centre; Victoria Road South,1500AA160,600,,,53,0,0,explicit,True,
 15003411303,702,first_essex_nov_702_mf.pdf,2026-11-02,later edition,Careers Office; High Chelmer; Job Centre; Victoria Road South,1500AA160,600,,,53,0,0,explicit,True,
-1500AA160,333,first_essex_333-375_mf.pdf; first_essex_333-375_sa.pdf; first_essex_333-375_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]; Chelmsford, Bus Stn [4] ----; Chelmsford, Bus Stn [4] ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ---- ----; Chelmsford, Bus Stn [9] dep; Chelmsford",1500AA160,600,,,44,27,17,explicit,True,
-1500IM2089,333,first_essex_333-375_mf.pdf; first_essex_333-375_sa.pdf; first_essex_333-375_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]; Chelmsford, Bus Stn [4] ----; Chelmsford, Bus Stn [4] ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ---- ----; Chelmsford, Bus Stn [9] dep; Chelmsford",1500AA160,600,,,44,27,17,explicit,True,
-15003411303,333,first_essex_333-375_mf.pdf; first_essex_333-375_sa.pdf; first_essex_333-375_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]; Chelmsford, Bus Stn [4] ----; Chelmsford, Bus Stn [4] ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ---- ----; Chelmsford, Bus Stn [9] dep; Chelmsford",1500AA160,600,,,44,27,17,explicit,True,
+1500AA160,333,first_essex_333-375_mf.pdf; first_essex_333-375_sa.pdf; first_essex_333-375_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]; Chelmsford, Bus Stn [4] ----; Chelmsford, Bus Stn [4] ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ---- ----; Chelmsford, Bus Stn [9] dep; Chelmsford",1500AA160,600,,,33,20,17,explicit,True,
+1500IM2089,333,first_essex_333-375_mf.pdf; first_essex_333-375_sa.pdf; first_essex_333-375_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]; Chelmsford, Bus Stn [4] ----; Chelmsford, Bus Stn [4] ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ---- ----; Chelmsford, Bus Stn [9] dep; Chelmsford",1500AA160,600,,,33,20,17,explicit,True,
+15003411303,333,first_essex_333-375_mf.pdf; first_essex_333-375_sa.pdf; first_essex_333-375_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]; Chelmsford, Bus Stn [4] ----; Chelmsford, Bus Stn [4] ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ---- ----; Chelmsford, Bus Stn [9] dep; Chelmsford",1500AA160,600,,,33,20,17,explicit,True,
 1500AA160,336,first_essex_336_mf.pdf; first_essex_336_sa.pdf; first_essex_336_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,42,27,13,explicit,True,
 1500IM2089,336,first_essex_336_mf.pdf; first_essex_336_sa.pdf; first_essex_336_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,42,27,13,explicit,True,
 15003411303,336,first_essex_336_mf.pdf; first_essex_336_sa.pdf; first_essex_336_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,42,27,13,explicit,True,
@@ -57,9 +57,9 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 1500AA160,47,first_essex_47_mf.pdf; first_essex_47_sa.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn ---- ---- ----; Chelmsford, Bus Stn [1]; Chelmsford, Bus Stn [1] ---- ----; Chelmsford, Bus Stn [1] ---- ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ----",1500AA160,600,,,25,22,0,explicit,True,
 1500IM2089,47,first_essex_47_mf.pdf; first_essex_47_sa.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn ---- ---- ----; Chelmsford, Bus Stn [1]; Chelmsford, Bus Stn [1] ---- ----; Chelmsford, Bus Stn [1] ---- ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ----",1500AA160,600,,,25,22,0,explicit,True,
 15003411303,47,first_essex_47_mf.pdf; first_essex_47_sa.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn ---- ---- ----; Chelmsford, Bus Stn [1]; Chelmsford, Bus Stn [1] ---- ----; Chelmsford, Bus Stn [1] ---- ---- ----; Chelmsford, Bus Stn [4] ---- ---- ---- ----",1500AA160,600,,,25,22,0,explicit,True,
-1500AA160,31,first_essex_31_mf.pdf; first_essex_31_sa.pdf; first_essex_31_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,32,12,3,explicit,True,
-1500IM2089,31,first_essex_31_mf.pdf; first_essex_31_sa.pdf; first_essex_31_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,32,12,3,explicit,True,
-15003411303,31,first_essex_31_mf.pdf; first_essex_31_sa.pdf; first_essex_31_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,32,12,3,explicit,True,
+1500AA160,31,first_essex_31_mf.pdf; first_essex_31_sa.pdf; first_essex_31_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,19,12,3,explicit,True,
+1500IM2089,31,first_essex_31_mf.pdf; first_essex_31_sa.pdf; first_essex_31_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,19,12,3,explicit,True,
+15003411303,31,first_essex_31_mf.pdf; first_essex_31_sa.pdf; first_essex_31_su.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [4]",1500AA160,600,,,19,12,3,explicit,True,
 1500AA160,3,first_essex_3_mf.pdf; first_essex_3_sa.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [2]; Chelmsford, Retail Market",1500AA160,600,,,16,12,0,explicit,True,
 1500IM2089,3,first_essex_3_mf.pdf; first_essex_3_sa.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [2]; Chelmsford, Retail Market",1500AA160,600,,,16,12,0,explicit,True,
 15003411303,3,first_essex_3_mf.pdf; first_essex_3_sa.pdf,2026-08-31,later edition,"Chelmsford, Bus Stn; Chelmsford, Bus Stn [2]; Chelmsford, Retail Market",1500AA160,600,,,16,12,0,explicit,True,
@@ -97,45 +97,45 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 2290YHA00296,56,eyms_EY_56-timetable-20260224-01362444.pdf,2026-02-24,in force,Hull Interchange,2290YHA01551,150,Interchange,,78,69,32,explicit,True,
 2290YHA00295,57,eyms_EY_57-timetable-20260224-01362444.pdf,2026-02-24,in force,Hull Interchange,2290YHA01551,150,Interchange,,81,73,33,explicit,True,
 2290YHA00296,57,eyms_EY_57-timetable-20260224-01362444.pdf,2026-02-24,in force,Hull Interchange,2290YHA01551,150,Interchange,,81,73,33,explicit,True,
-2290YHA00295,11,stagecoach_XGCO011.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,34,43,29,explicit,True,
-2290YHA00296,11,stagecoach_XGCO011.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,34,43,29,explicit,True,
-2290YHA00295,12,stagecoach_XGAO012.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,60,57,38,explicit,True,
-2290YHA00296,12,stagecoach_XGAO012.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,60,57,38,explicit,True,
-2290YHA00295,12A,stagecoach_XGCO012A.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,57,56,35,explicit,True,
-2290YHA00296,12A,stagecoach_XGCO012A.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,57,56,35,explicit,True,
+2290YHA00295,11,stagecoach_XGCO011.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,27,26,10,explicit,True,
+2290YHA00296,11,stagecoach_XGCO011.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,27,26,10,explicit,True,
+2290YHA00295,12,stagecoach_XGAO012.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,54,50,28,explicit,True,
+2290YHA00296,12,stagecoach_XGAO012.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,54,50,28,explicit,True,
+2290YHA00295,12A,stagecoach_XGCO012A.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,43,43,25,explicit,True,
+2290YHA00296,12A,stagecoach_XGCO012A.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 3) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,43,43,25,explicit,True,
 2290YHA00295,13,stagecoach_XGAO013.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 32) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,122,104,52,explicit,True,
 2290YHA00296,13,stagecoach_XGAO013.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 32) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,122,104,52,explicit,True,
 2290YHA00295,15,stagecoach_XGCO015.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 29) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,66,50,41,explicit,True,
 2290YHA00296,15,stagecoach_XGCO015.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 29) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,66,50,41,explicit,True,
-2290YHA00295,33C,stagecoach_XGAO033C.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,22,23,0,explicit,True,
-2290YHA00296,33C,stagecoach_XGAO033C.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,22,23,0,explicit,True,
+2290YHA00295,33C,stagecoach_XGAO033C.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,16,16,0,explicit,True,
+2290YHA00296,33C,stagecoach_XGAO033C.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,16,16,0,explicit,True,
 2290YHA00295,34,stagecoach_XGAO034.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,17,21,0,explicit,True,
 2290YHA00296,34,stagecoach_XGAO034.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,17,21,0,explicit,True,
 2290YHA00295,40,stagecoach_XGAO040.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,13,16,0,explicit,True,
 2290YHA00296,40,stagecoach_XGAO040.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 27) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,13,16,0,explicit,True,
-2290YHA00295,111,stagecoach_XGAO111.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,37,47,26,explicit,True,
-2290YHA00296,111,stagecoach_XGAO111.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,37,47,26,explicit,True,
-43000202104,2,nxbus_nov_2-birmingham-maypole.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,199,112,62,explicit,True,
-43000202301,2,nxbus_nov_2-birmingham-maypole.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,199,112,62,explicit,True,
-43000211301,2,nxbus_nov_2-birmingham-maypole.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,199,112,62,explicit,True,
-43000202104,3,nxbus_nov_3-birmingham-yardley-wood.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,189,126,61,explicit,True,
-43000202301,3,nxbus_nov_3-birmingham-yardley-wood.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,189,126,61,explicit,True,
-43000211301,3,nxbus_nov_3-birmingham-yardley-wood.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,189,126,61,explicit,True,
+2290YHA00295,111,stagecoach_XGAO111.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,27,28,21,explicit,True,
+2290YHA00296,111,stagecoach_XGAO111.pdf,2026-11-01,later edition,"Hull, Hull Interchange (Bay 28) Depart:; Hull, Hull Interchange (Bay 38) Arrive:",2290YHA01551,150,Interchange,,27,28,21,explicit,True,
+43000202104,2,nxbus_nov_2-birmingham-maypole.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,199,112,62,explicit,False,every journey printed twice; 
+43000202301,2,nxbus_nov_2-birmingham-maypole.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,199,112,62,explicit,False,every journey printed twice; 
+43000211301,2,nxbus_nov_2-birmingham-maypole.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,199,112,62,explicit,False,every journey printed twice; 
+43000202104,3,nxbus_nov_3-birmingham-yardley-wood.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,189,126,61,explicit,False,every journey printed twice; 
+43000202301,3,nxbus_nov_3-birmingham-yardley-wood.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,189,126,61,explicit,False,every journey printed twice; 
+43000211301,3,nxbus_nov_3-birmingham-yardley-wood.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,189,126,61,explicit,False,every journey printed twice; 
 43000202104,4,nxbus_4-birmingham-solihull.pdf,2026-08-30,later edition,Birmingham Carrs Lane,43000202104,700,,,181,169,108,explicit,True,
 43000202301,4,nxbus_4-birmingham-solihull.pdf,2026-08-30,later edition,Birmingham Carrs Lane,43000202104,700,,,181,169,108,explicit,True,
 43000211301,4,nxbus_4-birmingham-solihull.pdf,2026-08-30,later edition,Birmingham Carrs Lane,43000202104,700,,,181,169,108,explicit,True,
-43000202104,4,nxbus_nov_4-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,316,320,179,explicit,True,or less
-43000202301,4,nxbus_nov_4-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,316,320,179,explicit,True,or less
-43000211301,4,nxbus_nov_4-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,316,320,179,explicit,True,or less
+43000202104,4,nxbus_nov_4-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,316,320,179,explicit,False,every journey printed twice; or less
+43000202301,4,nxbus_nov_4-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,316,320,179,explicit,False,every journey printed twice; or less
+43000211301,4,nxbus_nov_4-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,316,320,179,explicit,False,every journey printed twice; or less
 43000202104,4A,nxbus_nov_4a-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,156,178,108,explicit,False,gap-without-zone-times:4 4 4 minutes or every then un
 43000202301,4A,nxbus_nov_4a-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,156,178,108,explicit,False,gap-without-zone-times:4 4 4 minutes or every then un
 43000211301,4A,nxbus_nov_4a-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Carrs Lane,43000202104,700,,,156,178,108,explicit,False,gap-without-zone-times:4 4 4 minutes or every then un
 43000202104,5,nxbus_5-birmingham-solihull.pdf,2026-08-30,later edition,Birmingham Moor St Q'way,43000202104,700,,,64,60,48,expanded,True,past-hour expanded
 43000202301,5,nxbus_5-birmingham-solihull.pdf,2026-08-30,later edition,Birmingham Moor St Q'way,43000202104,700,,,64,60,48,expanded,True,past-hour expanded
 43000211301,5,nxbus_5-birmingham-solihull.pdf,2026-08-30,later edition,Birmingham Moor St Q'way,43000202104,700,,,64,60,48,expanded,True,past-hour expanded
-43000202104,5,nxbus_nov_5-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,111,85,71,explicit,True,
-43000202301,5,nxbus_nov_5-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,111,85,71,explicit,True,
-43000211301,5,nxbus_nov_5-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,111,85,71,explicit,True,
+43000202104,5,nxbus_nov_5-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,111,85,71,explicit,False,every journey printed twice; 
+43000202301,5,nxbus_nov_5-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,111,85,71,explicit,False,every journey printed twice; 
+43000211301,5,nxbus_nov_5-birmingham-solihull.pdf,2026-11-01,later edition,Birmingham Moor St Q'way,43000202104,700,,,111,85,71,explicit,False,every journey printed twice; 
 43000202104,6,nxbus_6.pdf,2026-07-19,in force,Birmingham Moor St Q'way,43000202104,700,,,191,172,112,explicit,True,or less
 43000202301,6,nxbus_6.pdf,2026-07-19,in force,Birmingham Moor St Q'way,43000202104,700,,,191,172,112,explicit,True,or less
 43000211301,6,nxbus_6.pdf,2026-07-19,in force,Birmingham Moor St Q'way,43000202104,700,,,191,172,112,explicit,True,or less
@@ -148,12 +148,12 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 43000202104,17,nxbus_17-birmingham-chelmsley-wood.pdf,2026-08-30,later edition,Birmingham Moor Street,43000202104,700,,,118,99,36,explicit,True,
 43000202301,17,nxbus_17-birmingham-chelmsley-wood.pdf,2026-08-30,later edition,Birmingham Moor Street,43000202104,700,,,118,99,36,explicit,True,
 43000211301,17,nxbus_17-birmingham-chelmsley-wood.pdf,2026-08-30,later edition,Birmingham Moor Street,43000202104,700,,,118,99,36,explicit,True,
-43000202104,17,nxbus_nov_17-birmingham-chelmsley-wood.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,235,207,60,explicit,True,
-43000202301,17,nxbus_nov_17-birmingham-chelmsley-wood.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,235,207,60,explicit,True,
-43000211301,17,nxbus_nov_17-birmingham-chelmsley-wood.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,235,207,60,explicit,True,
-43000202104,17A,nxbus_nov_17a-airportnec-birmingham.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,136,134,124,explicit,True,
-43000202301,17A,nxbus_nov_17a-airportnec-birmingham.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,136,134,124,explicit,True,
-43000211301,17A,nxbus_nov_17a-airportnec-birmingham.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,136,134,124,explicit,True,
+43000202104,17,nxbus_nov_17-birmingham-chelmsley-wood.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,235,207,60,explicit,False,every journey printed twice; 
+43000202301,17,nxbus_nov_17-birmingham-chelmsley-wood.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,235,207,60,explicit,False,every journey printed twice; 
+43000211301,17,nxbus_nov_17-birmingham-chelmsley-wood.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,235,207,60,explicit,False,every journey printed twice; 
+43000202104,17A,nxbus_nov_17a-airportnec-birmingham.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,136,134,124,explicit,False,every journey printed twice; 
+43000202301,17A,nxbus_nov_17a-airportnec-birmingham.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,136,134,124,explicit,False,every journey printed twice; 
+43000211301,17A,nxbus_nov_17a-airportnec-birmingham.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,136,134,124,explicit,False,every journey printed twice; 
 43000202104,23,nxbus_nov_23-birmingham-bartley-green.pdf,2026-11-01,later edition,Bus Mall,43000202104,700,,,189.8,153,98,expanded,True,past-hour expanded
 43000202301,23,nxbus_nov_23-birmingham-bartley-green.pdf,2026-11-01,later edition,Bus Mall,43000202104,700,,,189.8,153,98,expanded,True,past-hour expanded
 43000211301,23,nxbus_nov_23-birmingham-bartley-green.pdf,2026-11-01,later edition,Bus Mall,43000202104,700,,,189.8,153,98,expanded,True,past-hour expanded
@@ -166,9 +166,9 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 43000202104,35,nxbus_35-birmingham-hawkesley.pdf,2026-08-30,later edition,Birmingham Moor Street,43000202104,700,,,152,126,82,expanded,True,or less; past-hour expanded
 43000202301,35,nxbus_35-birmingham-hawkesley.pdf,2026-08-30,later edition,Birmingham Moor Street,43000202104,700,,,152,126,82,expanded,True,or less; past-hour expanded
 43000211301,35,nxbus_35-birmingham-hawkesley.pdf,2026-08-30,later edition,Birmingham Moor Street,43000202104,700,,,152,126,82,expanded,True,or less; past-hour expanded
-43000202104,35,nxbus_nov_35-birmingham-hawkesley.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,225,226,159,explicit,True,or less
-43000202301,35,nxbus_nov_35-birmingham-hawkesley.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,225,226,159,explicit,True,or less
-43000211301,35,nxbus_nov_35-birmingham-hawkesley.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,225,226,159,explicit,True,or less
+43000202104,35,nxbus_nov_35-birmingham-hawkesley.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,225,226,159,explicit,False,every journey printed twice; or less
+43000202301,35,nxbus_nov_35-birmingham-hawkesley.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,225,226,159,explicit,False,every journey printed twice; or less
+43000211301,35,nxbus_nov_35-birmingham-hawkesley.pdf,2026-11-01,later edition,Birmingham Moor Street,43000202104,700,,,225,226,159,explicit,False,every journey printed twice; or less
 43000202104,50,nxbus_50.pdf,2026-07-19,in force,Birmingham Moor Street,43000202104,700,,,222,214,178,explicit,True,or less
 43000202301,50,nxbus_50.pdf,2026-07-19,in force,Birmingham Moor Street,43000202104,700,,,222,214,178,explicit,True,or less
 43000211301,50,nxbus_50.pdf,2026-07-19,in force,Birmingham Moor Street,43000202104,700,,,222,214,178,explicit,True,or less
@@ -335,3 +335,7 @@ case_stop,route,document,edition_from,edition_status,read_at,read_centre,read_ra
 1500AA160,351,first_essex_351_mf.pdf; first_essex_351_sa.pdf; first_essex_351_su.pdf,2026-08-31,later edition,zone E01034092 (same journeys as E01034091),,,,E01034092,35,25,11,zone check,True,
 1500IM2089,351,first_essex_351_mf.pdf; first_essex_351_sa.pdf; first_essex_351_su.pdf,2026-08-31,later edition,zone E01034092 (same journeys as E01034091),,,,E01034092,35,25,11,zone check,True,
 4400CY0389,GH2,Gatwick Hoppa LTD _ GH1.htm (service notice),2026-05-23,in force,operator notice: just the GH1 route from 23 May 2026,4400CY0389,200,,,0,0,0,operator notice,True,withdrawn
+2290YHA00295,56,eyms_EY_56-timetable-20260906-a7cbe3f3.pdf,2026-09-06,later edition,Hull Interchange (counted by eye),2290YHA01551,150,Interchange,,83,72,50,by eye,True,"image-only PDF, counted by eye"
+2290YHA00296,56,eyms_EY_56-timetable-20260906-a7cbe3f3.pdf,2026-09-06,later edition,Hull Interchange (counted by eye),2290YHA01551,150,Interchange,,83,72,50,by eye,True,"image-only PDF, counted by eye"
+2290YHA00295,57,eyms_EY_57-timetable-20260906-a7cbe3f3.pdf,2026-09-06,later edition,Hull Interchange (counted by eye),2290YHA01551,150,Interchange,,86,73,53,by eye,True,"image-only PDF, counted by eye"
+2290YHA00296,57,eyms_EY_57-timetable-20260906-a7cbe3f3.pdf,2026-09-06,later edition,Hull Interchange (counted by eye),2290YHA01551,150,Interchange,,86,73,53,by eye,True,"image-only PDF, counted by eye"

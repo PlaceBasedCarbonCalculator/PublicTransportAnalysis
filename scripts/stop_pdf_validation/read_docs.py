@@ -99,7 +99,12 @@ for r, f in [('12', 'brightonhove_BH_12-timetable-20260719-f95021d6.pdf'),
              ('14C', 'brightonhove_BH_14C-timetable-20260201-708e27c0.pdf'),
              ('18', 'brightonhove_BH_18-timetable-20251019-61d850f3.pdf'),
              ('20', 'brightonhove_BH_20-timetable-20260614-f218c7e8.pdf'),
-             ('50', 'brightonhove_BH_50-timetable-20251019-41bf41ae.pdf')]:
+             ('50', 'brightonhove_BH_50-timetable-20251019-41bf41ae.pdf'),
+             # the editions in force for the November check (bucket relisted
+             # 14 November 2026; the others above are still current then)
+             ('12', 'brightonhove_BH_12-timetable-20260927-c4003a5c.pdf'),
+             ('12X', 'brightonhove_BH_12X-timetable-20260927-d0e3becb.pdf'),
+             ('N12', 'brightonhove_BH_N12-timetable-20260927-68c800ee.pdf')]:
     READS.append(('BRI', r, ex(f), {'routes': [r]}))
 # Chelmsford and Stansted, First Essex: editions from 30/31 August 2026
 for r, stem in [('C1', 'C1'), ('C2', 'C2-C2e'), ('C3', 'C3'), ('C5', 'C5'), ('C6', 'C6'),
@@ -108,7 +113,8 @@ for r, stem in [('C1', 'C1'), ('C2', 'C2-C2e'), ('C3', 'C3'), ('C5', 'C5'), ('C6
                 ('336', '336'), ('351', '351'), ('371', '371'), ('47', '47'), ('31', '31'),
                 ('3', '3'), ('331', '331'), ('332', '332'), ('73', '73'), ('73B', '73B'),
                 ('13', '13'), ('13A', '13A'), ('13B', '13B'), ('46', '46')]:
-    READS.append(('CHELM', r, first_days(stem), {'routes': [r]}))
+    READS.append(('CHELM', r, first_days(stem),
+                  {'routes': [r], 'fri_twins': True} if r == '31' else {'routes': [r]}))
 # Hedingham & Chambers' 49 (hedinghamandchambers_HEDO_49-timetable-20250831-...)
 # is held but prints its stop names as graphics: there is no text row to read.
 for r in ['X30', 'X10', '42A']:
@@ -220,6 +226,21 @@ for hub, routes in [('REGENT', {'43': 'NMS_BH_43', '44': 'NMS_BH_44', '45': 'NMS
 # Collected from the operator's site during the window (July 2026, for the
 # zone checks), so in force although not from an archive: NXWM's 19 July
 # editions, whose successors start on 30 August.
+# West Midlands Bus timetables printed with every journey twice. The
+# November 2026 sheets for these routes show pairs of columns leaving the
+# same stop at the same minute and differing only in a stop or two (route
+# 17A: two journeys from Birmingham International at 04:47). TNDS and the
+# BODS TransXChange archive each carry one (one 04:47); the DfT's BODS GTFS
+# carries three. The operator's sheets look generated from its own data with
+# both its 1 and 15 November versions in force - the same doubling BODS GTFS
+# shows - so they count twice what is run and cannot judge the feeds. Kept
+# in the table, marked unreliable. See reports/gtfs_iteration_nov2026.md.
+PRINTED_TWICE = {'nxbus_nov_2-birmingham-maypole.pdf', 'nxbus_nov_3-birmingham-yardley-wood.pdf',
+                 'nxbus_nov_4-birmingham-solihull.pdf', 'nxbus_nov_5-birmingham-solihull.pdf',
+                 'nxbus_nov_17-birmingham-chelmsley-wood.pdf',
+                 'nxbus_nov_17a-airportnec-birmingham.pdf',
+                 'nxbus_nov_35-birmingham-hawkesley.pdf'}
+
 COLLECTED_IN_WINDOW = {'nxbus_6.pdf', 'nxbus_14.pdf', 'nxbus_50.pdf', 'nxbus_50-1.pdf',
                        'nxbus_74.pdf'}
 
@@ -364,7 +385,11 @@ def read_one(files, pat, excl, opt):
         if day != '*':
             for x in b:
                 x['day'] = day
-        r = T.count(b, pat, routes=opt.get('routes'), row_exclude=excl)
+        # First Essex prints each weekday journey of route 31 twice, an
+        # unmarked Monday-Thursday column and a "Fri" (Fridays only) twin at
+        # the same times, so each time is counted once
+        r = T.count(b, pat, routes=opt.get('routes'), row_exclude=excl,
+                    distinct_times=bool(opt.get('fri_twins')))
         for dd, v in r.items():
             per[dd] = per.get(dd, 0) + v['n']
             quals |= v['qualifiers']
@@ -438,6 +463,31 @@ def notice_rows():
     return out
 
 
+def by_eye_rows():
+    """Readings counted by eye from documents with no text layer.
+
+    East Yorkshire's 6 September 2026 edition of the 56/57 sheet is images
+    only (pdftotext returns nothing; no OCR is installed). Rendered with
+    pypdfium2 and counted column by column: every journey with a time at
+    either Hull Interchange row, both directions, the 56 and 57 apart, as the
+    reader would count them. The February edition read 78/69/32 and 81/73/33,
+    so the new edition mainly adds Sunday journeys."""
+    counts = {'56': (83, 72, 50), '57': (86, 73, 53)}
+    cases, centre, radius, fname, pat, excl = HUBS['HULL']
+    out = []
+    for r, (mf, sa, su) in counts.items():
+        for cs in cases:
+            out.append(dict(case_stop=cs, route=r,
+                            document='eyms_EY_%s-timetable-20260906-a7cbe3f3.pdf' % r,
+                            edition_from='2026-09-06',
+                            edition_status=edition_status('2026-09-06', True),
+                            read_at='Hull Interchange (counted by eye)', read_centre=centre,
+                            read_radius_m=radius, read_name=fname or '', read_zone='',
+                            MF=mf, Sa=sa, Su=su, basis='by eye', reliable=True,
+                            note='image-only PDF, counted by eye'))
+    return out
+
+
 def main(show=None):
     rows = []
     for hub, route, files, opt in READS:
@@ -463,10 +513,12 @@ def main(show=None):
                              read_at='; '.join(sorted(labs))[:200], read_centre=centre,
                              read_radius_m=radius, read_name=fname or '', read_zone='', MF=round(mf, 2), Sa=sa, Su=su,
                              basis='expanded' if any('expanded' in q for q in quals) else 'explicit',
-                             reliable=ok, note='; '.join(sorted(quals))[:200]))
+                             reliable=ok and doc not in PRINTED_TWICE,
+                             note=('every journey printed twice; ' if doc in PRINTED_TWICE else '') +
+                             '; '.join(sorted(quals))[:200]))
     if show:
         return
-    rows += zone_rows() + notice_rows()
+    rows += zone_rows() + notice_rows() + by_eye_rows()
     cols = ['case_stop', 'route', 'document', 'edition_from', 'edition_status', 'read_at',
             'read_centre', 'read_radius_m', 'read_name', 'read_zone', 'MF', 'Sa', 'Su', 'basis',
             'reliable', 'note']

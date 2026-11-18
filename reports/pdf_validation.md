@@ -531,45 +531,45 @@ Table: route_id(s) matched in each source
 
 |Route  |bods_gtfs               |tnds                     |
 |:------|:-----------------------|:------------------------|
-|111    |9130                    |3982                     |
-|142    |70659                   |3789+4176                |
-|143    |70660                   |3989                     |
-|1_1A   |131260+86042            |3819+4025                |
-|21     |3700                    |11983                    |
-|279    |10984339+10003          |1955                     |
-|69     |10423702                |2215                     |
-|A1     |32450                   |10923                    |
-|AN320  |58864                   |3689+3691                |
-|BB59   |3718578                 |6097                     |
-|BB727  |3718621                 |5811                     |
-|BR24   |5364                    |10901                    |
-|BR43   |101947                  |10905                    |
-|CDF1   |6532264                 |13067                    |
-|CDF24  |6532298                 |13096                    |
-|CDF608 |                        |13574                    |
-|CDF62  |6532448                 |12997+13097+13175        |
-|F38    |1059786                 |5937                     |
-|G1     |3841+6662               |5920+5942                |
-|KB9    |4560                    |677                      |
-|L100   |1059145                 |6196                     |
-|L26    |139008                  |5810                     |
-|NX14   |4440                    |13751                    |
-|NX50   |13213                   |13719+13774              |
-|NX6    |128640                  |13704                    |
-|NX74   |6860                    |13675                    |
-|OX400  |98976                   |8618                     |
-|PO1    |3869                    |11082                    |
-|PO3    |5222                    |10899                    |
-|SC125  |8154118                 |3576                     |
-|SF2A   |2580074                 |6646                     |
-|SF34   |2580093+2580098         |6498+6537                |
-|SF90   |2580214+2580215+2580218 |7074+7130+7363           |
-|SFX24  |2580353+2580355         |6124+6172                |
-|SY57   |1334797+133577+8703     |15007+15242+15335        |
-|TBALL  |11864                   |742                      |
-|TBX38  |36865                   |14181+14256              |
-|X30    |122084+122094           |8158+8232+8317+8577+9455 |
-|X85    |11921457+11921459       |6070+6091                |
+|111    |9130                    |3968                     |
+|142    |70659                   |3774+4166                |
+|143    |70660                   |3975                     |
+|1_1A   |131260+86042            |3804+4012                |
+|21     |3700                    |12226                    |
+|279    |10984339+10003          |1940                     |
+|69     |10423702                |2200                     |
+|A1     |32450                   |11165                    |
+|AN320  |58864                   |3674+3676                |
+|BB59   |3718578                 |6198                     |
+|BB727  |3718621                 |5826                     |
+|BR24   |5364                    |11143                    |
+|BR43   |101947                  |11147                    |
+|CDF1   |6532264                 |13327                    |
+|CDF24  |6532298                 |13357                    |
+|CDF608 |                        |13846                    |
+|CDF62  |6532448                 |13253+13358+13439        |
+|F38    |1059786                 |5987                     |
+|G1     |3841+6662               |5961+5992                |
+|KB9    |4560                    |685                      |
+|L100   |1059145                 |6305+6533                |
+|L26    |139008                  |5824+5825                |
+|NX14   |4440                    |14023                    |
+|NX50   |13213                   |13991+14046              |
+|NX6    |128640                  |13976                    |
+|NX74   |6860                    |13947                    |
+|OX400  |98976                   |8820                     |
+|PO1    |3869                    |11324                    |
+|PO3    |5222                    |11141                    |
+|SC125  |8154118                 |3561                     |
+|SF2A   |2580074                 |6782                     |
+|SF34   |2580093+2580098         |6625+6667                |
+|SF90   |2580214+2580215+2580218 |7225+7285+7523           |
+|SFX24  |2580353+2580355         |6227+6279                |
+|SY57   |1334797+133577+8703     |15283+15519+15615        |
+|TBALL  |11864                   |751                      |
+|TBX38  |36865                   |14453+14528              |
+|X30    |122084+122094           |8355+8429+8514+8777+9667 |
+|X85    |11921457+11921459       |6166+6192                |
 
 Where a source lists several `route_id`s for one route they are summed: a
 source that splits one service across several ids must still be compared as
@@ -1176,7 +1176,7 @@ right. This section asks the operators' timetables. It takes every route at
 those 23 case stops on which the feeds disagree, at the stop and its
 neighbours within 100 m, by at least 20 journeys a
 week and 10% of the larger: **143 routes**.
-109 of them have a reliable reading from 159 documents;
+106 of them have a reliable reading from 159 documents;
 17 of those readings are from an edition **in force over the
 window**.
 
@@ -1220,41 +1220,41 @@ A source is **right** within 15% of the document,
 
 |Verdict                                         | Routes (window)| Routes (day)|
 |:-----------------------------------------------|---------------:|------------:|
-|both agree                                      |              27|           41|
+|both agree                                      |              30|           46|
 |TNDS right                                      |              20|           28|
-|neither; BODS GTFS closer                       |              18|           10|
-|neither; TNDS closer                            |              18|           10|
-|BODS GTFS right                                 |              12|            7|
+|neither; BODS GTFS closer                       |              18|            5|
+|neither; TNDS closer                            |              17|            9|
+|BODS GTFS right                                 |               9|            6|
 |BODS GTFS right; TNDS absent                    |               5|            5|
-|neither                                         |               5|            5|
-|TNDS right; BODS GTFS absent                    |               3|            3|
+|TNDS right; BODS GTFS absent                    |               4|            4|
+|neither                                         |               2|            3|
 |no verdict (no weekday service in the document) |               1|            0|
 
 
 
-**27 routes are a stop-code difference, not a timetable one.** They disagree at the case stop, yet both feeds match the document where it is read, over the window and on the day: Durham (24); Hertfordshire (301, 400, SB4, SB50, SB7, SB8); Kingston upon Hull (12, 13, 15, 34, 40); Tyne and Wear (43, 44, 45, Q3X, X10, X11, X14, X15, X16, X18, X20, X21, X22, X30, X9). The buses are the same; the sources file them under different stop codes within a few hundred metres, which is what stop_disagreement.md found for several of its one-source stops. No timetable can say which code is right; NaPTAN can.
+**30 routes are a stop-code difference, not a timetable one.** They disagree at the case stop, yet both feeds match the document where it is read, over the window and on the day: Durham (24); Hertfordshire (301, 400, SB4, SB50, SB7, SB8); Kingston upon Hull (11, 12, 12A, 13, 15, 33C, 34, 40); Tyne and Wear (43, 44, 45, Q3X, X10, X11, X14, X15, X16, X18, X20, X21, X22, X30, X9). The buses are the same; the sources file them under different stop codes within a few hundred metres, which is what stop_disagreement.md found for several of its one-source stops. No timetable can say which code is right; NaPTAN can.
 
 ### Area by area
 
 
 |Area               | Routes| In force| TNDS ÷ doc, median| BODS ÷ doc, median| TNDS ÷ doc, day| BODS ÷ doc, day| TNDS right (window/day)| BODS right (window/day)|
 |:------------------|------:|--------:|------------------:|------------------:|---------------:|---------------:|-----------------------:|-----------------------:|
-|Essex              |     30|        0|               0.46|               1.54|            1.00|            1.00|                  0 / 18|                  5 / 12|
-|West Midlands      |     24|        3|               0.94|               1.54|            0.93|            1.68|                 18 / 16|                   1 / 1|
+|Essex              |     30|        0|               0.47|               1.57|            1.00|            1.00|                  0 / 21|                  3 / 15|
+|West Midlands      |     21|        3|               0.96|               1.66|            0.95|            1.72|                 18 / 16|                   0 / 0|
 |Tyne and Wear      |     15|        1|               1.00|               1.00|            1.00|            1.00|                 15 / 15|                 15 / 15|
-|Kingston upon Hull |     12|        2|               0.83|               0.99|            0.89|            1.00|                   5 / 7|                   7 / 9|
+|Kingston upon Hull |     12|        2|               1.00|               1.00|            1.00|            1.00|                  9 / 10|                 10 / 11|
 |Hertfordshire      |     11|        0|               1.11|               1.00|            1.00|            1.00|                  6 / 10|                 10 / 10|
-|Brighton and Hove  |      6|        6|               0.68|               0.48|            0.72|            0.49|                   1 / 1|                   3 / 3|
+|Brighton and Hove  |      6|        6|               0.69|               0.48|            0.72|            0.49|                   1 / 1|                   3 / 3|
 |South Yorkshire    |      5|        0|               0.97|               0.00|            0.97|            0.00|                   4 / 4|                   0 / 0|
 |West Sussex        |      5|        5|               0.00|               1.08|            0.00|            1.15|                   0 / 0|                   2 / 2|
 |Durham             |      1|        0|               1.00|               1.00|            1.00|            1.00|                   1 / 1|                   1 / 1|
 
-* **Essex** (30 routes, later editions only): TNDS reads 0.46 of the timetable over the window but 1.00 on the day: it stops part way through the window, not a different timetable.
-* **West Midlands** (24 routes, some editions in force, the rest later): BODS GTFS runs 1.5 times the timetable while TNDS matches it: extra journeys in BODS GTFS, the pattern of duplicated registrations.
+* **Essex** (30 routes, later editions only): TNDS reads 0.47 of the timetable over the window but 1.00 on the day: it stops part way through the window, not a different timetable.
+* **West Midlands** (21 routes, some editions in force, the rest later): BODS GTFS runs 1.7 times the timetable while TNDS matches it: extra journeys in BODS GTFS, the pattern of duplicated registrations.
 * **Tyne and Wear** (15 routes, some editions in force, the rest later): median TNDS 1.00 and BODS GTFS 1.00 of the documents over the window.
-* **Kingston upon Hull** (12 routes, some editions in force, the rest later): median TNDS 0.83 and BODS GTFS 0.99 of the documents over the window.
+* **Kingston upon Hull** (12 routes, some editions in force, the rest later): median TNDS 1.00 and BODS GTFS 1.00 of the documents over the window.
 * **Hertfordshire** (11 routes, later editions only): median TNDS 1.11 and BODS GTFS 1.00 of the documents over the window.
-* **Brighton and Hove** (6 routes, editions in force): median TNDS 0.68 and BODS GTFS 0.48 of the documents over the window.
+* **Brighton and Hove** (6 routes, editions in force): median TNDS 0.69 and BODS GTFS 0.48 of the documents over the window.
 * **South Yorkshire** (5 routes, later editions only): median TNDS 0.97 and BODS GTFS 0.00 of the documents over the window.
 * **West Sussex** (5 routes, editions in force): median TNDS 0.00 and BODS GTFS 1.08 of the documents over the window.
 * **Durham** (1 routes, later editions only): median TNDS 1.00 and BODS GTFS 1.00 of the documents over the window.
@@ -1272,7 +1272,7 @@ shown once.
 |Area               |Route |Document                                                      |Edition                      |Read at                          |Doc MF/Sa/Su |TNDS MF |BODS MF |T÷doc |B÷doc |T÷doc day |B÷doc day |Verdict                      |Verdict, day                 |
 |:------------------|:-----|:-------------------------------------------------------------|:----------------------------|:--------------------------------|:------------|:-------|:-------|:-----|:-----|:---------|:---------|:----------------------------|:----------------------------|
 |Brighton and Hove  |12    |brightonhove_BH_12-timetable-20260719-f95021d6.pdf            |2026-07-19 (in force)        |zone E01016969 (counted at the z |160/165/111  |117.0   |160.0   |0.71  |0.96  |0.73      |1.00      |BODS GTFS right              |BODS GTFS right              |
-|Brighton and Hove  |12A   |brightonhove_BH_12A-timetable-20251109-ccc2ebdc.pdf           |2025-11-09 (in force)        |Clock Tower T1                   |130/217/58   |93.0    |0.0     |0.65  |0.00  |0.72      |0.00      |neither; TNDS closer         |neither; TNDS closer         |
+|Brighton and Hove  |12A   |brightonhove_BH_12A-timetable-20251109-ccc2ebdc.pdf           |2025-11-09 (in force)        |Clock Tower T1                   |130/203/58   |93.0    |0.0     |0.66  |0.00  |0.72      |0.00      |neither; TNDS closer         |neither; TNDS closer         |
 |Brighton and Hove  |14    |brightonhove_BH_14-timetable-20260719-ab46269d.pdf            |2026-07-19 (in force)        |zone E01016969 (counted at the z |129/124/96   |85.0    |127.0   |0.61  |0.95  |0.66      |0.98      |BODS GTFS right              |BODS GTFS right              |
 |Brighton and Hove  |18    |brightonhove_BH_18-timetable-20251019-61d850f3.pdf            |2025-10-19 (in force)        |Churchill Square Stop C4         |65/23/39     |126.0   |0.0     |2.14  |0.00  |1.94      |0.00      |neither; TNDS closer         |neither; TNDS closer         |
 |Brighton and Hove  |20    |brightonhove_BH_20-timetable-20260614-f218c7e8.pdf            |2026-06-14 (in force)        |Brighton, Imperial Arcade C7     |126/120/66   |0.0     |126.0   |0.00  |0.98  |0.00      |1.00      |BODS GTFS right; TNDS absent |BODS GTFS right; TNDS absent |
@@ -1281,14 +1281,14 @@ shown once.
 |Essex              |13    |first_essex_13_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |8/8/0        |4.0     |12.0    |0.50  |1.50  |1.00      |1.00      |neither; BODS GTFS closer    |both agree                   |
 |Essex              |13A   |first_essex_13A_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn [6]          |10/5/10      |4.0     |13.0    |0.35  |1.12  |0.80      |0.90      |BODS GTFS right              |BODS GTFS right              |
 |Essex              |13B   |first_essex_13B_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |13/11/0      |6.0     |18.0    |0.47  |1.41  |0.92      |0.92      |neither; BODS GTFS closer    |both agree                   |
-|Essex              |3     |first_essex_3_mf.pdf …                                        |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |16/12/0      |6.2     |15.2    |0.40  |0.99  |0.38      |0.75      |BODS GTFS right              |neither; BODS GTFS closer    |
-|Essex              |31    |first_essex_31_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |32/12/3      |8.0     |27.0    |0.26  |0.91  |0.50      |0.59      |BODS GTFS right              |neither; BODS GTFS closer    |
+|Essex              |3     |first_essex_3_mf.pdf …                                        |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |16/12/0      |9.2     |15.2    |0.60  |0.99  |0.75      |0.75      |BODS GTFS right              |neither                      |
+|Essex              |31    |first_essex_31_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |19/12/3      |8.0     |27.0    |0.42  |1.45  |0.84      |1.00      |neither; BODS GTFS closer    |BODS GTFS right              |
 |Essex              |331   |first_essex_331_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn [4]          |22/18/0      |10.1    |30.3    |0.46  |1.39  |0.91      |0.91      |neither; BODS GTFS closer    |both agree                   |
 |Essex              |332   |first_essex_332_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn [4]          |10/2/13      |4.0     |13.0    |0.32  |1.45  |0.80      |0.90      |neither; BODS GTFS closer    |BODS GTFS right              |
-|Essex              |333   |first_essex_333-375_mf.pdf …                                  |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |44/27/17     |15.0    |46.0    |0.32  |1.12  |0.68      |0.70      |BODS GTFS right              |neither; BODS GTFS closer    |
+|Essex              |333   |first_essex_333-375_mf.pdf …                                  |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |33/20/17     |15.0    |46.0    |0.42  |1.46  |0.91      |0.94      |neither; BODS GTFS closer    |both agree                   |
 |Essex              |336   |first_essex_336_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |42/27/13     |16.0    |49.0    |0.37  |1.25  |0.76      |0.79      |neither; BODS GTFS closer    |neither; BODS GTFS closer    |
 |Essex              |351   |first_essex_351_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |35/25/11     |17.5    |87.5    |0.47  |2.52  |1.00      |2.00      |neither; TNDS closer         |TNDS right                   |
-|Essex              |371   |first_essex_371_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |55/40/25     |23.5    |48.0    |0.40  |0.90  |0.02      |0.87      |BODS GTFS right              |BODS GTFS right              |
+|Essex              |371   |first_essex_371_mf.pdf …                                      |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |55/40/25     |46.5    |48.0    |0.80  |0.90  |0.85      |0.87      |BODS GTFS right              |both agree                   |
 |Essex              |42A   |first_essex_42A_su.pdf                                        |2026-08-30 (later edition)   |Stansted Airport [13]            |0/0/14       |0.0     |0.0     |0.00  |2.07  |1.00      |1.00      |neither; BODS GTFS closer    |both agree                   |
 |Essex              |46    |first_essex_46_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |12/12/0      |10.0    |18.0    |0.78  |1.50  |1.33      |1.00      |neither; TNDS closer         |BODS GTFS right              |
 |Essex              |47    |first_essex_47_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |25/22/0      |14.0    |44.0    |0.56  |1.78  |1.12      |1.20      |neither; TNDS closer         |TNDS right                   |
@@ -1303,7 +1303,7 @@ shown once.
 |Essex              |C5    |first_essex_C5_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Bus Stn [8] arr      |90/67/34     |45.0    |213.0   |0.47  |2.38  |1.00      |1.87      |neither; TNDS closer         |TNDS right                   |
 |Essex              |C6    |first_essex_C6_mf.pdf                                         |2026-08-31 (later edition)   |Chelmsford, Bus Stn [6] dep      |10/0/0       |5.0     |16.0    |0.50  |1.60  |1.00      |1.10      |neither; BODS GTFS closer    |both agree                   |
 |Essex              |C7    |first_essex_C7-C7E_mf.pdf …                                   |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |32/32/21     |16.0    |121.0   |0.45  |3.68  |1.00      |3.28      |neither; TNDS closer         |TNDS right                   |
-|Essex              |C7E   |first_essex_C7-C7E_mf.pdf …                                   |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |14/16/13     |2.0     |6.0     |0.13  |0.45  |0.29      |0.29      |neither; BODS GTFS closer    |neither                      |
+|Essex              |C7E   |first_essex_C7-C7E_mf.pdf …                                   |2026-08-31 (later edition)   |Chelmsford, Bus Stn              |4/6/3        |2.0     |6.0     |0.45  |1.55  |1.00      |1.00      |neither; BODS GTFS closer    |both agree                   |
 |Essex              |C8    |first_essex_C8_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Bus Stn [7] arr      |48/36/18     |24.0    |132.0   |0.47  |2.82  |1.00      |2.25      |neither; TNDS closer         |TNDS right                   |
 |Essex              |C9    |first_essex_C9_mf.pdf …                                       |2026-08-31 (later edition)   |Chelmsford, Rail Stn arr         |50/36/17     |25.0    |163.0   |0.47  |3.30  |1.00      |2.76      |neither; TNDS closer         |TNDS right                   |
 |Essex              |X10   |first_essex_X10_mf.pdf …                                      |2026-08-31 (later edition)   |Stansted Airport, Coach Stn      |40/38/36     |20.0    |63.0    |0.43  |1.62  |1.00      |1.07      |neither; BODS GTFS closer    |both agree                   |
@@ -1319,14 +1319,14 @@ shown once.
 |Hertfordshire      |SB50  |AKE_BR_SB50_MF_in.html …                                      |2026-11-17 (later edition)   |Bus Station (Stop E), Stevenage  |9/0/0        |9.0     |9.0     |1.00  |1.00  |1.00      |1.00      |both agree                   |both agree                   |
 |Hertfordshire      |SB7   |AKE_BR_SB7_MF_in.html …                                       |2026-11-17 (later edition)   |Bus Station (Stop C), Stevenage  |63/53/18     |63.0    |63.0    |0.96  |0.96  |1.00      |1.00      |both agree                   |both agree                   |
 |Hertfordshire      |SB8   |AKE_BR_SB8_MF_in.html …                                       |2026-11-17 (later edition)   |Bus Station (Stop C), Stevenage  |28/26/0      |28.0    |28.0    |1.01  |1.01  |1.00      |1.00      |both agree                   |both agree                   |
-|Kingston upon Hull |11    |stagecoach_XGCO011.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 28)  |34/43/29     |30.0    |30.0    |0.79  |0.79  |0.88      |0.88      |neither                      |both agree                   |
-|Kingston upon Hull |111   |stagecoach_XGAO111.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 28)  |37/47/26     |28.0    |0.0     |0.74  |0.00  |0.76      |0.00      |neither; TNDS closer         |neither; TNDS closer         |
-|Kingston upon Hull |12    |stagecoach_XGAO012.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 3) D |60/57/38     |54.0    |54.0    |0.88  |0.88  |0.90      |0.90      |both agree                   |both agree                   |
-|Kingston upon Hull |12A   |stagecoach_XGCO012A.pdf                                       |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 3) D |57/56/35     |43.0    |43.0    |0.75  |0.75  |0.75      |0.75      |neither                      |neither                      |
+|Kingston upon Hull |11    |stagecoach_XGCO011.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 28)  |27/26/10     |30.0    |30.0    |1.11  |1.11  |1.11      |1.11      |both agree                   |both agree                   |
+|Kingston upon Hull |111   |stagecoach_XGAO111.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 28)  |27/28/21     |28.0    |0.0     |1.03  |0.00  |1.04      |0.00      |TNDS right; BODS GTFS absent |TNDS right; BODS GTFS absent |
+|Kingston upon Hull |12    |stagecoach_XGAO012.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 3) D |54/50/28     |54.0    |54.0    |1.00  |1.00  |1.00      |1.00      |both agree                   |both agree                   |
+|Kingston upon Hull |12A   |stagecoach_XGCO012A.pdf                                       |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 3) D |43/43/25     |43.0    |43.0    |1.00  |1.00  |1.00      |1.00      |both agree                   |both agree                   |
 |Kingston upon Hull |13    |stagecoach_XGAO013.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 32)  |122/104/52   |122.0   |122.0   |1.00  |1.00  |1.00      |1.00      |both agree                   |both agree                   |
 |Kingston upon Hull |14    |Hu_014 016 060926.pdf                                         |2026-09-06 (later edition)   |Hull Interchange                 |58/35/29     |66.0    |66.0    |1.18  |1.18  |1.14      |1.14      |neither                      |both agree                   |
 |Kingston upon Hull |15    |stagecoach_XGCO015.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 29)  |66/50/41     |66.0    |66.0    |1.00  |1.00  |1.00      |1.00      |both agree                   |both agree                   |
-|Kingston upon Hull |33C   |stagecoach_XGAO033C.pdf                                       |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 27)  |22/23/0      |15.0    |15.0    |0.68  |0.68  |0.68      |0.68      |neither                      |neither                      |
+|Kingston upon Hull |33C   |stagecoach_XGAO033C.pdf                                       |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 27)  |16/16/0      |15.0    |15.0    |0.94  |0.94  |0.94      |0.94      |both agree                   |both agree                   |
 |Kingston upon Hull |34    |stagecoach_XGAO034.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 27)  |17/21/0      |18.0    |18.0    |1.05  |1.05  |1.06      |1.06      |both agree                   |both agree                   |
 |Kingston upon Hull |40    |stagecoach_XGAO040.pdf                                        |2026-11-01 (later edition)   |Hull, Hull Interchange (Bay 27)  |13/16/0      |13.0    |13.0    |0.99  |0.99  |1.00      |1.00      |both agree                   |both agree                   |
 |Kingston upon Hull |56    |eyms_EY_56-timetable-20260224-01362444.pdf                    |2026-02-24 (in force)        |Hull Interchange                 |78/69/32     |0.0     |78.0    |0.00  |1.00  |0.00      |1.00      |BODS GTFS right; TNDS absent |BODS GTFS right; TNDS absent |
@@ -1357,11 +1357,11 @@ shown once.
 |West Midlands      |12    |nxbus_nov_12-dudley-birmingham.pdf                            |2026-11-01 (later edition)   |Dudley Ednam Road                |96/88/49     |96.0    |133.0   |1.02  |1.32  |1.00      |1.39      |reading unreliable           |—                            |
 |West Midlands      |126   |nxbus_126-dudley-birmingham.pdf                               |2026-08-30 (later edition)   |Dudley Ednam Road                |103/94/86    |103.0   |179.0   |1.00  |1.67  |1.00      |1.74      |TNDS right                   |TNDS right                   |
 |West Midlands      |17    |nxbus_17-birmingham-chelmsley-wood.pdf                        |2026-08-30 (later edition)   |Birmingham Moor Street           |118/99/36    |112.0   |223.0   |0.96  |1.73  |0.95      |1.89      |TNDS right                   |TNDS right                   |
-|West Midlands      |17A   |nxbus_nov_17a-airportnec-birmingham.pdf                       |2026-11-01 (later edition)   |Birmingham Moor Street           |136/134/124  |69.0    |135.0   |0.51  |0.86  |0.51      |0.99      |BODS GTFS right              |BODS GTFS right              |
-|West Midlands      |2     |nxbus_nov_2-birmingham-maypole.pdf                            |2026-11-01 (later edition)   |Birmingham Moor St Q'way         |199/112/62   |100.0   |136.0   |0.56  |0.72  |0.50      |0.68      |neither; BODS GTFS closer    |neither; BODS GTFS closer    |
+|West Midlands      |17A   |nxbus_nov_17a-airportnec-birmingham.pdf                       |2026-11-01 (later edition)   |Birmingham Moor Street           |136/134/124  |69.0    |135.0   |0.51  |0.86  |0.51      |0.99      |reading unreliable           |—                            |
+|West Midlands      |2     |nxbus_nov_2-birmingham-maypole.pdf                            |2026-11-01 (later edition)   |Birmingham Moor St Q'way         |199/112/62   |100.0   |136.0   |0.56  |0.72  |0.50      |0.68      |reading unreliable           |—                            |
 |West Midlands      |23    |nxbus_nov_23-birmingham-bartley-green.pdf                     |2026-11-01 (later edition)   |Bus Mall                         |190/153/98   |168.0   |291.2   |0.90  |1.41  |0.89      |1.51      |TNDS right                   |TNDS right                   |
 |West Midlands      |24    |nxbus_24-birmingham-quinton-road-west.pdf                     |2026-09-27 (later edition)   |Bus Mall                         |188/152/96   |165.2   |302.6   |0.89  |1.47  |0.88      |1.60      |TNDS right                   |TNDS right                   |
-|West Midlands      |3     |nxbus_nov_3-birmingham-yardley-wood.pdf                       |2026-11-01 (later edition)   |Birmingham Moor St Q'way         |189/126/61   |96.0    |126.0   |0.56  |0.70  |0.51      |0.67      |neither; BODS GTFS closer    |neither; BODS GTFS closer    |
+|West Midlands      |3     |nxbus_nov_3-birmingham-yardley-wood.pdf                       |2026-11-01 (later edition)   |Birmingham Moor St Q'way         |189/126/61   |96.0    |126.0   |0.56  |0.70  |0.51      |0.67      |reading unreliable           |—                            |
 |West Midlands      |35    |nxbus_35-birmingham-hawkesley.pdf                             |2026-08-30 (later edition)   |Birmingham Moor Street           |152/126/82   |144.0   |243.0   |0.95  |1.50  |0.95      |1.60      |TNDS right                   |TNDS right                   |
 |West Midlands      |4     |nxbus_4-birmingham-solihull.pdf                               |2026-08-30 (later edition)   |Birmingham Carrs Lane            |181/169/108  |178.0   |311.0   |0.98  |1.54  |0.98      |1.72      |TNDS right                   |TNDS right                   |
 |West Midlands      |4A    |nxbus_nov_4a-birmingham-solihull.pdf                          |2026-11-01 (later edition)   |Birmingham Carrs Lane            |156/178/108  |101.0   |189.0   |0.63  |1.04  |0.65      |1.21      |reading unreliable           |—                            |
@@ -1396,7 +1396,7 @@ operator TransXChange as BODS and shows only current and future timetables.
 
 
 
-34 no reliable reading; 92 only a later or earlier edition.
+37 no reliable reading; 89 only a later or earlier edition.
 
 
 |Area               |Route |Case stops                                                                  |Operator                                                            |TNDS MF |BODS MF |Needed                          |
@@ -1430,6 +1430,9 @@ operator TransXChange as BODS and shows only current and future timetables.
 |Tyne and Wear      |X46   |[Regent Centre-Temp SB](https://bustimes.org/stops/410000060406), [Interchange](https://bustimes.org/stops/41000008REGB)|Gateshead Central taxis / Gateshead Central Buses                   |16.0    |28.0    |no reliable reading             |
 |West Midlands      |12    |[Castle Hill](https://bustimes.org/stops/43000874601)                       |National Express West Midlands                                      |0.0     |52.0    |no reliable reading             |
 |West Midlands      |16    |[Park Street](https://bustimes.org/stops/43000202301)                       |National Express West Midlands                                      |264.0   |528.0   |no reliable reading             |
+|West Midlands      |17A   |[Birmingham Coach Station](https://bustimes.org/stops/43000211301)          |National Express West Midlands                                      |69.0    |135.0   |no reliable reading             |
+|West Midlands      |2     |[Bus Mall](https://bustimes.org/stops/43000202104), [Park Street](https://bustimes.org/stops/43000202301), [Birmingham Coach Station](https://bustimes.org/stops/43000211301)|National Express West Midlands                                      |100.0   |136.0   |no reliable reading             |
+|West Midlands      |3     |[Bus Mall](https://bustimes.org/stops/43000202104), [Park Street](https://bustimes.org/stops/43000202301), [Birmingham Coach Station](https://bustimes.org/stops/43000211301)|National Express West Midlands                                      |96.0    |126.0   |no reliable reading             |
 |West Midlands      |4A    |[Bus Mall](https://bustimes.org/stops/43000202104), [Park Street](https://bustimes.org/stops/43000202301), [Birmingham Coach Station](https://bustimes.org/stops/43000211301)|National Express West Midlands                                      |101.0   |189.0   |no reliable reading             |
 |West Midlands      |8     |[Castle Hill](https://bustimes.org/stops/43000874601)                       |National Express West Midlands                                      |43.0    |70.0    |no reliable reading             |
 |West Midlands      |80    |[Park Street](https://bustimes.org/stops/43000202301)                       |National Express West Midlands                                      |152.0   |256.6   |no reliable reading             |
@@ -1439,14 +1442,14 @@ operator TransXChange as BODS and shows only current and future timetables.
 |Essex              |13    |[Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |4.0     |12.0    |only a later or earlier edition |
 |Essex              |13A   |[Chelmsford Railway Station](https://bustimes.org/stops/1500AA160)          |First Essex Buses Ltd / First Essex                                 |4.0     |13.0    |only a later or earlier edition |
 |Essex              |13B   |[Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |5.5     |16.5    |only a later or earlier edition |
-|Essex              |3     |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / Fords Coaches / First Essex                 |6.2     |15.2    |only a later or earlier edition |
+|Essex              |3     |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160)|First Essex Buses Ltd / Fords Coaches / First Essex                 |9.2     |15.2    |only a later or earlier edition |
 |Essex              |31    |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |8.0     |27.0    |only a later or earlier edition |
 |Essex              |331   |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |10.1    |30.3    |only a later or earlier edition |
 |Essex              |332   |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |4.0     |13.0    |only a later or earlier edition |
 |Essex              |333   |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |15.0    |46.0    |only a later or earlier edition |
 |Essex              |336   |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |16.0    |49.0    |only a later or earlier edition |
 |Essex              |351   |[Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |14.5    |61.5    |only a later or earlier edition |
-|Essex              |371   |[Parkway](https://bustimes.org/stops/15003411303), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |23.5    |48.0    |only a later or earlier edition |
+|Essex              |371   |[Parkway](https://bustimes.org/stops/15003411303)                           |First Essex Buses Ltd / First Essex                                 |46.5    |48.0    |only a later or earlier edition |
 |Essex              |42A   |[Coach Station](https://bustimes.org/stops/1500IM187R), [Coach Station](https://bustimes.org/stops/1500IM187U)|First Essex                                                         |0.0     |0.0     |only a later or earlier edition |
 |Essex              |46    |[Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|Central Connect Transport Ltd / First Essex Buses Ltd / First Essex |10.0    |18.0    |only a later or earlier edition |
 |Essex              |47    |[Parkway](https://bustimes.org/stops/15003411303), [Chelmsford Railway Station](https://bustimes.org/stops/1500AA160), [Retail Market](https://bustimes.org/stops/1500IM2089)|First Essex Buses Ltd / First Essex                                 |13.5    |42.5    |only a later or earlier edition |
@@ -1511,11 +1514,8 @@ operator TransXChange as BODS and shows only current and future timetables.
 |West Midlands      |11A   |[Castle Hill](https://bustimes.org/stops/43000874601)                       |National Express West Midlands                                      |46.0    |61.0    |only a later or earlier edition |
 |West Midlands      |126   |[Castle Hill](https://bustimes.org/stops/43000874601)                       |National Express West Midlands                                      |0.0     |80.0    |only a later or earlier edition |
 |West Midlands      |17    |[Birmingham Coach Station](https://bustimes.org/stops/43000211301)          |National Express West Midlands                                      |112.0   |223.0   |only a later or earlier edition |
-|West Midlands      |17A   |[Birmingham Coach Station](https://bustimes.org/stops/43000211301)          |National Express West Midlands                                      |69.0    |135.0   |only a later or earlier edition |
-|West Midlands      |2     |[Bus Mall](https://bustimes.org/stops/43000202104), [Park Street](https://bustimes.org/stops/43000202301), [Birmingham Coach Station](https://bustimes.org/stops/43000211301)|National Express West Midlands                                      |100.0   |136.0   |only a later or earlier edition |
 |West Midlands      |23    |[Bus Mall](https://bustimes.org/stops/43000202104)                          |National Express West Midlands                                      |168.0   |291.2   |only a later or earlier edition |
 |West Midlands      |24    |[Bus Mall](https://bustimes.org/stops/43000202104)                          |National Express West Midlands                                      |165.2   |302.6   |only a later or earlier edition |
-|West Midlands      |3     |[Bus Mall](https://bustimes.org/stops/43000202104), [Park Street](https://bustimes.org/stops/43000202301), [Birmingham Coach Station](https://bustimes.org/stops/43000211301)|National Express West Midlands                                      |96.0    |126.0   |only a later or earlier edition |
 |West Midlands      |35    |[Park Street](https://bustimes.org/stops/43000202301)                       |National Express West Midlands                                      |72.0    |125.0   |only a later or earlier edition |
 |West Midlands      |4     |[Bus Mall](https://bustimes.org/stops/43000202104), [Park Street](https://bustimes.org/stops/43000202301), [Birmingham Coach Station](https://bustimes.org/stops/43000211301)|National Express West Midlands                                      |178.0   |311.0   |only a later or earlier edition |
 |West Midlands      |5     |[Bus Mall](https://bustimes.org/stops/43000202104), [Park Street](https://bustimes.org/stops/43000202301), [Birmingham Coach Station](https://bustimes.org/stops/43000211301), [Castle Hill](https://bustimes.org/stops/43000874601)|National Express West Midlands                                      |64.0    |119.0   |only a later or earlier edition |

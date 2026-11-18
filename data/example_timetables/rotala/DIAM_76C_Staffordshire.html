@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>Diamond - Timetable</title>
+    <link href="/Content/bootstrap/less/bootstrap.min.css" rel="stylesheet" />
+    <link href="/fonts/font-awesome/css/font-awesome.min.css" rel="stylesheet" />
+
+    <style>
+        html {
+            background-color: #5d636c;
+        }
+
+        body {
+            background-color: #5d636c;
+            padding-bottom: 50px;
+        }
+
+        footer {
+            bottom: 0;
+            width: 100%;
+            background: #5d636c;
+            padding: 15px 0;
+            color: #fff;
+        }
+
+        .navbar {
+            min-height: 70px;
+            margin: 0;
+            background-color: #014790;
+            border-radius: 0;
+        }
+
+        footer .nav-pills li a {
+            color: white;
+            border-radius: 0;
+            background: none;
+            padding: 0 10px;
+            line-height: 1.2em;
+            font-weight: normal;
+        }
+
+        footer .nav-pills li a:hover {
+            background: none;
+            text-decoration: underline;
+            color: #fff;
+        }
+
+        footer .nav-pills li a:active {
+            background: none;
+            text-decoration: underline;
+            color: #fff;
+        }
+
+        footer .nav-pills li a:focus {
+            background: none;
+            text-decoration: underline;
+            color: #fff;
+        }
+
+        footer .nav-pills li a:visited {
+            background: none;
+            text-decoration: underline;
+            color: #fff;
+            border: none;
+        }
+
+        footer a {
+            color: white;
+        }
+
+        footer a:hover {
+            color: white;
+            opacity: 0.8;
+        }
+
+        .dropdown.user {
+            margin-top: 7px;
+        }
+
+        #registerCompany {
+            padding: 50px 0;
+            background: 50% 100% url('../../CDN/diamond bus/images/masthead_bg_bus.png') no-repeat #1aa3d8;
+        }
+
+        .my-100 {
+            margin: 100px 0;
+        }
+
+        .pt-45 {
+            padding-top: 45px;
+        }
+    </style>
+    <script src="/bundles/modernizr?v=FYgoHrSvNmYV0UHIgj4kVHuKxGsq2XU9NX-0vez2AtM1"></script>
+
+    
+    <link href="/content/widgets/less/clients/diamondbus.min.css" rel="stylesheet" />
+    <link href="/Content/Widgets/Less/timetable.min.css" rel="stylesheet" />
+        <style>
+        @media print {
+
+            .panel {
+                border: 0 none;
+            }
+
+            .panel-body, .panel-heading {
+                border: 0 none;
+                padding: 0;
+                background-color: transparent;
+            }
+        }
+    </style>
+
+</head>
+<body>
+    <div class="navbar" role="navigation">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="https://www.diamondbuses.com">
+                    <img src="/CDN/diamond bus/images/logo_diamond_white_s.png" alt="Diamond Logo" height="24" />
+                </a>
+                <a class="navbar-brand" href="https://www.diamondbuses.com">
+                    <img src="/CDN/diamond bus/images/logo_diamond_northwest_white_s.png" alt="Diamond Logo" height="34" />
+                </a>
+            </div>
+
+                    <div class="user dropdown pull-right">
+                        <a href="/">Login</a>
+                    </div>
+        </div>
+    </div>
+    <div id="registerCompany">
+        <div class="container">
+            <img src="/CDN/diamond bus/images/icon.png" alt="Diamond Logo" height="23" class="visible-print" style="margin: 10px 0;" />
+
+            
+
+                <div class="timetable panel-body arrow1 darkerbg">
+
+                   
+
+
+
+<div id="timetable-result">
+        <span>No timetables currently available for this service</span>
+
+</div>
+
+
+
+
+
+
+
+                </div>
+
+        </div><!-- /.container -->
+    </div>
+    <footer>
+        <div class="container">
+            <div class="row v-align-cols">
+                <div class="col-xs-12 col-sm-10 pt-45" style="vertical-align: bottom;">
+                    &copy; 2017 - 2026 Diamond Bus | <a href="https://www.bushub.co.uk" title="www.bushub.co.uk" class="text-white">Powered by BusHub</a>
+                </div>
+                <div class="col-xs-12 col-sm-2 ">
+                    <small>Part of Rotala Limited</small>
+                    <img src="/CDN/diamond bus/images/logo-rotala-white.png" alt="Rotala logo" />
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+    <div class="modal fade" id="modal-disclaimer" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Disclaimer</h4>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        1.1  Any personal information you give to us will be processed in accordance with the UK Data Protection Act 1998. We will use the information to process your application. The data you provide is collected by a third party company on our behalf and is stored securely.<br />
+                        1.2  The information which you provide will be used for the following purposes: to enable us to create a computer and paper record of your application; to enable the application to be processed; to enable us to compile statistics, provided that no statistical information that would identify you as an individual will be published.<br />
+                        1.3  The Company collects stores and processes personal data about applicants for the purpose of managing the recruitment process and will continue to hold data until it is no longer necessary.  The information will not be disclosed to any third party, save for the third party which collects information on our behalf and except within the terms of the Data Protection Act.<br />
+                        1.4  You expressly consent to personal data contained within this form under the Data Protection Act 1998 being recorded for the purposes of assessing suitability for the post and may form the basis of any subsequent personnel file.
+                    </p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="/bundles/jquery?v=1BBPUMfvaNEKzDTndYSHCQPWc_R1gWe9wxCLI9Qr8Go1"></script>
+
+    <script src="/Scripts/jquery.validate.min.js"></script>
+    <script src="/Scripts/bootstrap.min.js"></script>
+    
+    
+    
+</body>
+</html>

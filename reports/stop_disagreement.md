@@ -26,33 +26,33 @@ disagreement, or agrees:
 - **TNDS higher** / **BODS higher** — both serve it, one more often;
 - **equal** — the same count in both.
 
-**Check.** The per-date departures behind the case charts are counted separately from `gtfs_stop_frequency()`, from each source's service dates in the window. Summed over the window they reproduce its counts exactly: 0 of 309,940 stops differ in TNDS and 0 in BODS GTFS (totals 193,896,410 against 193,896,410, and 205,024,655 against 205,024,655).
+**Check.** The per-date departures behind the case charts are counted separately from `gtfs_stop_frequency()`, from each source's service dates in the window. Summed over the window they reproduce its counts exactly: 0 of 310,000 stops differ in TNDS and 0 in BODS GTFS (totals 194,205,526 against 194,205,526, and 205,024,655 against 205,024,655).
 
 ## The four kinds of disagreement
 
 
 |Period |Kind        |   Stops| TNDS departures| BODS GTFS departures| Absolute difference| Share of absolute difference|
 |:------|:-----------|-------:|---------------:|--------------------:|-------------------:|----------------------------:|
-|window |TNDS only   |  11,481|       1,016,379|                    0|           1,016,379|                         5.2%|
-|window |BODS only   |   4,906|               0|            1,060,730|           1,060,730|                         5.4%|
-|window |TNDS higher |  39,118|      46,309,512|           43,025,970|           3,283,542|                        16.6%|
-|window |BODS higher |  52,938|      44,091,020|           58,458,456|          14,367,436|                        72.8%|
-|window |equal       | 201,497|     102,479,499|          102,479,499|                   0|                         0.0%|
-|day    |TNDS only   |  10,384|          98,539|                    0|              98,539|                         6.5%|
-|day    |BODS only   |   5,089|               0|               91,071|              91,071|                         6.0%|
-|day    |TNDS higher |  25,639|       1,615,019|            1,380,379|             234,640|                        15.4%|
-|day    |BODS higher |  42,195|       3,117,620|            4,213,381|           1,095,761|                        72.1%|
-|day    |equal       | 219,414|      10,361,761|           10,361,761|                   0|                         0.0%|
+|window |TNDS only   |  11,541|       1,010,656|                    0|           1,010,656|                         5.2%|
+|window |BODS only   |   4,892|               0|            1,230,991|           1,230,991|                         6.3%|
+|window |TNDS higher |  39,088|      45,684,538|           42,405,033|           3,279,505|                        16.9%|
+|window |BODS higher |  50,071|      42,562,825|           56,441,124|          13,878,299|                        71.5%|
+|window |equal       | 204,408|     104,947,507|          104,947,507|                   0|                         0.0%|
+|day    |TNDS only   |  10,433|          98,085|                    0|              98,085|                         6.6%|
+|day    |BODS only   |   5,030|               0|              105,315|             105,315|                         7.1%|
+|day    |TNDS higher |  24,600|       1,381,358|            1,148,452|             232,906|                        15.6%|
+|day    |BODS higher |  39,526|       3,001,351|            4,057,297|           1,055,946|                        70.8%|
+|day    |equal       | 223,181|      10,735,528|           10,735,528|                   0|                         0.0%|
 
-Over the window TNDS counts 193,896,410 bus departures and BODS GTFS 205,024,655 (-5.4%); on the single day 15,192,939 and 16,046,592 (-5.3%). 65.0% of the 309,940 served stops agree exactly over the window and 72.5% on the day.
+Over the window TNDS counts 194,205,526 bus departures and BODS GTFS 205,024,655 (-5.3%); on the single day 15,216,322 and 16,046,592 (-5.2%). 65.9% of the 310,000 served stops agree exactly over the window and 73.7% on the day.
 
-Stops served by one source only account for **10.5%** of the absolute stop-level difference over the window and 12.5% on the day. The rest is stops both sources serve at different frequencies.
+Stops served by one source only account for **11.6%** of the absolute stop-level difference over the window and 13.6% on the day. The rest is stops both sources serve at different frequencies.
 
 ## Window against day: an early stop, or a different timetable?
 
 ![plot of chunk nat-daily](figures/stopgap-nat-daily-1.png)
 
-On the single day TNDS counts 0.947 times the departures BODS GTFS does; on the window's last weekday (Fri  7 Aug) the ratio is 0.935. TNDS loses ground across the window relative to BODS GTFS, which is the signature of TNDS registrations expiring inside it.
+On the single day TNDS counts 0.948 times the departures BODS GTFS does; on the window's last weekday (Fri  7 Aug) the ratio is 0.937. TNDS loses ground across the window relative to BODS GTFS, which is the signature of TNDS registrations expiring inside it.
 
 How each stop's kind of disagreement over the window compares with the kind
 it shows on the single day. A stop that disagrees over the window but agrees
@@ -63,16 +63,16 @@ way on both is a different timetable.
 
 |Window \ day | TNDS only| BODS only| TNDS higher| BODS higher|   equal| no service on the day|
 |:------------|---------:|---------:|-----------:|-----------:|-------:|---------------------:|
-|TNDS only    |     9,415|         0|           0|           0|       0|                 2,066|
-|BODS only    |         0|     4,347|           0|           0|       0|                   559|
-|TNDS higher  |       942|        15|      24,847|         479|  12,593|                   242|
-|BODS higher  |        15|       706|         721|      41,647|   9,619|                   230|
-|equal        |        12|        21|          71|          69| 197,202|                 4,122|
+|TNDS only    |     9,409|         0|           0|           0|       0|                 2,132|
+|BODS only    |         0|     4,451|           0|           0|       0|                   441|
+|TNDS higher  |       999|         5|      23,819|         470|  13,539|                   256|
+|BODS higher  |        15|       554|         717|      38,988|   9,587|                   210|
+|equal        |        10|        20|          64|          68| 200,055|                 4,191|
 
-- **TNDS only**: 98.9% of the window difference is at stops showing the same kind on the day, and 0.0% at stops where the two agree exactly on the day.
-- **BODS only**: 99.0% of the window difference is at stops showing the same kind on the day, and 0.0% at stops where the two agree exactly on the day.
-- **TNDS higher**: 84.7% of the window difference is at stops showing the same kind on the day, and 10.0% at stops where the two agree exactly on the day.
-- **BODS higher**: 93.6% of the window difference is at stops showing the same kind on the day, and 4.8% at stops where the two agree exactly on the day.
+- **TNDS only**: 98.8% of the window difference is at stops showing the same kind on the day, and 0.0% at stops where the two agree exactly on the day.
+- **BODS only**: 99.2% of the window difference is at stops showing the same kind on the day, and 0.0% at stops where the two agree exactly on the day.
+- **TNDS higher**: 84.0% of the window difference is at stops showing the same kind on the day, and 10.6% at stops where the two agree exactly on the day.
+- **BODS higher**: 93.4% of the window difference is at stops showing the same kind on the day, and 5.0% at stops where the two agree exactly on the day.
 
 ## Stop codes: missing, or filed under a neighbour?
 
@@ -87,12 +87,12 @@ third of it is "similar": almost certainly the same buses under two codes.
 
 |Period |Kind      |  Stops| Neighbour ≤ 30 m| Neighbour ≤ 100 m| … with similar departures| Departures at those stops|
 |:------|:---------|------:|----------------:|-----------------:|-------------------------:|-------------------------:|
-|window |TNDS only | 11,481|             2.7%|              5.9%|                      1.9%|                      4.4%|
-|window |BODS only |  4,906|             4.9%|              9.8%|                      3.9%|                      4.6%|
-|day    |TNDS only | 10,384|             2.7%|              5.5%|                      2.4%|                      4.2%|
-|day    |BODS only |  5,089|             4.2%|              8.1%|                      3.7%|                      4.6%|
+|window |TNDS only | 11,541|             2.6%|              5.7%|                      1.8%|                      4.1%|
+|window |BODS only |  4,892|             4.9%|              9.6%|                      3.8%|                      3.7%|
+|day    |TNDS only | 10,433|             2.7%|              5.3%|                      2.3%|                      3.9%|
+|day    |BODS only |  5,030|             4.3%|              8.2%|                      3.7%|                      3.8%|
 
-Over the window 216 TNDS-only stops pair up with a neighbour this way, carrying 44,367 TNDS departures. Each such pair inflates the one-source count at one stop and the frequency difference at the other at the same time. The pairs are not reconciled anywhere in this report: they are listed in the tables and named in the case notes, because which code is right is a question for NaPTAN, not for either timetable.
+Over the window 209 TNDS-only stops pair up with a neighbour this way, carrying 41,589 TNDS departures. Each such pair inflates the one-source count at one stop and the frequency difference at the other at the same time. The pairs are not reconciled anywhere in this report: they are listed in the tables and named in the case notes, because which code is right is a question for NaPTAN, not for either timetable.
 
 ## Where the disagreement is
 
@@ -199,9 +199,9 @@ the largest differences sit on top.
 | 11|370070005    |Sheffield Interchange         |South Yorkshire, E01033268           | 3,592|         2|      3,590|      283 / 0|
 | 12|2290YHA00774 |St Mary's Church              |Kingston upon Hull, E01033104        | 3,930|       626|      3,304|     311 / 50|
 | 13|2290YHA00797 |King William House            |Kingston upon Hull, E01033104        | 3,930|       626|      3,304|     311 / 50|
-| 14|040000004912 |Railway Station               |Buckinghamshire, E01032955           | 4,386|     1,552|      2,834|    361 / 130|
-| 15|109000022155 |Morledge                      |Derby, E01034256                     | 8,366|     5,558|      2,808|    664 / 427|
-| 16|2800S16005A  |Todd Road                     |Merseyside, E01006872                | 3,758|     1,000|      2,758|     302 / 76|
+| 14|2800S16005A  |Todd Road                     |Merseyside, E01006872                | 4,150|     1,000|      3,150|     332 / 76|
+| 15|040000004912 |Railway Station               |Buckinghamshire, E01032955           | 4,386|     1,552|      2,834|    361 / 130|
+| 16|109000022155 |Morledge                      |Derby, E01034256                     | 8,366|     5,558|      2,808|    664 / 427|
 | 17|1800ANINAR1  |Ashton-under-Lyne Interchange |Greater Manchester, E01005948        | 9,876|     7,122|      2,754|    779 / 577|
 | 18|1500IM2758   |Bus Garage                    |Essex, E01021843                     | 4,369|     2,107|      2,262|    371 / 176|
 | 19|040000004914 |Friarage Road                 |Buckinghamshire, E01032955           | 4,608|     2,494|      2,114|    378 / 210|
@@ -217,13 +217,13 @@ the largest differences sit on top.
 
 |  #|Stop         |Name                          |Area, zone                    |   TNDS| BODS GTFS| Difference| Other period|
 |--:|:------------|:-----------------------------|:-----------------------------|------:|---------:|----------:|------------:|
-|  1|1500AA160    |Chelmsford Railway Station    |Essex, E01034092              |  2,640|    10,606|     -7,966|    431 / 647|
-|  2|1500IM2089   |Retail Market                 |Essex, E01034092              |  3,133|    10,837|     -7,704|    433 / 696|
-|  3|15003411303  |Parkway                       |Essex, E01033140              |  3,353|    10,898|     -7,545|    474 / 721|
+|  1|1500AA160    |Chelmsford Railway Station    |Essex, E01034092              |  2,658|    10,606|     -7,948|    434 / 647|
+|  2|1500IM2089   |Retail Market                 |Essex, E01034092              |  3,298|    10,837|     -7,539|    461 / 696|
+|  3|15003411303  |Parkway                       |Essex, E01033140              |  3,518|    10,898|     -7,380|    502 / 721|
 |  4|43000874601  |Castle Hill                   |West Midlands, E01009757      |  2,064|     9,250|     -7,186|    166 / 759|
 |  5|450026807    |Keighley Bus Station Entrance |West Yorkshire, E01010710     |     50|     6,860|     -6,810|      4 / 550|
 |  6|43000202301  |Park Street                   |West Midlands, E01033615      |  9,594|    16,224|     -6,630|  740 / 1,354|
-|  7|1500CFDRSTN2 |Chelmsford Railway Station    |Essex, E01034092              |  2,111|     8,544|     -6,433|    339 / 536|
+|  7|1500CFDRSTN2 |Chelmsford Railway Station    |Essex, E01034092              |  2,129|     8,544|     -6,415|    342 / 536|
 |  8|4400CY0073   |Dorsten Square                |West Sussex, E01031548        |    804|     6,888|     -6,084|     64 / 524|
 |  9|4400CY0342   |Gatwick South Terminal        |West Sussex, E01031575        |    716|     6,686|     -5,970|     56 / 510|
 | 10|4400CY0343   |Gatwick South Terminal        |West Sussex, E01031575        |    758|     6,686|     -5,928|     59 / 509|
@@ -238,10 +238,10 @@ the largest differences sit on top.
 | 19|1500IM2071   |King Edward VI School         |Essex, E01034091              |  1,409|     6,231|     -4,822|    236 / 388|
 | 20|2290YHA00004 |Drypool Bridge                |Kingston upon Hull, E01033109 |    242|     4,982|     -4,740|     20 / 400|
 | 21|2290YHA00006 |Alfred Gelder Street F        |Kingston upon Hull, E01033104 |    446|     5,176|     -4,730|     37 / 416|
-| 22|1500AA155    |Army & Navy                   |Essex, E01033140              |  1,856|     6,512|     -4,656|    274 / 380|
-| 23|40004402106A |War Memorial                  |Surrey, E01030704             |  2,592|     7,246|     -4,654|    193 / 522|
-| 24|43000203501  |Smallbrook Queensway          |West Midlands, E01033615      |  7,956|    12,510|     -4,554|  614 / 1,003|
-| 25|43000206202  |Colmore Row                   |West Midlands, E01033620      |  8,156|    12,684|     -4,528|  628 / 1,045|
+| 22|40004402106A |War Memorial                  |Surrey, E01030704             |  2,592|     7,246|     -4,654|    193 / 522|
+| 23|43000203501  |Smallbrook Queensway          |West Midlands, E01033615      |  7,956|    12,510|     -4,554|  614 / 1,003|
+| 24|43000206202  |Colmore Row                   |West Midlands, E01033620      |  8,156|    12,684|     -4,528|  628 / 1,045|
+| 25|1500AA155    |Army & Navy                   |Essex, E01033140              |  2,011|     6,512|     -4,501|    300 / 380|
 
 
 ### Single day (Tuesday 28 July 2026)
@@ -326,9 +326,9 @@ the largest differences sit on top.
 | 10|2290YHA01202 |Windmill Hotel                |Kingston upon Hull, E01012809        |  324|        36|        288|   4,078 / 484|
 | 11|2290YHA00774 |St Mary's Church              |Kingston upon Hull, E01033104        |  311|        50|        261|   3,930 / 626|
 | 12|2290YHA00797 |King William House            |Kingston upon Hull, E01033104        |  311|        50|        261|   3,930 / 626|
-| 13|109000022155 |Morledge                      |Derby, E01034256                     |  664|       427|        237| 8,366 / 5,558|
-| 14|040000004912 |Railway Station               |Buckinghamshire, E01032955           |  361|       130|        231| 4,386 / 1,552|
-| 15|2800S16005A  |Todd Road                     |Merseyside, E01006872                |  302|        76|        226| 3,758 / 1,000|
+| 13|2800S16005A  |Todd Road                     |Merseyside, E01006872                |  332|        76|        256| 4,150 / 1,000|
+| 14|109000022155 |Morledge                      |Derby, E01034256                     |  664|       427|        237| 8,366 / 5,558|
+| 15|040000004912 |Railway Station               |Buckinghamshire, E01032955           |  361|       130|        231| 4,386 / 1,552|
 | 16|1800ANINAR1  |Ashton-under-Lyne Interchange |Greater Manchester, E01005948        |  779|       577|        202| 9,876 / 7,122|
 | 17|1500IM2758   |Bus Garage                    |Essex, E01021843                     |  371|       176|        195| 4,369 / 2,107|
 | 18|3890D000203  |Stafford Street               |Stoke-on-Trent, E01014287            |  230|        49|        181|   2,706 / 596|
@@ -711,63 +711,63 @@ The note at the head of each case is generated from those measurements by fixed 
 
 
 
-**1. Chelmsford Railway Station — `1500AA160`**, Essex, E01034092. TNDS 2,640, BODS GTFS 10,606 (window); on the day, TNDS 431, BODS GTFS 647.
+**1. Chelmsford Railway Station — `1500AA160`**, Essex, E01034092. TNDS 2,658, BODS GTFS 10,606 (window); on the day, TNDS 434, BODS GTFS 647.
 
-- The two part company between the window's weeks: from **Mon  3 Aug**, TNDS 431 to 27 a weekday, while BODS GTFS 647 to 1,054 a weekday.
+- The two part company between the window's weeks: from **Mon  3 Aug**, TNDS 434 to 27 a weekday, while BODS GTFS 647 to 1,054 a weekday.
 - Only in TNDS, with no route in BODS GTFS sharing their stop sequence: **32** (72 departures).
-- Routes in both (300, C1, C5, C3, C2, 14 and 36 more): 2,514 journeys match within 5 minutes; 54 TNDS and 8,092 BODS GTFS journeys have no counterpart.
+- Routes in both (300, C1, 371, C5, C3, C2 and 36 more): 2,514 journeys match within 5 minutes; 72 TNDS and 8,092 BODS GTFS journeys have no counterpart.
 
 
 ![plot of chunk cases](figures/stopgap-cases-16.png)
 
 |TNDS route                                                                                                                     |BODS route                                                                                                                |Operator               |From → to                                            | TNDS here| BODS here| Matched|Last date T / B         |
 |:------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------|:----------------------|:----------------------------------------------------|---------:|---------:|-------:|:-----------------------|
-|300, C1, C5, C3, C2, 14, 170, 371, C7, 94, 38, 13B, 48, 49, 13, 47, C6, 99, 94A, 73B, C7E, 13A, 370, 73, 71, 70, 94B, C12, 73A |C1, C5, 300, C3, C2, 170, C7, 371, 14WI, 13B, 94, C6, 13, 47, 73B, 370, 13A, 73, 49, 70, C12, 73A, C2e, 71, 94A, 42A, 94B |First Essex            |Hospital → West Lawn                                 |     1,780|     7,852|   1,779|Sat  8 Aug / Sun  9 Aug |
+|300, C1, 371, C5, C3, C2, 14, 170, C7, 94, 38, 13B, 48, 49, 13, 47, C6, 99, 94A, 73B, 71, C7E, 13A, 370, 73, 70, 94B, C12, 73A |C1, C5, 300, C3, C2, 170, C7, 371, 14WI, 13B, 94, C6, 13, 47, 73B, 370, 13A, 73, 49, 70, C12, 73A, C2e, 71, 94A, 42A, 94B |First Essex            |Hospital → West Lawn                                 |     1,780|     7,852|   1,779|Sat  8 Aug / Sun  9 Aug |
 |C9, C10                                                                                                                        |C9, C10, C8                                                                                                               |First Essex            |Beaulieu Park Railway Station → Beaulieu Park Railwa |       534|     2,148|     524|Sat  1 Aug / Sun  9 Aug |
 |351                                                                                                                            |351                                                                                                                       |First Essex            |Bus Station → Eagle Way                              |        66|       218|      66|Sat  1 Aug / Sun  9 Aug |
 |73B, 73                                                                                                                        |73B, 73                                                                                                                   |First Essex            |Bus Station → Cherry Garden                          |        36|       130|      31|Sat  1 Aug / Sat  8 Aug |
 |32                                                                                                                             |—                                                                                                                         |Stephensons of Essex   |Bus Station → Two Brewers                            |        72|         0|       0|Sat  8 Aug / —          |
-|21, 3                                                                                                                          |3, 21, 8A                                                                                                                 |First Essex            |Bus Station → Travel Centre                          |        36|        90|      18|Sat  8 Aug / Sat  8 Aug |
 |46                                                                                                                             |46                                                                                                                        |First Essex            |Bus Station → Two Brewers                            |        56|       108|      36|Fri  7 Aug / Sat  8 Aug |
+|3, 21                                                                                                                          |3, 21, 8A                                                                                                                 |First Essex            |Bus Station → Travel Centre                          |        54|        90|      18|Sat  8 Aug / Sat  8 Aug |
 |723, 59                                                                                                                        |723, 59                                                                                                                   |Arriva Herts and Essex |Temp Bus Station → Coach Station                     |        60|        60|      60|Fri  7 Aug / Fri  7 Aug |
 |C1, C5, C2, 170, C7, 49, C6, 47, 38, 99, 48, 370, C7E, 38A, 70, 31                                                             |C1, C5, C2, C7, 170, 370, C6, 47, 70, 49, 31, 42A, C2e                                                                    |First Essex            |West Lawn → Hospital                                 |         0|         0|       0|— / —                   |
-|26, 3, 27, 8A                                                                                                                  |3, 26, 27, 8A                                                                                                             |First Essex            |Travel Centre → Bus Station                          |         0|         0|       0|— / —                   |
+|3, 26, 27, 8A                                                                                                                  |3, 26, 27, 8A                                                                                                             |First Essex            |Travel Centre → Bus Station                          |         0|         0|       0|— / —                   |
 
 
 
 
-**2. Retail Market — `1500IM2089`**, Essex, E01034092. TNDS 3,133, BODS GTFS 10,837 (window); on the day, TNDS 433, BODS GTFS 696.
+**2. Retail Market — `1500IM2089`**, Essex, E01034092. TNDS 3,298, BODS GTFS 10,837 (window); on the day, TNDS 461, BODS GTFS 696.
 
-- The two part company between the window's weeks: from **Mon  3 Aug**, TNDS 433 to 96 a weekday, while BODS GTFS 695 to 1,057 a weekday.
+- The two part company between the window's weeks: from **Mon  3 Aug**, TNDS 461 to 96 a weekday, while BODS GTFS 695 to 1,057 a weekday.
 - Only in BODS GTFS, with no route in TNDS sharing their stop sequence: **49** (14 departures).
 - BODS GTFS has a route with the same stop sequence as **19, 20, 21, 22, 339, 22B and 5 more** but it does not call at this stop code (9 departures).
 - TNDS has a route with the same stop sequence as **C9, C10, C8** but it does not call at this stop code (680 departures).
-- Routes in both (300, C1, C5, X20, C2, C3 and 56 more): 3,081 journeys match within 5 minutes; 43 TNDS and 7,062 BODS GTFS journeys have no counterpart.
+- Routes in both (300, C1, 371, C5, X20, C2 and 56 more): 3,235 journeys match within 5 minutes; 54 TNDS and 6,908 BODS GTFS journeys have no counterpart.
 
 
 ![plot of chunk cases](figures/stopgap-cases-17.png)
 
 |TNDS route                                                                                                                                                                                                          |BODS route                                                                                                                                                                                                    |Operator             |From → to                                            | TNDS here| BODS here| Matched|Last date T / B         |
 |:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|:--------------------|:----------------------------------------------------|---------:|---------:|-------:|:-----------------------|
-|300, C1, C5, X20, C2, C3, 375, 14, 170, 371, C7, 94, 331, 333, 336, 38, 13B, 48, 49, z75, 13, 47, C6, 82, 1A, 31, 75, 332, 99, 94A, 370, 73B, 52, 71, C7E, 13A, 73, X71, 38A, 70, 94B, 82A, 320, C12, 73A, 85, 3, 6 |C1, C5, C2, 300, C3, C7, 170, 371, X20, 331, 333, 336, 375, 14WI, 13B, 370, 94, C6, 31, 13, 47, 332, 73B, 13A, 70, 73, 49, 75, C12, z75, 73A, 71, 42A, C2e, 1A, 82, 94A, 320, 52, X71, 83, 82A, 94B, 85, 6, 3 |First Essex          |West Lawn → Hospital                                 |     2,129|     7,720|   2,111|Sat  8 Aug / Sun  9 Aug |
+|300, C1, 371, C5, X20, C2, C3, 375, 14, 170, C7, 94, 331, 333, 336, 38, 13B, 48, 49, z75, 13, 47, C6, 82, 1A, 31, 75, 71, 332, 99, 94A, 370, 73B, 52, C7E, 13A, 73, X71, 38A, 70, 94B, 82A, 320, C12, 73A, 85, 3, 6 |C1, C5, C2, 300, C3, C7, 170, 371, X20, 331, 333, 336, 375, 14WI, 13B, 370, 94, C6, 31, 13, 47, 332, 73B, 13A, 70, 73, 49, 75, C12, z75, 73A, 71, 42A, C2e, 1A, 82, 94A, 320, 52, X71, 83, 82A, 94B, 85, 6, 3 |First Essex          |West Lawn → Hospital                                 |     2,276|     7,720|   2,247|Sat  8 Aug / Sun  9 Aug |
 |C8, C10                                                                                                                                                                                                             |C8, C10, C9                                                                                                                                                                                                   |First Essex          |Beaulieu Park Railway Station → Beaulieu Park Railwa |       248|     1,094|     247|Sat  1 Aug / Sun  9 Aug |
 |C9, C10                                                                                                                                                                                                             |C9, C10, C8                                                                                                                                                                                                   |First Essex          |Beaulieu Park Railway Station → Beaulieu Park Railwa |         0|       680|       0|— / Sun  9 Aug          |
 |351                                                                                                                                                                                                                 |351                                                                                                                                                                                                           |First Essex          |Hospital (Northbound) → Bus Station                  |       103|       555|      83|Sat  1 Aug / Sun  9 Aug |
 |46                                                                                                                                                                                                                  |46                                                                                                                                                                                                            |First Essex          |Two Brewers → Bus Station                            |        36|       108|      36|Sat  1 Aug / Sat  8 Aug |
-|26, 3, 27, 8A                                                                                                                                                                                                       |3, 26, 27, 8A                                                                                                                                                                                                 |First Essex          |Travel Centre → Bus Station                          |        40|        90|      36|Sat  8 Aug / Sat  8 Aug |
+|3, 26, 27, 8A                                                                                                                                                                                                       |3, 26, 27, 8A                                                                                                                                                                                                 |First Essex          |Travel Centre → Bus Station                          |        58|        90|      54|Sat  8 Aug / Sat  8 Aug |
 |—                                                                                                                                                                                                                   |49                                                                                                                                                                                                            |Hedingham & Chambers |The Green → Retail Market                            |         0|        14|       0|— / Sat  8 Aug          |
 |17, 18                                                                                                                                                                                                              |18, 17                                                                                                                                                                                                        |JW Lodge & Sons      |High Street → Railway Street Car Park                |         8|        16|       8|Sat  8 Aug / Sat  8 Aug |
 |19                                                                                                                                                                                                                  |20, 21, 22, 339, 22B, 19A, 13B, 18C                                                                                                                                                                           |Central Connect      |Temp Bus Station → Two Brewers                       |         5|         0|       0|Fri 31 Jul / —          |
-|21, 3, 8A                                                                                                                                                                                                           |3, 21, 8A                                                                                                                                                                                                     |First Essex          |Bus Station → Travel Centre                          |         4|         0|       0|Wed  5 Aug / —          |
+|3, 21, 8A                                                                                                                                                                                                           |3, 21, 8A                                                                                                                                                                                                     |First Essex          |Bus Station → Travel Centre                          |         4|         0|       0|Wed  5 Aug / —          |
 
 
 
 
-**3. Parkway — `15003411303`**, Essex, E01033140. TNDS 3,353, BODS GTFS 10,898 (window); on the day, TNDS 474, BODS GTFS 721.
+**3. Parkway — `15003411303`**, Essex, E01033140. TNDS 3,518, BODS GTFS 10,898 (window); on the day, TNDS 502, BODS GTFS 721.
 
-- The two part company between the window's weeks: from **Mon  3 Aug**, TNDS 475 to 115 a weekday, while BODS GTFS 722 to 1,108 a weekday.
+- The two part company between the window's weeks: from **Mon  3 Aug**, TNDS 503 to 115 a weekday, while BODS GTFS 722 to 1,108 a weekday.
 - TNDS has a route with the same stop sequence as **C9, C10, C8** but it does not call at this stop code (680 departures).
-- Routes in both (C5, C2, 375, 170, C7, C1 and 44 more): 3,266 journeys match within 5 minutes; 87 TNDS and 6,952 BODS GTFS journeys have no counterpart.
+- Routes in both (C5, C2, 375, 170, C7, C1 and 44 more): 3,431 journeys match within 5 minutes; 87 TNDS and 6,787 BODS GTFS journeys have no counterpart.
 
 
 ![plot of chunk cases](figures/stopgap-cases-18.png)
@@ -778,10 +778,10 @@ The note at the head of each case is generated from those measurements by fixed 
 |702                                                                                                                    |702                                                                                                            |First Essex |Chelmer Valley Park-and-Ride → Chelmer Valley Park-a |       265|     1,315|     265|Fri 31 Jul / Fri  7 Aug |
 |701, 700                                                                                                               |700, 701                                                                                                       |First Essex |Sandon Park-and-Ride Car Park → Sandon Park-and-Ride |     1,209|     2,085|   1,184|Sat  8 Aug / Sat  8 Aug |
 |C8, C10                                                                                                                |C8, C10, C9                                                                                                    |First Essex |Beaulieu Park Railway Station → Beaulieu Park Railwa |       248|     1,094|     247|Sat  1 Aug / Sun  9 Aug |
-|C5, X20, C3, C2, 170, 371, C7, C1, 38, z75, 47, C6, 82, 99, 73B, 52, 71, C7E, 370, 73, X71, 70, 82A, 320, C12, 73A, 85 |C5, C3, C2, C7, 371, X20, C1, C6, 47, 73B, 370, 73, C12, z75, 73A, 71, C2e, 82, 320, 52, X71, 83, 82A, 170, 85 |First Essex |Lodge Road → Heath Drive                             |       394|     1,133|     394|Sat  8 Aug / Sun  9 Aug |
 |C9, C10                                                                                                                |C9, C10, C8                                                                                                    |First Essex |Beaulieu Park Railway Station → Beaulieu Park Railwa |         0|       680|       0|— / Sun  9 Aug          |
-|26, 3, 27, 8A                                                                                                          |3, 26, 27, 8A                                                                                                  |First Essex |Travel Centre → Bus Station                          |        40|        94|      40|Sat  8 Aug / Sat  8 Aug |
-|21, 3, 8A                                                                                                              |3, 21, 8A                                                                                                      |First Essex |Bus Station → Travel Centre                          |         0|         0|       0|— / —                   |
+|371, C5, X20, C3, C2, 170, C7, C1, 38, z75, 47, C6, 82, 71, 99, 73B, 52, C7E, 370, 73, X71, 70, 82A, 320, C12, 73A, 85 |C5, C3, C2, C7, 371, X20, C1, C6, 47, 73B, 370, 73, C12, z75, 73A, 71, C2e, 82, 320, 52, X71, 83, 82A, 170, 85 |First Essex |Lodge Road → Heath Drive                             |       541|     1,133|     541|Sat  8 Aug / Sun  9 Aug |
+|3, 26, 27, 8A                                                                                                          |3, 26, 27, 8A                                                                                                  |First Essex |Travel Centre → Bus Station                          |        58|        94|      58|Sat  8 Aug / Sat  8 Aug |
+|3, 21, 8A                                                                                                              |3, 21, 8A                                                                                                      |First Essex |Bus Station → Travel Centre                          |         0|         0|       0|— / —                   |
 |375, 333, 336, 331, 31, 332, 75, 3, 6                                                                                  |333, 336, 375, 331, 332, 31, 75, 6, 3                                                                          |First Essex |Bus Station → Lilac Grove                            |         0|         0|       0|— / —                   |
 |73B, 73                                                                                                                |73B, 73                                                                                                        |First Essex |Bus Station → Cherry Garden                          |         0|         0|       0|— / —                   |
 

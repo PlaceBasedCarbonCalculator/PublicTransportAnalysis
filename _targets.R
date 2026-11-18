@@ -356,6 +356,43 @@ list(
                             stop_pdf_docs),
              format = "file"),
 
+  # The same check on the November 2026 snapshots, which the documents
+  # collected in October and November are in force for, with the BODS
+  # TransXChange archive converted by UK2GTFS as a third feed. See
+  # stop_check_snapshot_nov() and reports/tnds_conversion_audit_stops.md.
+  tar_target(tnds_20261111, convert_tnds_snapshot("20261111", txc_cal, naptan,
+                                                 cfg = cfg_cores(30)),
+             format = "file"),
+  tar_target(bods_txc_20261111, convert_bods_txc("20261111", txc_cal, naptan,
+                                                 archive = "bodds_archive_20261111.zip",
+                                                 filter_date = "2026-11-11",
+                                                 cfg = cfg_cores(30)),
+             format = "file"),
+  tar_target(stopfreq_nov_tnds,
+             stop_frequency_source("tnds", stop_check_snapshot_nov(),
+                                   stop_check_day_nov(), stop_freq_impl,
+                                   tnds_20261111, tag = "_nov"),
+             format = "file"),
+  tar_target(stopfreq_nov_bods_gtfs,
+             stop_frequency_source("bods_gtfs", stop_check_snapshot_nov(),
+                                   stop_check_day_nov(), stop_freq_impl,
+                                   tag = "_nov"),
+             format = "file"),
+  tar_target(stopfreq_nov_bods_txc,
+             stop_frequency_source("bods_txc", stop_check_snapshot_nov(),
+                                   stop_check_day_nov(), stop_freq_impl,
+                                   bods_txc_20261111, tag = "_nov"),
+             format = "file"),
+  tar_target(stop_pdf_nov,
+             stop_pdf_check(stop_gap, c(tnds = stopfreq_nov_tnds,
+                                        bods_gtfs = stopfreq_nov_bods_gtfs,
+                                        bods_txc = stopfreq_nov_bods_txc),
+                            stop_pdf_docs,
+                            out_path = "data/stop_pdf_validation_nov.Rds",
+                            win = study_window(stop_check_snapshot_nov()$ref),
+                            day = stop_check_day_nov()),
+             format = "file"),
+
   # Everything that is not a bus.
   #
   # Every other validation stage here filters to route_type == 3, and three

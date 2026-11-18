@@ -83,10 +83,12 @@ stop_frequency_impl <- function(code_file = NULL) {
 #' @param impl stop_frequency_impl(), carried only so targets rebuilds this
 #'   when the package code changes
 #' @param ... file dependencies (the converted TNDS feed), unused
-#' @return path to data/stop_gap/stopfreq_<src>.Rds
+#' @param tag appended to the file name, so a second snapshot (the November
+#'   check, stop_check_snapshots()) does not overwrite the July one
+#' @return path to data/stop_gap/stopfreq_<src><tag>.Rds
 stop_frequency_source <- function(src, spec = validation_snapshot(),
                                   day = stop_gap_day(), impl = NULL, ...,
-                                  cfg = load_cfg()) {
+                                  tag = "", cfg = load_cfg()) {
   win <- study_window(spec$ref)
   stopifnot(day >= win$startdate, day <= win$enddate)
   message("stop_gap: reading ", src, " (", spec[[src]], ")")
@@ -123,7 +125,7 @@ stop_frequency_source <- function(src, spec = validation_snapshot(),
 
   dir <- file.path(cfg$out_dir, "stop_gap")
   dir.create(dir, showWarnings = FALSE, recursive = TRUE)
-  out <- file.path(dir, sprintf("stopfreq_%s.Rds", src))
+  out <- file.path(dir, sprintf("stopfreq_%s%s.Rds", src, tag))
   saveRDS(list(source = src, feed = spec[[src]], window = win, day = day,
                stops = stops[], tt = tt), out)
   out
