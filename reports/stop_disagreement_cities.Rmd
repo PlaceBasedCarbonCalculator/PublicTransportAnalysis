@@ -1,0 +1,592 @@
+---
+title: "Who is right? London and the West Midlands, stop by stop, on Thursday 19 November 2026"
+output: md_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, error = FALSE,
+                      fig.path = "figures/stopcity-", dpi = 110)
+library(data.table)
+library(ggplot2)
+library(sf)
+x <- readRDS(city_path)
+cats <- x$categories
+cmp <- x$comparisons
+fmt <- function(n) format(round(n), big.mark = ",", scientific = FALSE, trim = TRUE)
+pct <- function(p, d = 0) paste0(formatC(100 * p, format = "f", digits = d), "%")
+src_name <- c(tnds = "TNDS (UK2GTFS)", bods_txc = "BODS TransXChange (UK2GTFS)",
+              bods_gtfs = "BODS GTFS (DfT)", bustimes = "bustimes.org")
+# Colour is the requested one; shape carries the same information for readers
+# who cannot tell the reds from the greens: up = the TransXChange side is
+# right, down = BODS GTFS is right.
+cat_shape <- c(16, 17, 25, 17, 25, 15, 4)
+cat_fill <- cats$colour
+cl <- merge(x$class, cats[, .(cat, short, colour)], by = "cat")
+cl[, short := factor(short, levels = cats$short)]
+summ <- merge(x$summary, cats[, .(cat, short)], by = "cat")
+day_lab <- format(x$day, "%A %d %B %Y")
+share_of <- function(m, k) {
+  v <- summ[map == m & cat %in% k, sum(share)]
+  if (!length(v)) 0 else v
+}
+has_map <- exists("map_zones_path") && !is.null(map_zones_path) &&
+  file.exists(map_zones_path)
+```
+
+# Who is right? London and the West Midlands, stop by stop, on `r day_lab`
+
+The [stop report](stop_disagreement.md) shows where TNDS and the DfT's BODS
+GTFS disagree. It cannot say which one is right. The UK2GTFS filter work of
+November closed many route-level gaps, yet the overall amount of disagreement
+hardly moved. This report adds a referee to settle which side is wrong:
+[bustimes.org](https://bustimes.org), a third, independent rendering of the
+same timetables.
+
+The comparison is on one day and in two cities:
+
+- **London.** The DfT builds BODS GTFS from TNDS here, so BODS GTFS and the
+  TNDS feed UK2GTFS converts start from the same TransXChange.
+- **The West Midlands county.** BODS GTFS is built from the operators' own
+  BODS TransXChange. This is compared twice:
+  - with the same BODS TransXChange converted by UK2GTFS, which is the same
+    data through a different converter;
+  - with TNDS, which is different data through the same converter.
+
+```{r headline}
+tot <- x$totals
+lon <- tot[city == "London"]
+wm <- tot[city == "West Midlands"]
+```
+
+## Summary
+
+```{r summary-table}
+st <- tot[, .(City = city, Stops = fmt(stops), `bustimes.org` = fmt(bustimes),
+              TNDS = fmt(tnds), `BODS TransXChange` = fmt(bods_txc),
+              `BODS GTFS` = fmt(bods_gtfs))]
+knitr::kable(st, align = "lrrrrr",
+             caption = paste("Bus departures on", day_lab,
+                             "summed over every stop in each city"))
+```
+
+```{r summary-shares}
+sh <- dcast(summ, short ~ map, value.var = "share", fill = 0)
+sh <- sh[match(cats$short, short)]
+sh[is.na(short), short := cats$short[is.na(sh$short)]]
+for (m in cmp$map) if (!m %in% names(sh)) sh[, (m) := 0]
+sh2 <- sh[, c(list(Category = short), lapply(.SD, function(v) pct(ifelse(is.na(v), 0, v)))),
+          .SDcols = cmp$map]
+setnames(sh2, cmp$map, cmp$label)
+knitr::kable(sh2, align = "lrrr",
+             caption = "Share of each city's served stops in each category")
+```
+
+**When the two GTFS disagree, it is BODS GTFS that is usually wrong, in both
+cities.**
+
+- **The TransXChange conversions match bustimes.org.**
+  - TNDS is within `r pct(lon$tnds / lon$bustimes - 1, 1)` of bustimes.org's
+    total in London and `r pct(wm$tnds / wm$bustimes - 1, 1)` in the West
+    Midlands.
+  - BODS TransXChange is within `r pct(wm$bods_txc / wm$bustimes - 1, 1)` in
+    the West Midlands.
+- **BODS GTFS is `r pct(lon$bods_gtfs / lon$bustimes - 1)` over in London and
+  `r pct(wm$bods_gtfs / wm$bustimes - 1)` over in the West Midlands.**
+- **Dark green is by far the largest disagreement category everywhere.** These
+  are stops where bustimes.org and the TransXChange conversion agree and BODS
+  GTFS does not:
+  - `r pct(share_of("london_tnds", 2))` of London's stops;
+  - `r pct(share_of("wm_bods_txc", 2))` and `r pct(share_of("wm_tnds", 2))` of
+    the West Midlands' stops on the two maps.
+- **Red, where BODS GTFS is right and the conversion is wrong, is rare.** It is
+  1% of stops or less on every map.
+
+So the filter work did its job. What it cannot remove is the disagreement
+that comes from BODS GTFS itself.
+
+**BODS GTFS is wrong in a different way in each city:**
+
+- **London: duplicated versions of individual routes.** BODS GTFS carries
+  two or three copies of individual routes, such as the 358, 466, 370 and 279.
+  These are the version duplicates the DfT pipeline keeps. Its excess is
+  209,000 departures at dark green stops, nearly all of its 245,000 surplus
+  over bustimes.org.
+- **West Midlands: the operator handover.** National Express West Midlands
+  and National Express Coventry handed their networks to West Midlands Bus on
+  1 November. On 19 November BODS GTFS still runs every National Express
+  journey (726,000 departures) alongside the West Midlands Bus timetable that
+  replaced it. That doubles almost every stop in the county.
+
+**Yellow (both feeds agree, bustimes.org differs) is small, and splits two
+ways:**
+
+- **Both feeds wrong in the same way.** Routes run twice in TNDS, and so in
+  BODS GTFS too, which in London is built from it. Late-published National
+  Express timetables also appear in both of the 18 November BODS feeds.
+- **bustimes.org lacks a service** at a handful of West Midlands stops.
+
+The detail is in each city's section below.
+
+## How the comparison was made
+
+### The day and the snapshots
+
+All three feeds were downloaded on the morning of Wednesday 18 November 2026:
+
+- the TNDS regional archives;
+- the BODS TransXChange bulk archive;
+- the DfT's BODS GTFS.
+
+TNDS and BODS TransXChange were converted with the current UK2GTFS (filter
+round 8o), in the same way as the 11 November feeds in the
+[GTFS iteration report](gtfs_iteration_nov2026.md). Each feed's departures on
+`r day_lab` were counted per NaPTAN stop. The rules are those of
+`gtfs_stop_frequency()`:
+
+- every stop-time counts, including the interpolated times at non-timing
+  points;
+- a trip that calls twice at a stop counts twice;
+- frequency-based trips count once per implied departure;
+- bus only (route type 3).
+
+The day had to be one bustimes.org could still show, because it offers only
+dates from today onwards. The start of November was therefore out of reach,
+and 19 November is the first day after the snapshot. Starting so close to the
+download matters because TNDS has no forward horizon (see the
+[investigation](tnds_conversion_investigation.md)). Its registrations start
+running out within a week of an extract, and a later day would have counted
+that run-out as a TNDS shortfall.
+
+### bustimes.org
+
+bustimes.org reads BODS and TNDS itself and draws a dated timetable for every
+service. Each grid has one row per stop, every stop including the ones hidden
+behind its "All stops" switch, linked to the stop's ATCO code.
+
+`scripts/bustimes/` fetched the 19 November page of every bus service
+bustimes.org lists for its London and West Midlands regions. It then fetched
+the services it found on the stop pages of every stop where a feed runs buses
+but those pages had none, which covers services registered in a neighbouring
+region. It counts the time cells in each stop's row:
+
+- A time marked "set down only" counts, because it is still a stop-time in
+  GTFS.
+- A call after midnight (`00:15⁺¹`) by a journey that started before midnight
+  counts. GTFS writes it as 24:15 on the same service day.
+- A journey that runs wholly after midnight does not count. That is a night
+  bus whose first call is already marked ⁺¹.
+
+bustimes.org's page for a date shows two sets of night journeys. The previous
+night's (00:23, unmarked) start on that calendar date. That night's (00:23⁺¹,
+TransXChange `DepartureDayShift`) belong to that day's service. A GTFS service
+day holds only one set, so counting both would double every night route.
+Leaving them out removed 3,621 journeys, about 182,000 calls.
+
+bustimes.org is not ground truth. It applies its own rules to the same
+TransXChange: which version is current, bank holidays, and duplicates
+between BODS and TNDS. It is a third reading by a mature, widely used
+converter that shares no code with either of the others. Where it agrees
+with one feed against the other, that feed is very probably right.
+
+```{r coverage}
+pg <- x$bustimes_pages$pages
+sv <- x$bustimes_pages$services
+n_svc <- if (!is.null(sv)) nrow(sv) else NA
+n_pg <- if (!is.null(pg)) nrow(pg) else NA
+n_tt <- if (!is.null(pg)) pg[tables > 0, .N] else NA
+n_none <- if (!is.null(pg)) pg[tables == 0, .N] else NA
+```
+
+The scrape covered `r fmt(n_svc)` services. `r fmt(n_pg)` pages were fetched;
+`r fmt(n_tt)` had a timetable on the day and `r fmt(n_none)` had no journeys
+that day. Some stops have feed departures but no bustimes.org departures:
+`r fmt(lon$b_zero)` in London and `r fmt(wm$b_zero)` in the West Midlands.
+They are included and are classified like any other stop. A stop where
+bustimes.org has nothing but both feeds have buses is yellow, which is where
+the scrape's gaps show.
+
+### The seven categories
+
+Two counts **agree** when they are within `r x$rule$tol_abs` departures or
+`r pct(x$rule$tol_rel)` of the larger, whichever is more generous. Each stop
+is then placed in one of seven categories, using bustimes.org (B), BODS GTFS
+(G) and the TransXChange-converted feed (T):
+
+| | Colour | Rule |
+|---|---|---|
+| 1 | grey | B, G and T all agree |
+| 2 | dark green | B and T agree, G does not |
+| 3 | dark red | B and G agree, T does not |
+| 4 | light green | no pair agrees; T is closer to B, at most half G's distance |
+| 5 | light red | no pair agrees; G is closer to B, at most half T's distance |
+| 6 | yellow | G and T agree, B does not |
+| 7 | black | no pair agrees and neither feed is clearly closer |
+
+Green means the TransXChange conversion is right and BODS GTFS is wrong. Red
+means the reverse. On the maps, green stops are triangles pointing up, red
+stops are triangles pointing down, yellow stops are squares and black stops
+are crosses, so the categories can be told apart without colour. Stops no
+source serves on the day are left out.
+
+```{r map-fn}
+zmap <- if (has_map) readRDS(map_zones_path) else NULL
+city_map <- function(m, facet = FALSE) {
+  d <- cl[map == m]
+  bb <- d[, .(xmin = quantile(x, 0.002), xmax = quantile(x, 0.998),
+              ymin = quantile(y, 0.002), ymax = quantile(y, 0.998))]
+  pad <- 1500
+  base <- list()
+  if (!is.null(zmap)) {
+    z <- suppressWarnings(st_crop(zmap, st_bbox(c(xmin = bb$xmin - pad,
+                                                  ymin = bb$ymin - pad,
+                                                  xmax = bb$xmax + pad,
+                                                  ymax = bb$ymax + pad),
+                                                crs = st_crs(zmap))))
+    base <- list(geom_sf(data = z, fill = "grey97", colour = "grey90",
+                         linewidth = 0.08))
+  }
+  lev <- levels(d$short)
+  d <- d[order(cat != 1)]  # grey rows first, so drawn underneath
+  # One layer, so every category has a legend key; grey is drawn first and
+  # smallest so that disagreement sits on top of it
+  p <- ggplot() + base +
+    geom_point(data = d, aes(x, y, colour = short, shape = short,
+                             fill = short, size = short), stroke = 0.25,
+               show.legend = TRUE) +
+    scale_size_manual(values = setNames(c(0.35, rep(1.0, 6)), cats$short),
+                      limits = lev, drop = FALSE, name = NULL) +
+    scale_colour_manual(values = setNames(cats$colour, cats$short), limits = lev,
+                        drop = FALSE, name = NULL) +
+    scale_fill_manual(values = setNames(cats$colour, cats$short), limits = lev,
+                      drop = FALSE, name = NULL) +
+    scale_shape_manual(values = setNames(cat_shape, cats$short), limits = lev,
+                       drop = FALSE, name = NULL) +
+    coord_sf(crs = 27700, datum = NA, xlim = c(bb$xmin - pad, bb$xmax + pad),
+             ylim = c(bb$ymin - pad, bb$ymax + pad), expand = FALSE) +
+    theme_void(base_size = 11) +
+    theme(legend.position = "bottom", legend.text = element_text(size = 9),
+          plot.background = element_rect(fill = "white", colour = NA)) +
+    guides(colour = guide_legend(ncol = 2, override.aes = list(size = 3)),
+           shape = guide_legend(ncol = 2), fill = guide_legend(ncol = 2),
+           size = guide_legend(ncol = 2))
+  if (facet) {
+    dd <- copy(d)
+    p <- ggplot() + base +
+      geom_point(data = dd[, !"short"], aes(x, y), colour = "grey88",
+                 size = 0.15) +
+      geom_point(data = dd, aes(x, y, colour = short), size = 0.45) +
+      scale_colour_manual(values = setNames(cats$colour, cats$short),
+                          guide = "none") +
+      facet_wrap(~short, ncol = 4, drop = FALSE) +
+      coord_sf(crs = 27700, datum = NA, xlim = c(bb$xmin - pad, bb$xmax + pad),
+               ylim = c(bb$ymin - pad, bb$ymax + pad), expand = FALSE) +
+      theme_void(base_size = 10) +
+      theme(strip.text = element_text(size = 9, margin = margin(2, 0, 2, 0)),
+            plot.background = element_rect(fill = "white", colour = NA))
+  }
+  p
+}
+
+cat_table <- function(m) {
+  d <- summ[map == m][order(cat)]
+  d[, .(Category = paste0(cat, ". ", cats$label[cat]), Stops = fmt(stops),
+        Share = pct(share, 1), `bustimes.org` = fmt(b), `BODS GTFS` = fmt(g),
+        `TXC feed` = fmt(t))]
+}
+
+# Which lines make each colour: at the stops of that colour, the lines whose
+# counts differ most between the sources the colour is about
+route_table <- function(m, k, n = 8) {
+  r <- x$routes[map == m & cat == k]
+  if (!nrow(r)) return(NULL)
+  r[, err := switch(as.character(k),
+                    "2" = abs(g - b), "4" = abs(g - b),
+                    "3" = abs(t - b), "5" = abs(t - b),
+                    "6" = abs(g - b),
+                    pmax(abs(g - b), abs(t - b)))]
+  r <- r[order(-err)][seq_len(min(n, .N))]
+  this_city <- cmp[map == m, city]
+  la <- x$line_agency[city == this_city]
+  txc_col <- cmp[map == m, txc]
+  r <- merge(r, la, by = "line", all.x = TRUE, sort = FALSE)
+  r <- r[order(-err)]
+  op <- function(v) ifelse(is.na(v), "", v)
+  r[, .(Line = line,
+        Operator = ifelse(op(bods_gtfs) != "", op(bods_gtfs),
+                          ifelse(op(get(txc_col)) != "", op(get(txc_col)),
+                                 op(bustimes))),
+        Stops = stops, `bustimes.org` = fmt(b), `BODS GTFS` = fmt(g),
+        `TXC feed` = fmt(t))]
+}
+
+stop_table <- function(m, k, n = 8) {
+  d <- cl[map == m & cat == k]
+  if (!nrow(d)) return(NULL)
+  d[, err := pmax(abs(g - b), abs(t - b), abs(g - t))]
+  d <- d[order(-err)][seq_len(min(n, .N))]
+  d[, .(Stop = stop_name, `ATCO code` = stop_id, `bustimes.org` = fmt(b),
+        `BODS GTFS` = fmt(g), `TXC feed` = fmt(t))]
+}
+
+map_section <- function(m) {
+  out <- character(0)
+  for (k in 2:7) {
+    rt <- route_table(m, k)
+    if (is.null(rt)) next
+    out <- c(out, sprintf("\n**%d. %s** - the lines that differ most at these stops, with their departures summed over those stops:\n",
+                          k, cats$label[k]),
+             knitr::kable(rt, align = "llrrrr"),
+             sprintf("\nThe stops with the largest differences:\n"),
+             knitr::kable(stop_table(m, k), align = "llrrr"), "")
+  }
+  paste(out, collapse = "\n")
+}
+```
+
+## London: BODS GTFS against TNDS
+
+In London the DfT builds BODS GTFS from TNDS, so the two feeds should be the
+same timetable. Any difference between them comes from the converters or from
+the date each was taken, not from the data.
+
+```{r map-london, fig.width = 10, fig.height = 9}
+city_map("london_tnds")
+```
+
+```{r map-london-facet, fig.width = 11, fig.height = 6.5}
+city_map("london_tnds", facet = TRUE)
+```
+
+```{r tab-london}
+knitr::kable(cat_table("london_tnds"), align = "lrrrrr",
+             caption = "London, TXC feed = TNDS: stops per category, and departures summed over those stops")
+```
+
+London is mostly grey: `r pct(share_of("london_tnds", 1))` of stops agree in
+all three sources. The rest is concentrated, not scattered.
+
+- **Dark green (`r pct(share_of("london_tnds", 2))`).** These stops run along
+  whole routes, mostly in outer London: the 358 from Crystal Palace to Orpington,
+  the 466, the 370, the 279. Along each one, BODS GTFS has two or three times
+  the departures that TNDS and bustimes.org agree on. In London, BODS GTFS is
+  built from TNDS, so the difference is the DfT's processing. Its pipeline
+  has no file versioning, so when TfL publishes a new version of a route
+  under a new service code, both versions run. UK2GTFS's filter removes the
+  superseded one.
+- **Yellow (`r pct(share_of("london_tnds", 6))`).** This is mostly two routes
+  that TNDS itself runs twice on 19 November:
+  - the 2 is registered by both Arriva London North and Arriva London South;
+  - the 329 has two versions, one to Turnpike Lane and one to Wood Green.
+
+  Both are overlapping registrations from an operator transfer and a route
+  change. bustimes.org shows one, and the two GTFS, which share the TNDS
+  source, both show two. Here the TransXChange is the problem, not either
+  converter. The rest of the yellow is short sections of busy routes where
+  bustimes.org has slightly more departures. These are mostly short workings
+  and stand changes, and they are within a few percent on the route as a whole.
+- **Dark red (`r pct(share_of("london_tnds", 3), 1)`).** These are routes
+  present in the UK2GTFS TNDS conversion and absent from both other sources,
+  such as H21 and 243, or the reverse, such as 757. A route that both bustimes.org
+  and BODS GTFS lack may be a registration that has ended but that UK2GTFS
+  still treats as current. These were not traced further.
+
+The two night-bus rules matter most in London. Before journeys run wholly
+after midnight were left out of the bustimes.org count, every N route was
+yellow at exactly twice the feeds' count.
+
+```{r routes-london, results = "asis"}
+cat(map_section("london_tnds"))
+```
+
+## West Midlands: BODS GTFS against BODS TransXChange
+
+This is the same operator data through two converters: the DfT's, and
+UK2GTFS's with its filtering of superseded and overlapping files.
+
+```{r map-wm-txc, fig.width = 10, fig.height = 8}
+city_map("wm_bods_txc")
+```
+
+```{r map-wm-txc-facet, fig.width = 11, fig.height = 6}
+city_map("wm_bods_txc", facet = TRUE)
+```
+
+```{r tab-wm-txc}
+knitr::kable(cat_table("wm_bods_txc"), align = "lrrrrr",
+             caption = "West Midlands, TXC feed = BODS TransXChange (UK2GTFS)")
+```
+
+Only `r pct(share_of("wm_bods_txc", 1))` of West Midlands stops agree in all
+three sources. Dark green covers `r pct(share_of("wm_bods_txc", 2))`, which is
+nearly every stop West Midlands Bus serves. The grey that remains is mostly
+stops served only by smaller operators.
+
+- **Dark green.** BODS GTFS counts each West Midlands Bus stop about twice:
+  - once for West Midlands Bus (797,000 departures on the day, already about
+    10% more than the 722,000 in the BODS TransXChange conversion);
+  - once again for the National Express West Midlands and National Express
+    Coventry timetables it replaced (644,000 and 82,000).
+
+  bustimes.org and the UK2GTFS conversion of the same BODS TransXChange have
+  only the West Midlands Bus timetable.
+- **Light green (`r pct(share_of("wm_bods_txc", 4))`).** Routes such as the 4,
+  4M and 9, where BODS GTFS doubles and the conversion is near but not within
+  10% of bustimes.org. The 4H is the exception, and it is unresolved. Both
+  TransXChange conversions have about 46 journeys at each stop, while
+  bustimes.org shows four journeys each way on 19 November.
+- **Yellow (`r pct(share_of("wm_bods_txc", 6))`).** Mostly a defect in the
+  18 November BODS TransXChange archive. It contains National Express West
+  Midlands timetables for the 66 and 96 and National Express Coventry ones for
+  the 20, 20A and 22. These are valid on 19 November, and both BODS feeds run
+  them alongside West Midlands Bus. The 11 November archive did not have them.
+  They add 21,000 departures, 2.4% of the county, to the conversion. The rest
+  of the yellow is Diamond Bus's 226 and a few Walsall routes (23, 41, 224),
+  which both feeds run and bustimes.org does not show on the day.
+
+```{r routes-wm-txc, results = "asis"}
+cat(map_section("wm_bods_txc"))
+```
+
+## West Midlands: BODS GTFS against TNDS
+
+```{r map-wm-tnds, fig.width = 10, fig.height = 8}
+city_map("wm_tnds")
+```
+
+```{r map-wm-tnds-facet, fig.width = 11, fig.height = 6}
+city_map("wm_tnds", facet = TRUE)
+```
+
+```{r tab-wm-tnds}
+knitr::kable(cat_table("wm_tnds"), align = "lrrrrr",
+             caption = "West Midlands, TXC feed = TNDS (UK2GTFS)")
+```
+
+With TNDS in place of BODS TransXChange the picture is almost the same.
+Dark green covers `r pct(share_of("wm_tnds", 2))` of stops: BODS GTFS's
+double count does not depend on which TransXChange it is compared with.
+
+TNDS does not carry the late National Express timetables, so its yellow is
+smaller (`r pct(share_of("wm_tnds", 6))`). Its dark red is a little larger
+(`r pct(share_of("wm_tnds", 3), 1)`). These are stops where bustimes.org
+agrees with the DfT's BODS-based count and not with TNDS, which suggests that
+the TNDS registration differs from the BODS one. They were not traced
+further.
+
+```{r routes-wm-tnds, results = "asis"}
+cat(map_section("wm_tnds"))
+```
+
+### TNDS or BODS TransXChange: what the choice of source costs
+
+Both West Midlands maps share bustimes.org and BODS GTFS. The only change
+between them is the TransXChange UK2GTFS converted. A stop that changes
+colour between the two maps is a stop where the choice of source, rather
+than the converter, decides the answer.
+
+```{r wm-contrast}
+w <- merge(cl[map == "wm_bods_txc", .(stop_id, txc = cat)],
+           cl[map == "wm_tnds", .(stop_id, tnds = cat)], by = "stop_id", all = TRUE)
+w[, `:=`(txc = cats$short[txc], tnds = cats$short[tnds])]
+ct <- dcast(w[, .N, by = .(`BODS TransXChange map` = txc, `TNDS map` = tnds)],
+            `BODS TransXChange map` ~ `TNDS map`, value.var = "N", fill = 0)
+knitr::kable(ct, caption = "West Midlands stops: category on the BODS TransXChange map (rows) against the TNDS map (columns)")
+same_wm <- w[txc == tnds, .N] / nrow(w)
+```
+
+`r pct(same_wm)` of West Midlands stops have the same colour on both maps.
+
+The largest moves are between yellow and dark green, and between light and
+dark green:
+
+- **Yellow on the BODS TransXChange map, dark green on the TNDS map.** These
+  are the National Express timetables that are in the 18 November BODS archive
+  and not in TNDS.
+- **Light green ↔ dark green.** These are routes where one TransXChange source
+  is just inside the 10% rule and the other just outside it.
+
+Neither move changes the answer to "which GTFS is wrong". For the West
+Midlands, the two TransXChange sources are interchangeable as a check on BODS
+GTFS.
+
+## How much the snapshot date matters
+
+```{r snapshot-effect}
+if (!is.null(x$prev)) {
+  ps <- merge(x$prev$summary[, .(map, cat, prev = share)],
+              x$summary[, .(map, cat, now = share)], by = c("map", "cat"), all = TRUE)
+  ps[is.na(prev), prev := 0][is.na(now), now := 0]
+  ps <- dcast(ps, cat ~ map, value.var = c("prev", "now"))
+  out <- data.table(Category = paste0(ps$cat, ". ", cats$label[ps$cat]))
+  for (i in seq_len(nrow(cmp))) {
+    m <- cmp$map[i]
+    out[, (paste(cmp$label[i], "11 Nov")) := pct(ps[[paste0("prev_", m)]])]
+    out[, (paste(cmp$label[i], "18 Nov")) := pct(ps[[paste0("now_", m)]])]
+  }
+  knitr::kable(out, caption = "Share of stops per category with the 11 November feeds and with the 18 November feeds, both counted on 19 November against the same bustimes.org scrape")
+}
+```
+
+```{r snapshot-totals}
+if (!is.null(x$prev)) {
+  pt <- merge(x$prev$totals, x$totals[, .(city, tnds_now = tnds,
+                                           bods_txc_now = bods_txc,
+                                           bods_gtfs_now = bods_gtfs)], by = "city")
+  knitr::kable(pt[, .(City = city, `TNDS 11 Nov` = fmt(tnds), `TNDS 18 Nov` = fmt(tnds_now),
+                      `BODS TXC 11 Nov` = fmt(bods_txc), `BODS TXC 18 Nov` = fmt(bods_txc_now),
+                      `BODS GTFS 11 Nov` = fmt(bods_gtfs), `BODS GTFS 18 Nov` = fmt(bods_gtfs_now))],
+               caption = "Departures on 19 November from each snapshot")
+}
+```
+
+The week between snapshots changed little:
+
+- **London.** It is essentially unchanged: all three feeds are within 0.01%
+  of their 11 November totals.
+- **West Midlands, TNDS.** Also unchanged. This fits TNDS losing
+  registrations only from about a week after an extract, not within the first
+  week.
+- **West Midlands, BODS TransXChange.** It gained the 21,000 National Express
+  departures described above, which doubled its yellow.
+- **West Midlands, BODS GTFS.** It is the one feed that moved a lot, from
+  2.14 to 1.67 million departures. In the 11 November GTFS, West Midlands Bus
+  alone had 1.26 million, 1.75 times the BODS TransXChange conversion. By
+  18 November that was down to 1.1 times, but the National Express copy was
+  still there.
+
+So the BODS GTFS double count in the West Midlands is not a one-off: it has
+persisted for at least two weekly snapshots after the handover.
+
+## How much the agreement rule matters
+
+```{r sensitivity}
+se <- merge(x$sensitivity, cats[, .(cat, short)], by = "cat")
+se <- dcast(se, map + rule ~ short, value.var = "share", fill = 0)
+se <- merge(se, cmp[, .(map, label)], by = "map")
+cols <- intersect(cats$short, names(se))
+se2 <- se[, c(list(Map = label, Rule = rule), lapply(.SD, pct)), .SDcols = cols]
+knitr::kable(se2, caption = "Share of stops per category under a stricter and a looser agreement rule")
+```
+
+## Caveats
+
+- **One weekday.** The comparison says nothing about Saturdays, Sundays or
+  school holidays. A source that gets its weekday calendars right and its
+  weekend ones wrong looks good here.
+- **Counts, not journeys.** Two sources can agree on the number of
+  departures at a stop and still disagree on the times. A route present in
+  one source and absent in another can also be offset by a duplicate
+  elsewhere. A grey stop shows that the counts agree; it does not prove the
+  timetables are identical.
+- **Stop codes.** A source that files a route under a neighbouring stop code,
+  such as the other stand of a bus station, makes two stops disagree, one
+  each way. The [stop report](stop_disagreement.md) measures how common that
+  is.
+- **bustimes.org's own processing.** It merges BODS and TNDS, picks versions
+  and handles bank holidays its own way, and it is updated continuously. Its
+  page for 19 November reflects data newer than the 18 November snapshots by
+  however long it took to fetch.
+- **Line names.** The route tables match lines by their name, upper-cased with
+  punctuation removed, within one stop. A line that two sources name
+  differently appears twice, once with zeros (see
+  [route matching](bus_source_comparison.md)).

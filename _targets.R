@@ -393,6 +393,50 @@ list(
                             day = stop_check_day_nov()),
              format = "file"),
 
+  # London and the West Midlands on one day (Thu 19 Nov 2026), from snapshots
+  # all taken on 18 November, with bustimes.org as a third rendering of the
+  # same timetables. See R/stop_city.R and scripts/bustimes/.
+  tar_target(tnds_20261118, convert_tnds_snapshot("20261118", txc_cal, naptan,
+                                                 cfg = cfg_cores(30)),
+             format = "file"),
+  tar_target(bods_txc_20261118, convert_bods_txc("20261118", txc_cal, naptan,
+                                                 archive = "bodds_archive_20261118.zip",
+                                                 filter_date = "2026-11-18",
+                                                 cfg = cfg_cores(30)),
+             format = "file"),
+  tar_target(stopfreq_1118_tnds,
+             stop_frequency_source("tnds", stop_city_snapshot(),
+                                   stop_city_day(), stop_freq_impl,
+                                   tnds_20261118, tag = "_1118"),
+             format = "file"),
+  tar_target(stopfreq_1118_bods_gtfs,
+             stop_frequency_source("bods_gtfs", stop_city_snapshot(),
+                                   stop_city_day(), stop_freq_impl,
+                                   tag = "_1118"),
+             format = "file"),
+  tar_target(stopfreq_1118_bods_txc,
+             stop_frequency_source("bods_txc", stop_city_snapshot(),
+                                   stop_city_day(), stop_freq_impl,
+                                   bods_txc_20261118, tag = "_1118"),
+             format = "file"),
+  # The scrape is a fixed input, like the PDF readings: written once by
+  # scripts/bustimes/ on the day it could still be fetched.
+  tar_target(bustimes_counts_1119,
+             "data/bustimes/20261119/stop_service_counts.csv", format = "file"),
+  tar_target(stop_city,
+             stop_city_analysis(
+               c(tnds = stopfreq_1118_tnds, bods_txc = stopfreq_1118_bods_txc,
+                 bods_gtfs = stopfreq_1118_bods_gtfs),
+               c(tnds = stopfreq_nov_tnds, bods_txc = stopfreq_nov_bods_txc,
+                 bods_gtfs = stopfreq_nov_bods_gtfs),
+               bustimes_counts_1119, naptan),
+             format = "file"),
+  tar_target(stop_city_rmd, "reports/stop_disagreement_cities.Rmd",
+             format = "file"),
+  tar_target(stop_city_report,
+             render_stop_city_report(stop_city, stop_city_rmd, plain_zones_file),
+             format = "file"),
+
   # Everything that is not a bus.
   #
   # Every other validation stage here filters to route_type == 3, and three
