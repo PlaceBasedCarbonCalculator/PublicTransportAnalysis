@@ -1,0 +1,277 @@
+---
+title: "Where is the stop? Stop locations in TNDS, BODS and NaPTAN, November 2026"
+output: md_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, error = FALSE)
+library(data.table)
+x <- readRDS(loc_path)
+fmt <- function(n) format(round(n), big.mark = ",", scientific = FALSE, trim = TRUE)
+pct <- function(p, d = 0) paste0(formatC(100 * p, format = "f", digits = d), "%")
+src_name <- c(tnds21 = "TNDS 2.1", tnds25 = "TNDS 2.5", bods_txc = "BODS TransXChange",
+              bods_coach = "BODS Coach", tndsblend = "TNDS blend")
+nm <- function(s) ifelse(s %in% names(src_name), src_name[s], s)
+sc <- x$stop_cov
+g <- function(s, col) sc[source == s][[col]]
+ds <- x$dist_src
+dd <- function(s, col) ds[source == s][[col]]
+bf <- x$file_forms[source == "bods_txc"]
+bods_every <- bf[kind == "every stop located", sum(share)]
+bods_none <- bf[kind == "no stop located", sum(share)]
+```
+
+# Where is the stop? Stop locations in TNDS, BODS and NaPTAN
+
+Until version 0.4.1, UK2GTFS took every stop's position from NaPTAN. The
+pipeline's NaPTAN copy (the `naptan` target) was downloaded on 2 August 2026
+and is never refreshed. A stop opened since then had no position, and
+`gtfs_clean()` silently deleted the stop and every call at it, even though the
+TransXChange file often says exactly where the stop is. That is how SL12's
+Ferry Lane stop in Rainham, with 520 calls a fortnight in its TfL file,
+vanished from the 18 November conversion
+([red stops](stop_disagreement_cities.md)).
+
+UK2GTFS 0.4.1 adds a `stop_locations` argument to `transxchange2gtfs()`:
+
+| Option | Position used |
+|---|---|
+| `"naptan_fill"` (the new default) | NaPTAN; the file's own position where NaPTAN lacks the stop |
+| `"naptan"` | NaPTAN only (the old behaviour) |
+| `"txc"` | the file's position only |
+| `"txc_fill"` | the file's position; NaPTAN where the file gives none |
+
+A stop that several files locate takes the median of their positions. Every
+conversion now reports how many stops each source located. `gtfs_clean()`
+also now says how many stops and calls it drops for having no position.
+
+Whether the file's position can be trusted depends on the files: do they give
+positions at all, and do those positions agree with NaPTAN? This report
+measures both, for every file in:
+
+- both TNDS editions of 18 November (TransXChange 2.1 and 2.5);
+- the BODS TransXChange archive of 18 November;
+- the BODS Coach feed of 18 November.
+
+`scripts/stop_locations/txc_stop_points.py` reads each file's `<StopPoints>`.
+A stop is declared in one of two ways:
+
+- as a reference to NaPTAN (`<AnnotatedStopPointRef>`), which may carry a
+  `<Location>`;
+- as a full definition (`<StopPoint>` with an `<AtcoCode>` and a
+  `<Place><Location>`).
+
+The script also records which stops the timetable actually calls at. Positions
+are compared with the full NaPTAN register downloaded on 19 November, which
+holds `r fmt(x$naptan_current_n)` stops. Of these,
+`r fmt(x$naptan_status[Status == "active", N])` are active and
+`r fmt(x$naptan_status[Status == "inactive", N])` inactive.
+
+## Summary
+
+- **Whether a file gives positions depends on who wrote it.**
+  - In BODS, `r pct(bods_every, 0)` of files place every stop, writing the
+    position into the reference itself in WGS84, and `r pct(bods_none, 0)`
+    place none. The ones that place none are mostly the big groups' exports:
+    every First file and all but a handful of Stagecoach's and National
+    Express West Midlands'. So `r pct(g("bods_txc", "located_in_txc"))` of
+    the stops BODS calls at have a file position.
+  - In TNDS only two kinds of publisher define stops in full: Transport for
+    London (every file) and a minority of the North West and Yorkshire
+    suppliers. That is about 11% of the stops TNDS calls at.
+  - Every other stop is a bare reference, and only NaPTAN can place it.
+- **Where TNDS gives a position, it is NaPTAN's.**
+  - The median distance from NaPTAN is 0 m.
+  - 95% of TfL's definitions are within 5 m.
+  - None of the 115,000 TNDS definitions is more than 1 km away.
+- **BODS positions are close to NaPTAN, but not identical, and a few are
+  wrong.**
+  - The median distance is `r round(dd("bods_txc", "median_m"), 1)` m and
+    95% are within `r round(dd("bods_txc", "p95_m"))` m.
+  - `r pct(dd("bods_txc", "over_50m"), 1)` are more than 50 m away and
+    `r pct(dd("bods_txc", "over_1km"), 2)` more than 1 km. The worst,
+    Monmouth Clinic, is placed 373 km away.
+  - Because a few are wildly wrong, the file's position should fill gaps,
+    not override NaPTAN. That is why the default is `"naptan_fill"`, not
+    `"txc"`.
+- **Filling from the files rescues some stops; a fresh NaPTAN rescues more.**
+  - Of the `r fmt(g("tnds25", "stops"))` stops the TNDS 2.5 timetables call
+    at, `r fmt(g("tnds25", "missing_frozen"))` are missing from the
+    pipeline's NaPTAN copy, and the file locates
+    `r fmt(g("tnds25", "missing_frozen_located"))` of them.
+  - `r fmt(g("tnds25", "missing_frozen") - g("tnds25", "missing_current"))` of
+    them are in the current NaPTAN.
+  - For BODS the figures are `r fmt(g("bods_txc", "missing_frozen"))` missing,
+    `r fmt(g("bods_txc", "missing_frozen_located"))` located by the file, and
+    `r fmt(g("bods_txc", "missing_frozen") - g("bods_txc", "missing_current"))`
+    in the current NaPTAN.
+  - So `naptan_fill` and a refreshed NaPTAN copy are complements, not
+    alternatives.
+
+## Do the files give stop positions?
+
+```{r forms}
+ff <- copy(x$file_forms)
+ff[, Source := nm(source)]
+ff <- ff[order(source, -N), .(Source, `Stops declared as` = form, Positions = kind,
+                              Files = fmt(N), Share = pct(share, 1))]
+knitr::kable(ff, caption = "Files by how they declare their stops and whether they give positions")
+```
+
+```{r publishers}
+pf <- x$pub_forms[startsWith(source, "tnds25")][order(-files)]
+pf <- pf[, .(Publisher = publisher, Files = fmt(files),
+             `Full definitions` = pct(full_share), `Stops with a position` = pct(located_share))]
+knitr::kable(head(pf, 20), caption = "TNDS 2.5 by supplier (file-name prefix, or region where there is none)")
+```
+
+In TNDS the position comes with the supplier, not the region:
+
+- Transport for London defines every stop of every file in full.
+- Yorkshire's `SVR` files do the same.
+- The North West's files are mixed.
+- Everyone else (Traveline's regional suppliers, the "square" BODS-derived
+  files, Scotland, Wales) writes bare references.
+
+BODS splits by operator group, not by region:
+
+- Arriva, Go-Ahead and most independents give a position for every stop.
+- First (every file), Stagecoach and National Express West Midlands (all but
+  a handful of files) give none.
+- Independents are mixed: about a fifth of the other operators' files give
+  no positions.
+
+So a new stop on a First or Stagecoach route cannot be placed from BODS
+either.
+
+## Do the positions agree with NaPTAN?
+
+```{r dist}
+dt <- x$dist_src[, .(Source = nm(source), `Stop definitions` = fmt(defs),
+                     `Median (m)` = round(median_m, 1), `95th percentile (m)` = round(p95_m, 1),
+                     `Over 50 m` = pct(over_50m, 2), `Over 250 m` = pct(over_250m, 3),
+                     `Over 1 km` = pct(over_1km, 3))]
+knitr::kable(dt, caption = "Distance from each file's stop position to the current NaPTAN position (one row per stop per file)")
+```
+
+```{r dist-pub}
+dp <- x$dist_pub[defs >= 5000][order(source, -defs)]
+dp <- dp[, .(Source = nm(source), Publisher = publisher, `Definitions` = fmt(defs),
+             `Median (m)` = round(median_m, 1), `95th percentile (m)` = round(p95_m, 1),
+             `Over 50 m` = pct(over_50m, 2), `Over 1 km` = pct(over_1km, 3))]
+knitr::kable(head(dp, 25), caption = "The same, by publisher (BODS: by dataset) for publishers with at least 5,000 stop definitions")
+```
+
+```{r worst}
+w <- unique(x$worst, by = c("source", "stop_id"))[order(-dist)]
+w <- w[, .(Source = nm(source), Stop = stop_id, Name = CommonName,
+           `Distance (km)` = round(dist / 1000, 1), `NaPTAN status` = Status)]
+knitr::kable(head(w, 15), caption = "The stops whose file position is furthest from NaPTAN")
+```
+
+The positions TNDS gives are NaPTAN's, to the metre. They are useful for a
+stop NaPTAN has since dropped or not yet added, and never contradict it.
+
+BODS positions come from each operator's own data:
+
+- They mostly sit within a few metres of NaPTAN. Where they don't, this report
+  does not establish whether the operator or NaPTAN is out of date.
+- The few kilometre-scale differences are plainly errors.
+
+Either way, a BODS position should not be preferred where NaPTAN has the
+stop.
+
+## One stop, several positions
+
+```{r spread}
+sp <- x$spread[, .(Source = nm(source), `Stops defined by more than one file` = fmt(stops),
+                   `Spread over 50 m` = fmt(over_50m), `Over 250 m` = fmt(over_250m),
+                   `Over 1 km` = fmt(over_1km))]
+knitr::kable(sp, caption = "Stops whose definitions in different files disagree with each other")
+```
+
+UK2GTFS takes the median of a stop's file positions, so one stray definition
+among several does not move it. This matters only for the stops it fills
+(those NaPTAN lacks). Where NaPTAN has the stop, the file positions are not
+used under `"naptan_fill"`.
+
+## Stops the timetables use that NaPTAN does not have
+
+```{r coverage}
+cv <- x$stop_cov[, .(Source = nm(source), `Stops called at` = fmt(stops),
+                     `With a file position` = pct(located_in_txc),
+                     `Missing from the pipeline NaPTAN (2 Aug)` = fmt(missing_frozen),
+                     `... of which the file locates` = fmt(missing_frozen_located),
+                     `Missing from current NaPTAN (19 Nov)` = fmt(missing_current),
+                     `... of which the file locates` = fmt(missing_current_located),
+                     `In NaPTAN but inactive` = fmt(inactive))]
+knitr::kable(cv, caption = "Stops the timetables call at, against the two NaPTAN copies")
+```
+
+The pipeline's NaPTAN copy includes UK2GTFS's own `naptan_missing` additions.
+That is why a few stops are missing from the current register but not from
+the copy.
+
+A stop missing from the copy has no position under the old behaviour. Under
+`"naptan_fill"` it has one if the file gives one. In TNDS that is mostly the
+London stops, because TfL is the one large publisher that defines its stops;
+elsewhere in TNDS a new stop can only be placed by a newer NaPTAN.
+
+NaPTAN marks `r fmt(g("tnds25", "inactive"))` stops called at in TNDS 2.5,
+and `r fmt(g("bods_txc", "inactive"))` in BODS, as inactive. They still have
+positions, so they are converted. Whether a timetable calling at an inactive
+stop is right is a separate question this report does not answer.
+
+## What `naptan_fill` did in the November conversions
+
+```{r conversions}
+if (!is.null(x$conversions)) {
+  cvn <- dcast(x$conversions, conversion ~ source, value.var = c("stops", "calls"), fill = 0)
+  for (v in c("stops_naptan", "stops_txc", "stops_none", "calls_txc", "calls_none"))
+    if (!v %in% names(cvn)) cvn[, (v) := 0]
+  knitr::kable(cvn[, .(Conversion = nm(conversion), `Stops from NaPTAN` = fmt(stops_naptan),
+                       `Stops from the files` = fmt(stops_txc), `Calls kept by the fill` = fmt(calls_txc),
+                       `Stops with no position` = fmt(stops_none), `Calls still lost` = fmt(calls_none))],
+               caption = "Stop positions in the 18 November conversions with stop_locations = \"naptan_fill\" (calls over the conversion window, before date trimming)")
+}
+```
+
+```{r conv-numbers}
+cv1 <- function(conv, src, col) {
+  v <- x$conversions[conversion == conv & source == src][[col]]
+  if (length(v)) sum(v) else 0
+}
+```
+
+In TNDS 2.5 the fill placed `r fmt(cv1("tnds25", "txc", "stops"))` stops,
+all in London and Yorkshire, and kept `r fmt(cv1("tnds25", "txc", "calls"))`
+calls. `r fmt(cv1("tnds25", "none", "stops"))` stops and
+`r fmt(cv1("tnds25", "none", "calls"))` calls are still lost, because their
+files give no position. In BODS TransXChange the fill placed
+`r fmt(cv1("bods_txc", "txc", "stops"))` stops and kept
+`r fmt(cv1("bods_txc", "txc", "calls"))` calls;
+`r fmt(cv1("bods_txc", "none", "stops"))` stops are still lost. A refreshed NaPTAN would place most of the
+remainder (see the table above).
+
+```{r gtfs}
+gd <- x$gtfs_dist
+```
+
+For comparison, the DfT's BODS GTFS places its stops within
+`r round(gd$median_m, 2)` m of NaPTAN at the median, and
+`r pct(gd$over_50m, 3)` are more than 50 m away. That is far closer than
+the operators' own files, so it appears to take its positions from NaPTAN.
+
+## Recommendations
+
+1. **Keep `"naptan_fill"` as the UK2GTFS default.** It changes nothing where
+   NaPTAN has the stop, and it keeps the calls that were silently lost where
+   NaPTAN does not.
+2. **Refresh the pipeline's NaPTAN copy as part of the next series rebuild,
+   and date it.** Most TNDS files give no position, so for them only a newer
+   NaPTAN helps. The frozen copy should match the snapshots it converts:
+   historic snapshots want an older register, not a newer one, because stops
+   are deleted as well as added.
+3. **Do not use `"txc"` or `"txc_fill"` for BODS.** A handful of operator
+   positions are kilometres out. For TNDS the two give the same answer as
+   NaPTAN wherever both exist.

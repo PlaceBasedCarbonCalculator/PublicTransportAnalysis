@@ -17,6 +17,9 @@ in services.csv (source "stop:<code>"), and then fetches the new services'
 timetables. That is how services registered in another region but calling in
 London or the West Midlands get in.
 
+--modes bus,coach (anywhere after the date) sets which modes the stop pass
+adds; the default is bus.
+
 bustimes.org only offers dates from today on, so this must run on or before
 the date it fetches.
 """
@@ -92,7 +95,7 @@ def fetch_services(out_dir, date, services):
         time.sleep(PAUSE)
 
 
-def services_from_stops(out_dir, codes):
+def services_from_stops(out_dir, codes, modes=("bus",)):
     stop_dir = os.path.join(out_dir, "stops")
     os.makedirs(stop_dir, exist_ok=True)
     with open(os.path.join(out_dir, "services_all.json"), encoding="utf-8") as f:
@@ -114,17 +117,21 @@ def services_from_stops(out_dir, codes):
             if slug in have:
                 continue
             r = by_slug.get(slug)
-            if r is None or r["mode"] != "bus":
+            if r is None or r["mode"] not in modes:
                 continue
             have.add(slug)
             added.append({"id": r["id"], "slug": slug, "line_name": r["line_name"],
                           "operator": ";".join(r["operator"] or []),
                           "region": r["region_id"], "description": r["description"],
-                          "source": f"stop:{code}"})
+                          "source": f"stop:{code}", "mode": r["mode"]})
     if added:
+        with open(os.path.join(out_dir, "services.csv"), encoding="utf-8") as f:
+            header = next(csv.reader(f))
         with open(os.path.join(out_dir, "services.csv"), "a", newline="",
                   encoding="utf-8") as f:
-            w = csv.DictWriter(f, fieldnames=list(added[0].keys()))
+            # Write in the file's own column order; an older services.csv
+            # without the mode column just doesn't get it.
+            w = csv.DictWriter(f, fieldnames=header, extrasaction="ignore")
             w.writerows(added)
     print(f"{len(codes)} stops checked, {len(added)} services added", flush=True)
     return added
@@ -132,10 +139,13 @@ def services_from_stops(out_dir, codes):
 
 def main(argv):
     out_dir, date = argv[1], argv[2]
-    if len(argv) > 4 and argv[3] == "--from-stops":
-        with open(argv[4], encoding="utf-8") as f:
+    modes = ("bus",)
+    if "--modes" in argv:
+        modes = tuple(argv[argv.index("--modes") + 1].split(","))
+    if "--from-stops" in argv:
+        with open(argv[argv.index("--from-stops") + 1], encoding="utf-8") as f:
             codes = [ln.strip() for ln in f if ln.strip()]
-        added = services_from_stops(out_dir, codes)
+        added = services_from_stops(out_dir, codes, modes)
         fetch_services(out_dir, date, added)
     else:
         fetch_services(out_dir, date, read_services(out_dir))

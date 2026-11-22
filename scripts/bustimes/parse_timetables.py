@@ -6,7 +6,8 @@ Reads html/<id>.html (fetch_timetables.py) and writes:
 
   stop_service_counts.csv  service_id, line_name, operator, region, grouping
                            (direction table), stop (ATCO code, as linked),
-                           row (position in the table), departures
+                           row (position in the table), departures, mode
+                           (bus or coach, from services.csv; bus if absent)
   pages.csv                one row per page: date it is for, tables, rows,
                            cells, and any layout the count could not handle
 
@@ -158,7 +159,8 @@ def main(out_dir, date):
                 n_rows += 1
                 n_cells += n
                 counts.append([sid, s.get("line_name", ""), s.get("operator", ""),
-                               s.get("region", ""), g, title, k, stop.upper(), n])
+                               s.get("region", ""), g, title, k, stop.upper(), n,
+                               s.get("mode", "bus")])
         no_tt = "Sorry, no journeys found" in text or "no journeys" in text.lower()
         pages.append([sid, s.get("slug", ""), p.date, p.date == date,
                       len(p.groupings), n_rows, n_cells, no_tt,
@@ -168,7 +170,7 @@ def main(out_dir, date):
               encoding="utf-8") as f:
         w = csv.writer(f)
         w.writerow(["service_id", "line_name", "operator", "region", "grouping",
-                    "grouping_title", "row", "stop", "departures"])
+                    "grouping_title", "row", "stop", "departures", "mode"])
         w.writerows(counts)
     with open(os.path.join(out_dir, "pages.csv"), "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f)
@@ -177,7 +179,7 @@ def main(out_dir, date):
                     "shifted_cells", "other_cells"])
         w.writerows(pages)
     print(f"{len(pages)} pages, {len(counts)} stop rows, "
-          f"{sum(r[-1] for r in counts)} departures; "
+          f"{sum(r[8] for r in counts)} departures; "
           f"{sum(1 for p in pages if not p[3])} pages not dated {date}; "
           f"{sum(p[8] for p in pages)} journeys run wholly after midnight left out "
           f"({sum(p[9] for p in pages)} calls)")
