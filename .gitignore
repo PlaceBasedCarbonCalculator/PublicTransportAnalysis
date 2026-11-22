@@ -68,3 +68,7 @@ rsconnect/
 backups/
 zpv_work/
 __pycache__/
+
+# Over GitHub 100 MB limit; rebuilt by targets
+data/stop_gap/stopfreq_bods_gtfs_1118.Rds
+data/stop_gap/stopfreq_bods_gtfs_nov.Rds
