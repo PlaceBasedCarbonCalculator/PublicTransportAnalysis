@@ -1,0 +1,18 @@
+example,route_id,agency_id,agency_name,route_short_name,route_type,route_long_name,route_desc
+copy_x6,1174,AMID,Arriva,X6,3,Leicester - Coventry (Limited Stop),NA [ServiceCode: X6]
+stoploc_sl12,2384,IF,EAST LONDON BUS & COACH COMPANY LIMITED,SL12,3,Parham Drive - Ferry Lane / Coldharbour Lane,"Gants Hill - Newbury Park - Eastern Avenue - Romford Town Centre and Station - Queens Hospital - Elm Park - Rainham, Ferry Lane [ServiceCode: 60-SL1-2-y05-5]"
+copy_439,2491,ME,METROBUS LIMITED,439,3,Waddon Marsh Tram Stop - Wapses Lodge Roundabout,Waddon Marsh - Waddon - Purley Way - Purley Station - Northwood Avenue - Kenley Station - Whyteleafe and Upper Warlingham Stations - Whyteleafe South [ServiceCode: 51-439-_-y05-5]
+svckey_metrobus,8301,METR,Metrobus,10,3,Gatwick - Bewbush,Gatwick - Crawley - Bewbush [ServiceCode: 10]
+svckey_metrobus,8335,METR,Metrobus,100,3,Maidenbower - Redhill,Maidenbower - Crawley -  Gatwick - Redhill [ServiceCode: 100]
+svckey_metrobus,8398,METR,Metrobus,2,3,K2 Leisure Centre - Ifield West,K2 Leisure Centre - Crawley - Ifield West [ServiceCode: 2]
+svckey_metrobus,8610,METR,Metrobus,100,3,Maidenbower - Redhill,Maidenbower - Crawley - Gatwick - Redhill [ServiceCode: 100]
+svckey_metrobus,8662,METR,Metrobus,21,3,Crawley - Epsom,Crawley - Dorking - Leatherhead - Epsom [ServiceCode: 21]
+copy_439,8804,GAHL,London General,439,3,Waddon Marsh - Whyteleafe,[ServiceCode: 439]
+svckey_metrobus,8949,METR,Metrobus,10,3,Gatwick - Bewbush,Gatwick - Crawley - Bewbush [ServiceCode: 10]
+svckey_metrobus,9387,METR,Metrobus,100,3,Maidenbower - Redhill,Maidenbower - Crawley - Gatwick - Redhill [ServiceCode: 100]
+svckey_metrobus,9575,METR,Metrobus,1,3,Broadfield - Crawley,[ServiceCode: 1]
+svckey_metrobus,9645,METR,Metrobus,10,3,Gatwick Airport - Bewbush,Gatwick Airport - Crawley - Bewbush [ServiceCode: 10]
+svckey_metrobus,9937,METR,Metrobus,2,3,Tilgate - Ifield West,Tilgate - Crawley - Ifield West [ServiceCode: 2]
+copy_10a,14621,WMB,West Midlands Bus,10A,3,Shops - Wolverhampton Bus Station,Pattingham - Perton - Wolverhampton [ServiceCode: 40-10A-A-y11-17]
+copy_x6,14648,AMD,Arriva Midlands,X6,3,Leicester St Margaret's Bus Station - Pool Meadow Bus Station,Leicester - Coventry via Earl Shinton [ServiceCode: 6-X6-0-y11-2]
+copy_10a,14758,WMB,West Midlands Bus,10A,3,Wolverhampton Bus Station - Shops,"Wolverhampton - Pattingham     via Compton, Perton [ServiceCode: 58-10A-_-y11-26]"

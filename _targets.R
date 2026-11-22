@@ -515,6 +515,51 @@ list(
                                      output = "stop_disagreement_cities_1120.md"),
              format = "file"),
 
+  # Prototype cross-file copy rule (UK2GTFS 0.4.2 gtfs_deduplicate_copies(),
+  # R/convert_copies.R): the 20 Nov TNDS 2.5 and BODS TransXChange feeds
+  # rebuilt from their untrimmed caches with the rule applied, and the city
+  # comparison run with and without it.
+  tar_target(tnds25_20261118_xc,
+             convert_tnds_copies("20261118", "_v25_naptan_fill",
+                                 after = tnds25_20261118_nf),
+             format = "file"),
+  tar_target(bods_txc_20261118_xc,
+             convert_bods_txc_copies("20261118", after = bods_txc_20261118_nf),
+             format = "file"),
+  tar_target(stopfreq_1120_tnds25xc,
+             stop_city_source("tnds25xc",
+                              c(stop_city_snapshot_1120(),
+                                list(tnds25xc = tnds25_20261118_xc)),
+                              stop_city_day_1120(), tag = "_1120bc"),
+             format = "file"),
+  tar_target(stopfreq_1120_bods_txcxc,
+             stop_city_source("bods_txcxc",
+                              c(stop_city_snapshot_1120(),
+                                list(bods_txcxc = bods_txc_20261118_xc)),
+                              stop_city_day_1120(), tag = "_1120bc"),
+             format = "file"),
+  tar_target(stop_city_1120_xcopy,
+             stop_city_analysis(
+               c(tnds25 = stopfreq_1120_tnds25,
+                 tnds25xc = stopfreq_1120_tnds25xc,
+                 bods_txc = stopfreq_1120_bods_txc,
+                 bods_txcxc = stopfreq_1120_bods_txcxc,
+                 bods_gtfs = stopfreq_1120_bods_gtfs),
+               NULL, bustimes_counts_1120, naptan,
+               day = stop_city_day_1120(), cmp = stop_city_comparisons_xcopy(),
+               supplement = c(bods_coach = stopfreq_1120_bods_coach),
+               out_name = "stop_city_xcopy"),
+             format = "file"),
+  tar_target(filter_rules_examples, "data/filter_rules", format = "file"),
+  tar_target(filter_rules_rmd, "reports/filtering_rules_overview.Rmd",
+             format = "file"),
+  tar_target(filter_rules_report,
+             render_filter_rules_report(filter_rules_rmd, stop_city_1120_xcopy,
+                                        plain_zones_file, tnds25_20261118_xc,
+                                        bods_txc_20261118_xc,
+                                        filter_rules_examples),
+             format = "file"),
+
   # Stop location quality in every TransXChange source (R/stop_locations.R):
   # the files' own stop positions against NaPTAN, and what naptan_fill did.
   # The scan is scripts/stop_locations/txc_stop_points.py, run by hand like
