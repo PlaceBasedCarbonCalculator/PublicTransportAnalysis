@@ -46,7 +46,11 @@ filter runs side by side, with the duplication each change puts back),
   heritage railways and the DLR the wrong mode.
 * **A combination helps, but only service by service**: each source has
   services the other lacks or has out of date. The gain at the case stops
-  is one reading; §5 sets out how to build it.
+  is one reading; §5 sets out how to build it. **Built on 27 November
+  (§5.1)**, it is the most accurate feed on both checks. On the operator
+  timetables it scores 62 of 78 readings within 15%, against TNDS 61, BODS
+  TransXChange 59 and BODS GTFS 41, with a median error of 3.8%. In the
+  West Midlands it comes within 1.3% of bustimes.org.
 
 ## 1. Why services run out early in TNDS
 
@@ -410,7 +414,120 @@ The day-by-day test of whether it beats TNDS alone is the November check
 plus the July check (which BODS would win on the horizon cases); on this
 evidence the gain at the case stops is small (one reading), and the larger
 gains are where there are no case stops yet (Reading-type horizon loss,
-withdrawn services). It is not built here.
+withdrawn services).
+
+### 5.1 Built: the combined feed (27 November 2026)
+
+The combined feed is built by `build_combined_feed()` in
+`R/convert_combined.R`, with targets `combined_20261111` and
+`combined_20261118`. It is built for validation only; the series is
+unchanged. There are two versions of each:
+
+- `gtfs/combined_<date>_merged.zip`, the choice alone;
+- `gtfs/combined_<date>_xcopy_merged.zip`, with the copy rule
+  (`gtfs_deduplicate_copies()`) applied before trimming.
+
+The per-service decisions are in `data/combined/<date>/`
+(`services.csv`, `matches.csv`, `components.csv`).
+
+**Two departures from the design above.**
+
+1. **The choice is made on the converted feeds, not on the TransXChange
+   files.**
+   - The inputs are the untrimmed conversions already built:
+     - 18 November: the TNDS blend edition with naptan_fill, and the BODS
+       TransXChange conversion.
+     - 11 November: TNDS 2.5, because there is no blend for that date.
+   - Each source's file filter therefore still chooses among all its own
+     files, and the untrimmed caches keep each timetable's real operating
+     period.
+   - A service is an operator plus its TransXChange `ServiceCode`, read from
+     `route_desc`.
+   - Matching follows step 1 (line name plus at least half the smaller
+     service's stops). A second pass matches on first-stop departures where
+     line names differ.
+   - Matched services are grouped as connected components, because one BODS
+     registration can match two TNDS files.
+2. **A doubling rule comes before the freshness rule.** A dry run showed that
+   freshness alone often picked the doubled source:
+   - BODS where National Express West Midlands is republished beside West
+     Midlands Bus;
+   - TNDS where Arriva Cymru's North West and Wales files are copies.
+
+   So the smaller source is taken:
+   - when one source runs 1.7 to 2.3 times the other's journeys in the
+     window; or
+   - from 1.7 times up, when the larger source runs the group under more
+     operators.
+
+   The upper bound exists because of X93 (2.4 times, where the operator's
+   timetable sides with BODS's larger count). One known exception remains:
+   Preston 35, where the timetable sides with BODS's larger count.
+
+**What it chose (18 November, all of Great Britain, window 16-29 November).**
+
+- Of 7,171 matched groups:
+  - 1,963 are taken from BODS and 5,208 from TNDS.
+  - 213 are decided by the doubling rule; in 120 of those it reverses the
+    freshness choice.
+- 542 services are in BODS only (34,605 journeys) and 3,810 in TNDS only.
+- The total is within 0.02% of TNDS: 5,208,614 trip-days against 5,207,723.
+  Removed doubles and added BODS services roughly cancel.
+
+**Operator timetables** (§4 method; 78 in-force readings, built from the
+11 November feeds; `data/stop_pdf_validation_nov_combined.Rds`, scored with
+`scripts/tnds_conversion_audit/nov_summary.R`):
+
+| Feed | Within 15% | Median error |
+|---|---:|---:|
+| Combined (with or without the copy rule) | **62** | **3.8%** |
+| TNDS 2.5 | 61 | 5.5% |
+| BODS TransXChange (UK2GTFS) | 59 | 5.5% |
+| BODS GTFS (DfT) | 41 | 12.9% |
+
+- The combined feed gets right every reading that either TransXChange
+  source gets right, and loses none. That is the ceiling for a choice
+  between them.
+- The reading it adds is Brighton & Hove 20, which is absent from TNDS.
+- The median error falls because, on readings both sources get within 15%,
+  it takes the closer source more often than not.
+- 16 readings are wrong in every feed. Those failures are in the inputs, not
+  in the choice.
+- (The §4 figures, 54/51/34, predate filter rounds 3-8o and naptan_fill.
+  The comparison above uses the same rebuilt feeds throughout.)
+
+**City comparison against bustimes.org** (Friday 20 November;
+`reports/stop_disagreement_cities_1120.md`, "A combined feed"):
+
+| | bustimes.org | TNDS blend | Combined | Combined + copy rule | BODS TXC | BODS GTFS |
+|---|---:|---:|---:|---:|---:|---:|
+| London departures | 4,026,934 | +1.0% | +1.1% | **+0.9%** | -95.2% | +6.3% |
+| West Midlands departures | 853,852 | +2.9% | **+1.3%** | **+1.3%** | +3.7% | +93.7% |
+| London lines agreeing | | 89.9% | 90.0% | **90.1%** | 17.5% | 84.4% |
+| West Midlands lines agreeing | | 80.1% | **81.8%** | **81.8%** | 80.7% | 38.4% |
+
+- **West Midlands.** The summed line error falls 12% on the blend. This is
+  the doubling rule removing TNDS's second copy of NXWM/WMB lines 61, 63, 10,
+  10A, 85 and X1.
+- **London.** The choice changes nothing, because BODS carries almost no
+  London service. The copy rule cuts the summed line error by 17%
+  (Arriva London 2, Go-Ahead 439).
+
+**Known limits:**
+
+- **A group is taken whole.** A service in the losing source with no
+  counterpart in the winning one is dropped. West Midlands Bus 59, 11 and 1
+  lose 10-26% of their journeys to BODS's thinner registrations (59: 6,907
+  departures, against 8,867 on bustimes.org). Diamond 50A falls further
+  below bustimes.org than TNDS does.
+  - The next refinement: keep a losing service that matched nothing in the
+    winning source.
+- **Services in one source only are kept unchecked.** NXWM 64/X64 are in
+  BODS only and are probably a registration left open; bustimes.org has no
+  X64.
+- **Doubles inside one source are not in scope.** The choice fixes doubles
+  between sources only. TNDS's own copies (London 2, 439) need the copy
+  rule, which is why the `xcopy` version is the one to use.
 
 ## 6. What changed in UK2GTFS, and what is still open
 

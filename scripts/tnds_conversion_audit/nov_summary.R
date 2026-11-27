@@ -8,13 +8,22 @@ s <- function(f, lab) {
   ch <- unique(x[chosen == TRUE & reliable == TRUE & edition_status == "in force"],
                by = c("route", "document"))
   med <- function(r) round(100 * median(abs(r[is.finite(r)] - 1)), 1)
-  data.table(build = lab, readings = nrow(ch),
+  out <- data.table(build = lab, readings = nrow(ch),
              tnds = sum(ok(ch$tnds_ratio)), bods_txc = sum(ok(ch$bods_txc_ratio)),
              bods_gtfs = sum(ok(ch$bods_ratio)),
              tnds_med = med(ch$tnds_ratio), txc_med = med(ch$bods_txc_ratio),
              gtfs_med = med(ch$bods_ratio),
              tnds_else_txc = sum(ok(ifelse(ch$tnds_ratio > 0, ch$tnds_ratio, ch$bods_txc_ratio))),
              none_ok = sum(!ok(ch$tnds_ratio) & !ok(ch$bods_txc_ratio) & !ok(ch$bods_ratio)))
+  # a combined feed (stop_pdf_nov_combined), where the check carried one
+  for (v in c("combined", "combinedxc")) {
+    r <- ch[[paste0(v, "_ratio")]]
+    if (is.null(r)) next
+    out[, (v) := sum(ok(r))]
+    out[, (paste0(v, "_med")) := med(r)]
+    out[, (paste0(v, "_absent")) := sum(r == 0, na.rm = TRUE)]
+  }
+  out
 }
 a <- commandArgs(trailingOnly = TRUE)
 kv <- strsplit(a, "=", fixed = TRUE)

@@ -289,6 +289,15 @@ results are cached under `gtfs/cache/` so interrupted runs resume):
   revision of every dataset, so superseded revisions are dropped with
   `txc_filter_files()`/`filter_duplicate_files`, keeping the revision valid on
   that year's analysis date.
+- **Combined TNDS + BODS TransXChange, November 2026 (validation only)** —
+  `build_combined_feed()` in `R/convert_combined.R`. It matches services
+  across the two converted, already filtered feeds, takes each one from a
+  single source, and writes the result with and without the cross-file copy
+  rule (`gtfs/combined_<snapshot>[_xcopy]_merged.zip`; the choice for every
+  service is in `data/combined/<snapshot>/`). It is built for 18 November
+  (scored against bustimes.org in `reports/stop_disagreement_cities_1120.md`)
+  and 11 November (scored against operators' timetables,
+  `stop_pdf_nov_combined`). It is not used by the yearly series.
 
 Every TransXChange/NPTDR conversion gets the same post-treatment:
 `gtfs_clean()`, known-bad stop coordinates patched from
@@ -480,6 +489,7 @@ run.R               convenience wrapper for targets::tar_make()
 R/config.R          paths, study-window rule, year/source table
 R/zones.R           zone polygons: widened for counting, plain for comparison
 R/convert.R         UK2GTFS conversions (Bus Archive merges, RDP rail, TXC)
+R/convert_combined.R TNDS + BODS TransXChange, one source chosen per service
 R/frequency.R       feed reading + deduplication, per-year trips-per-zone
 R/comparison.R      three-source bus comparison, 2022-2026
 R/route_match.R     matching a service across sources by number and stops

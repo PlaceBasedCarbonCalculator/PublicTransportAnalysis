@@ -16,8 +16,12 @@ fmt <- function(n) format(round(n), big.mark = ",", scientific = FALSE, trim = T
 pct <- function(p, d = 0) paste0(formatC(100 * p, format = "f", digits = d), "%")
 sgn <- function(p, d = 1) paste0(ifelse(p >= 0, "+", ""), pct(p, d))
 src_name <- c(tnds25 = "TNDS 2.5", tnds21 = "TNDS 2.1", tndsblend = "TNDS blend",
+              combined = "Combined", combinedxc = "Combined + copy rule",
               bods_txc = "BODS TransXChange", bods_gtfs = "BODS GTFS",
               bustimes = "bustimes.org")
+cb_dir <- file.path("..", "data", "combined", "20261118")
+has_cb <- all(c("combined", "combinedxc") %in% names(x$totals)) &&
+  file.exists(file.path(cb_dir, "components.csv"))
 cat_shape <- c(16, 17, 25, 17, 25, 15, 4)
 cl <- merge(x$class, cats[, .(cat, short, colour)], by = "cat")
 cl[, short := factor(short, levels = cats$short)]
@@ -63,9 +67,16 @@ as referee, with four changes:
    where it is. See the [stop location report](stop_location_quality.md).
 4. **The day is Friday 20 November.** The feeds are the same 18 November
    downloads.
+5. **A combined feed** (added 27 November): TNDS and UK2GTFS's conversion
+   of the BODS TransXChange archive, with one source chosen for each
+   service, as proposed in
+   [gtfs_iteration_nov2026.md §5](gtfs_iteration_nov2026.md#5-a-combined-source).
+   It is shown with and without the cross-file copy rule. See
+   [A combined feed](#a-combined-feed-tnds-and-bods-chosen-service-by-service).
 
 ```{r totals}
-cols <- intersect(c("bustimes", "tnds25", "tnds21", "tndsblend", "bods_txc", "bods_gtfs"), names(tot))
+cols <- intersect(c("bustimes", "tnds25", "tnds21", "tndsblend", "combined", "combinedxc",
+                    "bods_txc", "bods_gtfs"), names(tot))
 tt <- tot[, c(list(City = city, Stops = fmt(stops)), lapply(.SD, fmt)), .SDcols = cols]
 setnames(tt, cols, src_name[cols])
 knitr::kable(tt, align = paste0("lr", strrep("r", length(cols))),
@@ -128,6 +139,205 @@ prev_red <- function(m) prev19$summary[map == m & cat == 3, sum(stops)]
     stops dark green.
   - BODS TransXChange does not carry TfL's own routes, so it has no London
     map.
+
+## A combined feed: TNDS and BODS chosen service by service
+
+```{r combined-setup, eval = has_cb}
+comp <- fread(file.path(cb_dir, "components.csv"))
+svc <- fread(file.path(cb_dir, "services.csv"))
+svc_in <- svc[in_span == TRUE]
+src_lab <- c(tnds = "TNDS", bods_txc = "BODS TransXChange")
+n_grp <- nrow(comp)
+n_b <- comp[choice == "bods_txc", .N]
+n_guard <- comp[reason == "the other source runs it about twice", .N]
+n_flip <- comp[choice != choice_fresh, .N]
+only <- svc_in[is.na(comp) & trips_win > 0, .(services = .N, trips = sum(trips_win)), by = source]
+kept_trips <- svc_in[keep == TRUE, sum(trips_win)]
+tnds_trips <- svc_in[source == "tnds", sum(trips_win)]
+bods_trips <- svc_in[source == "bods_txc", sum(trips_win)]
+```
+
+`r if (!has_cb) "*The combined feed has not been built yet.*"`
+
+The [November audit](gtfs_iteration_nov2026.md) found that TNDS and
+UK2GTFS's conversion of the BODS TransXChange archive fail in different
+places. TNDS lags BODS and runs out early. BODS lacks London, Scotland, Wales
+and some English services. A wholesale merge was tested and rejected
+([source_triangulation.md](source_triangulation.md)): it counted every
+service both carry twice. The combined feed instead takes each service from
+one source only.
+
+**How it is built** (`R/convert_combined.R`):
+
+1. **The inputs.** These are the two feeds already on the maps above: the
+   TNDS blend edition and the BODS TransXChange conversion. Each was filtered
+   and converted on its own. The choice is made on the converted feeds, not
+   on the raw files: each source's file filter still sees every file of its
+   own when it picks between versions, and the untrimmed caches keep each
+   timetable's real operating period.
+2. **Matching.** A service is an operator plus its TransXChange
+   `ServiceCode`. TNDS and BODS services are matched when they share a line
+   name and at least half the smaller one's stops. A second pass, which
+   ignores line names, matches services with the same first-stop departures
+   over at least half their stops. Matched services are grouped, because one
+   BODS registration can match two TNDS files and the reverse.
+3. **Choice, per group:**
+   - **A doubling first.** The smaller source is taken when one source runs
+     1.7 to 2.3 times the other's journeys in the window. It is also taken
+     from 1.7 times up when the larger source runs the group under more
+     operators.
+   - **Otherwise the newer timetable**, provided it runs to the window's end.
+   - **Otherwise TNDS.**
+
+   A service in one source only is taken from that source.
+4. **Output.** The kept services are merged, trimmed to the snapshot ±45
+   days and cleaned. The copy rule (`gtfs_deduplicate_copies()`) is applied
+   to the second version before trimming, as it must be.
+
+The doubling rule is not in the §5 design. It was added after a dry run on
+these feeds:
+
+- 184 groups had one source at about twice the other, split evenly between
+  the two sources.
+- Every case read was a bus counted twice:
+  - in BODS, versions left open (National Express West Midlands republished
+    beside West Midlands Bus, Green Line 757, London 372 and 465);
+  - in TNDS, copies (Arriva Cymru's North West and Wales files, Arriva SB1,
+    Bee Network 612).
+- The fresher source was often the doubled one.
+- One exception was found: Preston 35, where the operator's timetable sides
+  with BODS's larger count.
+
+```{r combined-choice, eval = has_cb}
+ct <- comp[, .(Groups = .N, `TNDS journeys` = fmt(sum(t_trips)),
+               `BODS journeys` = fmt(sum(b_trips))),
+           by = .(`Source taken` = src_lab[choice], Reason = reason)][order(`Source taken`, -Groups)]
+knitr::kable(ct, align = "llrrr",
+             caption = "Matched groups by the source taken and why; journeys are trip-days in the window (16-29 November), all of Great Britain")
+knitr::kable(only[, .(Source = src_lab[source], Services = fmt(services), Journeys = fmt(trips))],
+             align = "lrr", caption = "Services in one source only, taken from it")
+```
+
+```{r combined-numbers, eval = has_cb}
+lt <- x$lines[, .(n = sum(n)), by = .(city, line, source)]
+lw <- dcast(lt, city + line ~ source, value.var = "n", fill = 0)
+lsrc <- intersect(c("tndsblend", "combined", "combinedxc", "bods_txc", "bods_gtfs"), names(lw))
+score <- rbindlist(lapply(lsrc, function(s) {
+  d <- lw[bustimes > 0 | get(s) > 0]
+  d[, .(source = s, lines = .N, agree = sum(counts_agree(bustimes, get(s))),
+        abs_err = sum(abs(get(s) - bustimes))), by = city]
+}))
+score[, share := agree / lines]
+moved <- lw[abs(combinedxc - tndsblend) > pmax(2, 0.02 * tndsblend)]
+moved[, closer := fcase(abs(combinedxc - bustimes) < abs(tndsblend - bustimes), "closer",
+                        abs(combinedxc - bustimes) > abs(tndsblend - bustimes), "further",
+                        default = "same")]
+mv_n <- moved[, .N, by = .(city, closer)]
+mvn <- function(cty, k) { v <- mv_n[city == cty & closer == k, N]; if (length(v)) v else 0L }
+cb_lon <- lon; cb_wm <- wm
+```
+
+**Nationally the choice moves about a quarter of the services, and
+the total hardly at all.**
+
+- Of `r fmt(n_grp)` matched groups, `r fmt(n_b)` are taken from BODS.
+- `r fmt(n_guard)` are decided by the doubling rule. In `r fmt(n_flip)` of
+  those it takes the other source from the one the newer-timetable rule
+  alone would have chosen.
+- Over the fortnight the combined feed has `r fmt(kept_trips)` journeys,
+  against `r fmt(tnds_trips)` in TNDS and `r fmt(bods_trips)` in BODS
+  TransXChange (`r sgn(kept_trips / tnds_trips - 1, 2)` on TNDS). The
+  doubles it removes and the services it adds from BODS roughly cancel.
+
+```{r combined-city, eval = has_cb}
+cc <- intersect(c("tndsblend", "combined", "combinedxc", "bods_txc", "bods_gtfs"), names(tot))
+ctot <- tot[, c(list(City = city, `bustimes.org` = fmt(bustimes)),
+                lapply(.SD, function(v) paste0(fmt(v), " (", sgn(v / bustimes - 1), ")"))),
+            .SDcols = cc]
+setnames(ctot, cc, src_name[cc])
+knitr::kable(ctot, align = paste0("lr", strrep("r", length(cc))),
+             caption = paste("Departures on", day_lab, "summed over each city's stops, and against bustimes.org"))
+sc <- dcast(score, city ~ source, value.var = "share")
+sc2 <- sc[, c(list(City = city), lapply(.SD, function(v) pct(v, 1))), .SDcols = lsrc]
+setnames(sc2, lsrc, src_name[lsrc])
+knitr::kable(sc2, caption = "Share of lines whose departures over the city's stops agree with bustimes.org (within 2 departures or 10%)")
+er <- dcast(score, city ~ source, value.var = "abs_err")
+er2 <- er[, c(list(City = city), lapply(.SD, fmt)), .SDcols = lsrc]
+setnames(er2, lsrc, src_name[lsrc])
+knitr::kable(er2, caption = "Sum over lines of the absolute difference from bustimes.org, departures")
+```
+
+```{r combined-maps-table, eval = has_cb}
+ed_tab2 <- function(city_name, maps) {
+  d <- summ[map %in% maps]
+  d <- merge(d, cmp[, .(map, label)], by = "map")
+  w <- dcast(d, cat + short ~ label, value.var = "stops", fill = 0)
+  w[, Category := paste0(cat, ". ", short)]
+  w[, c("cat", "short") := NULL]
+  setcolorder(w, c("Category", intersect(cmp[map %in% maps, label], names(w))))
+  knitr::kable(w, caption = paste(city_name, "- stops per category: the TNDS blend and the combined feed"))
+}
+ed_tab2("London", c("london_tndsblend", "london_combined", "london_combinedxc"))
+ed_tab2("West Midlands", c("wm_tndsblend", "wm_combined", "wm_combinedxc", "wm_bods_txc"))
+```
+
+```{r combined-lines, eval = has_cb}
+show <- moved[order(-abs(combinedxc - tndsblend))]
+show <- show[, head(.SD, 15), by = city]
+knitr::kable(show[, .(City = city, Line = line, `bustimes.org` = fmt(bustimes),
+                      `BODS GTFS` = fmt(bods_gtfs), `TNDS blend` = fmt(tndsblend),
+                      `BODS TXC` = fmt(bods_txc), Combined = fmt(combined),
+                      `Combined + copy rule` = fmt(combinedxc),
+                      `Against TNDS blend` = closer)],
+             align = "llrrrrrrl",
+             caption = paste("The lines whose departures most change between the TNDS blend and the combined feed with the copy rule, summed over the city's stops on", day_lab))
+```
+
+**What the combined feed gains.**
+
+- **West Midlands: closest to bustimes.org of every feed.**
+  - The city total is within 1.3% of bustimes.org, against 2.9% for the TNDS
+    blend and 3.7% for BODS TransXChange.
+  - 81.8% of lines agree, against 80.1% and 80.7%.
+  - The summed line error falls by 12% on the blend (74,846 departures against
+    84,988).
+  - The gain is the doubling rule. TNDS carries National Express West Midlands
+    beside West Midlands Bus on 61, 63, 10, 10A, 85 and X1. The combined feed
+    takes BODS's single copy, and 63 falls from 15,155 departures to 9,506
+    (bustimes.org: 9,456).
+- **London: no change from the choice, as expected.**
+  - BODS TransXChange carries almost nothing in London, so nearly every London
+    service is TNDS-only and the combined feed is the TNDS blend.
+  - The copy rule is what moves London: the summed line error falls by 17%
+    (39,838 against 48,267). Most of that is Arriva London's line 2, filed
+    under both North and South, and Go-Ahead's 439 (see
+    [filtering_rules_overview.md](filtering_rules_overview.md)).
+  - On this day the copy rule changes nothing in the West Midlands.
+- **The operator-timetable check agrees** (78 in-force readings, 16-29
+  November, built from the 11 November feeds; see
+  [gtfs_iteration_nov2026.md](gtfs_iteration_nov2026.md#5-a-combined-source)):
+  - The combined feed is within 15% on 62 readings, against 61 for TNDS, 59
+    for BODS TransXChange and 41 for BODS GTFS.
+  - Its median error is 3.8%, against 5.5% for both TransXChange sources.
+  - It gets right every reading that either TransXChange source gets right
+    and loses none. The one it adds is Brighton & Hove 20, absent from TNDS.
+
+**What it loses: a group is taken from one source whole.**
+
+- When the chosen source lacks a service the other has in the same group,
+  that service is dropped.
+- **West Midlands Bus 59, 11 and 1.** BODS's newer registrations are chosen,
+  but the TNDS group runs 10-26% more journeys (59: 2,332 against 1,852 in the
+  window). On 59 the combined feed has BODS's 6,907 departures, against
+  8,867 on bustimes.org and in TNDS.
+- **Diamond 50A** falls to BODS's 1,251 departures, against TNDS's 2,367
+  (bustimes.org: 4,289; both sources are short).
+- **National Express West Midlands 64 and X64** are in BODS only, so they are
+  kept. bustimes.org has no X64 and half the 64 departures: this is probably a
+  registration left open, of the kind the doubling rule catches only when
+  TNDS also carries the line.
+- A finer choice would compare the groups' services one by one and keep a
+  losing service that has no counterpart. That is the next refinement to test.
 
 ## TNDS editions
 

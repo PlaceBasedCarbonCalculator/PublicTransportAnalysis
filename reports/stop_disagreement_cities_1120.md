@@ -31,36 +31,42 @@ as referee, with four changes:
    where it is. See the [stop location report](stop_location_quality.md).
 4. **The day is Friday 20 November.** The feeds are the same 18 November
    downloads.
+5. **A combined feed** (added 27 November): TNDS and UK2GTFS's conversion
+   of the BODS TransXChange archive, with one source chosen for each
+   service, as proposed in
+   [gtfs_iteration_nov2026.md §5](gtfs_iteration_nov2026.md#5-a-combined-source).
+   It is shown with and without the cross-file copy rule. See
+   [A combined feed](#a-combined-feed-tnds-and-bods-chosen-service-by-service).
 
 
 Table: Bus and coach departures on Friday 20 November 2026 summed over every stop in each city
 
-|City          |  Stops| bustimes.org|  TNDS 2.5|  TNDS 2.1| TNDS blend| BODS TransXChange| BODS GTFS|
-|:-------------|------:|------------:|---------:|---------:|----------:|-----------------:|---------:|
-|London        | 19,092|    4,026,934| 4,069,161| 4,101,937|  4,069,161|           192,949| 4,282,619|
-|West Midlands | 11,352|      853,852|   878,520|   878,808|    878,808|           885,290| 1,654,336|
+|City          |  Stops| bustimes.org|  TNDS 2.5|  TNDS 2.1| TNDS blend|  Combined| Combined + copy rule| BODS TransXChange| BODS GTFS|
+|:-------------|------:|------------:|---------:|---------:|----------:|---------:|--------------------:|-----------------:|---------:|
+|London        | 19,092|    4,026,934| 4,069,161| 4,101,937|  4,069,161| 4,069,715|            4,061,224|           192,949| 4,282,619|
+|West Midlands | 11,352|      853,852|   878,520|   878,808|    878,808|   864,832|              864,832|           885,290| 1,654,336|
 
 
 
 Table: Each feed's total against bustimes.org
 
-|City          |TNDS 2.5 |TNDS 2.1 |TNDS blend |BODS TransXChange |BODS GTFS |
-|:-------------|:--------|:--------|:----------|:-----------------|:---------|
-|London        |+1.0%    |+1.9%    |+1.0%      |-95.2%            |+6.3%     |
-|West Midlands |+2.9%    |+2.9%    |+2.9%      |+3.7%             |+93.7%    |
+|City          |TNDS 2.5 |TNDS 2.1 |TNDS blend |Combined |Combined + copy rule |BODS TransXChange |BODS GTFS |
+|:-------------|:--------|:--------|:----------|:--------|:--------------------|:-----------------|:---------|
+|London        |+1.0%    |+1.9%    |+1.0%      |+1.1%    |+0.9%                |-95.2%            |+6.3%     |
+|West Midlands |+2.9%    |+2.9%    |+2.9%      |+1.3%    |+1.3%                |+3.7%             |+93.7%    |
 
 
 Table: Share of each city's served stops in each category, every map
 
-|Category              |London: TNDS 2.5 |London: TNDS 2.1 |London: TNDS blend |West Midlands: BODS TransXChange |West Midlands: TNDS 2.5 |West Midlands: TNDS 2.1 |West Midlands: TNDS blend |
-|:---------------------|:----------------|:----------------|:------------------|:--------------------------------|:-----------------------|:-----------------------|:-------------------------|
-|all agree             |87.9%            |86.5%            |87.9%              |21.4%                            |20.8%                   |20.9%                   |20.9%                     |
-|BODS GTFS odd one out |10.4%            |9.6%             |10.4%              |68.3%                            |71.9%                   |71.9%                   |71.9%                     |
-|TXC odd one out       |0.4%             |1.9%             |0.4%               |0.1%                             |0.9%                    |0.8%                    |0.8%                      |
-|TXC closer            |0.1%             |0.2%             |0.1%               |4.4%                             |3.8%                    |3.8%                    |3.8%                      |
-|BODS GTFS closer      |0.0%             |0.1%             |0.0%               |0.0%                             |0.1%                    |0.1%                    |0.1%                      |
-|bustimes odd one out  |1.1%             |1.4%             |1.1%               |5.4%                             |1.7%                    |1.8%                    |1.8%                      |
-|all disagree          |0.0%             |0.4%             |0.0%               |0.5%                             |0.8%                    |0.7%                    |0.7%                      |
+|Category              |London: TNDS 2.5 |London: TNDS 2.1 |London: TNDS blend |London: Combined |London: Combined + copy rule |West Midlands: BODS TransXChange |West Midlands: TNDS 2.5 |West Midlands: TNDS 2.1 |West Midlands: TNDS blend |West Midlands: Combined |West Midlands: Combined + copy rule |
+|:---------------------|:----------------|:----------------|:------------------|:----------------|:----------------------------|:--------------------------------|:-----------------------|:-----------------------|:-------------------------|:-----------------------|:-----------------------------------|
+|all agree             |87.9%            |86.5%            |87.9%              |88.0%            |88.1%                        |21.4%                            |20.8%                   |20.9%                   |20.9%                     |21.1%                   |21.1%                               |
+|BODS GTFS odd one out |10.4%            |9.6%             |10.4%              |10.4%            |10.7%                        |68.3%                            |71.9%                   |71.9%                   |71.9%                     |72.4%                   |72.4%                               |
+|TXC odd one out       |0.4%             |1.9%             |0.4%               |0.4%             |0.3%                         |0.1%                             |0.9%                    |0.8%                    |0.8%                      |0.6%                    |0.6%                                |
+|TXC closer            |0.1%             |0.2%             |0.1%               |0.1%             |0.2%                         |4.4%                             |3.8%                    |3.8%                    |3.8%                      |3.6%                    |3.6%                                |
+|BODS GTFS closer      |0.0%             |0.1%             |0.0%               |0.0%             |0.0%                         |0.0%                             |0.1%                    |0.1%                    |0.1%                      |0.1%                    |0.1%                                |
+|bustimes odd one out  |1.1%             |1.4%             |1.1%               |1.1%             |0.7%                         |5.4%                             |1.7%                    |1.8%                    |1.8%                      |1.6%                    |1.6%                                |
+|all disagree          |0.0%             |0.4%             |0.0%               |0.0%             |0.0%                         |0.5%                             |0.8%                    |0.7%                    |0.7%                      |0.6%                    |0.6%                                |
 
 
 
@@ -100,6 +106,234 @@ Table: Share of each city's served stops in each category, every map
     stops dark green.
   - BODS TransXChange does not carry TfL's own routes, so it has no London
     map.
+
+## A combined feed: TNDS and BODS chosen service by service
+
+
+
+
+
+The [November audit](gtfs_iteration_nov2026.md) found that TNDS and
+UK2GTFS's conversion of the BODS TransXChange archive fail in different
+places. TNDS lags BODS and runs out early. BODS lacks London, Scotland, Wales
+and some English services. A wholesale merge was tested and rejected
+([source_triangulation.md](source_triangulation.md)): it counted every
+service both carry twice. The combined feed instead takes each service from
+one source only.
+
+**How it is built** (`R/convert_combined.R`):
+
+1. **The inputs.** These are the two feeds already on the maps above: the
+   TNDS blend edition and the BODS TransXChange conversion. Each was filtered
+   and converted on its own. The choice is made on the converted feeds, not
+   on the raw files: each source's file filter still sees every file of its
+   own when it picks between versions, and the untrimmed caches keep each
+   timetable's real operating period.
+2. **Matching.** A service is an operator plus its TransXChange
+   `ServiceCode`. TNDS and BODS services are matched when they share a line
+   name and at least half the smaller one's stops. A second pass, which
+   ignores line names, matches services with the same first-stop departures
+   over at least half their stops. Matched services are grouped, because one
+   BODS registration can match two TNDS files and the reverse.
+3. **Choice, per group:**
+   - **A doubling first.** The smaller source is taken when one source runs
+     1.7 to 2.3 times the other's journeys in the window. It is also taken
+     from 1.7 times up when the larger source runs the group under more
+     operators.
+   - **Otherwise the newer timetable**, provided it runs to the window's end.
+   - **Otherwise TNDS.**
+
+   A service in one source only is taken from that source.
+4. **Output.** The kept services are merged, trimmed to the snapshot ±45
+   days and cleaned. The copy rule (`gtfs_deduplicate_copies()`) is applied
+   to the second version before trimming, as it must be.
+
+The doubling rule is not in the §5 design. It was added after a dry run on
+these feeds:
+
+- 184 groups had one source at about twice the other, split evenly between
+  the two sources.
+- Every case read was a bus counted twice:
+  - in BODS, versions left open (National Express West Midlands republished
+    beside West Midlands Bus, Green Line 757, London 372 and 465);
+  - in TNDS, copies (Arriva Cymru's North West and Wales files, Arriva SB1,
+    Bee Network 612).
+- The fresher source was often the doubled one.
+- One exception was found: Preston 35, where the operator's timetable sides
+  with BODS's larger count.
+
+
+Table: Matched groups by the source taken and why; journeys are trip-days in the window (16-29 November), all of Great Britain
+
+|Source taken      |Reason                                   | Groups| TNDS journeys| BODS journeys|
+|:-----------------|:----------------------------------------|------:|-------------:|-------------:|
+|BODS TransXChange |newer, and runs to the window's end      |   1852|       815,104|       815,045|
+|BODS TransXChange |the other source runs it about twice     |    108|        66,906|        33,217|
+|BODS TransXChange |newer; neither runs to the window's end  |      2|             4|             4|
+|BODS TransXChange |the only one running to the window's end |      1|            17|            51|
+|TNDS              |same start: TNDS by default              |   3043|     1,384,307|     1,386,345|
+|TNDS              |newer, and runs to the window's end      |   2055|       730,299|       726,807|
+|TNDS              |the other source runs it about twice     |    105|        28,260|        60,632|
+|TNDS              |newer; neither runs to the window's end  |      4|            90|             8|
+|TNDS              |the only one running to the window's end |      1|           300|            45|
+
+
+
+Table: Services in one source only, taken from it
+
+|Source            | Services|  Journeys|
+|:-----------------|--------:|---------:|
+|BODS TransXChange |      542|    34,605|
+|TNDS              |    3,810| 2,182,436|
+
+
+
+**Nationally the choice moves about a quarter of the services, and
+the total hardly at all.**
+
+- Of 7,171 matched groups, 1,963 are taken from BODS.
+- 213 are decided by the doubling rule. In 120 of
+  those it takes the other source from the one the newer-timetable rule
+  alone would have chosen.
+- Over the fortnight the combined feed has 5,208,614 journeys,
+  against 5,207,723 in TNDS and 3,056,759 in BODS
+  TransXChange (+0.02% on TNDS). The
+  doubles it removes and the services it adds from BODS roughly cancel.
+
+
+Table: Departures on Friday 20 November 2026 summed over each city's stops, and against bustimes.org
+
+|City          | bustimes.org|        TNDS blend|          Combined| Combined + copy rule| BODS TransXChange|          BODS GTFS|
+|:-------------|------------:|-----------------:|-----------------:|--------------------:|-----------------:|------------------:|
+|London        |    4,026,934| 4,069,161 (+1.0%)| 4,069,715 (+1.1%)|    4,061,224 (+0.9%)|  192,949 (-95.2%)|  4,282,619 (+6.3%)|
+|West Midlands |      853,852|   878,808 (+2.9%)|   864,832 (+1.3%)|      864,832 (+1.3%)|   885,290 (+3.7%)| 1,654,336 (+93.7%)|
+
+
+
+Table: Share of lines whose departures over the city's stops agree with bustimes.org (within 2 departures or 10%)
+
+|City          |TNDS blend |Combined |Combined + copy rule |BODS TransXChange |BODS GTFS |
+|:-------------|:----------|:--------|:--------------------|:-----------------|:---------|
+|London        |89.9%      |90.0%    |90.1%                |17.5%             |84.4%     |
+|West Midlands |80.1%      |81.8%    |81.8%                |80.7%             |38.4%     |
+
+
+
+Table: Sum over lines of the absolute difference from bustimes.org, departures
+
+|City          |TNDS blend |Combined |Combined + copy rule |BODS TransXChange |BODS GTFS |
+|:-------------|:----------|:--------|:--------------------|:-----------------|:---------|
+|London        |48,267     |48,329   |39,838               |3,854,925         |276,527   |
+|West Midlands |84,988     |74,846   |74,846               |94,656            |830,052   |
+
+
+Table: London - stops per category: the TNDS blend and the combined feed
+
+|Category                 | London: TNDS blend| London: Combined| London: Combined + copy rule|
+|:------------------------|------------------:|----------------:|----------------------------:|
+|1. all agree             |              16789|            16790|                        16811|
+|2. BODS GTFS odd one out |               1983|             1978|                         2040|
+|3. TXC odd one out       |                 77|               71|                           50|
+|4. TXC closer            |                 21|               23|                           43|
+|5. BODS GTFS closer      |                  3|                3|                            3|
+|6. bustimes odd one out  |                210|              215|                          133|
+|7. all disagree          |                  7|                5|                            5|
+
+
+
+Table: West Midlands - stops per category: the TNDS blend and the combined feed
+
+|Category                 | West Midlands: BODS TransXChange| West Midlands: TNDS blend| West Midlands: Combined| West Midlands: Combined + copy rule|
+|:------------------------|--------------------------------:|-------------------------:|-----------------------:|-----------------------------------:|
+|1. all agree             |                             2417|                      2374|                    2389|                                2389|
+|2. BODS GTFS odd one out |                             7723|                      8165|                    8213|                                8213|
+|3. TXC odd one out       |                                6|                        93|                      65|                                  65|
+|4. TXC closer            |                              495|                       430|                     411|                                 411|
+|5. BODS GTFS closer      |                                0|                         6|                       6|                                   6|
+|6. bustimes odd one out  |                              613|                       200|                     185|                                 185|
+|7. all disagree          |                               56|                        84|                      70|                                  70|
+
+
+Table: The lines whose departures most change between the TNDS blend and the combined feed with the copy rule, summed over the city's stops on Friday 20 November 2026
+
+|City          |Line                                    | bustimes.org| BODS GTFS| TNDS blend| BODS TXC| Combined| Combined + copy rule|Against TNDS blend |
+|:-------------|:---------------------------------------|------------:|---------:|----------:|--------:|--------:|--------------------:|:------------------|
+|London        |2                                       |       10,580|    21,500|     21,500|        0|   21,500|               14,061|closer             |
+|London        |439                                     |        1,196|     1,196|      2,317|        0|    2,317|                1,265|closer             |
+|London        |347                                     |            0|         0|          0|      280|      280|                  280|further            |
+|London        |555                                     |          461|       461|        300|      461|      461|                  461|closer             |
+|London        |N555                                    |            0|         0|        131|        0|        0|                    0|closer             |
+|London        |BL1                                     |        1,581|     1,669|      1,581|       88|    1,669|                1,669|further            |
+|London        |BL2                                     |            0|        60|          0|       60|       60|                   60|further            |
+|London        |HARRYPOTTERSTUDIOSTOURVICTORIATOSTUDIOS |            0|        60|          0|       60|       60|                   60|further            |
+|London        |446                                     |            0|       540|        483|      540|      540|                  540|further            |
+|London        |515                                     |          308|       308|        363|      308|      308|                  308|closer             |
+|London        |461                                     |          602|       602|        559|      602|      602|                  602|closer             |
+|London        |E16                                     |            0|        20|         40|       20|       20|                   20|closer             |
+|London        |715                                     |          270|       270|        255|      270|      270|                  270|closer             |
+|London        |714                                     |          208|       208|        197|      208|      208|                  208|closer             |
+|London        |514                                     |           52|        52|         58|       52|       52|                   52|closer             |
+|West Midlands |63                                      |        9,456|    28,155|     15,155|    9,813|    9,506|                9,506|closer             |
+|West Midlands |61                                      |        8,699|    24,449|     13,732|    8,699|    8,663|                8,663|closer             |
+|West Midlands |59                                      |        8,867|    13,814|      8,867|    6,907|    6,907|                6,907|further            |
+|West Midlands |50A                                     |        4,289|     1,251|      2,367|    1,251|    1,251|                1,251|further            |
+|West Midlands |80                                      |        7,798|    15,686|      6,742|    7,798|    7,798|                7,798|closer             |
+|West Midlands |10                                      |        6,109|    11,770|      6,909|    6,109|    6,115|                6,115|closer             |
+|West Midlands |64                                      |          786|     1,934|        774|    1,529|    1,517|                1,517|further            |
+|West Midlands |10A                                     |          741|     1,482|      1,444|      741|      741|                  741|closer             |
+|West Midlands |11                                      |       12,091|    20,962|     12,046|   11,489|   11,489|               11,489|further            |
+|West Midlands |85                                      |          582|     1,112|      1,112|      556|      556|                  556|closer             |
+|West Midlands |1                                       |       16,280|    29,396|     16,235|   15,746|   15,746|               15,746|further            |
+|West Midlands |X64                                     |            0|       413|          0|      413|      413|                  413|further            |
+|West Midlands |X6                                      |          296|       296|        555|      296|      296|                  296|closer             |
+|West Midlands |X1                                      |        6,573|    18,043|      6,812|    6,573|    6,573|                6,573|closer             |
+|West Midlands |12X                                     |        4,385|     8,721|      4,266|    4,455|    4,455|                4,455|closer             |
+
+**What the combined feed gains.**
+
+- **West Midlands: closest to bustimes.org of every feed.**
+  - The city total is within 1.3% of bustimes.org, against 2.9% for the TNDS
+    blend and 3.7% for BODS TransXChange.
+  - 81.8% of lines agree, against 80.1% and 80.7%.
+  - The summed line error falls by 12% on the blend (74,846 departures against
+    84,988).
+  - The gain is the doubling rule. TNDS carries National Express West Midlands
+    beside West Midlands Bus on 61, 63, 10, 10A, 85 and X1. The combined feed
+    takes BODS's single copy, and 63 falls from 15,155 departures to 9,506
+    (bustimes.org: 9,456).
+- **London: no change from the choice, as expected.**
+  - BODS TransXChange carries almost nothing in London, so nearly every London
+    service is TNDS-only and the combined feed is the TNDS blend.
+  - The copy rule is what moves London: the summed line error falls by 17%
+    (39,838 against 48,267). Most of that is Arriva London's line 2, filed
+    under both North and South, and Go-Ahead's 439 (see
+    [filtering_rules_overview.md](filtering_rules_overview.md)).
+  - On this day the copy rule changes nothing in the West Midlands.
+- **The operator-timetable check agrees** (78 in-force readings, 16-29
+  November, built from the 11 November feeds; see
+  [gtfs_iteration_nov2026.md](gtfs_iteration_nov2026.md#5-a-combined-source)):
+  - The combined feed is within 15% on 62 readings, against 61 for TNDS, 59
+    for BODS TransXChange and 41 for BODS GTFS.
+  - Its median error is 3.8%, against 5.5% for both TransXChange sources.
+  - It gets right every reading that either TransXChange source gets right
+    and loses none. The one it adds is Brighton & Hove 20, absent from TNDS.
+
+**What it loses: a group is taken from one source whole.**
+
+- When the chosen source lacks a service the other has in the same group,
+  that service is dropped.
+- **West Midlands Bus 59, 11 and 1.** BODS's newer registrations are chosen,
+  but the TNDS group runs 10-26% more journeys (59: 2,332 against 1,852 in the
+  window). On 59 the combined feed has BODS's 6,907 departures, against
+  8,867 on bustimes.org and in TNDS.
+- **Diamond 50A** falls to BODS's 1,251 departures, against TNDS's 2,367
+  (bustimes.org: 4,289; both sources are short).
+- **National Express West Midlands 64 and X64** are in BODS only, so they are
+  kept. bustimes.org has no X64 and half the 64 departures: this is probably a
+  registration left open, of the kind the doubling rule catches only when
+  TNDS also carries the line.
+- A finer choice would compare the groups' services one by one and keep a
+  losing service that has no counterpart. That is the next refinement to test.
 
 ## TNDS editions
 
@@ -361,44 +595,56 @@ it would change the series. The scan only measures them
 
 Table: Lines per pair of sources and city, by timetable and mode agreement
 
-|Pair                              | pass| soft pass| fail| timetable differs|
-|:---------------------------------|----:|---------:|----:|-----------------:|
-|BODS GTFS vs BODS TransXChange    |  309|         0|    0|               233|
-|BODS GTFS vs TNDS 2.1             |  888|         1|    0|               234|
-|BODS GTFS vs TNDS 2.5             |  897|         1|    0|               225|
-|BODS GTFS vs TNDS blend           |  897|         1|    0|               225|
-|bustimes.org vs BODS GTFS         |  822|         0|    1|               271|
-|bustimes.org vs BODS TransXChange |  388|         0|    1|               113|
-|bustimes.org vs TNDS 2.1          |  973|         1|    2|               120|
-|bustimes.org vs TNDS 2.5          |  987|         1|    2|               106|
-|bustimes.org vs TNDS blend        |  987|         1|    2|               106|
+|Pair                                 | pass| soft pass| fail| timetable differs|
+|:------------------------------------|----:|---------:|----:|-----------------:|
+|BODS GTFS vs BODS TransXChange       |  309|         0|    0|               233|
+|BODS GTFS vs Combined                |  912|         1|    0|               221|
+|BODS GTFS vs Combined + copy rule    |  912|         1|    0|               221|
+|BODS GTFS vs TNDS 2.1                |  888|         1|    0|               234|
+|BODS GTFS vs TNDS 2.5                |  897|         1|    0|               225|
+|BODS GTFS vs TNDS blend              |  897|         1|    0|               225|
+|bustimes.org vs BODS GTFS            |  822|         0|    1|               271|
+|bustimes.org vs BODS TransXChange    |  388|         0|    1|               113|
+|bustimes.org vs Combined             | 1001|         1|    2|                95|
+|bustimes.org vs Combined + copy rule | 1002|         1|    2|                94|
+|bustimes.org vs TNDS 2.1             |  973|         1|    2|               120|
+|bustimes.org vs TNDS 2.5             |  987|         1|    2|               106|
+|bustimes.org vs TNDS blend           |  987|         1|    2|               106|
 
 
 Table: Soft passes: departures change mode between the two sources, and the line's total agrees
 
-|City   |Line |A            |B          | A bus| A coach| B bus| B coach|Operator                        |
-|:------|:----|:------------|:----------|-----:|-------:|-----:|-------:|:-------------------------------|
-|London |757  |bustimes.org |TNDS 2.1   |   800|       0|     0|     800|Green Line (operated by Arriva) |
-|London |757  |bustimes.org |TNDS 2.5   |   800|       0|     0|     800|Green Line (operated by Arriva) |
-|London |757  |bustimes.org |TNDS blend |   800|       0|     0|     800|Green Line (operated by Arriva) |
-|London |N40  |BODS GTFS    |TNDS 2.1   |     0|      86|    74|      16|National Express                |
-|London |N40  |BODS GTFS    |TNDS 2.5   |     0|      86|    74|      16|National Express                |
-|London |N40  |BODS GTFS    |TNDS blend |     0|      86|    74|      16|National Express                |
+|City   |Line |A            |B                    | A bus| A coach| B bus| B coach|Operator                        |
+|:------|:----|:------------|:--------------------|-----:|-------:|-----:|-------:|:-------------------------------|
+|London |757  |bustimes.org |Combined             |   800|       0|     0|     800|Green Line (operated by Arriva) |
+|London |757  |bustimes.org |Combined + copy rule |   800|       0|     0|     800|Green Line (operated by Arriva) |
+|London |757  |bustimes.org |TNDS 2.1             |   800|       0|     0|     800|Green Line (operated by Arriva) |
+|London |757  |bustimes.org |TNDS 2.5             |   800|       0|     0|     800|Green Line (operated by Arriva) |
+|London |757  |bustimes.org |TNDS blend           |   800|       0|     0|     800|Green Line (operated by Arriva) |
+|London |N40  |BODS GTFS    |Combined             |     0|      86|    74|      16|National Express                |
+|London |N40  |BODS GTFS    |Combined + copy rule |     0|      86|    74|      16|National Express                |
+|London |N40  |BODS GTFS    |TNDS 2.1             |     0|      86|    74|      16|National Express                |
+|London |N40  |BODS GTFS    |TNDS 2.5             |     0|      86|    74|      16|National Express                |
+|London |N40  |BODS GTFS    |TNDS blend           |     0|      86|    74|      16|National Express                |
 
 
 
 Table: Fails: departures change mode and the total does not agree - for investigation
 
-|City   |Line |A            |B                 | A bus| A coach| B bus| B coach|Operator                            |
-|:------|:----|:------------|:-----------------|-----:|-------:|-----:|-------:|:-----------------------------------|
-|London |N40  |bustimes.org |TNDS 2.1          |     0|      66|    74|      16|National Express                    |
-|London |N40  |bustimes.org |TNDS 2.5          |     0|      66|    74|      16|National Express                    |
-|London |N40  |bustimes.org |TNDS blend        |     0|      66|    74|      16|National Express                    |
-|London |RA2  |bustimes.org |BODS GTFS         |     0|     313|   352|       0|First Berkshire & The Thames Valley |
-|London |RA2  |bustimes.org |BODS TransXChange |     0|     313|   352|       0|First Berkshire                     |
-|London |RA2  |bustimes.org |TNDS 2.1          |     0|     313|   352|       0|First Berkshire                     |
-|London |RA2  |bustimes.org |TNDS 2.5          |     0|     313|   352|       0|First Berkshire                     |
-|London |RA2  |bustimes.org |TNDS blend        |     0|     313|   352|       0|First Berkshire                     |
+|City   |Line |A            |B                    | A bus| A coach| B bus| B coach|Operator                            |
+|:------|:----|:------------|:--------------------|-----:|-------:|-----:|-------:|:-----------------------------------|
+|London |N40  |bustimes.org |Combined             |     0|      66|    74|      16|National Express                    |
+|London |N40  |bustimes.org |Combined + copy rule |     0|      66|    74|      16|National Express                    |
+|London |N40  |bustimes.org |TNDS 2.1             |     0|      66|    74|      16|National Express                    |
+|London |N40  |bustimes.org |TNDS 2.5             |     0|      66|    74|      16|National Express                    |
+|London |N40  |bustimes.org |TNDS blend           |     0|      66|    74|      16|National Express                    |
+|London |RA2  |bustimes.org |BODS GTFS            |     0|     313|   352|       0|First Berkshire & The Thames Valley |
+|London |RA2  |bustimes.org |BODS TransXChange    |     0|     313|   352|       0|First Berkshire                     |
+|London |RA2  |bustimes.org |Combined             |     0|     313|   352|       0|First Berkshire                     |
+|London |RA2  |bustimes.org |Combined + copy rule |     0|     313|   352|       0|First Berkshire                     |
+|London |RA2  |bustimes.org |TNDS 2.1             |     0|     313|   352|       0|First Berkshire                     |
+|London |RA2  |bustimes.org |TNDS 2.5             |     0|     313|   352|       0|First Berkshire                     |
+|London |RA2  |bustimes.org |TNDS blend           |     0|     313|   352|       0|First Berkshire                     |
 
 **Bus and coach labels rarely conflict.** Three lines account for every soft
 pass and fail:
@@ -623,9 +869,131 @@ Table: London: TNDS blend - stops per category, departures summed over them
 |446  |     7|            0|       252|      241|
 
 
-### West Midlands: BODS TransXChange
+### London: Combined
 
 ![plot of chunk maps](figures/stopcity1120-maps-4.png)
+
+
+
+Table: London: Combined - stops per category, departures summed over them
+
+|Category                                    |  Stops| Share| bustimes.org| BODS GTFS|  TXC feed|
+|:-------------------------------------------|------:|-----:|------------:|---------:|---------:|
+|1. All agree                                | 16,790| 88.0%|    3,409,252| 3,426,693| 3,423,464|
+|2. bustimes + TXC agree, BODS GTFS differs  |  1,978| 10.4%|      531,255|   742,664|   533,488|
+|3. bustimes + BODS GTFS agree, TXC differs  |     71|  0.4%|        6,448|     6,443|     7,925|
+|4. None agree, TXC closer to bustimes       |     23|  0.1%|        3,255|     5,305|     3,887|
+|5. None agree, BODS GTFS closer to bustimes |      3|  0.0%|          342|       455|       657|
+|6. TXC + BODS GTFS agree, bustimes differs  |    215|  1.1%|       75,287|    99,394|    99,215|
+|7. All significantly disagree               |      5|  0.0%|        1,095|     1,665|     1,079|
+
+
+**3. bustimes + BODS GTFS agree, TXC differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|H21  |    21|            0|         0|      883|
+|439  |    21|          524|       524|    1,084|
+|243  |    15|            0|         0|      224|
+|H30  |     2|          134|       134|        0|
+|H2D  |     1|           37|        37|        0|
+|H5D  |     1|           33|        33|        0|
+
+
+**5. None agree, BODS GTFS closer to bustimes** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|H30  |     1|            0|         0|      114|
+|H21  |     2|            0|         0|       80|
+|446  |     2|            0|        72|       72|
+|RA2  |     1|           79|       118|      118|
+|N40  |     1|            0|         0|        6|
+|N30  |     1|            0|         0|        4|
+
+
+**6. TXC + BODS GTFS agree, bustimes differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|2    |    82|       10,336|    21,004|   21,004|
+|329  |    65|        7,980|    17,080|   17,080|
+|A4   |    11|            0|       816|      816|
+|N2   |    82|          860|     1,230|    1,230|
+|102  |     9|            0|       306|      306|
+|446  |     7|            0|       252|      252|
+
+
+### London: Combined + copy rule
+
+![plot of chunk maps](figures/stopcity1120-maps-5.png)
+
+
+
+Table: London: Combined + copy rule - stops per category, departures summed over them
+
+|Category                                    |  Stops| Share| bustimes.org| BODS GTFS|  TXC feed|
+|:-------------------------------------------|------:|-----:|------------:|---------:|---------:|
+|1. All agree                                | 16,811| 88.1%|    3,412,265| 3,429,706| 3,426,335|
+|2. bustimes + TXC agree, BODS GTFS differs  |  2,040| 10.7%|      564,066|   782,984|   568,349|
+|3. bustimes + BODS GTFS agree, TXC differs  |     50|  0.3%|        3,435|     3,430|     4,352|
+|4. None agree, TXC closer to bustimes       |     43|  0.2%|       13,121|    18,951|    15,083|
+|5. None agree, BODS GTFS closer to bustimes |      3|  0.0%|          342|       455|       657|
+|6. TXC + BODS GTFS agree, bustimes differs  |    133|  0.7%|       32,610|    45,428|    45,369|
+|7. All significantly disagree               |      5|  0.0%|        1,095|     1,665|     1,079|
+
+
+**3. bustimes + BODS GTFS agree, TXC differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|H21  |    21|            0|         0|      883|
+|243  |    15|            0|         0|      224|
+|H30  |     2|          134|       134|        0|
+|H2D  |     1|           37|        37|        0|
+|H5D  |     1|           33|        33|        0|
+|H2C  |     1|           25|        25|        0|
+
+
+**5. None agree, BODS GTFS closer to bustimes** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|H30  |     1|            0|         0|      114|
+|H21  |     2|            0|         0|       80|
+|446  |     2|            0|        72|       72|
+|RA2  |     1|           79|       118|      118|
+|N40  |     1|            0|         0|        6|
+|N30  |     1|            0|         0|        4|
+
+
+**6. TXC + BODS GTFS agree, bustimes differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|329  |    65|        7,980|    17,080|   17,080|
+|A4   |    11|            0|       816|      816|
+|102  |     9|            0|       306|      306|
+|446  |     7|            0|       252|      252|
+|7X   |    10|            0|       247|      247|
+|HHL  |     4|           25|       132|      132|
+
+
+### West Midlands: BODS TransXChange
+
+![plot of chunk maps](figures/stopcity1120-maps-6.png)
 
 
 
@@ -671,7 +1039,7 @@ Table: West Midlands: BODS TransXChange - stops per category, departures summed 
 
 ### West Midlands: TNDS 2.5
 
-![plot of chunk maps](figures/stopcity1120-maps-5.png)
+![plot of chunk maps](figures/stopcity1120-maps-7.png)
 
 
 
@@ -732,7 +1100,7 @@ Table: West Midlands: TNDS 2.5 - stops per category, departures summed over them
 
 ### West Midlands: TNDS 2.1
 
-![plot of chunk maps](figures/stopcity1120-maps-6.png)
+![plot of chunk maps](figures/stopcity1120-maps-8.png)
 
 
 
@@ -793,7 +1161,7 @@ Table: West Midlands: TNDS 2.1 - stops per category, departures summed over them
 
 ### West Midlands: TNDS blend
 
-![plot of chunk maps](figures/stopcity1120-maps-7.png)
+![plot of chunk maps](figures/stopcity1120-maps-9.png)
 
 
 
@@ -850,6 +1218,128 @@ Table: West Midlands: TNDS blend - stops per category, departures summed over th
 |41   |    24|            0|       587|      587|
 |10A  |    25|          475|       950|      950|
 |23   |    24|            0|       274|      274|
+
+
+### West Midlands: Combined
+
+![plot of chunk maps](figures/stopcity1120-maps-10.png)
+
+
+
+Table: West Midlands: Combined - stops per category, departures summed over them
+
+|Category                                    | Stops| Share| bustimes.org| BODS GTFS| TXC feed|
+|:-------------------------------------------|-----:|-----:|------------:|---------:|--------:|
+|1. All agree                                | 2,389| 21.1%|       48,235|    48,588|   48,293|
+|2. bustimes + TXC agree, BODS GTFS differs  | 8,213| 72.4%|      748,007| 1,494,585|  748,840|
+|3. bustimes + BODS GTFS agree, TXC differs  |    65|  0.6%|          981|       984|    1,307|
+|4. None agree, TXC closer to bustimes       |   411|  3.6%|       51,274|    97,539|   56,372|
+|5. None agree, BODS GTFS closer to bustimes |     6|  0.1%|          203|       324|      484|
+|6. TXC + BODS GTFS agree, bustimes differs  |   185|  1.6%|        1,842|     5,696|    5,570|
+|7. All significantly disagree               |    70|  0.6%|        3,310|     6,620|    3,966|
+
+
+**3. bustimes + BODS GTFS agree, TXC differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|12   |     7|            0|         0|      337|
+|97A  |     1|          140|        41|        0|
+|229  |     6|           29|        29|      142|
+|19   |     4|          110|       110|        0|
+|45   |     3|           98|        98|        0|
+|310  |     6|            0|         0|       64|
+
+
+**5. None agree, BODS GTFS closer to bustimes** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|70   |     1|            0|         0|       58|
+|229  |     2|            0|         0|       56|
+|70A  |     1|            0|         0|       47|
+|19   |     1|            0|         0|       44|
+|23   |     1|            0|        20|       20|
+|23A  |     1|            0|        18|       18|
+
+
+**6. TXC + BODS GTFS agree, bustimes differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|226  |    60|            0|     1,344|    1,344|
+|4H   |    23|           96|     1,224|    1,128|
+|41   |    24|            0|       587|      587|
+|23   |    24|            0|       274|      274|
+|23A  |    24|            0|       273|      273|
+|11   |     1|          141|         0|        0|
+
+
+### West Midlands: Combined + copy rule
+
+![plot of chunk maps](figures/stopcity1120-maps-11.png)
+
+
+
+Table: West Midlands: Combined + copy rule - stops per category, departures summed over them
+
+|Category                                    | Stops| Share| bustimes.org| BODS GTFS| TXC feed|
+|:-------------------------------------------|-----:|-----:|------------:|---------:|--------:|
+|1. All agree                                | 2,389| 21.1%|       48,235|    48,588|   48,293|
+|2. bustimes + TXC agree, BODS GTFS differs  | 8,213| 72.4%|      748,007| 1,494,585|  748,840|
+|3. bustimes + BODS GTFS agree, TXC differs  |    65|  0.6%|          981|       984|    1,307|
+|4. None agree, TXC closer to bustimes       |   411|  3.6%|       51,274|    97,539|   56,372|
+|5. None agree, BODS GTFS closer to bustimes |     6|  0.1%|          203|       324|      484|
+|6. TXC + BODS GTFS agree, bustimes differs  |   185|  1.6%|        1,842|     5,696|    5,570|
+|7. All significantly disagree               |    70|  0.6%|        3,310|     6,620|    3,966|
+
+
+**3. bustimes + BODS GTFS agree, TXC differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|12   |     7|            0|         0|      337|
+|97A  |     1|          140|        41|        0|
+|229  |     6|           29|        29|      142|
+|19   |     4|          110|       110|        0|
+|45   |     3|           98|        98|        0|
+|310  |     6|            0|         0|       64|
+
+
+**5. None agree, BODS GTFS closer to bustimes** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|70   |     1|            0|         0|       58|
+|229  |     2|            0|         0|       56|
+|70A  |     1|            0|         0|       47|
+|19   |     1|            0|         0|       44|
+|23   |     1|            0|        20|       20|
+|23A  |     1|            0|        18|       18|
+
+
+**6. TXC + BODS GTFS agree, bustimes differs** - lines that differ most at these stops:
+
+
+
+|Line | Stops| bustimes.org| BODS GTFS| TXC feed|
+|:----|-----:|------------:|---------:|--------:|
+|226  |    60|            0|     1,344|    1,344|
+|4H   |    23|           96|     1,224|    1,128|
+|41   |    24|            0|       587|      587|
+|23   |    24|            0|       274|      274|
+|23A  |    24|            0|       273|      273|
+|11   |     1|          141|         0|        0|
 
 ## The red stops of 19 November
 

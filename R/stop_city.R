@@ -55,11 +55,12 @@ stop_city_day_1120 <- function() as.Date("2026-11-20")
 #' The second run's comparisons: each TNDS edition in both cities, and BODS
 #' TransXChange in the West Midlands
 stop_city_comparisons_1120 <- function() {
-  ed <- c(tnds25 = "TNDS 2.5", tnds21 = "TNDS 2.1", tndsblend = "TNDS blend")
+  ed <- c(tnds25 = "TNDS 2.5", tnds21 = "TNDS 2.1", tndsblend = "TNDS blend",
+          combined = "Combined", combinedxc = "Combined + copy rule")
   data.table::data.table(
     map = c(paste0("london_", names(ed)), "wm_bods_txc",
             paste0("wm_", names(ed))),
-    city = c(rep("London", 3), rep("West Midlands", 4)),
+    city = c(rep("London", length(ed)), rep("West Midlands", length(ed) + 1)),
     txc = c(names(ed), "bods_txc", names(ed)),
     label = c(paste("London:", ed), "West Midlands: BODS TransXChange",
               paste("West Midlands:", ed)))
