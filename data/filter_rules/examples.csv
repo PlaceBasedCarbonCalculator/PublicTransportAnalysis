@@ -1,0 +1,10 @@
+example,route_short_name,route_type,agency_ids,service_code
+copy_439,439,3,ME GAHL,
+copy_x6,X6,3,AMID AMD,
+copy_10a,10A,3,WMB,
+stoploc_sl12,SL12,3,,
+svckey_metrobus,1,3,METR,
+svckey_metrobus,2,3,METR,
+svckey_metrobus,10,3,METR,
+svckey_metrobus,21,3,METR,
+svckey_metrobus,100,3,METR,

@@ -1,0 +1,9 @@
+region,file,lines,noc,mode,start,end,journeys,n_stops,covered,active
+EM,derbs_MDCL_822_derbs_MDCL_22_11022A_822_1.xml,822,MDCL,bus,2025-01-05,,2,38,0.0,True
+EM,derbs_TBTN_swi_SERSW.xml,swi,TBTN,bus,2026-01-04,2036-01-04,172,197,0.0,True
+EM,derbs_TBTN_vil_SERV1.xml,vil,TBTN,bus,2026-01-04,2036-01-04,185,165,0.0,True
+EM,derbs_TMTL_26_SER26_26A_1.xml,26A,TMTL,bus,2026-07-26,2036-07-26,11,57,0.0,True
+EM,leics_AFCL_87_87.xml,87,AMID,bus,2026-08-22,,68,81,0.0,True
+SE,square_BOUB_BCB_BCB.xml,BCB,BOUB,bus,2025-06-01,,9,39,0.0,True
+W,X15_Sargents Brothers Coaches_(SARG)_20261112.xml,X15,SARG,,2026-06-18,2027-11-10,2,110,0.418,True
+WM,twm_70-9-_-y11-1.xml,9,AMNO,bus,2026-10-01,2027-12-31,35,85,0.0,True

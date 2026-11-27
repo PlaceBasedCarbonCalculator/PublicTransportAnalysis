@@ -1,0 +1,1216 @@
+line,route_type,kept_routes,kept_agency,kept_name,kept_code,kept_start,kept_trips,dropped_routes,dropped_agency,dropped_name,dropped_code,dropped_start,dropped_trips,shared_starts,share_dropped,share_kept,decided_by,scope,trips_removed,trips_trimmed,trip_days_removed
+50,3,2773,GNEL,Go North East Limited,NE_04_GNE_50_1,2026-09-21,328,2766,GNEL,Go North East Limited,NE_01_GNE_50_1,2026-07-19,370,123,1,1,newer,trips,36,208,235974
+2,3,2063,MN,ARRIVA LONDON NORTH LIMITED,8-2-_-y05-61972,2026-11-14,950,2111,SL,ARRIVA LONDON SOUTH LIMITED,8-2-_-y05-61971,2026-11-13,970,487,0.834,0.745,newer,trips,559,175,73844
+38,3,15528,SYRK,Stagecoach Yorkshire,Y_SC_SYRK_38_1,2026-11-12,44,15996,SYRK,Stagecoach Yorkshire,YWAO038,2026-08-29,44,40,1,1,newer,trips,0,44,72524
+1,3,13171,ACYM,Arriva Cymru,1,2026-11-01,340,3718,ACYM,Arriva Cymru,NW_02_ACY_1_1,2025-09-28,550,248,1,1,newer,trips,0,340,34772
+10,3,13224 13572,ACYM,Arriva Cymru,10,2026-11-01,306,3930,ACYM,Arriva Cymru,NW_02_ACY_10_1,2026-09-20,296,151,1,0.938,newer,trips,0,296,28608
+X2,3,3478,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_X2_1,2026-10-28,151,3939,1004,Stagecoach,NW_06_1004_X2_1,2026-03-08,151,140,1,1,newer,trips,0,151,22597
+487,3,3591,2002,Metro Network,NW_06_2002_487_1,2026-10-25,145,3588,MNGN,Go North West,NW_02_MNGN_487_1,2026-10-25,176,105,1,1,longer,trips,0,176,21327
+X2,3,3453,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_X2_2,2026-11-01,137,3653,1004,Stagecoach,NW_06_1004_X2_2,2026-03-08,137,131,1,1,newer,trips,0,137,20242
+394,3,4181,HIPK,High Peak Buses,NW_04_HIPK_394_1,2026-01-12,12,1327,HIPK,High Peak Buses,394,2025-12-05,12,12,1,1,newer,trips,0,12,18444
+439,3,2491,ME,METROBUS LIMITED,51-439-_-y05-5,2026-11-13,201,8804,GAHL,London General,439,2024-03-02,255,99,0.943,0.9,newer,trips,0,178,17596
+10,3,14604,WMB,West Midlands Bus,58-10-_-y11-26,2026-11-01,118,14606,WMB,West Midlands Bus,40-10-C-y11-13,2026-11-01,118,99,1,1,longer,trips,116,0,16979
+X84,3,14205,AMN,Arriva Midlands,80-X84-0-y11-1,2026-10-01,105,896 927,AMID,Arriva,X84,2026-08-22,102,68,0.958,0.861,newer,trips,0,94,16066
+2,3,3461,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_2_2,2026-11-03,106,3736,1004,Stagecoach,NW_06_1004_2_1,2026-03-08,105,81,1,0.988,newer,trips,0,105,14733
+X6,3,14648,AMD,Arriva Midlands,6-X6-0-y11-2,2026-10-01,82,1174,AMID,Arriva,X6,2026-08-22,82,57,0.983,0.983,newer,trips,0,81,14337
+21,3,14459,DIAE,Diamond Bus East Midlands,40-21-A-y11-6,2026-11-02,68,1168 979,MDCL,Diamond Bus,SER21,2026-11-01,108,61,0.649,0.968,newer,trips,0,67,14212
+4,3,13105 13276 13278 13647 13954,ACYM,Arriva Cymru,4,2026-11-01,321,3646,ACYM,Arriva Cymru,NW_02_ACY_4_1,2026-09-21,102,72,1,0.393,newer,trips,0,102,14076
+10A,3,14621,WMB,West Midlands Bus,40-10A-A-y11-17,2026-11-02,52,14758,WMB,West Midlands Bus,58-10A-_-y11-26,2026-11-02,52,41,1,1,longer,trips,14,38,11974
+347,3,3827,1061,Vision Bus,NW_06_1061_347_1,2026-01-03,41,3665,VISB,Vision Bus Ltd,NW_05_VISB_347_1,2025-09-15,59,25,0.532,0.862,newer,trips,0,35,10430
+4,3,14397,DIAE,Diamond Bus East Midlands,40-4-D-y11-3,2026-10-01,43,875,MDCL,Diamond Bus,SER4,2026-07-27,43,32,1,1,newer,trips,0,33,10395
+15,3,13772 13787,ACYM,Arriva Cymru,15,2026-11-01,82,4603,ACYM,Arriva Cymru,NW_02_ACY_15_1,2026-09-21,46,26,1,0.591,newer,trips,0,46,6532
+44,3,59,729HO,Konectbuses (formerly known as Hedingham & Chambers),13-44-_-y08-3,2026-11-09,254,8830 9278,HEDO,Central Connect (formerly Konectbuses),44_PF0002189-121,2026-11-02,58,46,0.852,0.868,newer,trips,0,50,6312
+2A,3,13164 13220 13288,ACYM,Arriva Cymru,2,2026-11-01,188,14489,ACY,Arriva Wales,50-2A-C-y11-5,2026-10-01,66,23,1,0.215,newer,trips,0,43,6164
+4S,3,13105 13276 13278 13647 13954,ACYM,Arriva Cymru,4,2026-11-01,321,3943,ACYM,Arriva Cymru,NW_02_ACY_4S_1,2026-09-20,118,59,1,0.322,newer,trips,0,118,6072
+21E,3,1168 979,MDCL,Diamond Bus,SER21,2026-11-01,108,14476,DIAE,Diamond Bus East Midlands,40-21E-A-y11-5,2026-10-01,39,28,0.933,0.298,newer,trips,0,37,4783
+2,3,13164 13220 13288,ACYM,Arriva Cymru,2,2026-11-01,188,15179,ACY,Arriva Wales,50-2-E-y11-5,2026-10-01,38,27,1,0.252,newer,trips,0,38,4487
+18,3,5505,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_18_1,2026-11-08,9,4578,KLCO,Kirkby Lonsdale Coach Hire Ltd,NW_05_KLCO_18_1,2025-10-26,52,9,0.346,1,newer,trips,0,9,4356
+101,3,13898,ACYM,Arriva Cymru,101,2026-11-02,16,5120,ACYM,Arriva Cymru,NW_02_ACY_101_1,2025-05-06,16,8,1,1,newer,trips,0,16,2208
+LondonCableCar,6,2653,CAB,London Cable Car,71-CAB-_-y05-54,2026-12-31,266,2565,CAB,London Cable Car,71-CAB-_-y05-42,2026-11-13,1016,266,0.881,1,newer,trips,0,230,1502
+15A,3,13772 13787,ACYM,Arriva Cymru,15,2026-11-01,82,4481,ACYM,Arriva Cymru,NW_02_ACY_15A_1,2026-09-20,36,18,1,0.409,newer,trips,0,36,972
+LondonCableCar,6,2665,CAB,London Cable Car,71-CAB-_-y05-51,2026-12-26,230,2565,CAB,London Cable Car,71-CAB-_-y05-42,2026-11-13,1016,230,0.762,1,newer,trips,0,460,920
+8,3,14340,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_2,2026-11-14,38,14345,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_1,2026-09-12,25,14,1,1,newer,trips,0,25,731
+8A,3,14496,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_4,2026-11-14,36,14501,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_3,2026-09-12,24,13,1,1,newer,trips,0,24,684
+G4,3,13728,DWYN,Dilwyn's Coaches,MGAG004,2026-05-17,32,13498,GWCO,Gwynfor Coaches,MGAG004,2026-05-11,141,8,0.216,1,newer,trips,16,0,632
+4B,3,13105 13276 13278 13647 13954,ACYM,Arriva Cymru,4,2026-11-01,321,5300,ACYM,Arriva Cymru,NW_02_ACY_4B_1,2026-09-21,4,3,1,0.016,newer,trips,0,4,552
+43,3,14995 15015 15016,FPOT,First,PD0000003:193,2026-11-01,32,14843,DGC,D & G Bus,60-43-0-y11-5,2026-11-01,58,8,0.2,1,longer,trips,9,0,540
+85,3,14026,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_2,2026-11-14,63,14107,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_4,2026-10-31,42,26,0.963,0.812,newer,trips,0,39,503
+5,3,15348 15352 15353,FPOT,First,PD0000003:197,2026-11-02,14,14972,DGC,D & G Bus,60-5-C-y11-3,2026-11-01,157,4,0.036,1,newer,trips,0,5,372
+10A,3,13224 13572,ACYM,Arriva Cymru,10,2026-11-01,306,4253,ACYM,Arriva Cymru,NW_02_ACY_10A_1,2026-09-21,10,10,1,0.062,newer,trips,0,10,350
+15,3,16842,EYMS,East Yorkshire,YYAO015,2026-05-31,11,16465,EYMS,East Yorkshire,SER15,2026-05-31,11,11,1,1,longer,trips,0,11,330
+49,3,15388 15394 15395,FPOT,First,PD0000003:201,2026-11-07,12,15431,SOS,Stanton's of Stoke,60-49-0-y11-1,2026-10-26,2,2,1,0.667,newer,trips,0,2,314
+HD4,3,447,KCTB,Central Connect,3-HD4-_-y08-1,2026-11-09,2,9638,HEDO,Central Connect (formerly Konectbuses),HD4_PF0002189-275,2026-09-01,2,2,1,1,newer,trips,0,2,302
+A2,3,11684,FBRI,First Bristol,PH0000132:01010461,2026-11-22,144,11688 11783 11812,FBRI,First Bristol,UZ000FBRI:A2,2026-11-01,336,48,1,1,newer,trips,48,0,240
+X16,3,6398,ANUM,ARRIVA North East,ANUM_X16,2026-11-07,8,2914,ANUM,ARRIVA North East,NE_02_NMS_X16_1,2026-09-01,67,4,0.121,1,newer,trips,0,4,208
+1,3,9941,SCCM,Stagecoach East,SE_SC_SCCM_1_11,2026-12-27,102,9135,SCCM,Stagecoach East,SE_SC_SCCM_1_9,2026-09-10,204,98,0.71,1,newer,trips,0,82,164
+4,3,9735,SCCM,Stagecoach East,SE_SC_SCCM_4_7,2026-12-27,84,9587,SCCM,Stagecoach East,SE_SC_SCCM_4_5,2026-09-10,148,83,1,1,newer,trips,0,64,128
+X5,3,9243,SCCM,Stagecoach East,SE_SC_SCCM_X5_2,2026-12-27,101,9064,SCCM,Stagecoach East,SE_SC_SCCM_X5_4,2026-09-10,154,80,0.899,1,newer,trips,0,64,128
+5,3,10355,SCCM,Stagecoach East,SE_SC_SCCM_5_11,2026-12-27,82,10129,SCCM,Stagecoach East,SE_SC_SCCM_5_9,2026-09-10,144,68,1,1,newer,trips,0,62,124
+6,3,9958,SCCM,Stagecoach East,SE_SC_SCCM_6_7,2026-12-27,82,9202,SCCM,Stagecoach East,SE_SC_SCCM_6_5,2026-09-10,168,82,0.586,1,newer,trips,0,62,124
+2W,3,9053,SCCM,Stagecoach East,SE_SC_SCCM_2W_2,2026-12-27,80,9140,SCCM,Stagecoach East,SE_SC_SCCM_2W_4,2026-10-25,140,68,1,1,newer,trips,0,60,120
+73,3,5876,SCFI,Stagecoach East Scotland,S_SC_SCFI_73_2,2026-12-07,368,5875,SCFI,Stagecoach East Scotland,S_SC_SCFI_73_3,2026-10-19,368,148,1,1,newer,trips,0,53,106
+73,3,5876,SCFI,Stagecoach East Scotland,S_SC_SCFI_73_2,2026-12-07,368,5880,SCFI,Stagecoach East Scotland,S_SC_SCFI_73_1,2026-12-02,260,148,1,1,newer,trips,0,53,106
+3,3,10430,SCCM,Stagecoach East,SE_SC_SCCM_3_11,2026-12-27,70,10283,SCCM,Stagecoach East,SE_SC_SCCM_3_9,2026-09-10,119,70,1,1,newer,trips,0,50,100
+905,3,8526,SCCM,Stagecoach East,SE_SC_SCCM_905_2,2026-12-27,76,8393,SCCM,Stagecoach East,SE_SC_SCCM_905_4,2026-09-10,126,73,0.682,1,newer,trips,0,49,98
+84,3,14095,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_4,2026-11-14,44,14071,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_3,2026-10-31,28,23,0.852,0.885,newer,trips,0,24,80
+8,3,9886,SCCM,Stagecoach East,SE_SC_SCCM_8_7,2026-12-27,56,9948,SCCM,Stagecoach East,SE_SC_SCCM_8_5,2026-09-10,92,37,1,1,newer,trips,0,36,72
+SB12,3,10676,SCCM,Stagecoach East,SE_SC_SCCM_SB12_4,2026-12-29,36,10559,SCCM,Stagecoach East,SE_SC_SCCM_SB12_2,2026-10-29,72,36,1,1,newer,trips,0,36,72
+MK1,3,8706,SCCM,Stagecoach East,SE_SC_SCCM_MK1_2,2026-12-27,63,8692,SCCM,Stagecoach East,SE_SC_SCCM_MK1_4,2026-09-10,97,39,1,1,newer,trips,0,34,68
+X5,3,9655,SCCM,Stagecoach East,SE_SC_SCCM_X5_11,2026-12-27,60,9538,SCCM,Stagecoach East,SE_SC_SCCM_X5_9,2026-09-10,108,44,0.733,1,newer,trips,0,34,68
+X5,3,10497,SCCM,Stagecoach East,SE_SC_SCCM_X5_7,2026-12-27,60,10302,SCCM,Stagecoach East,SE_SC_SCCM_X5_5,2026-09-10,108,44,0.733,1,newer,trips,0,34,68
+X7,3,5780,SCFI,Stagecoach East Scotland,S_SC_SCFI_X7_2,2026-12-07,151,5781,SCFI,Stagecoach East Scotland,S_SC_SCFI_X7_3,2026-10-19,151,49,1,1,newer,trips,0,34,68
+X7,3,5780,SCFI,Stagecoach East Scotland,S_SC_SCFI_X7_2,2026-12-07,151,5782,SCFI,Stagecoach East Scotland,S_SC_SCFI_X7_1,2026-12-02,112,49,1,1,newer,trips,0,34,68
+MK1,3,9544,SCCM,Stagecoach East,SE_SC_SCCM_MK1_7,2026-12-27,62,9480,SCCM,Stagecoach East,SE_SC_SCCM_MK1_5,2026-09-10,95,36,1,1,newer,trips,0,33,66
+50,3,9027,SCCM,Stagecoach East,SE_SC_SCCM_50_2,2026-12-27,40,8491,SCCM,Stagecoach East,SE_SC_SCCM_50_4,2026-09-10,74,30,0.909,1,newer,trips,0,30,60
+9D,3,8665,SCCM,Stagecoach East,SE_SC_SCCM_9D_2,2026-12-27,49,8660,SCCM,Stagecoach East,SE_SC_SCCM_9D_4,2026-09-10,74,49,1,1,newer,trips,0,25,50
+20,3,5776,SCFI,Stagecoach East Scotland,S_SC_SCFI_20_2,2026-12-07,141,5775,SCFI,Stagecoach East Scotland,S_SC_SCFI_20_3,2026-10-19,141,70,1,1,newer,trips,0,20,40
+20,3,5776,SCFI,Stagecoach East Scotland,S_SC_SCFI_20_2,2026-12-07,141,5778,SCFI,Stagecoach East Scotland,S_SC_SCFI_20_1,2026-12-02,100,70,1,1,newer,trips,0,20,40
+7,3,8888,SCSO,Stagecoach South,SE_SC_SCSO_7_7,2026-10-16,32,8950,COMT,Compass Travel,7,2026-05-09,32,16,1,1,newer,trips,0,16,32
+9A,3,8780,SCCM,Stagecoach East,SE_SC_SCCM_9A_2,2026-12-29,16,8678,SCCM,Stagecoach East,SE_SC_SCCM_9A_4,2026-09-10,32,16,1,1,newer,trips,0,16,32
+30,3,5810,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_2,2026-12-07,99,5820,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_3,2026-10-19,94,50,1,1,newer,trips,0,15,30
+30,3,5810,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_2,2026-12-07,99,5811,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_1,2026-12-02,68,50,1,1,newer,trips,0,15,30
+9B,3,8811,SCCM,Stagecoach East,SE_SC_SCCM_9B_2,2026-12-29,15,8623,SCCM,Stagecoach East,SE_SC_SCCM_9B_4,2026-09-10,30,15,1,1,newer,trips,0,15,30
+30B,3,6365,SCFI,Stagecoach East Scotland,S_SC_SCFI_30B_2,2026-12-07,29,6364,SCFI,Stagecoach East Scotland,S_SC_SCFI_30B_3,2026-10-19,29,19,1,1,newer,trips,0,14,28
+30B,3,6365,SCFI,Stagecoach East Scotland,S_SC_SCFI_30B_2,2026-12-07,29,6366,SCFI,Stagecoach East Scotland,S_SC_SCFI_30B_1,2026-12-02,24,19,1,1,newer,trips,0,14,28
+47,3,6555,SCFI,Stagecoach East Scotland,S_SC_SCFI_47_2,2026-12-07,76,6554,SCFI,Stagecoach East Scotland,S_SC_SCFI_47_3,2026-10-19,73,40,1,1,newer,trips,0,13,26
+47,3,6555,SCFI,Stagecoach East Scotland,S_SC_SCFI_47_2,2026-12-07,76,6563,SCFI,Stagecoach East Scotland,S_SC_SCFI_47_1,2026-12-02,56,40,1,1,newer,trips,0,13,26
+21A,3,5824,SCFI,Stagecoach East Scotland,S_SC_SCFI_21A_2,2026-12-07,61,5823,SCFI,Stagecoach East Scotland,S_SC_SCFI_21A_3,2026-10-19,60,32,1,0.97,newer,trips,0,12,24
+21A,3,5824,SCFI,Stagecoach East Scotland,S_SC_SCFI_21A_2,2026-12-07,61,5834,SCFI,Stagecoach East Scotland,S_SC_SCFI_21A_1,2026-12-02,45,33,1,1,newer,trips,0,12,24
+28,3,8835,SCCM,Stagecoach East,SE_SC_SCCM_28_2,2026-12-29,12,8826,SCCM,Stagecoach East,SE_SC_SCCM_28_4,2026-09-10,26,12,1,1,newer,trips,0,12,24
+27,3,5878,SCFI,Stagecoach East Scotland,S_SC_SCFI_27_5,2026-12-07,108,5877,SCFI,Stagecoach East Scotland,S_SC_SCFI_27_3,2026-10-19,103,54,1,1,newer,trips,0,10,20
+27,3,5878,SCFI,Stagecoach East Scotland,S_SC_SCFI_27_5,2026-12-07,108,5879,SCFI,Stagecoach East Scotland,S_SC_SCFI_27_4,2026-12-02,72,53,1,0.981,newer,trips,0,10,20
+25,3,8736,SCCM,Stagecoach East,SE_SC_SCCM_25_2,2026-12-29,9,8726,SCCM,Stagecoach East,SE_SC_SCCM_25_4,2026-09-10,21,9,1,1,newer,trips,0,9,18
+9,3,10369,SCCM,Stagecoach East,SE_SC_SCCM_9_2,2026-12-29,8,9614,SCCM,Stagecoach East,SE_SC_SCCM_9_4,2026-09-10,19,8,0.727,1,newer,trips,0,8,16
+28A,3,9239,SCCM,Stagecoach East,SE_SC_SCCM_28A_2,2026-12-29,7,9218,SCCM,Stagecoach East,SE_SC_SCCM_28A_4,2026-09-10,21,7,1,1,newer,trips,0,7,14
+75A,3,7940,SCFI,Stagecoach East Scotland,S_SC_SCFI_75A_2,2026-12-07,25,7939,SCFI,Stagecoach East Scotland,S_SC_SCFI_75A_3,2026-10-19,25,13,1,1,newer,trips,0,7,14
+75A,3,7940,SCFI,Stagecoach East Scotland,S_SC_SCFI_75A_2,2026-12-07,25,7952,SCFI,Stagecoach East Scotland,S_SC_SCFI_75A_1,2026-12-02,19,13,1,1,newer,trips,0,7,14
+76A,3,7453,SCFI,Stagecoach East Scotland,S_SC_SCFI_76A_2,2026-12-07,60,7452,SCFI,Stagecoach East Scotland,S_SC_SCFI_76A_3,2026-10-19,60,25,1,1,newer,trips,0,7,14
+76A,3,7453,SCFI,Stagecoach East Scotland,S_SC_SCFI_76A_2,2026-12-07,60,7486,SCFI,Stagecoach East Scotland,S_SC_SCFI_76A_1,2026-12-02,42,25,1,1,newer,trips,0,7,14
+20C,3,6650,SCFI,Stagecoach East Scotland,S_SC_SCFI_20C_1,2026-12-06,6,6651,SCFI,Stagecoach East Scotland,S_SC_SCFI_20C_3,2026-10-25,6,6,1,1,newer,trips,0,6,12
+20C,3,6652,SCFI,Stagecoach East Scotland,S_SC_SCFI_20C_2,2026-12-13,12,6650,SCFI,Stagecoach East Scotland,S_SC_SCFI_20C_1,2026-12-06,6,6,1,0.667,newer,trips,0,6,12
+74B,3,7109,SCFI,Stagecoach East Scotland,S_SC_SCFI_74B_2,2026-12-07,18,7108,SCFI,Stagecoach East Scotland,S_SC_SCFI_74B_3,2026-10-19,18,10,1,1,newer,trips,0,6,12
+74B,3,7109,SCFI,Stagecoach East Scotland,S_SC_SCFI_74B_2,2026-12-07,18,7112,SCFI,Stagecoach East Scotland,S_SC_SCFI_74B_1,2026-12-02,14,10,1,1,newer,trips,0,6,12
+84A,3,14324,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_4,2026-11-14,12,14469,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_3,2026-10-31,8,4,1,0.5,newer,trips,0,8,12
+27,3,10514,SCCM,Stagecoach East,SE_SC_SCCM_27_2,2026-12-29,4,10508,SCCM,Stagecoach East,SE_SC_SCCM_27_4,2026-09-10,8,4,1,1,newer,trips,0,4,8
+42,3,7505,SCFI,Stagecoach East Scotland,S_SC_SCFI_42_4,2026-12-06,2,7504,SCFI,Stagecoach East Scotland,S_SC_SCFI_42_3,2026-10-25,2,2,1,1,newer,trips,0,2,4
+42,3,7506,SCFI,Stagecoach East Scotland,S_SC_SCFI_42_5,2026-12-13,2,7505,SCFI,Stagecoach East Scotland,S_SC_SCFI_42_4,2026-12-06,2,2,1,1,newer,trips,0,2,4
+30A,3,6372,SCFI,Stagecoach East Scotland,S_SC_SCFI_30A_2,2026-12-07,22,6371,SCFI,Stagecoach East Scotland,S_SC_SCFI_30A_3,2026-10-19,22,9,1,1,newer,trips,0,1,2
+30A,3,6372,SCFI,Stagecoach East Scotland,S_SC_SCFI_30A_2,2026-12-07,22,6376,SCFI,Stagecoach East Scotland,S_SC_SCFI_30A_1,2026-12-02,15,9,1,1,newer,trips,0,1,2
+1,3,9173,SCCM,Stagecoach East,SE_SC_SCCM_1_10,2026-12-20,122,9135,SCCM,Stagecoach East,SE_SC_SCCM_1_9,2026-09-10,204,108,0.783,1,newer,trips,0,0,0
+1,3,9258,SCCM,Stagecoach East,SE_SC_SCCM_1_12,2027-01-03,204,9173,SCCM,Stagecoach East,SE_SC_SCCM_1_10,2026-12-20,122,108,1,0.783,newer,trips,0,0,0
+1,3,9258,SCCM,Stagecoach East,SE_SC_SCCM_1_12,2027-01-03,204,9135,SCCM,Stagecoach East,SE_SC_SCCM_1_9,2026-09-10,204,138,1,1,newer,trips,0,0,0
+1,3,9258,SCCM,Stagecoach East,SE_SC_SCCM_1_12,2027-01-03,204,9941,SCCM,Stagecoach East,SE_SC_SCCM_1_11,2026-12-27,102,98,1,0.71,newer,trips,0,0,0
+1,3,2,SCCM,Stagecoach East,EA_SC_SCCM_1_8,2027-01-03,382,4,SCCM,Stagecoach East,EA_SC_SCCM_1_7,2026-12-27,364,214,1,0.877,newer,trips,0,0,0
+1,3,4,SCCM,Stagecoach East,EA_SC_SCCM_1_7,2026-12-27,364,1,SCCM,Stagecoach East,EA_SC_SCCM_1_5,2026-11-01,382,214,0.877,1,newer,trips,0,0,0
+1,3,2,SCCM,Stagecoach East,EA_SC_SCCM_1_8,2027-01-03,382,1,SCCM,Stagecoach East,EA_SC_SCCM_1_5,2026-11-01,382,244,1,1,newer,trips,0,0,0
+1,3,3,SCCM,Stagecoach East,EA_SC_SCCM_1_6,2026-12-20,227,1,SCCM,Stagecoach East,EA_SC_SCCM_1_5,2026-11-01,382,215,0.881,1,newer,trips,0,0,0
+1,3,4,SCCM,Stagecoach East,EA_SC_SCCM_1_7,2026-12-27,364,3,SCCM,Stagecoach East,EA_SC_SCCM_1_6,2026-12-20,227,185,0.86,0.864,newer,trips,0,0,0
+1,3,2,SCCM,Stagecoach East,EA_SC_SCCM_1_8,2027-01-03,382,3,SCCM,Stagecoach East,EA_SC_SCCM_1_6,2026-12-20,227,215,1,0.881,newer,trips,0,0,0
+1,3,767,SCCM,Stagecoach East,EM_SC_SCCM_1_2,2026-12-20,246,759,SCCM,Stagecoach East,EM_SC_SCCM_1_4,2026-09-10,378,219,0.779,1,newer,trips,0,0,0
+1,3,829,SCCM,Stagecoach East,EM_SC_SCCM_1_1,2026-12-27,208,759,SCCM,Stagecoach East,EM_SC_SCCM_1_4,2026-09-10,378,188,0.669,1,newer,trips,0,0,0
+1,3,3844,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_1_3,2026-12-07,380,3889,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_1_2,2026-10-13,366,152,0.993,1,newer,trips,0,0,0
+1,3,5129,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_1_5,2026-12-07,72,5273,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_1_4,2026-11-02,72,24,1,1,newer,trips,0,0,0
+1,3,14194,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_7,2026-12-12,17,14192,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_6,2026-11-28,17,13,1,1,newer,trips,0,0,0
+1,3,14192,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_6,2026-11-28,17,14193,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_5,2026-11-14,17,13,1,1,newer,trips,0,0,0
+1,3,14194,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_7,2026-12-12,17,14193,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_5,2026-11-14,17,13,1,1,newer,trips,0,0,0
+1,3,4350,BNSM,Bee Network,NW_04_BNSM_1_2,2026-11-29,207,4499,BNSM,Bee Network,NW_04_BNSM_1_1,2026-11-06,207,84,1,1,newer,trips,0,0,0
+1,3,11080,SCSO,Stagecoach South,SW_SC_SCSO_1_6,2026-12-01,1336,11081,SCSO,Stagecoach South,SW_SC_SCSO_1_5,2026-10-13,582,254,1,1,newer,trips,0,0,0
+1,3,8405,SCSO,Stagecoach South,SE_SC_SCSO_1_8,2026-12-01,364,8502,SCSO,Stagecoach South,SE_SC_SCSO_1_7,2026-10-25,213,87,1,0.916,newer,trips,0,0,0
+1,3,14158,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_4,2026-11-21,87,14156,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_3,2026-11-14,115,69,1,1,newer,trips,0,0,0
+1,3,14146,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_9,2026-11-28,244,14144,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_8,2026-11-14,244,134,1,1,newer,trips,0,0,0
+1,3,14145,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_10,2026-12-12,244,14144,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_8,2026-11-14,244,134,1,1,newer,trips,0,0,0
+1,3,14145,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_10,2026-12-12,244,14146,SCNH,Stagecoach Midlands,WM_SC_SCNH_1_9,2026-11-28,244,134,1,1,newer,trips,0,0,0
+10,3,11275,SCSO,Stagecoach South,SW_SC_SCSO_10_3,2026-12-01,216,11284,SCSO,Stagecoach South,SW_SC_SCSO_10_2,2026-10-13,103,42,1,1,newer,trips,0,0,0
+10,3,2052,MN,ARRIVA LONDON NORTH LIMITED,8-10-_-y05-2,2026-11-28,842,2069,MN,ARRIVA LONDON NORTH LIMITED,8-10-_-y05-1,2026-11-14,842,571,1,1,newer,trips,0,0,0
+100,3,3525,BNSM,Bee Network,NW_04_BNSM_100_2,2026-11-29,336,3534,BNSM,Bee Network,NW_04_BNSM_100_1,2026-11-06,332,237,1,1,newer,trips,0,0,0
+101,3,3459,BNML,Bee Network,NW_04_BNML_101_2,2026-11-29,922,3558,BNML,Bee Network,NW_04_BNML_101_1,2026-11-02,333,311,1,1,newer,trips,0,0,0
+102,3,4822,BNML,Bee Network,NW_04_BNML_102_2,2026-11-29,28,4980,BNML,Bee Network,NW_04_BNML_102_1,2026-11-08,14,14,1,1,newer,trips,0,0,0
+103,3,3482,BNML,Bee Network,NW_04_BNML_103_2,2026-11-29,524,3590,BNML,Bee Network,NW_04_BNML_103_1,2026-11-02,187,179,1,1,newer,trips,0,0,0
+11,3,3514,BNSM,Bee Network,NW_04_BNSM_11_2,2026-11-29,237,3518,BNSM,Bee Network,NW_04_BNSM_11_1,2026-09-17,237,146,0.993,0.993,newer,trips,0,0,0
+11,3,11317,SCSO,Stagecoach South,SW_SC_SCSO_11_5,2026-12-01,394,11331,SCSO,Stagecoach South,SW_SC_SCSO_11_4,2026-10-13,162,63,1,1,newer,trips,0,0,0
+110,3,3670,HWCO,Holmeswood Coaches Ltd,NW_04_HWCO_110_2,2026-11-30,55,3669,HWCO,Holmeswood Coaches Ltd,NW_04_HWCO_110_1,2026-09-01,55,37,1,1,newer,trips,0,0,0
+111,3,3597,BNML,Bee Network,NW_04_BNML_111_2,2026-11-29,1032,3932,BNML,Bee Network,NW_04_BNML_111_1,2026-11-02,363,334,1,1,newer,trips,0,0,0
+12,3,8962,SCSO,Stagecoach South,SE_SC_SCSO_12_1,2026-12-01,104,8993,SCSO,Stagecoach South,SE_SC_SCSO_12_2,2026-10-13,38,15,1,1,newer,trips,0,0,0
+12,3,8962,SCSO,Stagecoach South,SE_SC_SCSO_12_1,2026-12-01,104,9468,FALC,Falcon Coaches,12,2025-09-01,28,14,1,0.933,newer,trips,0,0,0
+12,3,8993,SCSO,Stagecoach South,SE_SC_SCSO_12_2,2026-10-13,38,9468,FALC,Falcon Coaches,12,2025-09-01,28,14,1,0.933,newer,trips,0,0,0
+12,3,14083,WMB,West Midlands Bus,57-12-_-y11-2,2026-11-30,247,14084,WMB,West Midlands Bus,57-12-_-y11-1,2026-11-24,247,182,1,1,newer,trips,0,0,0
+12,3,14083,WMB,West Midlands Bus,57-12-_-y11-2,2026-11-30,247,14090,WMB,West Midlands Bus,57-12-_-y11-0,2026-11-01,247,182,1,1,newer,trips,0,0,0
+12,3,14084,WMB,West Midlands Bus,57-12-_-y11-1,2026-11-24,247,14090,WMB,West Midlands Bus,57-12-_-y11-0,2026-11-01,247,182,1,1,newer,trips,0,0,0
+123,3,12100,SCSO,Stagecoach South,SW_SC_SCSO_123_1,2026-12-01,2,12099,SCSO,Stagecoach South,SW_SC_SCSO_123_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+129,3,4262,BNSM,Bee Network,NW_04_BNSM_129_2,2026-11-29,43,4264,BNSM,Bee Network,NW_04_BNSM_129_1,2026-11-06,43,29,1,1,newer,trips,0,0,0
+12A,3,14776,DIA,Diamond Bus,18-12A-B-y11-3,2026-11-30,100,14798,DIA,Diamond Bus,18-12A-B-y11-2,2026-10-01,100,63,1,1,newer,trips,0,0,0
+13,3,9,SCCM,Stagecoach East,EA_SC_SCCM_13_3,2027-01-03,94,10,SCCM,Stagecoach East,EA_SC_SCCM_13_4,2026-11-01,94,68,1,1,newer,trips,0,0,0
+13,3,9,SCCM,Stagecoach East,EA_SC_SCCM_13_3,2027-01-03,94,13,SCCM,Stagecoach East,EA_SC_SCCM_13_1,2026-12-20,60,54,1,0.794,newer,trips,0,0,0
+13,3,13,SCCM,Stagecoach East,EA_SC_SCCM_13_1,2026-12-20,60,10,SCCM,Stagecoach East,EA_SC_SCCM_13_4,2026-11-01,94,54,0.794,1,newer,trips,0,0,0
+13,3,9,SCCM,Stagecoach East,EA_SC_SCCM_13_3,2027-01-03,94,37,SCCM,Stagecoach East,EA_SC_SCCM_13_2,2026-12-27,94,47,1,0.691,newer,trips,0,0,0
+13,3,37,SCCM,Stagecoach East,EA_SC_SCCM_13_2,2026-12-27,94,10,SCCM,Stagecoach East,EA_SC_SCCM_13_4,2026-11-01,94,47,0.691,1,newer,trips,0,0,0
+135,3,3537,BNSM,Bee Network,NW_04_BNSM_135_2,2026-11-29,602,3545,BNSM,Bee Network,NW_04_BNSM_135_1,2026-11-06,588,322,1,1,newer,trips,0,0,0
+13A,3,23,SCCM,Stagecoach East,EA_SC_SCCM_13A_3,2027-01-04,59,154,SCCM,Stagecoach East,EA_SC_SCCM_13A_2,2026-12-29,48,24,1,0.429,newer,trips,0,0,0
+13A,3,154,SCCM,Stagecoach East,EA_SC_SCCM_13A_2,2026-12-29,48,24,SCCM,Stagecoach East,EA_SC_SCCM_13A_4,2026-11-02,59,24,0.429,1,newer,trips,0,0,0
+13A,3,23,SCCM,Stagecoach East,EA_SC_SCCM_13A_3,2027-01-04,59,24,SCCM,Stagecoach East,EA_SC_SCCM_13A_4,2026-11-02,59,56,1,1,newer,trips,0,0,0
+13A,3,23,SCCM,Stagecoach East,EA_SC_SCCM_13A_3,2027-01-04,59,29,SCCM,Stagecoach East,EA_SC_SCCM_13A_1,2026-12-21,35,35,1,0.625,newer,trips,0,0,0
+13A,3,29,SCCM,Stagecoach East,EA_SC_SCCM_13A_1,2026-12-21,35,24,SCCM,Stagecoach East,EA_SC_SCCM_13A_4,2026-11-02,59,35,0.625,1,newer,trips,0,0,0
+14,3,10680,RRTR,Red Rose Travel,14/14E,2025-11-09,8,10235,RLNE,Redline,14,2025-11-03,49,8,0.308,1,newer,trips,0,0,0
+14,3,14257,SCNH,Stagecoach Midlands,WM_SC_SCNH_14_4,2026-11-28,68,14256,SCNH,Stagecoach Midlands,WM_SC_SCNH_14_3,2026-11-14,68,30,1,1,newer,trips,0,0,0
+14,3,14258,SCNH,Stagecoach Midlands,WM_SC_SCNH_14_5,2026-12-12,68,14256,SCNH,Stagecoach Midlands,WM_SC_SCNH_14_3,2026-11-14,68,30,1,1,newer,trips,0,0,0
+14,3,14258,SCNH,Stagecoach Midlands,WM_SC_SCNH_14_5,2026-12-12,68,14257,SCNH,Stagecoach Midlands,WM_SC_SCNH_14_4,2026-11-28,68,30,1,1,newer,trips,0,0,0
+14,3,14937,DIA,Diamond Bus,18-14-T-y11-4,2026-11-30,51,14966,DIA,Diamond Bus,18-14-T-y11-3,2026-10-01,51,36,1,1,newer,trips,0,0,0
+142,3,3778,BNML,Bee Network,NW_04_BNML_142_4,2026-11-29,262,4064,BNML,Bee Network,NW_04_BNML_142_3,2026-11-02,132,62,1,0.912,newer,trips,0,0,0
+143,3,3454,BNML,Bee Network,NW_04_BNML_143_3,2026-11-29,2145,3547,BNML,Bee Network,NW_04_BNML_143_2,2026-11-02,888,708,1,0.797,newer,trips,0,0,0
+149,3,3792,BNSM,Bee Network,NW_04_BNSM_149_2,2026-11-29,52,3798,BNSM,Bee Network,NW_04_BNSM_149_1,2026-11-06,52,36,1,1,newer,trips,0,0,0
+14A,3,14583,SCNH,Stagecoach Midlands,WM_SC_SCNH_14A_1,2026-11-28,5,14584,SCNH,Stagecoach Midlands,WM_SC_SCNH_14A_3,2026-11-14,5,4,1,1,newer,trips,0,0,0
+14A,3,14585,SCNH,Stagecoach Midlands,WM_SC_SCNH_14A_2,2026-12-12,5,14583,SCNH,Stagecoach Midlands,WM_SC_SCNH_14A_1,2026-11-28,5,4,1,1,newer,trips,0,0,0
+14A,3,14585,SCNH,Stagecoach Midlands,WM_SC_SCNH_14A_2,2026-12-12,5,14584,SCNH,Stagecoach Midlands,WM_SC_SCNH_14A_3,2026-11-14,5,4,1,1,newer,trips,0,0,0
+15,3,11329,SCSO,Stagecoach South,SW_SC_SCSO_15_3,2026-12-01,536,11347,SCSO,Stagecoach South,SW_SC_SCSO_15_2,2026-10-13,222,103,1,1,newer,trips,0,0,0
+15,3,14022,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_7,2026-11-28,90,14021,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_6,2026-11-14,90,45,1,1,newer,trips,0,0,0
+15,3,14023,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_8,2026-12-12,90,14021,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_6,2026-11-14,90,45,1,1,newer,trips,0,0,0
+15,3,14023,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_8,2026-12-12,90,14022,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_7,2026-11-28,90,45,1,1,newer,trips,0,0,0
+15,3,14123,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_4,2026-11-28,99,14122,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_3,2026-11-14,99,56,1,1,newer,trips,0,0,0
+15,3,14124,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_5,2026-12-12,99,14122,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_3,2026-11-14,99,56,1,1,newer,trips,0,0,0
+15,3,14124,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_5,2026-12-12,99,14123,SCNH,Stagecoach Midlands,WM_SC_SCNH_15_4,2026-11-28,99,56,1,1,newer,trips,0,0,0
+16,3,11486,SCSO,Stagecoach South,SW_SC_SCSO_16_4,2026-12-01,196,11508,SCSO,Stagecoach South,SW_SC_SCSO_16_3,2026-11-05,72,30,1,0.938,newer,trips,0,0,0
+17,3,3498,BNSM,Bee Network,NW_04_BNSM_17_2,2026-11-29,548,3500,BNSM,Bee Network,NW_04_BNSM_17_1,2026-11-06,536,405,1,1,newer,trips,0,0,0
+17A,3,4154,BNSM,Bee Network,NW_04_BNSM_17A_2,2026-11-30,4,4153,BNSM,Bee Network,NW_04_BNSM_17A_1,2026-11-06,4,4,1,1,newer,trips,0,0,0
+18,3,9903,RRTR,Red Rose Travel,49-18-N-y10-1,2026-11-14,10,9469,LTKR,Langston & Tasker,18,2025-09-08,10,10,1,1,newer,trips,0,0,0
+18,3,3506,BNSM,Bee Network,NW_04_BNSM_18_2,2026-11-29,494,3508,BNSM,Bee Network,NW_04_BNSM_18_1,2026-11-06,494,437,1,1,newer,trips,0,0,0
+18,3,11196,SCSO,Stagecoach South,SW_SC_SCSO_18_3,2026-12-01,442,11201,SCSO,Stagecoach South,SW_SC_SCSO_18_2,2026-10-13,184,76,1,1,newer,trips,0,0,0
+180,3,4464,BNSM,Bee Network,NW_04_BNSM_180_2,2026-11-30,24,4463,BNSM,Bee Network,NW_04_BNSM_180_1,2026-11-06,24,20,1,1,newer,trips,0,0,0
+181,3,3789,BNSM,Bee Network,NW_04_BNSM_181_2,2026-11-30,69,3788,BNSM,Bee Network,NW_04_BNSM_181_1,2026-11-06,69,30,1,1,newer,trips,0,0,0
+182,3,3663,BNSM,Bee Network,NW_04_BNSM_182_2,2026-11-29,143,3666,BNSM,Bee Network,NW_04_BNSM_182_1,2026-11-06,143,84,1,1,newer,trips,0,0,0
+183,3,4808,BNSM,Bee Network,NW_04_BNSM_183_2,2026-11-30,46,4961,BNSM,Bee Network,NW_04_BNSM_183_1,2026-11-06,40,25,1,0.862,newer,trips,0,0,0
+184,3,3856,BNSM,Bee Network,NW_04_BNSM_184_2,2026-11-29,73,3861,BNSM,Bee Network,NW_04_BNSM_184_1,2026-11-06,73,44,1,1,newer,trips,0,0,0
+19,3,11283,SCSO,Stagecoach South,SW_SC_SCSO_19_3,2026-12-01,210,11289,SCSO,Stagecoach South,SW_SC_SCSO_19_2,2026-10-13,86,33,1,1,newer,trips,0,0,0
+19,3,14533,SCNH,Stagecoach Midlands,WM_SC_SCNH_19_4,2026-11-28,89,14532,SCNH,Stagecoach Midlands,WM_SC_SCNH_19_3,2026-11-14,89,46,1,1,newer,trips,0,0,0
+19,3,14534,SCNH,Stagecoach Midlands,WM_SC_SCNH_19_5,2026-12-12,89,14532,SCNH,Stagecoach Midlands,WM_SC_SCNH_19_3,2026-11-14,89,46,1,1,newer,trips,0,0,0
+19,3,14534,SCNH,Stagecoach Midlands,WM_SC_SCNH_19_5,2026-12-12,89,14533,SCNH,Stagecoach Midlands,WM_SC_SCNH_19_4,2026-11-28,89,46,1,1,newer,trips,0,0,0
+19,3,14150,DIA,Diamond Bus,18-19-0-y11-3,2026-11-30,152,14151,DIA,Diamond Bus,18-19-0-y11-2,2026-10-01,152,111,1,1,newer,trips,0,0,0
+19,3,2145,MN,ARRIVA LONDON NORTH LIMITED,8-19-_-y05-61950,2026-11-28,923,2169,MN,ARRIVA LONDON NORTH LIMITED,8-19-_-y05-61949,2026-11-14,923,733,1,1,newer,trips,0,0,0
+191,3,4138,BNSM,Bee Network,NW_04_BNSM_191_2,2026-11-30,17,4137,BNSM,Bee Network,NW_04_BNSM_191_1,2026-09-17,17,17,1,1,newer,trips,0,0,0
+192,3,3466,BNSM,Bee Network,NW_04_BNSM_192_2,2026-11-29,1612,3468,BNSM,Bee Network,NW_04_BNSM_192_1,2026-09-17,1612,1225,1,1,newer,trips,0,0,0
+197,3,3874,BNSM,Bee Network,NW_04_BNSM_197_2,2026-11-29,166,3875,BNSM,Bee Network,NW_04_BNSM_197_1,2026-09-17,166,130,1,1,newer,trips,0,0,0
+198,3,2192,SL,ARRIVA LONDON SOUTH LIMITED,8-198-_-y05-61817,2026-11-28,444,2216,SL,ARRIVA LONDON SOUTH LIMITED,8-198-_-y05-61816,2026-11-13,444,383,1,1,newer,trips,0,0,0
+1A,3,5057,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_1A_3,2026-12-07,71,5199,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_1A_2,2026-11-02,71,24,1,1,newer,trips,0,0,0
+1A,3,14551,SCNH,Stagecoach Midlands,WM_SC_SCNH_1A_1,2026-11-28,4,14552,SCNH,Stagecoach Midlands,WM_SC_SCNH_1A_3,2026-11-14,4,2,1,1,newer,trips,0,0,0
+1A,3,14553,SCNH,Stagecoach Midlands,WM_SC_SCNH_1A_2,2026-12-12,4,14551,SCNH,Stagecoach Midlands,WM_SC_SCNH_1A_1,2026-11-28,4,2,1,1,newer,trips,0,0,0
+1A,3,14553,SCNH,Stagecoach Midlands,WM_SC_SCNH_1A_2,2026-12-12,4,14552,SCNH,Stagecoach Midlands,WM_SC_SCNH_1A_3,2026-11-14,4,2,1,1,newer,trips,0,0,0
+2,3,66,SCCM,Stagecoach East,EA_SC_SCCM_2_7,2026-12-27,273,65,SCCM,Stagecoach East,EA_SC_SCCM_2_6,2026-12-20,180,167,1,1,newer,trips,0,0,0
+2,3,68,SCCM,Stagecoach East,EA_SC_SCCM_2_8,2027-01-03,290,65,SCCM,Stagecoach East,EA_SC_SCCM_2_6,2026-12-20,180,167,1,1,newer,trips,0,0,0
+2,3,68,SCCM,Stagecoach East,EA_SC_SCCM_2_8,2027-01-03,290,66,SCCM,Stagecoach East,EA_SC_SCCM_2_7,2026-12-27,273,167,1,1,newer,trips,0,0,0
+2,3,65,SCCM,Stagecoach East,EA_SC_SCCM_2_6,2026-12-20,180,67,SCCM,Stagecoach East,EA_SC_SCCM_2_5,2026-11-01,290,167,1,1,newer,trips,0,0,0
+2,3,66,SCCM,Stagecoach East,EA_SC_SCCM_2_7,2026-12-27,273,67,SCCM,Stagecoach East,EA_SC_SCCM_2_5,2026-11-01,290,167,1,1,newer,trips,0,0,0
+2,3,68,SCCM,Stagecoach East,EA_SC_SCCM_2_8,2027-01-03,290,67,SCCM,Stagecoach East,EA_SC_SCCM_2_5,2026-11-01,290,167,1,1,newer,trips,0,0,0
+2,3,862,SCCM,Stagecoach East,EM_SC_SCCM_2_3,2027-01-03,226,861,SCCM,Stagecoach East,EM_SC_SCCM_2_4,2026-09-10,226,157,1,1,newer,trips,0,0,0
+2,3,924,SCCM,Stagecoach East,EM_SC_SCCM_2_1,2026-12-27,135,861,SCCM,Stagecoach East,EM_SC_SCCM_2_4,2026-09-10,226,122,0.777,1,newer,trips,0,0,0
+2,3,862,SCCM,Stagecoach East,EM_SC_SCCM_2_3,2027-01-03,226,924,SCCM,Stagecoach East,EM_SC_SCCM_2_1,2026-12-27,135,122,1,0.777,newer,trips,0,0,0
+2,3,898,SCCM,Stagecoach East,EM_SC_SCCM_2_2,2026-12-20,142,861,SCCM,Stagecoach East,EM_SC_SCCM_2_4,2026-09-10,226,129,0.822,1,newer,trips,0,0,0
+2,3,862,SCCM,Stagecoach East,EM_SC_SCCM_2_3,2027-01-03,226,898,SCCM,Stagecoach East,EM_SC_SCCM_2_2,2026-12-20,142,129,1,0.822,newer,trips,0,0,0
+2,3,4135,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_2_5,2026-12-07,305,4316,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_2_4,2026-10-13,280,101,1,1,newer,trips,0,0,0
+2,3,4399,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_2_1,2026-12-07,172,4566,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_2_2,2026-11-02,172,72,1,1,newer,trips,0,0,0
+2,3,14298,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_8,2026-12-12,15,14296,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_7,2026-11-28,15,11,1,1,newer,trips,0,0,0
+2,3,14296,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_7,2026-11-28,15,14297,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_6,2026-11-14,15,11,1,1,newer,trips,0,0,0
+2,3,14298,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_8,2026-12-12,15,14297,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_6,2026-11-14,15,11,1,1,newer,trips,0,0,0
+2,3,4304,BNSM,Bee Network,NW_04_BNSM_2_2,2026-11-29,207,4428,BNSM,Bee Network,NW_04_BNSM_2_1,2026-11-06,207,83,1,1,newer,trips,0,0,0
+2,3,11216,SCSO,Stagecoach South,SW_SC_SCSO_2_7,2026-12-01,495,11229,SCSO,Stagecoach South,SW_SC_SCSO_2_6,2026-10-13,201,77,1,1,newer,trips,0,0,0
+2,3,8416,SCSO,Stagecoach South,SE_SC_SCSO_2_1,2026-12-01,353,8449,SCSO,Stagecoach South,SE_SC_SCSO_2_2,2026-10-13,268,68,1,1,newer,trips,0,0,0
+2,3,14138,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_5,2026-11-21,61,14135,SCNH,Stagecoach Midlands,WM_SC_SCNH_2_4,2026-11-14,92,39,1,1,newer,trips,0,0,0
+2,3,6208,SBLB,Stagecoach Bluebird,S_SC_SBLB_2_3,2026-12-21,27,6209,SBLB,Stagecoach Bluebird,S_SC_SBLB_2_2,2026-10-28,27,11,0.917,0.917,newer,trips,0,0,0
+20,3,12039,LEMB,The Big Lemon,40-20-A-y10-3,2026-11-23,220,12221,LEMB,The Big Lemon,40-20-A-y10-2,2026-11-09,49,33,1,1,newer,trips,0,0,0
+20,3,10634,SCCM,Stagecoach East,SE_SC_SCCM_20_1,2026-12-21,17,10665,SCCM,Stagecoach East,SE_SC_SCCM_20_3,2026-09-10,17,13,1,1,newer,trips,0,0,0
+20,3,10710,SCCM,Stagecoach East,SE_SC_SCCM_20_2,2027-01-04,17,10634,SCCM,Stagecoach East,SE_SC_SCCM_20_1,2026-12-21,17,13,1,1,newer,trips,0,0,0
+20,3,10710,SCCM,Stagecoach East,SE_SC_SCCM_20_2,2027-01-04,17,10665,SCCM,Stagecoach East,SE_SC_SCCM_20_3,2026-09-10,17,13,1,1,newer,trips,0,0,0
+20,3,11223,SCSO,Stagecoach South,SW_SC_SCSO_20_4,2026-12-01,820,11243,SCSO,Stagecoach South,SW_SC_SCSO_20_3,2026-10-13,364,111,1,1,newer,trips,0,0,0
+20,3,5778,SCFI,Stagecoach East Scotland,S_SC_SCFI_20_1,2026-12-02,100,5775,SCFI,Stagecoach East Scotland,S_SC_SCFI_20_3,2026-10-19,141,70,1,1,newer,trips,0,0,0
+20C,3,6652,SCFI,Stagecoach East Scotland,S_SC_SCFI_20C_2,2026-12-13,12,6651,SCFI,Stagecoach East Scotland,S_SC_SCFI_20C_3,2026-10-25,6,6,1,0.667,newer,trips,0,0,0
+21,3,5956,SCFI,Stagecoach East Scotland,S_SC_SCFI_21_2,2026-12-07,47,5958,SCFI,Stagecoach East Scotland,S_SC_SCFI_21_1,2026-12-02,30,20,1,0.909,newer,trips,0,0,0
+21,3,5956,SCFI,Stagecoach East Scotland,S_SC_SCFI_21_2,2026-12-07,47,5955,SCFI,Stagecoach East Scotland,S_SC_SCFI_21_3,2026-10-19,44,19,1,0.864,newer,trips,0,0,0
+21,3,5958,SCFI,Stagecoach East Scotland,S_SC_SCFI_21_1,2026-12-02,30,5955,SCFI,Stagecoach East Scotland,S_SC_SCFI_21_3,2026-10-19,44,19,1,0.95,newer,trips,0,0,0
+216,3,3654,BNML,Bee Network,NW_04_BNML_216_3,2026-11-29,666,3758,BNML,Bee Network,NW_04_BNML_216_1,2026-10-25,666,369,1,1,newer,trips,0,0,0
+216,3,4149,BNML,Bee Network,NW_04_BNML_216_2,2026-11-28,163,3758,BNML,Bee Network,NW_04_BNML_216_1,2026-10-25,666,163,0.442,1,newer,trips,0,0,0
+216,3,3654,BNML,Bee Network,NW_04_BNML_216_3,2026-11-29,666,4149,BNML,Bee Network,NW_04_BNML_216_2,2026-11-28,163,163,1,0.442,newer,trips,0,0,0
+219,3,3479,BNML,Bee Network,NW_04_BNML_219_3,2026-11-29,870,3493,BNML,Bee Network,NW_04_BNML_219_1,2026-10-25,870,467,1,1,newer,trips,0,0,0
+219,3,3701,BNML,Bee Network,NW_04_BNML_219_2,2026-11-28,211,3493,BNML,Bee Network,NW_04_BNML_219_1,2026-10-25,870,211,0.452,1,newer,trips,0,0,0
+219,3,3479,BNML,Bee Network,NW_04_BNML_219_3,2026-11-29,870,3701,BNML,Bee Network,NW_04_BNML_219_2,2026-11-28,211,211,1,0.452,newer,trips,0,0,0
+21A,3,5834,SCFI,Stagecoach East Scotland,S_SC_SCFI_21A_1,2026-12-02,45,5823,SCFI,Stagecoach East Scotland,S_SC_SCFI_21A_3,2026-10-19,60,32,1,0.97,newer,trips,0,0,0
+21B,3,6810,SCFI,Stagecoach East Scotland,S_SC_SCFI_21B_2,2026-12-07,4,6809,SCFI,Stagecoach East Scotland,S_SC_SCFI_21B_3,2026-10-19,4,2,1,1,newer,trips,0,0,0
+21D,3,7397,SCFI,Stagecoach East Scotland,S_SC_SCFI_21D_2,2026-12-07,4,7396,SCFI,Stagecoach East Scotland,S_SC_SCFI_21D_3,2026-10-19,4,2,1,1,newer,trips,0,0,0
+21D,3,7401,SCFI,Stagecoach East Scotland,S_SC_SCFI_21D_1,2026-12-02,2,7396,SCFI,Stagecoach East Scotland,S_SC_SCFI_21D_3,2026-10-19,4,2,1,1,newer,trips,0,0,0
+21D,3,7397,SCFI,Stagecoach East Scotland,S_SC_SCFI_21D_2,2026-12-07,4,7401,SCFI,Stagecoach East Scotland,S_SC_SCFI_21D_1,2026-12-02,2,2,1,1,newer,trips,0,0,0
+22,3,10163,SCCM,Stagecoach East,SE_SC_SCCM_22_2,2026-12-29,6,10160,SCCM,Stagecoach East,SE_SC_SCCM_22_1,2026-12-21,6,6,1,1,newer,trips,0,0,0
+22,3,10160,SCCM,Stagecoach East,SE_SC_SCCM_22_1,2026-12-21,6,10172,SCCM,Stagecoach East,SE_SC_SCCM_22_4,2026-09-10,6,6,1,1,newer,trips,0,0,0
+22,3,10190,SCCM,Stagecoach East,SE_SC_SCCM_22_3,2027-01-04,6,10160,SCCM,Stagecoach East,SE_SC_SCCM_22_1,2026-12-21,6,6,1,1,newer,trips,0,0,0
+22,3,10163,SCCM,Stagecoach East,SE_SC_SCCM_22_2,2026-12-29,6,10172,SCCM,Stagecoach East,SE_SC_SCCM_22_4,2026-09-10,6,6,1,1,newer,trips,0,0,0
+22,3,10190,SCCM,Stagecoach East,SE_SC_SCCM_22_3,2027-01-04,6,10163,SCCM,Stagecoach East,SE_SC_SCCM_22_2,2026-12-29,6,6,1,1,newer,trips,0,0,0
+22,3,10190,SCCM,Stagecoach East,SE_SC_SCCM_22_3,2027-01-04,6,10172,SCCM,Stagecoach East,SE_SC_SCCM_22_4,2026-09-10,6,6,1,1,newer,trips,0,0,0
+22,3,4358,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_22_1,2026-12-07,50,4402,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_22_2,2026-11-02,50,18,1,1,newer,trips,0,0,0
+22,3,6760,SCFI,Stagecoach East Scotland,S_SC_SCFI_22_2,2026-12-07,12,6759,SCFI,Stagecoach East Scotland,S_SC_SCFI_22_3,2026-10-19,12,6,1,1,newer,trips,0,0,0
+22,3,6775,SCFI,Stagecoach East Scotland,S_SC_SCFI_22_1,2026-12-02,7,6759,SCFI,Stagecoach East Scotland,S_SC_SCFI_22_3,2026-10-19,12,6,1,1,newer,trips,0,0,0
+22,3,6760,SCFI,Stagecoach East Scotland,S_SC_SCFI_22_2,2026-12-07,12,6775,SCFI,Stagecoach East Scotland,S_SC_SCFI_22_1,2026-12-02,7,6,1,1,newer,trips,0,0,0
+221,3,4280,BNML,Bee Network,NW_04_BNML_221_2,2026-11-30,14,4322,BNML,Bee Network,NW_04_BNML_221_1,2026-10-26,14,7,1,1,newer,trips,0,0,0
+229,3,14236,SCNH,Stagecoach Midlands,WM_SC_SCNH_229_1,2026-11-28,12,14237,SCNH,Stagecoach Midlands,WM_SC_SCNH_229_3,2026-11-14,12,8,1,1,newer,trips,0,0,0
+229,3,14238,SCNH,Stagecoach Midlands,WM_SC_SCNH_229_2,2026-12-12,12,14236,SCNH,Stagecoach Midlands,WM_SC_SCNH_229_1,2026-11-28,12,8,1,1,newer,trips,0,0,0
+229,3,14238,SCNH,Stagecoach Midlands,WM_SC_SCNH_229_2,2026-12-12,12,14237,SCNH,Stagecoach Midlands,WM_SC_SCNH_229_3,2026-11-14,12,8,1,1,newer,trips,0,0,0
+22A,3,10625,SCCM,Stagecoach East,SE_SC_SCCM_22A_2,2026-12-29,2,10631,SCCM,Stagecoach East,SE_SC_SCCM_22A_4,2026-09-11,2,2,1,1,newer,trips,0,0,0
+22A,3,10639,SCCM,Stagecoach East,SE_SC_SCCM_22A_3,2027-01-04,2,10625,SCCM,Stagecoach East,SE_SC_SCCM_22A_2,2026-12-29,2,2,1,1,newer,trips,0,0,0
+22A,3,10625,SCCM,Stagecoach East,SE_SC_SCCM_22A_2,2026-12-29,2,10635,SCCM,Stagecoach East,SE_SC_SCCM_22A_1,2026-12-21,2,2,1,1,newer,trips,0,0,0
+22A,3,10635,SCCM,Stagecoach East,SE_SC_SCCM_22A_1,2026-12-21,2,10631,SCCM,Stagecoach East,SE_SC_SCCM_22A_4,2026-09-11,2,2,1,1,newer,trips,0,0,0
+22A,3,10639,SCCM,Stagecoach East,SE_SC_SCCM_22A_3,2027-01-04,2,10635,SCCM,Stagecoach East,SE_SC_SCCM_22A_1,2026-12-21,2,2,1,1,newer,trips,0,0,0
+22A,3,10639,SCCM,Stagecoach East,SE_SC_SCCM_22A_3,2027-01-04,2,10631,SCCM,Stagecoach East,SE_SC_SCCM_22A_4,2026-09-11,2,2,1,1,newer,trips,0,0,0
+22A,3,4515,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_22A_1,2026-12-07,44,4568,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_22A_2,2026-11-02,44,16,1,1,newer,trips,0,0,0
+23,3,3605,BNSM,Bee Network,NW_04_BNSM_23_2,2026-11-29,230,3606,BNSM,Bee Network,NW_04_BNSM_23_1,2026-09-17,230,157,1,1,newer,trips,0,0,0
+23,3,11650,SCSO,Stagecoach South,SW_SC_SCSO_23_3,2026-12-01,85,11667,SCSO,Stagecoach South,SW_SC_SCSO_23_2,2026-10-13,35,18,1,1,newer,trips,0,0,0
+230,3,3830,BNML,Bee Network,NW_04_BNML_230_3,2026-11-29,176,3900,BNML,Bee Network,NW_04_BNML_230_1,2026-10-25,176,60,1,1,newer,trips,0,0,0
+230,3,4218,BNML,Bee Network,NW_04_BNML_230_2,2026-11-28,48,3900,BNML,Bee Network,NW_04_BNML_230_1,2026-10-25,176,48,0.8,1,newer,trips,0,0,0
+230,3,3830,BNML,Bee Network,NW_04_BNML_230_3,2026-11-29,176,4218,BNML,Bee Network,NW_04_BNML_230_2,2026-11-28,48,48,1,0.8,newer,trips,0,0,0
+231,3,3674,BNML,Bee Network,NW_04_BNML_231_3,2026-11-29,227,3716,BNML,Bee Network,NW_04_BNML_231_1,2026-10-25,227,115,1,1,newer,trips,0,0,0
+231,3,4050,BNML,Bee Network,NW_04_BNML_231_2,2026-11-28,54,3716,BNML,Bee Network,NW_04_BNML_231_1,2026-10-25,227,54,0.47,1,newer,trips,0,0,0
+231,3,3674,BNML,Bee Network,NW_04_BNML_231_3,2026-11-29,227,4050,BNML,Bee Network,NW_04_BNML_231_2,2026-11-28,54,54,1,0.47,newer,trips,0,0,0
+234,3,3873,TASL,Travel Assist Services,NW_05_TASL_234_1,2031-12-01,14,3999,TASL,Travel Assist Services,NW_04_TASL_234_1,2026-11-30,14,14,1,1,newer,trips,0,0,0
+236,3,2181,LI,Lea Interchange Bus Company,60-236-_-y05-60656,2026-11-20,823,2203,LI,Lea Interchange Bus Company,60-236-_-y05-60655,2026-11-13,823,491,1,1,newer,trips,0,0,0
+237,3,3552,BNML,Bee Network,NW_04_BNML_237_1,2026-11-29,270,3564,BNML,Bee Network,NW_04_BNML_237_2,2026-10-25,270,162,1,1,newer,trips,0,0,0
+237,3,3552,BNML,Bee Network,NW_04_BNML_237_1,2026-11-29,270,3867,BNML,Bee Network,NW_04_BNML_237_3,2026-11-28,57,57,1,0.352,newer,trips,0,0,0
+237,3,3867,BNML,Bee Network,NW_04_BNML_237_3,2026-11-28,57,3564,BNML,Bee Network,NW_04_BNML_237_2,2026-10-25,270,57,0.352,1,newer,trips,0,0,0
+24,3,14494,SCNH,Stagecoach Midlands,WM_SC_SCNH_24_1,2026-11-21,6,14493,SCNH,Stagecoach Midlands,WM_SC_SCNH_24_2,2026-11-14,9,3,1,1,newer,trips,0,0,0
+245,3,3853,BNML,Bee Network,NW_04_BNML_245_2,2026-11-29,144,3857,BNML,Bee Network,NW_04_BNML_245_1,2026-11-02,144,81,1,1,newer,trips,0,0,0
+247,3,3879,BNML,Bee Network,NW_04_BNML_247_2,2026-11-29,144,3899,BNML,Bee Network,NW_04_BNML_247_1,2026-11-02,144,97,1,1,newer,trips,0,0,0
+248,3,3625,BNML,Bee Network,NW_04_BNML_248_2,2026-11-29,81,3626,BNML,Bee Network,NW_04_BNML_248_1,2026-11-02,81,73,1,1,newer,trips,0,0,0
+249,3,3575,BNML,Bee Network,NW_04_BNML_249_2,2026-11-29,159,3580,BNML,Bee Network,NW_04_BNML_249_1,2026-11-02,159,78,1,1,newer,trips,0,0,0
+24A,3,14436,SCNH,Stagecoach Midlands,WM_SC_SCNH_24A_1,2026-11-21,6,14435,SCNH,Stagecoach Midlands,WM_SC_SCNH_24A_2,2026-11-14,9,3,1,1,newer,trips,0,0,0
+25,3,8732,SCCM,Stagecoach East,SE_SC_SCCM_25_1,2026-12-21,12,8726,SCCM,Stagecoach East,SE_SC_SCCM_25_4,2026-09-10,21,9,1,1,newer,trips,0,0,0
+25,3,8735,SCCM,Stagecoach East,SE_SC_SCCM_25_3,2027-01-04,21,8732,SCCM,Stagecoach East,SE_SC_SCCM_25_1,2026-12-21,12,9,1,1,newer,trips,0,0,0
+25,3,8736,SCCM,Stagecoach East,SE_SC_SCCM_25_2,2026-12-29,9,8732,SCCM,Stagecoach East,SE_SC_SCCM_25_1,2026-12-21,12,9,1,1,newer,trips,0,0,0
+25,3,8735,SCCM,Stagecoach East,SE_SC_SCCM_25_3,2027-01-04,21,8726,SCCM,Stagecoach East,SE_SC_SCCM_25_4,2026-09-10,21,9,1,1,newer,trips,0,0,0
+25,3,8735,SCCM,Stagecoach East,SE_SC_SCCM_25_3,2027-01-04,21,8736,SCCM,Stagecoach East,SE_SC_SCCM_25_2,2026-12-29,9,9,1,1,newer,trips,0,0,0
+25,3,3784,BNSM,Bee Network,NW_04_BNSM_25_2,2026-11-29,170,3787,BNSM,Bee Network,NW_04_BNSM_25_1,2026-09-17,170,127,1,1,newer,trips,0,0,0
+25,3,3786,VISB,Vision Bus Ltd,NW_05_VISB_25_2,2026-11-29,64,3794,VISB,Vision Bus Ltd,NW_05_VISB_25_1,2026-10-25,64,43,1,1,newer,trips,0,0,0
+25,3,14353,SCNH,Stagecoach Midlands,WM_SC_SCNH_25_1,2026-11-21,10,14352,SCNH,Stagecoach Midlands,WM_SC_SCNH_25_2,2026-11-14,15,5,1,1,newer,trips,0,0,0
+259,3,2208,MN,ARRIVA LONDON NORTH LIMITED,8-259-_-y05-60420,2026-11-28,868,1963,MN,ARRIVA LONDON NORTH LIMITED,8-259-_-y05-60419,2026-11-13,842,266,0.485,1,newer,trips,0,0,0
+25A,3,14178,SCNH,Stagecoach Midlands,WM_SC_SCNH_25A_1,2026-11-21,10,14177,SCNH,Stagecoach Midlands,WM_SC_SCNH_25A_2,2026-11-14,15,7,1,1,newer,trips,0,0,0
+25X,3,14591,SCNH,Stagecoach Midlands,WM_SC_SCNH_25X_1,2026-11-21,4,14590,SCNH,Stagecoach Midlands,WM_SC_SCNH_25X_2,2026-11-14,6,2,1,1,newer,trips,0,0,0
+26,3,14018,SCNH,Stagecoach Midlands,WM_SC_SCNH_26_1,2026-11-28,60,14019,SCNH,Stagecoach Midlands,WM_SC_SCNH_26_3,2026-11-14,60,42,1,1,newer,trips,0,0,0
+26,3,14020,SCNH,Stagecoach Midlands,WM_SC_SCNH_26_2,2026-12-12,60,14018,SCNH,Stagecoach Midlands,WM_SC_SCNH_26_1,2026-11-28,60,42,1,1,newer,trips,0,0,0
+26,3,14020,SCNH,Stagecoach Midlands,WM_SC_SCNH_26_2,2026-12-12,60,14019,SCNH,Stagecoach Midlands,WM_SC_SCNH_26_3,2026-11-14,60,42,1,1,newer,trips,0,0,0
+263,3,4062,BNML,Bee Network,NW_04_BNML_263_2,2026-12-03,64,4300,BNML,Bee Network,NW_04_BNML_263_1,2026-11-05,22,12,1,1,newer,trips,0,0,0
+263,3,3671,BNML,Bee Network,NW_04_BNML_263_4,2026-11-29,299,3691,BNML,Bee Network,NW_04_BNML_263_3,2026-11-02,299,179,1,1,newer,trips,0,0,0
+27,3,10511,SCCM,Stagecoach East,SE_SC_SCCM_27_1,2026-12-22,4,10508,SCCM,Stagecoach East,SE_SC_SCCM_27_4,2026-09-10,8,4,1,1,newer,trips,0,0,0
+27,3,10514,SCCM,Stagecoach East,SE_SC_SCCM_27_2,2026-12-29,4,10511,SCCM,Stagecoach East,SE_SC_SCCM_27_1,2026-12-22,4,4,1,1,newer,trips,0,0,0
+27,3,10518,SCCM,Stagecoach East,SE_SC_SCCM_27_3,2027-01-05,8,10511,SCCM,Stagecoach East,SE_SC_SCCM_27_1,2026-12-22,4,4,1,1,newer,trips,0,0,0
+27,3,10518,SCCM,Stagecoach East,SE_SC_SCCM_27_3,2027-01-05,8,10514,SCCM,Stagecoach East,SE_SC_SCCM_27_2,2026-12-29,4,4,1,1,newer,trips,0,0,0
+27,3,10518,SCCM,Stagecoach East,SE_SC_SCCM_27_3,2027-01-05,8,10508,SCCM,Stagecoach East,SE_SC_SCCM_27_4,2026-09-10,8,4,1,1,newer,trips,0,0,0
+27,3,14218,SCNH,Stagecoach Midlands,WM_SC_SCNH_27_1,2026-11-28,21,14219,SCNH,Stagecoach Midlands,WM_SC_SCNH_27_3,2026-11-14,21,15,1,1,newer,trips,0,0,0
+27,3,14220,SCNH,Stagecoach Midlands,WM_SC_SCNH_27_2,2026-12-12,21,14218,SCNH,Stagecoach Midlands,WM_SC_SCNH_27_1,2026-11-28,21,15,1,1,newer,trips,0,0,0
+27,3,14220,SCNH,Stagecoach Midlands,WM_SC_SCNH_27_2,2026-12-12,21,14219,SCNH,Stagecoach Midlands,WM_SC_SCNH_27_3,2026-11-14,21,15,1,1,newer,trips,0,0,0
+27,3,5879,SCFI,Stagecoach East Scotland,S_SC_SCFI_27_4,2026-12-02,72,5877,SCFI,Stagecoach East Scotland,S_SC_SCFI_27_3,2026-10-19,103,53,0.981,1,newer,trips,0,0,0
+28,3,8831,SCCM,Stagecoach East,SE_SC_SCCM_28_1,2026-12-21,14,8826,SCCM,Stagecoach East,SE_SC_SCCM_28_4,2026-09-10,26,12,1,1,newer,trips,0,0,0
+28,3,8835,SCCM,Stagecoach East,SE_SC_SCCM_28_2,2026-12-29,12,8831,SCCM,Stagecoach East,SE_SC_SCCM_28_1,2026-12-21,14,12,1,1,newer,trips,0,0,0
+28,3,8837,SCCM,Stagecoach East,SE_SC_SCCM_28_3,2027-01-04,26,8831,SCCM,Stagecoach East,SE_SC_SCCM_28_1,2026-12-21,14,12,1,1,newer,trips,0,0,0
+28,3,8837,SCCM,Stagecoach East,SE_SC_SCCM_28_3,2027-01-04,26,8835,SCCM,Stagecoach East,SE_SC_SCCM_28_2,2026-12-29,12,12,1,1,newer,trips,0,0,0
+28,3,8837,SCCM,Stagecoach East,SE_SC_SCCM_28_3,2027-01-04,26,8826,SCCM,Stagecoach East,SE_SC_SCCM_28_4,2026-09-10,26,12,1,1,newer,trips,0,0,0
+28,3,14035,SCNH,Stagecoach Midlands,WM_SC_SCNH_28_1,2026-11-28,61,14036,SCNH,Stagecoach Midlands,WM_SC_SCNH_28_3,2026-11-14,61,53,1,1,newer,trips,0,0,0
+28,3,14037,SCNH,Stagecoach Midlands,WM_SC_SCNH_28_2,2026-12-12,61,14035,SCNH,Stagecoach Midlands,WM_SC_SCNH_28_1,2026-11-28,61,53,1,1,newer,trips,0,0,0
+28,3,14037,SCNH,Stagecoach Midlands,WM_SC_SCNH_28_2,2026-12-12,61,14036,SCNH,Stagecoach Midlands,WM_SC_SCNH_28_3,2026-11-14,61,53,1,1,newer,trips,0,0,0
+28,3,8424,SCSO,Stagecoach South,SE_SC_SCSO_28_1,2026-12-01,162,8440,SCSO,Stagecoach South,SE_SC_SCSO_28_2,2026-10-08,116,27,1,1,newer,trips,0,0,0
+281,3,4142,BNML,Bee Network,NW_04_BNML_281_2,2026-11-30,47,4141,BNML,Bee Network,NW_04_BNML_281_1,2026-11-02,47,28,1,1,newer,trips,0,0,0
+282,3,5229,BNML,Bee Network,NW_04_BNML_282_2,2026-11-29,47,5245,BNML,Bee Network,NW_04_BNML_282_1,2026-11-02,47,19,1,1,newer,trips,0,0,0
+283,3,4685,BNML,Bee Network,NW_04_BNML_283_2,2026-11-29,35,4690,BNML,Bee Network,NW_04_BNML_283_1,2026-11-02,35,22,1,1,newer,trips,0,0,0
+284,3,4707,BNML,Bee Network,NW_04_BNML_284_2,2026-11-29,33,4715,BNML,Bee Network,NW_04_BNML_284_1,2026-11-02,33,20,1,1,newer,trips,0,0,0
+285,3,4908,BNML,Bee Network,NW_04_BNML_285_2,2026-11-29,36,4913,BNML,Bee Network,NW_04_BNML_285_1,2026-11-02,36,21,1,1,newer,trips,0,0,0
+286,3,4863,BNML,Bee Network,NW_04_BNML_286_2,2026-11-29,35,4868,BNML,Bee Network,NW_04_BNML_286_1,2026-11-02,35,21,1,1,newer,trips,0,0,0
+28A,3,9228,SCCM,Stagecoach East,SE_SC_SCCM_28A_1,2026-12-21,14,9218,SCCM,Stagecoach East,SE_SC_SCCM_28A_4,2026-09-10,21,7,1,1,newer,trips,0,0,0
+28A,3,9233,SCCM,Stagecoach East,SE_SC_SCCM_28A_3,2027-01-04,21,9228,SCCM,Stagecoach East,SE_SC_SCCM_28A_1,2026-12-21,14,7,1,1,newer,trips,0,0,0
+28A,3,9239,SCCM,Stagecoach East,SE_SC_SCCM_28A_2,2026-12-29,7,9228,SCCM,Stagecoach East,SE_SC_SCCM_28A_1,2026-12-21,14,7,1,1,newer,trips,0,0,0
+28A,3,9233,SCCM,Stagecoach East,SE_SC_SCCM_28A_3,2027-01-04,21,9218,SCCM,Stagecoach East,SE_SC_SCCM_28A_4,2026-09-10,21,7,1,1,newer,trips,0,0,0
+28A,3,9233,SCCM,Stagecoach East,SE_SC_SCCM_28A_3,2027-01-04,21,9239,SCCM,Stagecoach East,SE_SC_SCCM_28A_2,2026-12-29,7,7,1,1,newer,trips,0,0,0
+29,3,3897,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_29_1,2026-12-07,79,3916,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_29_2,2026-11-02,79,30,1,1,newer,trips,0,0,0
+29,3,1981,MN,ARRIVA LONDON NORTH LIMITED,8-29-_-y05-61256,2026-11-28,1372,1992,MN,ARRIVA LONDON NORTH LIMITED,8-29-_-y05-61255,2026-11-13,1372,878,1,1,newer,trips,0,0,0
+29A,3,4206,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_29A_1,2026-12-07,61,4237,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_29A_2,2026-11-02,61,21,1,1,newer,trips,0,0,0
+2A,3,14276,SCNH,Stagecoach Midlands,WM_SC_SCNH_2A_1,2026-11-28,10,14277,SCNH,Stagecoach Midlands,WM_SC_SCNH_2A_3,2026-11-14,10,8,1,1,newer,trips,0,0,0
+2A,3,14278,SCNH,Stagecoach Midlands,WM_SC_SCNH_2A_2,2026-12-12,10,14276,SCNH,Stagecoach Midlands,WM_SC_SCNH_2A_1,2026-11-28,10,8,1,1,newer,trips,0,0,0
+2A,3,14278,SCNH,Stagecoach Midlands,WM_SC_SCNH_2A_2,2026-12-12,10,14277,SCNH,Stagecoach Midlands,WM_SC_SCNH_2A_3,2026-11-14,10,8,1,1,newer,trips,0,0,0
+2W,3,9053,SCCM,Stagecoach East,SE_SC_SCCM_2W_2,2026-12-27,80,9035,SCCM,Stagecoach East,SE_SC_SCCM_2W_1,2026-12-20,80,68,1,1,newer,trips,0,0,0
+2W,3,9035,SCCM,Stagecoach East,SE_SC_SCCM_2W_1,2026-12-20,80,9140,SCCM,Stagecoach East,SE_SC_SCCM_2W_4,2026-10-25,140,68,1,1,newer,trips,0,0,0
+3,3,10385,SCCM,Stagecoach East,SE_SC_SCCM_3_10,2026-12-20,69,10283,SCCM,Stagecoach East,SE_SC_SCCM_3_9,2026-09-10,119,69,0.986,1,newer,trips,0,0,0
+3,3,10430,SCCM,Stagecoach East,SE_SC_SCCM_3_11,2026-12-27,70,10385,SCCM,Stagecoach East,SE_SC_SCCM_3_10,2026-12-20,69,69,1,0.986,newer,trips,0,0,0
+3,3,10473,SCCM,Stagecoach East,SE_SC_SCCM_3_12,2027-01-03,119,10385,SCCM,Stagecoach East,SE_SC_SCCM_3_10,2026-12-20,69,69,1,0.986,newer,trips,0,0,0
+3,3,10473,SCCM,Stagecoach East,SE_SC_SCCM_3_12,2027-01-03,119,10430,SCCM,Stagecoach East,SE_SC_SCCM_3_11,2026-12-27,70,70,1,1,newer,trips,0,0,0
+3,3,10473,SCCM,Stagecoach East,SE_SC_SCCM_3_12,2027-01-03,119,10283,SCCM,Stagecoach East,SE_SC_SCCM_3_9,2026-09-10,119,70,1,1,newer,trips,0,0,0
+3,3,8,SCCM,Stagecoach East,EA_SC_SCCM_3_8,2027-01-03,297,7,SCCM,Stagecoach East,EA_SC_SCCM_3_5,2026-11-01,297,192,1,1,newer,trips,0,0,0
+3,3,11,SCCM,Stagecoach East,EA_SC_SCCM_3_6,2026-12-20,182,7,SCCM,Stagecoach East,EA_SC_SCCM_3_5,2026-11-01,297,181,0.943,1,newer,trips,0,0,0
+3,3,12,SCCM,Stagecoach East,EA_SC_SCCM_3_7,2026-12-27,278,7,SCCM,Stagecoach East,EA_SC_SCCM_3_5,2026-11-01,297,174,0.906,1,newer,trips,0,0,0
+3,3,8,SCCM,Stagecoach East,EA_SC_SCCM_3_8,2027-01-03,297,11,SCCM,Stagecoach East,EA_SC_SCCM_3_6,2026-12-20,182,181,1,0.943,newer,trips,0,0,0
+3,3,12,SCCM,Stagecoach East,EA_SC_SCCM_3_7,2026-12-27,278,11,SCCM,Stagecoach East,EA_SC_SCCM_3_6,2026-12-20,182,163,0.901,0.937,newer,trips,0,0,0
+3,3,8,SCCM,Stagecoach East,EA_SC_SCCM_3_8,2027-01-03,297,12,SCCM,Stagecoach East,EA_SC_SCCM_3_7,2026-12-27,278,174,1,0.906,newer,trips,0,0,0
+3,3,790,SCCM,Stagecoach East,EM_SC_SCCM_3_3,2027-01-03,238,791,SCCM,Stagecoach East,EM_SC_SCCM_3_4,2026-09-10,238,167,1,1,newer,trips,0,0,0
+3,3,790,SCCM,Stagecoach East,EM_SC_SCCM_3_3,2027-01-03,238,802,SCCM,Stagecoach East,EM_SC_SCCM_3_2,2026-12-20,149,135,1,0.808,newer,trips,0,0,0
+3,3,802,SCCM,Stagecoach East,EM_SC_SCCM_3_2,2026-12-20,149,791,SCCM,Stagecoach East,EM_SC_SCCM_3_4,2026-09-10,238,135,0.808,1,newer,trips,0,0,0
+3,3,790,SCCM,Stagecoach East,EM_SC_SCCM_3_3,2027-01-03,238,857,SCCM,Stagecoach East,EM_SC_SCCM_3_1,2026-12-27,141,126,1,0.754,newer,trips,0,0,0
+3,3,857,SCCM,Stagecoach East,EM_SC_SCCM_3_1,2026-12-27,141,791,SCCM,Stagecoach East,EM_SC_SCCM_3_4,2026-09-10,238,126,0.754,1,newer,trips,0,0,0
+3,3,4001,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_3_4,2026-12-07,343,4124,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_3_3,2026-11-02,235,117,1,1,newer,trips,0,0,0
+3,3,4501,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_3_1,2026-12-07,134,4662,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_3_2,2026-11-02,134,58,1,1,newer,trips,0,0,0
+3,3,11082,SCSO,Stagecoach South,SW_SC_SCSO_3_5,2026-12-01,469,11083,SCSO,Stagecoach South,SW_SC_SCSO_3_4,2026-10-13,194,82,1,1,newer,trips,0,0,0
+3,3,14914,SCNH,Stagecoach Midlands,WM_SC_SCNH_3_4,2026-12-12,25,14912,SCNH,Stagecoach Midlands,WM_SC_SCNH_3_3,2026-11-28,25,13,1,1,newer,trips,0,0,0
+3,3,14912,SCNH,Stagecoach Midlands,WM_SC_SCNH_3_3,2026-11-28,25,14913,SCNH,Stagecoach Midlands,WM_SC_SCNH_3_2,2026-11-14,25,13,1,1,newer,trips,0,0,0
+3,3,14914,SCNH,Stagecoach Midlands,WM_SC_SCNH_3_4,2026-12-12,25,14913,SCNH,Stagecoach Midlands,WM_SC_SCNH_3_2,2026-11-14,25,13,1,1,newer,trips,0,0,0
+3,3,6297,SBLB,Stagecoach Bluebird,S_SC_SBLB_3_3,2026-12-21,25,6296,SBLB,Stagecoach Bluebird,S_SC_SBLB_3_2,2026-10-28,25,9,1,1,newer,trips,0,0,0
+30,3,3447,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_30_1,2026-12-07,435,3448,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_30_2,2026-11-02,430,198,1,1,newer,trips,0,0,0
+30,3,5811,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_1,2026-12-02,68,5820,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_3,2026-10-19,94,50,1,1,newer,trips,0,0,0
+30,3,7922,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_6,2026-12-07,30,7921,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_4,2026-10-19,30,14,1,1,newer,trips,0,0,0
+30,3,7935,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_5,2026-12-02,20,7921,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_4,2026-10-19,30,14,1,1,newer,trips,0,0,0
+30,3,7922,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_6,2026-12-07,30,7935,SCFI,Stagecoach East Scotland,S_SC_SCFI_30_5,2026-12-02,20,14,1,1,newer,trips,0,0,0
+300,3,3542,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_300_1,2026-12-07,201,3549,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_300_2,2026-11-02,201,97,1,1,newer,trips,0,0,0
+300,3,4621,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_300_4,2026-12-07,102,4760,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_300_3,2026-11-02,102,53,1,1,newer,trips,0,0,0
+300,3,8530,SCSO,Stagecoach South,SE_SC_SCSO_300_1,2026-12-01,206,8700,SCSO,Stagecoach South,SE_SC_SCSO_300_2,2026-10-26,90,39,1,1,newer,trips,0,0,0
+30A,3,6376,SCFI,Stagecoach East Scotland,S_SC_SCFI_30A_1,2026-12-02,15,6371,SCFI,Stagecoach East Scotland,S_SC_SCFI_30A_3,2026-10-19,22,9,1,1,newer,trips,0,0,0
+30B,3,6366,SCFI,Stagecoach East Scotland,S_SC_SCFI_30B_1,2026-12-02,24,6364,SCFI,Stagecoach East Scotland,S_SC_SCFI_30B_3,2026-10-19,29,19,1,1,newer,trips,0,0,0
+30C,3,7993,SCFI,Stagecoach East Scotland,S_SC_SCFI_30C_2,2026-12-07,12,7992,SCFI,Stagecoach East Scotland,S_SC_SCFI_30C_3,2026-10-19,12,6,1,1,newer,trips,0,0,0
+30C,3,8002,SCFI,Stagecoach East Scotland,S_SC_SCFI_30C_1,2026-12-02,6,7992,SCFI,Stagecoach East Scotland,S_SC_SCFI_30C_3,2026-10-19,12,6,1,1,newer,trips,0,0,0
+30C,3,7993,SCFI,Stagecoach East Scotland,S_SC_SCFI_30C_2,2026-12-07,12,8002,SCFI,Stagecoach East Scotland,S_SC_SCFI_30C_1,2026-12-02,6,6,1,1,newer,trips,0,0,0
+31,3,4191,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_31_1,2026-10-07,96,4180,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_31_2,2026-08-11,95,81,0.988,0.988,newer,trips,0,0,0
+312,3,3906,BNSM,Bee Network,NW_04_BNSM_312_2,2026-11-29,87,3909,BNSM,Bee Network,NW_04_BNSM_312_1,2026-09-17,87,34,1,1,newer,trips,0,0,0
+313,3,3914,BNML,Bee Network,NW_04_BNML_313_2,2026-11-29,166,3940,BNML,Bee Network,NW_04_BNML_313_1,2026-11-02,166,96,0.941,0.941,newer,trips,0,0,0
+314,3,4088,BNSM,Bee Network,NW_04_BNSM_314_2,2026-11-29,143,4090,BNSM,Bee Network,NW_04_BNSM_314_1,2026-09-17,143,80,1,1,newer,trips,0,0,0
+31A,3,5458,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_31A_1,2026-10-07,17,5448,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_31A_2,2026-08-11,17,10,1,1,newer,trips,0,0,0
+32,3,4859,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_32_2,2026-12-07,53,4983,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_32_1,2026-11-30,52,24,1,1,newer,trips,0,0,0
+32,3,4328,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_32_1,2026-10-07,44,4321,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_32_2,2026-08-11,44,17,1,1,newer,trips,0,0,0
+321,3,7816,STWS,Stagecoach West Scotland,S_SC_STWS_321_2,2026-11-30,4,7815,STWS,Stagecoach West Scotland,S_SC_STWS_321_3,2026-10-19,4,2,1,1,newer,trips,0,0,0
+321,3,7817,STWS,Stagecoach West Scotland,S_SC_STWS_321_1,2026-11-24,4,7815,STWS,Stagecoach West Scotland,S_SC_STWS_321_3,2026-10-19,4,2,1,1,newer,trips,0,0,0
+321,3,7816,STWS,Stagecoach West Scotland,S_SC_STWS_321_2,2026-11-30,4,7817,STWS,Stagecoach West Scotland,S_SC_STWS_321_1,2026-11-24,4,2,1,1,newer,trips,0,0,0
+322,3,4474,BNSM,Bee Network,NW_04_BNSM_322_2,2026-11-30,56,4473,BNSM,Bee Network,NW_04_BNSM_322_1,2026-09-17,56,40,1,1,newer,trips,0,0,0
+322,3,6309,STWS,Stagecoach West Scotland,S_SC_STWS_322_2,2026-11-30,129,6313,STWS,Stagecoach West Scotland,S_SC_STWS_322_3,2026-10-19,111,42,1,1,newer,trips,0,0,0
+322,3,6309,STWS,Stagecoach West Scotland,S_SC_STWS_322_2,2026-11-30,129,6310,STWS,Stagecoach West Scotland,S_SC_STWS_322_1,2026-11-23,129,42,1,1,newer,trips,0,0,0
+322,3,6310,STWS,Stagecoach West Scotland,S_SC_STWS_322_1,2026-11-23,129,6313,STWS,Stagecoach West Scotland,S_SC_STWS_322_3,2026-10-19,111,42,1,1,newer,trips,0,0,0
+323,3,5919,STWS,Stagecoach West Scotland,S_SC_STWS_323_2,2026-11-30,144,5924,STWS,Stagecoach West Scotland,S_SC_STWS_323_3,2026-10-19,124,50,1,1,newer,trips,0,0,0
+323,3,5919,STWS,Stagecoach West Scotland,S_SC_STWS_323_2,2026-11-30,144,5920,STWS,Stagecoach West Scotland,S_SC_STWS_323_1,2026-11-23,144,50,1,1,newer,trips,0,0,0
+323,3,5920,STWS,Stagecoach West Scotland,S_SC_STWS_323_1,2026-11-23,144,5924,STWS,Stagecoach West Scotland,S_SC_STWS_323_3,2026-10-19,124,50,1,1,newer,trips,0,0,0
+323A,3,6542,STWS,Stagecoach West Scotland,S_SC_STWS_323A_2,2026-11-30,52,6552,STWS,Stagecoach West Scotland,S_SC_STWS_323A_3,2026-10-19,40,14,1,1,newer,trips,0,0,0
+323A,3,6542,STWS,Stagecoach West Scotland,S_SC_STWS_323A_2,2026-11-30,52,6544,STWS,Stagecoach West Scotland,S_SC_STWS_323A_1,2026-11-23,52,14,1,1,newer,trips,0,0,0
+323A,3,6544,STWS,Stagecoach West Scotland,S_SC_STWS_323A_1,2026-11-23,52,6552,STWS,Stagecoach West Scotland,S_SC_STWS_323A_3,2026-10-19,40,14,1,1,newer,trips,0,0,0
+324,3,6102,STWS,Stagecoach West Scotland,S_SC_STWS_324_2,2026-11-30,67,6104,STWS,Stagecoach West Scotland,S_SC_STWS_324_3,2026-10-19,59,21,1,1,newer,trips,0,0,0
+324,3,6102,STWS,Stagecoach West Scotland,S_SC_STWS_324_2,2026-11-30,67,6103,STWS,Stagecoach West Scotland,S_SC_STWS_324_1,2026-11-23,67,21,1,1,newer,trips,0,0,0
+324,3,6103,STWS,Stagecoach West Scotland,S_SC_STWS_324_1,2026-11-23,67,6104,STWS,Stagecoach West Scotland,S_SC_STWS_324_3,2026-10-19,59,21,1,1,newer,trips,0,0,0
+325,3,12476,TA,Taw & Torridge Coaches Ltd,31-325-_-y10-1,2026-11-12,6,12460,AW,Country Bus,31-325-A-y10-1,2026-11-10,10,2,1,1,newer,trips,0,0,0
+325,3,4305,BNSM,Bee Network,NW_04_BNSM_325_2,2026-11-29,208,4307,BNSM,Bee Network,NW_04_BNSM_325_1,2026-09-17,208,100,1,1,newer,trips,0,0,0
+327,3,4284,BNSM,Bee Network,NW_04_BNSM_327_2,2026-11-29,96,4291,BNSM,Bee Network,NW_04_BNSM_327_1,2026-09-17,96,70,1,1,newer,trips,0,0,0
+32A,3,5580,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_32A_1,2026-10-07,11,5575,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_32A_2,2026-08-11,11,11,1,1,newer,trips,0,0,0
+33,3,1294,SCCM,Stagecoach East,EM_SC_SCCM_33_3,2027-01-03,78,1373,SCCM,Stagecoach East,EM_SC_SCCM_33_4,2026-09-10,66,33,1,0.688,newer,trips,0,0,0
+33,3,1294,SCCM,Stagecoach East,EM_SC_SCCM_33_3,2027-01-03,78,1364,SCCM,Stagecoach East,EM_SC_SCCM_33_2,2026-12-21,33,33,1,0.688,newer,trips,0,0,0
+33,3,1364,SCCM,Stagecoach East,EM_SC_SCCM_33_2,2026-12-21,33,1373,SCCM,Stagecoach East,EM_SC_SCCM_33_4,2026-09-10,66,33,1,1,newer,trips,0,0,0
+33,3,1294,SCCM,Stagecoach East,EM_SC_SCCM_33_3,2027-01-03,78,1366,SCCM,Stagecoach East,EM_SC_SCCM_33_1,2026-12-29,33,33,1,0.688,newer,trips,0,0,0
+33,3,1366,SCCM,Stagecoach East,EM_SC_SCCM_33_1,2026-12-29,33,1364,SCCM,Stagecoach East,EM_SC_SCCM_33_2,2026-12-21,33,33,1,1,newer,trips,0,0,0
+33,3,1366,SCCM,Stagecoach East,EM_SC_SCCM_33_1,2026-12-29,33,1373,SCCM,Stagecoach East,EM_SC_SCCM_33_4,2026-09-10,66,33,1,1,newer,trips,0,0,0
+33,3,3760,BNSM,Bee Network,NW_04_BNSM_33_2,2026-11-29,148,3771,BNSM,Bee Network,NW_04_BNSM_33_1,2026-11-06,148,104,1,1,newer,trips,0,0,0
+33,3,4172,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_33_1,2026-10-07,45,4167,SCMY,Stagecoach Cumbria and Lancashire,NW_SC_SCMY_33_2,2026-08-11,45,24,1,1,newer,trips,0,0,0
+33,3,7405,SCFI,Stagecoach East Scotland,S_SC_SCFI_33_5,2026-12-07,4,7404,SCFI,Stagecoach East Scotland,S_SC_SCFI_33_3,2026-10-19,4,2,1,1,newer,trips,0,0,0
+33,3,7409,SCFI,Stagecoach East Scotland,S_SC_SCFI_33_4,2026-12-02,2,7404,SCFI,Stagecoach East Scotland,S_SC_SCFI_33_3,2026-10-19,4,2,1,1,newer,trips,0,0,0
+33,3,7405,SCFI,Stagecoach East Scotland,S_SC_SCFI_33_5,2026-12-07,4,7409,SCFI,Stagecoach East Scotland,S_SC_SCFI_33_4,2026-12-02,2,2,1,1,newer,trips,0,0,0
+330,3,3677,BNSM,Bee Network,NW_04_BNSM_330_2,2026-11-29,415,3679,BNSM,Bee Network,NW_04_BNSM_330_1,2026-09-17,415,272,1,1,newer,trips,0,0,0
+336,3,4828,BNML,Bee Network,NW_04_BNML_336_3,2026-11-29,68,5152,BNML,Bee Network,NW_04_BNML_336_1,2026-10-25,68,32,1,1,newer,trips,0,0,0
+336,3,5396,BNML,Bee Network,NW_04_BNML_336_2,2026-11-28,18,5152,BNML,Bee Network,NW_04_BNML_336_1,2026-10-25,68,18,0.562,1,newer,trips,0,0,0
+336,3,4828,BNML,Bee Network,NW_04_BNML_336_3,2026-11-29,68,5396,BNML,Bee Network,NW_04_BNML_336_2,2026-11-28,18,18,1,0.562,newer,trips,0,0,0
+337,3,4723,BNML,Bee Network,NW_04_BNML_337_3,2026-11-29,66,5008,BNML,Bee Network,NW_04_BNML_337_1,2026-10-25,66,27,1,1,newer,trips,0,0,0
+337,3,5349,BNML,Bee Network,NW_04_BNML_337_2,2026-11-28,17,5008,BNML,Bee Network,NW_04_BNML_337_1,2026-10-25,66,17,0.63,1,newer,trips,0,0,0
+337,3,4723,BNML,Bee Network,NW_04_BNML_337_3,2026-11-29,66,5349,BNML,Bee Network,NW_04_BNML_337_2,2026-11-28,17,17,1,0.63,newer,trips,0,0,0
+34,3,8294,SCSO,Stagecoach South,SE_SC_SCSO_34_1,2026-12-01,678,8295,SCSO,Stagecoach South,SE_SC_SCSO_34_2,2026-10-13,507,149,1,1,newer,trips,0,0,0
+346,3,3907,BNML,Bee Network,NW_04_BNML_346_3,2026-11-29,301,4071,BNML,Bee Network,NW_04_BNML_346_1,2026-10-25,301,185,1,1,newer,trips,0,0,0
+346,3,4528,BNML,Bee Network,NW_04_BNML_346_2,2026-11-28,78,4071,BNML,Bee Network,NW_04_BNML_346_1,2026-10-25,301,78,0.422,1,newer,trips,0,0,0
+346,3,3907,BNML,Bee Network,NW_04_BNML_346_3,2026-11-29,301,4528,BNML,Bee Network,NW_04_BNML_346_2,2026-11-28,78,78,1,0.422,newer,trips,0,0,0
+347,3,3801,BNML,Bee Network,NW_04_BNML_347_3,2026-11-29,243,3888,BNML,Bee Network,NW_04_BNML_347_1,2026-10-25,243,148,1,1,newer,trips,0,0,0
+347,3,4418,BNML,Bee Network,NW_04_BNML_347_2,2026-11-28,65,3888,BNML,Bee Network,NW_04_BNML_347_1,2026-10-25,243,65,0.439,1,newer,trips,0,0,0
+347,3,3801,BNML,Bee Network,NW_04_BNML_347_3,2026-11-29,243,4418,BNML,Bee Network,NW_04_BNML_347_2,2026-11-28,65,65,1,0.439,newer,trips,0,0,0
+348,3,4094,BNSM,Bee Network,NW_04_BNSM_348_2,2026-11-29,170,4100,BNSM,Bee Network,NW_04_BNSM_348_1,2026-11-06,170,118,1,1,newer,trips,0,0,0
+35,3,8624,SCSO,Stagecoach South,SE_SC_SCSO_35_1,2026-12-01,112,8675,SCSO,Stagecoach South,SE_SC_SCSO_35_2,2026-10-13,80,18,1,1,newer,trips,0,0,0
+350,3,3595,BNSM,Bee Network,NW_04_BNSM_350_2,2026-11-29,206,3596,BNSM,Bee Network,NW_04_BNSM_350_1,2026-11-06,206,195,1,1,newer,trips,0,0,0
+358,3,3708,BNSM,Bee Network,NW_04_BNSM_358_2,2026-11-29,101,3709,BNSM,Bee Network,NW_04_BNSM_358_1,2026-09-17,101,78,1,1,newer,trips,0,0,0
+358,3,5729,STWS,Stagecoach West Scotland,S_SC_STWS_358_1,2026-11-09,145,5732,STWS,Stagecoach West Scotland,S_SC_STWS_358_2,2026-09-28,114,47,1,1,newer,trips,0,0,0
+360,3,5813,STWS,Stagecoach West Scotland,S_SC_STWS_360_1,2026-11-09,79,5804,STWS,Stagecoach West Scotland,S_SC_STWS_360_2,2026-09-28,59,32,1,1,newer,trips,0,0,0
+368,3,3565,BNML,Bee Network,NW_04_BNML_368_2,2026-11-29,732,3749,BNML,Bee Network,NW_04_BNML_368_1,2026-11-02,255,201,1,1,newer,trips,0,0,0
+37,3,1007,SCCM,Stagecoach East,EM_SC_SCCM_37_2,2026-12-20,38,1011,SCCM,Stagecoach East,EM_SC_SCCM_37_4,2026-09-10,66,37,1,1,newer,trips,0,0,0
+37,3,1008,SCCM,Stagecoach East,EM_SC_SCCM_37_1,2026-12-27,38,1007,SCCM,Stagecoach East,EM_SC_SCCM_37_2,2026-12-20,38,37,1,1,newer,trips,0,0,0
+37,3,1008,SCCM,Stagecoach East,EM_SC_SCCM_37_1,2026-12-27,38,1011,SCCM,Stagecoach East,EM_SC_SCCM_37_4,2026-09-10,66,37,1,1,newer,trips,0,0,0
+370,3,3954,BNML,Bee Network,NW_04_BNML_370_2,2026-11-29,97,3963,BNML,Bee Network,NW_04_BNML_370_1,2026-11-02,97,88,0.989,0.989,newer,trips,0,0,0
+371,3,4043,BNML,Bee Network,NW_04_BNML_371_2,2026-11-30,41,4042,BNML,Bee Network,NW_04_BNML_371_1,2026-11-02,41,35,1,1,newer,trips,0,0,0
+374,3,4044,BNSM,Bee Network,NW_04_BNSM_374_2,2026-11-29,38,4045,BNSM,Bee Network,NW_04_BNSM_374_1,2026-09-17,38,21,1,1,newer,trips,0,0,0
+375,3,3584,AMSY,Arriva Merseyside,NW_05_AMSY_375_2,2026-11-08,103,3589,AMSY,Arriva Merseyside,NW_05_AMSY_375_1,2026-05-10,130,61,0.54,0.824,newer,trips,0,0,0
+378,3,4038,BNSM,Bee Network,NW_04_BNSM_378_2,2026-11-30,25,4037,BNSM,Bee Network,NW_04_BNSM_378_1,2026-09-17,25,22,1,1,newer,trips,0,0,0
+378A,3,4575,BNSM,Bee Network,NW_04_BNSM_378A_2,2026-11-29,20,4579,BNSM,Bee Network,NW_04_BNSM_378A_1,2026-09-17,20,15,1,1,newer,trips,0,0,0
+379,3,4074,BNSM,Bee Network,NW_04_BNSM_379_2,2026-11-30,24,4073,BNSM,Bee Network,NW_04_BNSM_379_1,2026-09-17,24,21,1,1,newer,trips,0,0,0
+382,3,4063,BNML,Bee Network,NW_04_BNML_382_2,2026-11-30,57,4162,BNML,Bee Network,NW_04_BNML_382_3,2026-10-31,37,21,1,0.955,newer,trips,0,0,0
+382,3,4063,BNML,Bee Network,NW_04_BNML_382_2,2026-11-30,57,4329,BNML,Bee Network,NW_04_BNML_382_1,2026-11-28,18,18,1,0.818,newer,trips,0,0,0
+382,3,4329,BNML,Bee Network,NW_04_BNML_382_1,2026-11-28,18,4162,BNML,Bee Network,NW_04_BNML_382_3,2026-10-31,37,18,0.857,1,newer,trips,0,0,0
+383,3,3934,BNSM,Bee Network,NW_04_BNSM_383_2,2026-11-29,110,3935,BNSM,Bee Network,NW_04_BNSM_383_1,2026-09-17,110,72,1,1,newer,trips,0,0,0
+384,3,3884,BNSM,Bee Network,NW_04_BNSM_384_2,2026-11-29,113,3886,BNSM,Bee Network,NW_04_BNSM_384_1,2026-09-17,113,65,1,1,newer,trips,0,0,0
+388,3,3831,BNML,Bee Network,NW_04_BNML_388_1,2026-11-29,137,3834,BNML,Bee Network,NW_04_BNML_388_2,2026-10-25,137,59,1,1,newer,trips,0,0,0
+388,3,3831,BNML,Bee Network,NW_04_BNML_388_1,2026-11-29,137,4176,BNML,Bee Network,NW_04_BNML_388_3,2026-11-28,35,35,1,0.593,newer,trips,0,0,0
+388,3,4176,BNML,Bee Network,NW_04_BNML_388_3,2026-11-28,35,3834,BNML,Bee Network,NW_04_BNML_388_2,2026-10-25,137,35,0.593,1,newer,trips,0,0,0
+389,3,4113,BNML,Bee Network,NW_04_BNML_389_1,2026-11-30,82,4186,BNML,Bee Network,NW_04_BNML_389_2,2026-10-26,82,52,1,1,newer,trips,0,0,0
+389,3,4113,BNML,Bee Network,NW_04_BNML_389_1,2026-11-30,82,4616,BNML,Bee Network,NW_04_BNML_389_3,2026-11-28,26,26,1,0.5,newer,trips,0,0,0
+389,3,4616,BNML,Bee Network,NW_04_BNML_389_3,2026-11-28,26,4186,BNML,Bee Network,NW_04_BNML_389_2,2026-10-26,82,26,0.5,1,newer,trips,0,0,0
+390,3,2073,ML,METROLINE TRAVEL LIMITED,54-390-_-y05-60578,2026-11-28,912,2070,ML,METROLINE TRAVEL LIMITED,54-390-_-y05-60577,2026-11-21,918,502,0.998,1,newer,trips,0,0,0
+394,3,4182,HIPK,High Peak Buses,NW_04_HIPK_394_2,2027-01-04,12,1327,HIPK,High Peak Buses,394,2025-12-05,12,12,1,1,newer,trips,0,0,0
+394,3,4182,HIPK,High Peak Buses,NW_04_HIPK_394_2,2027-01-04,12,4181,HIPK,High Peak Buses,NW_04_HIPK_394_1,2026-01-12,12,12,1,1,newer,trips,0,0,0
+399,3,1418,SCEM,Stagecoach East Midlands,EM_SC_SCEM_399_2,2026-11-07,10,1712,HNTS,Hornsby Bus & Coach,nlincs_HNTS_399_15399A,2025-04-07,24,10,0.417,1,newer,trips,0,0,0
+3A,3,4613,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_3A_1,2026-12-07,140,4825,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_3A_2,2026-11-02,140,48,1,1,newer,trips,0,0,0
+3A,3,14881,SCNH,Stagecoach Midlands,WM_SC_SCNH_3A_1,2026-11-28,12,14763,SCNH,Stagecoach Midlands,WM_SC_SCNH_3A_3,2026-11-14,12,8,1,1,newer,trips,0,0,0
+3A,3,14882,SCNH,Stagecoach Midlands,WM_SC_SCNH_3A_2,2026-12-12,12,14881,SCNH,Stagecoach Midlands,WM_SC_SCNH_3A_1,2026-11-28,12,8,1,1,newer,trips,0,0,0
+3A,3,14882,SCNH,Stagecoach Midlands,WM_SC_SCNH_3A_2,2026-12-12,12,14763,SCNH,Stagecoach Midlands,WM_SC_SCNH_3A_3,2026-11-14,12,8,1,1,newer,trips,0,0,0
+3E,3,6837,SBLB,Stagecoach Bluebird,S_SC_SBLB_3E_1,2027-01-08,3,6838,SBLB,Stagecoach Bluebird,S_SC_SBLB_3E_2,2026-10-30,3,3,1,1,newer,trips,0,0,0
+4,3,9684,SCCM,Stagecoach East,SE_SC_SCCM_4_6,2026-12-20,84,9587,SCCM,Stagecoach East,SE_SC_SCCM_4_5,2026-09-10,148,83,1,1,newer,trips,0,0,0
+4,3,9751,SCCM,Stagecoach East,SE_SC_SCCM_4_8,2027-01-03,148,9587,SCCM,Stagecoach East,SE_SC_SCCM_4_5,2026-09-10,148,83,1,1,newer,trips,0,0,0
+4,3,9735,SCCM,Stagecoach East,SE_SC_SCCM_4_7,2026-12-27,84,9684,SCCM,Stagecoach East,SE_SC_SCCM_4_6,2026-12-20,84,83,1,1,newer,trips,0,0,0
+4,3,9751,SCCM,Stagecoach East,SE_SC_SCCM_4_8,2027-01-03,148,9684,SCCM,Stagecoach East,SE_SC_SCCM_4_6,2026-12-20,84,83,1,1,newer,trips,0,0,0
+4,3,9751,SCCM,Stagecoach East,SE_SC_SCCM_4_8,2027-01-03,148,9735,SCCM,Stagecoach East,SE_SC_SCCM_4_7,2026-12-27,84,83,1,1,newer,trips,0,0,0
+4,3,39,SCCM,Stagecoach East,EA_SC_SCCM_4_12,2027-01-03,194,40,SCCM,Stagecoach East,EA_SC_SCCM_4_9,2026-11-01,194,141,1,1,newer,trips,0,0,0
+4,3,39,SCCM,Stagecoach East,EA_SC_SCCM_4_12,2027-01-03,194,70,SCCM,Stagecoach East,EA_SC_SCCM_4_10,2026-12-20,108,98,1,0.695,newer,trips,0,0,0
+4,3,70,SCCM,Stagecoach East,EA_SC_SCCM_4_10,2026-12-20,108,40,SCCM,Stagecoach East,EA_SC_SCCM_4_9,2026-11-01,194,98,0.695,1,newer,trips,0,0,0
+4,3,39,SCCM,Stagecoach East,EA_SC_SCCM_4_12,2027-01-03,194,98,SCCM,Stagecoach East,EA_SC_SCCM_4_11,2026-12-27,186,97,1,0.688,newer,trips,0,0,0
+4,3,98,SCCM,Stagecoach East,EA_SC_SCCM_4_11,2026-12-27,186,40,SCCM,Stagecoach East,EA_SC_SCCM_4_9,2026-11-01,194,97,0.688,1,newer,trips,0,0,0
+4,3,830,SCCM,Stagecoach East,EM_SC_SCCM_4_3,2027-01-03,158,837,SCCM,Stagecoach East,EM_SC_SCCM_4_4,2026-09-10,158,100,1,1,newer,trips,0,0,0
+4,3,830,SCCM,Stagecoach East,EM_SC_SCCM_4_3,2027-01-03,158,836,SCCM,Stagecoach East,EM_SC_SCCM_4_2,2026-12-20,95,91,1,0.91,newer,trips,0,0,0
+4,3,836,SCCM,Stagecoach East,EM_SC_SCCM_4_2,2026-12-20,95,837,SCCM,Stagecoach East,EM_SC_SCCM_4_4,2026-09-10,158,91,0.91,1,newer,trips,0,0,0
+4,3,830,SCCM,Stagecoach East,EM_SC_SCCM_4_3,2027-01-03,158,887,SCCM,Stagecoach East,EM_SC_SCCM_4_1,2026-12-27,95,89,1,0.89,newer,trips,0,0,0
+4,3,887,SCCM,Stagecoach East,EM_SC_SCCM_4_1,2026-12-27,95,836,SCCM,Stagecoach East,EM_SC_SCCM_4_2,2026-12-20,95,80,0.879,0.899,newer,trips,0,0,0
+4,3,887,SCCM,Stagecoach East,EM_SC_SCCM_4_1,2026-12-27,95,837,SCCM,Stagecoach East,EM_SC_SCCM_4_4,2026-09-10,158,89,0.89,1,newer,trips,0,0,0
+4,3,4125,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_4_3,2026-12-07,167,4222,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_4_2,2026-11-02,124,68,1,1,newer,trips,0,0,0
+4,3,11903,SCSO,Stagecoach South,SW_SC_SCSO_4_3,2026-12-01,168,11950,SCSO,Stagecoach South,SW_SC_SCSO_4_2,2026-10-13,68,24,1,1,newer,trips,0,0,0
+4,3,14149,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_7,2026-11-21,196,14141,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_6,2026-11-14,280,137,1,1,newer,trips,0,0,0
+4,3,15392,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_4,2026-11-28,11,15391,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_3,2026-11-14,11,6,1,1,newer,trips,0,0,0
+4,3,15393,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_5,2026-12-12,11,15391,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_3,2026-11-14,11,6,1,1,newer,trips,0,0,0
+4,3,15393,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_5,2026-12-12,11,15392,SCNH,Stagecoach Midlands,WM_SC_SCNH_4_4,2026-11-28,11,6,1,1,newer,trips,0,0,0
+4,3,7438,SBLB,Stagecoach Bluebird,S_SC_SBLB_4_1,2026-12-21,113,7462,SBLB,Stagecoach Bluebird,S_SC_SBLB_4_2,2026-10-28,107,30,1,1,newer,trips,0,0,0
+401,3,12463,SCSO,Stagecoach South,SW_SC_SCSO_401_1,2026-12-01,2,12462,SCSO,Stagecoach South,SW_SC_SCSO_401_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+402,3,3823,BNSM,Bee Network,NW_04_BNSM_402_2,2026-11-29,83,3836,BNSM,Bee Network,NW_04_BNSM_402_1,2026-11-06,79,53,1,1,newer,trips,0,0,0
+402,3,12469,SCSO,Stagecoach South,SW_SC_SCSO_402_1,2026-12-01,2,12468,SCSO,Stagecoach South,SW_SC_SCSO_402_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+403,3,4059,BNSM,Bee Network,NW_04_BNSM_403_2,2026-11-30,32,4091,BNSM,Bee Network,NW_04_BNSM_403_1,2026-11-06,30,13,1,1,newer,trips,0,0,0
+403,3,12374,SCSO,Stagecoach South,SW_SC_SCSO_403_1,2026-12-01,2,12373,SCSO,Stagecoach South,SW_SC_SCSO_403_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+404,3,12034,SCSO,Stagecoach South,SW_SC_SCSO_404_1,2026-12-01,9,12035,SCSO,Stagecoach South,SW_SC_SCSO_404_2,2026-11-05,9,5,1,1,newer,trips,0,0,0
+405,3,12437,SCSO,Stagecoach South,SW_SC_SCSO_405_1,2026-12-01,2,12436,SCSO,Stagecoach South,SW_SC_SCSO_405_2,2026-11-05,2,2,1,1,newer,trips,0,0,0
+406,3,4529,BNFM,Bee Network,NW_04_BNFM_406_2,2026-11-29,113,4534,BNFM,Bee Network,NW_04_BNFM_406_1,2026-10-28,113,92,1,1,newer,trips,0,0,0
+409,3,3512,BNSM,Bee Network,NW_04_BNSM_409_2,2026-11-29,458,3513,BNSM,Bee Network,NW_04_BNSM_409_1,2026-11-06,458,349,1,1,newer,trips,0,0,0
+41,3,3488,BNSM,Bee Network,NW_04_BNSM_41_2,2026-11-29,264,3490,BNSM,Bee Network,NW_04_BNSM_41_1,2026-11-06,264,198,1,1,newer,trips,0,0,0
+410,3,2159,SL,ARRIVA LONDON SOUTH LIMITED,8-410-_-y05-53368,2026-11-21,548,2171,SL,ARRIVA LONDON SOUTH LIMITED,8-410-_-y05-53367,2026-11-13,548,437,0.995,0.993,newer,trips,0,0,0
+411,3,5135,BNSM,Bee Network,NW_04_BNSM_411_2,2026-11-29,53,5222,BNSM,Bee Network,NW_04_BNSM_411_1,2026-11-06,51,31,1,0.969,newer,trips,0,0,0
+415,3,4380,BNSM,Bee Network,NW_04_BNSM_415_2,2026-11-29,58,4385,BNSM,Bee Network,NW_04_BNSM_415_1,2026-11-06,58,57,1,1,newer,trips,0,0,0
+415,3,12997,SCSO,Stagecoach South,SW_SC_SCSO_415_1,2026-12-01,2,12996,SCSO,Stagecoach South,SW_SC_SCSO_415_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+42,3,7506,SCFI,Stagecoach East Scotland,S_SC_SCFI_42_5,2026-12-13,2,7504,SCFI,Stagecoach East Scotland,S_SC_SCFI_42_3,2026-10-25,2,2,1,1,newer,trips,0,0,0
+420,3,16509,SYRK,Stagecoach Yorkshire,Y_SC_SYRK_420_1,2026-11-02,4,16911,CHEL,Chad Healey European,YSPO420,2026-09-01,2,2,1,1,newer,trips,0,0,0
+425,3,3742,BNSM,Bee Network,NW_04_BNSM_425_2,2026-11-29,129,3746,BNSM,Bee Network,NW_04_BNSM_425_1,2026-11-06,129,82,1,1,newer,trips,0,0,0
+426,3,4684,BNSM,Bee Network,NW_04_BNSM_426_2,2026-11-29,84,4697,BNSM,Bee Network,NW_04_BNSM_426_1,2026-11-06,84,47,1,1,newer,trips,0,0,0
+43,3,3470,BNML,Bee Network,NW_04_BNML_43_2,2026-11-29,1508,3567,BNML,Bee Network,NW_04_BNML_43_1,2026-11-02,528,323,1,1,newer,trips,0,0,0
+433,3,3919,BNFM,Bee Network,NW_04_BNFM_433_2,2026-11-29,68,3920,BNFM,Bee Network,NW_04_BNFM_433_1,2026-10-28,68,50,1,1,newer,trips,0,0,0
+434,3,4014,BNFM,Bee Network,NW_04_BNFM_434_2,2026-11-29,92,4015,BNFM,Bee Network,NW_04_BNFM_434_1,2026-10-28,92,84,1,1,newer,trips,0,0,0
+436,3,4323,BNFM,Bee Network,NW_04_BNFM_436_2,2026-11-29,45,4326,BNFM,Bee Network,NW_04_BNFM_436_1,2026-10-28,45,33,1,1,newer,trips,0,0,0
+437,3,5275,BNFM,Bee Network,NW_04_BNFM_437_2,2026-11-30,8,5345,BNFM,Bee Network,NW_04_BNFM_437_1,2026-11-02,8,2,1,1,newer,trips,0,0,0
+440,3,5181,BNFM,Bee Network,NW_04_BNFM_440_2,2026-11-29,88,5188,BNFM,Bee Network,NW_04_BNFM_440_1,2026-10-28,88,71,1,1,newer,trips,0,0,0
+442,3,4436,BNFM,Bee Network,NW_04_BNFM_442_2,2026-11-29,91,4478,BNFM,Bee Network,NW_04_BNFM_442_1,2026-10-28,91,83,1,1,newer,trips,0,0,0
+447,3,3959,BNFM,Bee Network,NW_04_BNFM_447_2,2026-11-29,94,3965,BNFM,Bee Network,NW_04_BNFM_447_1,2026-10-28,94,80,1,1,newer,trips,0,0,0
+450,3,4084,BNFM,Bee Network,NW_04_BNFM_450_2,2026-11-29,48,4085,BNFM,Bee Network,NW_04_BNFM_450_1,2026-10-28,48,34,1,1,newer,trips,0,0,0
+451,3,4266,BNFM,Bee Network,NW_04_BNFM_451_2,2026-11-29,48,4267,BNFM,Bee Network,NW_04_BNFM_451_1,2026-10-28,48,36,1,1,newer,trips,0,0,0
+455,3,4097,BNFM,Bee Network,NW_04_BNFM_455_2,2026-11-30,45,4103,BNFM,Bee Network,NW_04_BNFM_455_1,2026-10-28,45,43,0.977,0.977,newer,trips,0,0,0
+456,3,4271,BNFM,Bee Network,NW_04_BNFM_456_2,2026-11-29,71,4289,BNFM,Bee Network,NW_04_BNFM_456_1,2026-10-28,71,71,1,1,newer,trips,0,0,0
+457,3,4198,BNFM,Bee Network,NW_04_BNFM_457_2,2026-11-29,101,4208,BNFM,Bee Network,NW_04_BNFM_457_1,2026-10-28,101,92,1,1,newer,trips,0,0,0
+458,3,4177,BNFM,Bee Network,NW_04_BNFM_458_2,2026-11-29,71,4188,BNFM,Bee Network,NW_04_BNFM_458_1,2026-10-28,71,70,1,1,newer,trips,0,0,0
+46,3,1297,SCCM,Stagecoach East,EM_SC_SCCM_46_1,2026-12-29,15,1356,SCCM,Stagecoach East,EM_SC_SCCM_46_2,2026-12-21,18,15,1,1,newer,trips,0,0,0
+46,3,1297,SCCM,Stagecoach East,EM_SC_SCCM_46_1,2026-12-29,15,993,SCCM,Stagecoach East,EM_SC_SCCM_46_4,2026-09-10,30,15,1,1,newer,trips,0,0,0
+46,3,996,SCCM,Stagecoach East,EM_SC_SCCM_46_3,2027-01-04,34,1297,SCCM,Stagecoach East,EM_SC_SCCM_46_1,2026-12-29,15,15,1,0.833,newer,trips,0,0,0
+46,3,1356,SCCM,Stagecoach East,EM_SC_SCCM_46_2,2026-12-21,18,993,SCCM,Stagecoach East,EM_SC_SCCM_46_4,2026-09-10,30,15,1,1,newer,trips,0,0,0
+46,3,996,SCCM,Stagecoach East,EM_SC_SCCM_46_3,2027-01-04,34,1356,SCCM,Stagecoach East,EM_SC_SCCM_46_2,2026-12-21,18,15,1,0.833,newer,trips,0,0,0
+46,3,996,SCCM,Stagecoach East,EM_SC_SCCM_46_3,2027-01-04,34,993,SCCM,Stagecoach East,EM_SC_SCCM_46_4,2026-09-10,30,15,1,0.833,newer,trips,0,0,0
+46,3,8364,SCSO,Stagecoach South,SE_SC_SCSO_46_1,2026-12-01,158,8376,SCSO,Stagecoach South,SE_SC_SCSO_46_2,2026-10-08,113,28,1,1,newer,trips,0,0,0
+461,3,4275,BNFM,Bee Network,NW_04_BNFM_461_2,2026-11-30,24,4274,BNFM,Bee Network,NW_04_BNFM_461_1,2026-10-28,24,24,1,1,newer,trips,0,0,0
+467,3,4127,BNFM,Bee Network,NW_04_BNFM_467_2,2026-11-29,150,4134,BNFM,Bee Network,NW_04_BNFM_467_1,2026-10-28,150,96,1,1,newer,trips,0,0,0
+468,3,4102,BNFM,Bee Network,NW_04_BNFM_468_2,2026-11-29,162,4107,BNFM,Bee Network,NW_04_BNFM_468_1,2026-10-28,162,112,1,1,newer,trips,0,0,0
+47,3,9466,SCSO,Stagecoach South,SE_SC_SCSO_47_3,2026-12-01,28,9643,SCSO,Stagecoach South,SE_SC_SCSO_47_2,2026-10-13,21,7,1,1,newer,trips,0,0,0
+47,3,6563,SCFI,Stagecoach East Scotland,S_SC_SCFI_47_1,2026-12-02,56,6554,SCFI,Stagecoach East Scotland,S_SC_SCFI_47_3,2026-10-19,73,40,1,1,newer,trips,0,0,0
+471,3,10034,SCSO,Stagecoach South,SE_SC_SCSO_471_1,2026-12-01,4,10150,SCSO,Stagecoach South,SE_SC_SCSO_471_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+475,3,4066,BNSM,Bee Network,NW_04_BNSM_475_2,2026-11-30,50,4104,BNSM,Bee Network,NW_04_BNSM_475_1,2026-11-06,47,37,1,0.974,newer,trips,0,0,0
+477,3,4128,BNSM,Bee Network,NW_04_BNSM_477_2,2026-11-30,46,4166,BNSM,Bee Network,NW_04_BNSM_477_1,2026-11-06,45,33,1,1,newer,trips,0,0,0
+47A,3,7657,SCFI,Stagecoach East Scotland,S_SC_SCFI_47A_5,2026-12-07,4,7656,SCFI,Stagecoach East Scotland,S_SC_SCFI_47A_3,2026-10-19,4,3,1,1,newer,trips,0,0,0
+47B,3,7704,SCFI,Stagecoach East Scotland,S_SC_SCFI_47B_2,2026-12-07,4,7703,SCFI,Stagecoach East Scotland,S_SC_SCFI_47B_3,2026-10-19,4,3,1,1,newer,trips,0,0,0
+480,3,3846,BNSM,Bee Network,NW_04_BNSM_480_2,2026-11-29,73,3832,BNSM,Bee Network,NW_04_BNSM_480_1,2026-11-06,70,46,0.958,0.958,newer,trips,0,0,0
+483,3,16907,SMTS,SMT Bus and Coach Ltd,YSJO483,2026-09-01,2,16908,BBCG,Globe,YSHO483,2022-09-05,2,2,1,1,newer,trips,0,0,0
+487,3,4242,BNSM,Bee Network,NW_04_BNSM_487_2,2026-11-29,68,4327,BNSM,Bee Network,NW_04_BNSM_487_1,2026-11-06,64,51,1,0.981,newer,trips,0,0,0
+49,3,11516,SCSO,Stagecoach South,SW_SC_SCSO_49_1,2026-11-30,12,11478,SCSO,Stagecoach South,SW_SC_SCSO_49_2,2026-09-30,120,10,0.909,0.909,newer,trips,0,0,0
+4A,3,14540,SCNH,Stagecoach Midlands,WM_SC_SCNH_4A_3,2026-11-21,14,14538,SCNH,Stagecoach Midlands,WM_SC_SCNH_4A_2,2026-11-14,21,7,1,1,newer,trips,0,0,0
+5,3,10291,SCCM,Stagecoach East,SE_SC_SCCM_5_10,2026-12-20,82,10129,SCCM,Stagecoach East,SE_SC_SCCM_5_9,2026-09-10,144,68,1,1,newer,trips,0,0,0
+5,3,10355,SCCM,Stagecoach East,SE_SC_SCCM_5_11,2026-12-27,82,10291,SCCM,Stagecoach East,SE_SC_SCCM_5_10,2026-12-20,82,68,1,1,newer,trips,0,0,0
+5,3,10377,SCCM,Stagecoach East,SE_SC_SCCM_5_12,2027-01-03,144,10291,SCCM,Stagecoach East,SE_SC_SCCM_5_10,2026-12-20,82,68,1,1,newer,trips,0,0,0
+5,3,10377,SCCM,Stagecoach East,SE_SC_SCCM_5_12,2027-01-03,144,10355,SCCM,Stagecoach East,SE_SC_SCCM_5_11,2026-12-27,82,68,1,1,newer,trips,0,0,0
+5,3,10377,SCCM,Stagecoach East,SE_SC_SCCM_5_12,2027-01-03,144,10129,SCCM,Stagecoach East,SE_SC_SCCM_5_9,2026-09-10,144,68,1,1,newer,trips,0,0,0
+5,3,214,SCCM,Stagecoach East,EA_SC_SCCM_5_6,2026-12-20,137,208,SCCM,Stagecoach East,EA_SC_SCCM_5_5,2026-09-10,144,82,1,1,newer,trips,0,0,0
+5,3,221,SCCM,Stagecoach East,EA_SC_SCCM_5_7,2026-12-27,137,208,SCCM,Stagecoach East,EA_SC_SCCM_5_5,2026-09-10,144,82,1,1,newer,trips,0,0,0
+5,3,226,SCCM,Stagecoach East,EA_SC_SCCM_5_8,2027-01-03,144,208,SCCM,Stagecoach East,EA_SC_SCCM_5_5,2026-09-10,144,82,1,1,newer,trips,0,0,0
+5,3,221,SCCM,Stagecoach East,EA_SC_SCCM_5_7,2026-12-27,137,214,SCCM,Stagecoach East,EA_SC_SCCM_5_6,2026-12-20,137,82,1,1,newer,trips,0,0,0
+5,3,226,SCCM,Stagecoach East,EA_SC_SCCM_5_8,2027-01-03,144,214,SCCM,Stagecoach East,EA_SC_SCCM_5_6,2026-12-20,137,82,1,1,newer,trips,0,0,0
+5,3,226,SCCM,Stagecoach East,EA_SC_SCCM_5_8,2027-01-03,144,221,SCCM,Stagecoach East,EA_SC_SCCM_5_7,2026-12-27,137,82,1,1,newer,trips,0,0,0
+5,3,849,SCCM,Stagecoach East,EM_SC_SCCM_5_2,2026-12-20,103,813,SCCM,Stagecoach East,EM_SC_SCCM_5_4,2026-09-10,166,94,0.887,1,newer,trips,0,0,0
+5,3,882,SCCM,Stagecoach East,EM_SC_SCCM_5_1,2026-12-27,96,813,SCCM,Stagecoach East,EM_SC_SCCM_5_4,2026-09-10,166,87,0.821,1,newer,trips,0,0,0
+5,3,882,SCCM,Stagecoach East,EM_SC_SCCM_5_1,2026-12-27,96,849,SCCM,Stagecoach East,EM_SC_SCCM_5_2,2026-12-20,103,75,0.798,0.862,newer,trips,0,0,0
+5,3,5022,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_5_1,2026-12-07,109,5346,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_5_2,2026-11-02,66,36,1,1,newer,trips,0,0,0
+5,3,11434,SCSO,Stagecoach South,SW_SC_SCSO_5_4,2026-12-01,360,11454,SCSO,Stagecoach South,SW_SC_SCSO_5_3,2026-10-13,148,62,1,1,newer,trips,0,0,0
+5,3,14972,DGC,D & G Bus,60-5-C-y11-3,2026-11-01,157,15365,SCR,Blue Buses,60-5-B-y11-2,2026-10-01,18,18,1,0.164,newer,trips,0,0,0
+5,3,15468,SCNH,Stagecoach Midlands,WM_SC_SCNH_5_4,2026-11-28,7,15467,SCNH,Stagecoach Midlands,WM_SC_SCNH_5_3,2026-11-14,7,4,1,1,newer,trips,0,0,0
+5,3,15469,SCNH,Stagecoach Midlands,WM_SC_SCNH_5_5,2026-12-12,7,15467,SCNH,Stagecoach Midlands,WM_SC_SCNH_5_3,2026-11-14,7,4,1,1,newer,trips,0,0,0
+5,3,15469,SCNH,Stagecoach Midlands,WM_SC_SCNH_5_5,2026-12-12,7,15468,SCNH,Stagecoach Midlands,WM_SC_SCNH_5_4,2026-11-28,7,4,1,1,newer,trips,0,0,0
+5,3,7834,SBLB,Stagecoach Bluebird,S_SC_SBLB_5_3,2026-12-21,12,7833,SBLB,Stagecoach Bluebird,S_SC_SBLB_5_2,2026-10-28,12,4,1,1,newer,trips,0,0,0
+50,3,8508,SCCM,Stagecoach East,SE_SC_SCCM_50_3,2027-01-03,82,8491,SCCM,Stagecoach East,SE_SC_SCCM_50_4,2026-09-10,74,33,1,0.868,newer,trips,0,0,0
+50,3,8801,SCCM,Stagecoach East,SE_SC_SCCM_50_1,2026-12-20,40,8491,SCCM,Stagecoach East,SE_SC_SCCM_50_4,2026-09-10,74,30,0.909,1,newer,trips,0,0,0
+50,3,8508,SCCM,Stagecoach East,SE_SC_SCCM_50_3,2027-01-03,82,8801,SCCM,Stagecoach East,SE_SC_SCCM_50_1,2026-12-20,40,30,1,0.789,newer,trips,0,0,0
+50,3,9027,SCCM,Stagecoach East,SE_SC_SCCM_50_2,2026-12-27,40,8801,SCCM,Stagecoach East,SE_SC_SCCM_50_1,2026-12-20,40,30,1,1,newer,trips,0,0,0
+50,3,8508,SCCM,Stagecoach East,SE_SC_SCCM_50_3,2027-01-03,82,9027,SCCM,Stagecoach East,SE_SC_SCCM_50_2,2026-12-27,40,30,1,0.789,newer,trips,0,0,0
+50,3,4427,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_50_1,2026-12-07,150,4582,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_50_2,2026-11-02,150,58,1,1,newer,trips,0,0,0
+50,3,3519,BNML,Bee Network,NW_04_BNML_50_2,2026-11-29,1314,3655,BNML,Bee Network,NW_04_BNML_50_1,2026-11-02,469,403,1,1,newer,trips,0,0,0
+50,3,14077,SCNH,Stagecoach Midlands,WM_SC_SCNH_50_1,2026-11-28,38,14078,SCNH,Stagecoach Midlands,WM_SC_SCNH_50_3,2026-11-14,38,33,1,1,newer,trips,0,0,0
+50,3,14079,SCNH,Stagecoach Midlands,WM_SC_SCNH_50_2,2026-12-12,38,14077,SCNH,Stagecoach Midlands,WM_SC_SCNH_50_1,2026-11-28,38,33,1,1,newer,trips,0,0,0
+50,3,14079,SCNH,Stagecoach Midlands,WM_SC_SCNH_50_2,2026-12-12,38,14078,SCNH,Stagecoach Midlands,WM_SC_SCNH_50_3,2026-11-14,38,33,1,1,newer,trips,0,0,0
+50,3,1987,SL,ARRIVA LONDON SOUTH LIMITED,8-50-_-y05-55999,2026-11-21,714,1995,SL,ARRIVA LONDON SOUTH LIMITED,8-50-_-y05-55998,2026-11-13,714,444,1,1,newer,trips,0,0,0
+500,3,8338,SCSO,Stagecoach South,SE_SC_SCSO_500_1,2026-11-29,331,8325,SCSO,Stagecoach South,SE_SC_SCSO_500_2,2026-10-19,445,101,0.99,0.99,newer,trips,0,0,0
+501,3,14689,SCNH,Stagecoach Midlands,WM_SC_SCNH_501_2,2026-12-12,2,14695,SCNH,Stagecoach Midlands,WM_SC_SCNH_501_3,2026-11-14,2,2,1,1,newer,trips,0,0,0
+501,3,14689,SCNH,Stagecoach Midlands,WM_SC_SCNH_501_2,2026-12-12,2,14696,SCNH,Stagecoach Midlands,WM_SC_SCNH_501_1,2026-11-28,2,2,1,1,newer,trips,0,0,0
+501,3,14696,SCNH,Stagecoach Midlands,WM_SC_SCNH_501_1,2026-11-28,2,14695,SCNH,Stagecoach Midlands,WM_SC_SCNH_501_3,2026-11-14,2,2,1,1,newer,trips,0,0,0
+507,3,4105,BNDB,Bee Network,NW_04_BNDB_507_2,2026-11-29,90,4106,BNDB,Bee Network,NW_04_BNDB_507_1,2026-08-30,90,66,1,1,newer,trips,0,0,0
+51,3,4642,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_51_3,2026-12-07,126,4834,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_51_2,2026-11-02,126,44,1,1,newer,trips,0,0,0
+51,3,14334,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_3,2026-11-28,20,14333,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_2,2026-11-14,20,12,1,1,newer,trips,0,0,0
+51,3,14335,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_4,2026-12-12,20,14333,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_2,2026-11-14,20,12,1,1,newer,trips,0,0,0
+51,3,14335,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_4,2026-12-12,20,14334,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_3,2026-11-28,20,12,1,1,newer,trips,0,0,0
+51,3,4526,BNML,Bee Network,NW_04_BNML_51_2,2026-11-30,28,5045,BNML,Bee Network,NW_04_BNML_51_1,2026-11-02,7,7,1,1,newer,trips,0,0,0
+51,3,14106,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_6,2026-11-21,62,14105,SCNH,Stagecoach Midlands,WM_SC_SCNH_51_5,2026-11-14,93,36,1,1,newer,trips,0,0,0
+511,3,3947,BNDB,Bee Network,NW_04_BNDB_511_2,2026-11-29,107,3950,BNDB,Bee Network,NW_04_BNDB_511_1,2026-08-30,107,79,1,1,newer,trips,0,0,0
+512,3,3926,BNDB,Bee Network,NW_04_BNDB_512_2,2026-11-29,67,3927,BNDB,Bee Network,NW_04_BNDB_512_1,2026-08-30,67,53,1,1,newer,trips,0,0,0
+513,3,3971,BNDB,Bee Network,NW_04_BNDB_513_2,2026-11-29,69,3972,BNDB,Bee Network,NW_04_BNDB_513_1,2026-08-30,69,55,1,1,newer,trips,0,0,0
+516,3,3902,BNDB,Bee Network,NW_04_BNDB_516_2,2026-11-29,69,3904,BNDB,Bee Network,NW_04_BNDB_516_1,2026-08-30,69,54,1,1,newer,trips,0,0,0
+519,3,15243,CVM,Coventry Minibuses,4-519-_-y11-1,2026-10-03,2,15227,AMG,A & M Group,2-519-_-y11-1,2026-10-01,2,2,1,1,newer,trips,0,0,0
+51A,3,14730,SCNH,Stagecoach Midlands,WM_SC_SCNH_51A_1,2026-11-30,2,14731,SCNH,Stagecoach Midlands,WM_SC_SCNH_51A_3,2026-11-16,2,2,1,1,newer,trips,0,0,0
+51A,3,14732,SCNH,Stagecoach Midlands,WM_SC_SCNH_51A_2,2026-12-14,2,14730,SCNH,Stagecoach Midlands,WM_SC_SCNH_51A_1,2026-11-30,2,2,1,1,newer,trips,0,0,0
+51A,3,14732,SCNH,Stagecoach Midlands,WM_SC_SCNH_51A_2,2026-12-14,2,14731,SCNH,Stagecoach Midlands,WM_SC_SCNH_51A_3,2026-11-16,2,2,1,1,newer,trips,0,0,0
+52,3,3913,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_52_1,2026-12-07,155,3942,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_52_2,2026-11-02,155,70,1,1,newer,trips,0,0,0
+52,3,3486,BNSM,Bee Network,NW_04_BNSM_52_2,2026-11-29,364,3487,BNSM,Bee Network,NW_04_BNSM_52_1,2026-11-06,364,327,1,1,newer,trips,0,0,0
+52,3,6509,SCFI,Stagecoach East Scotland,S_SC_SCFI_52_2,2026-12-07,29,6508,SCFI,Stagecoach East Scotland,S_SC_SCFI_52_3,2026-10-19,29,12,1,1,newer,trips,0,0,0
+52,3,6511,SCFI,Stagecoach East Scotland,S_SC_SCFI_52_1,2026-12-02,19,6508,SCFI,Stagecoach East Scotland,S_SC_SCFI_52_3,2026-10-19,29,12,1,1,newer,trips,0,0,0
+52,3,6509,SCFI,Stagecoach East Scotland,S_SC_SCFI_52_2,2026-12-07,29,6511,SCFI,Stagecoach East Scotland,S_SC_SCFI_52_1,2026-12-02,19,12,1,1,newer,trips,0,0,0
+521,3,3695,BNDB,Bee Network,NW_04_BNDB_521_2,2026-11-29,104,3696,BNDB,Bee Network,NW_04_BNDB_521_1,2026-08-30,104,81,1,1,newer,trips,0,0,0
+525,3,4407,BNDB,Bee Network,NW_04_BNDB_525_2,2026-11-29,39,4408,BNDB,Bee Network,NW_04_BNDB_525_1,2026-08-30,39,20,1,1,newer,trips,0,0,0
+526,3,4200,BNDB,Bee Network,NW_04_BNDB_526_2,2026-11-29,72,4201,BNDB,Bee Network,NW_04_BNDB_526_1,2026-08-30,72,52,1,1,newer,trips,0,0,0
+527,3,4435,BNDB,Bee Network,NW_04_BNDB_527_2,2026-11-29,40,4437,BNDB,Bee Network,NW_04_BNDB_527_1,2026-08-30,40,28,1,1,newer,trips,0,0,0
+53,3,3515,BNSM,Bee Network,NW_04_BNSM_53_2,2026-11-29,174,3517,BNSM,Bee Network,NW_04_BNSM_53_1,2026-11-06,174,125,1,1,newer,trips,0,0,0
+53,3,8352,SCSO,Stagecoach South,SE_SC_SCSO_53_3,2026-12-01,301,8409,SCSO,Stagecoach South,SE_SC_SCSO_53_2,2026-10-07,150,72,1,1,newer,trips,0,0,0
+532,3,15215,SCNH,Stagecoach Midlands,WM_SC_SCNH_532_1,2026-11-30,4,15216,SCNH,Stagecoach Midlands,WM_SC_SCNH_532_3,2026-11-16,4,2,1,1,newer,trips,0,0,0
+532,3,15217,SCNH,Stagecoach Midlands,WM_SC_SCNH_532_2,2026-12-14,4,15215,SCNH,Stagecoach Midlands,WM_SC_SCNH_532_1,2026-11-30,4,2,1,1,newer,trips,0,0,0
+532,3,15217,SCNH,Stagecoach Midlands,WM_SC_SCNH_532_2,2026-12-14,4,15216,SCNH,Stagecoach Midlands,WM_SC_SCNH_532_3,2026-11-16,4,2,1,1,newer,trips,0,0,0
+533,3,4523,BNDB,Bee Network,NW_04_BNDB_533_2,2026-11-30,65,4522,BNDB,Bee Network,NW_04_BNDB_533_1,2026-09-01,65,43,1,1,newer,trips,0,0,0
+535,3,4095,PBLT,Rotala Preston Bus,NW_05_PBLT_535_1,2032-01-03,26,4233,PBLT,Rotala Preston Bus,NW_04_PBLT_535_1,2026-11-30,65,15,1,1,newer,trips,0,0,0
+535,3,4263,PBLT,Rotala Preston Bus,NW_04_PBLT_535_2,2027-01-02,26,4233,PBLT,Rotala Preston Bus,NW_04_PBLT_535_1,2026-11-30,65,15,1,1,newer,trips,0,0,0
+535,3,4095,PBLT,Rotala Preston Bus,NW_05_PBLT_535_1,2032-01-03,26,4263,PBLT,Rotala Preston Bus,NW_04_PBLT_535_2,2027-01-02,26,15,1,1,newer,trips,0,0,0
+537,3,4337,BNDB,Bee Network,NW_04_BNDB_537_2,2026-11-29,85,4362,BNDB,Bee Network,NW_04_BNDB_537_1,2026-08-30,85,54,1,1,newer,trips,0,0,0
+541,3,4234,BNDB,Bee Network,NW_04_BNDB_541_2,2026-11-29,73,4247,BNDB,Bee Network,NW_04_BNDB_541_1,2026-08-30,73,41,1,1,newer,trips,0,0,0
+544,3,4591,BNDB,Bee Network,NW_04_BNDB_544_2,2026-11-30,19,4590,BNDB,Bee Network,NW_04_BNDB_544_1,2026-09-01,19,14,1,1,newer,trips,0,0,0
+55,3,8566,SCSO,Stagecoach South,SE_SC_SCSO_55_1,2026-11-29,288,8451,SCSO,Stagecoach South,SE_SC_SCSO_55_2,2026-10-19,419,94,0.797,1,newer,trips,0,0,0
+553,3,3948,BNDB,Bee Network,NW_04_BNDB_553_2,2026-11-29,69,3949,BNDB,Bee Network,NW_04_BNDB_553_1,2026-08-30,69,56,1,1,newer,trips,0,0,0
+559,3,3859,BNDB,Bee Network,NW_04_BNDB_559_2,2026-11-29,72,3860,BNDB,Bee Network,NW_04_BNDB_559_1,2026-08-30,72,57,1,1,newer,trips,0,0,0
+57,3,3997,BNSM,Bee Network,NW_04_BNSM_57_2,2026-11-29,103,4003,BNSM,Bee Network,NW_04_BNSM_57_1,2026-11-06,103,64,1,1,newer,trips,0,0,0
+573,3,4371,BNDB,Bee Network,NW_04_BNDB_573_2,2026-11-29,34,4372,BNDB,Bee Network,NW_04_BNDB_573_1,2026-08-30,34,24,1,1,newer,trips,0,0,0
+574,3,4056,BNDB,Bee Network,NW_04_BNDB_574_2,2026-11-29,33,4057,BNDB,Bee Network,NW_04_BNDB_574_1,2026-08-30,33,25,1,1,newer,trips,0,0,0
+58,3,15241,SCNH,Stagecoach Midlands,WM_SC_SCNH_58_3,2026-11-30,4,15240,SCNH,Stagecoach Midlands,WM_SC_SCNH_58_2,2026-11-16,4,2,1,1,newer,trips,0,0,0
+58,3,15244,SCNH,Stagecoach Midlands,WM_SC_SCNH_58_4,2026-12-14,3,15240,SCNH,Stagecoach Midlands,WM_SC_SCNH_58_2,2026-11-16,4,2,1,1,newer,trips,0,0,0
+58,3,15244,SCNH,Stagecoach Midlands,WM_SC_SCNH_58_4,2026-12-14,3,15241,SCNH,Stagecoach Midlands,WM_SC_SCNH_58_3,2026-11-30,4,2,1,1,newer,trips,0,0,0
+58,3,6005,STWS,Stagecoach West Scotland,S_SC_STWS_58_1,2026-11-09,146,6008,STWS,Stagecoach West Scotland,S_SC_STWS_58_2,2026-09-28,122,29,1,1,newer,trips,0,0,0
+583,3,3980,BNDB,Bee Network,NW_04_BNDB_583_2,2026-11-29,72,3981,BNDB,Bee Network,NW_04_BNDB_583_1,2026-08-30,72,54,1,1,newer,trips,0,0,0
+584,3,5163,BNDB,Bee Network,NW_04_BNDB_584_2,2026-11-29,36,5166,BNDB,Bee Network,NW_04_BNDB_584_1,2026-08-30,36,25,1,1,newer,trips,0,0,0
+588,3,5101,BNDB,Bee Network,NW_04_BNDB_588_2,2026-11-29,37,5104,BNDB,Bee Network,NW_04_BNDB_588_1,2026-08-30,37,27,1,1,newer,trips,0,0,0
+589,3,4335,BNDB,Bee Network,NW_04_BNDB_589_2,2026-11-30,21,4334,BNDB,Bee Network,NW_04_BNDB_589_1,2026-09-01,21,15,1,1,newer,trips,0,0,0
+594,3,3988,BNDB,Bee Network,NW_04_BNDB_594_2,2026-11-29,35,3994,BNDB,Bee Network,NW_04_BNDB_594_1,2026-08-30,35,24,1,1,newer,trips,0,0,0
+596,3,5204,BNDB,Bee Network,NW_04_BNDB_596_2,2026-11-30,20,5203,BNDB,Bee Network,NW_04_BNDB_596_1,2026-09-01,20,13,1,1,newer,trips,0,0,0
+597,3,5380,BNDB,Bee Network,NW_04_BNDB_597_2,2026-11-30,20,5379,BNDB,Bee Network,NW_04_BNDB_597_1,2026-09-01,20,20,1,1,newer,trips,0,0,0
+5A,3,766,SCCM,Stagecoach East,EM_SC_SCCM_5A_3,2027-01-03,157,765,SCCM,Stagecoach East,EM_SC_SCCM_5A_4,2026-09-10,157,102,1,1,newer,trips,0,0,0
+5A,3,776,SCCM,Stagecoach East,EM_SC_SCCM_5A_2,2026-12-20,97,765,SCCM,Stagecoach East,EM_SC_SCCM_5A_4,2026-09-10,157,89,0.873,1,newer,trips,0,0,0
+5A,3,766,SCCM,Stagecoach East,EM_SC_SCCM_5A_3,2027-01-03,157,776,SCCM,Stagecoach East,EM_SC_SCCM_5A_2,2026-12-20,97,89,1,0.873,newer,trips,0,0,0
+5A,3,823,SCCM,Stagecoach East,EM_SC_SCCM_5A_1,2026-12-27,90,765,SCCM,Stagecoach East,EM_SC_SCCM_5A_4,2026-09-10,157,82,0.804,1,newer,trips,0,0,0
+5A,3,766,SCCM,Stagecoach East,EM_SC_SCCM_5A_3,2027-01-03,157,823,SCCM,Stagecoach East,EM_SC_SCCM_5A_1,2026-12-27,90,82,1,0.804,newer,trips,0,0,0
+5A,3,823,SCCM,Stagecoach East,EM_SC_SCCM_5A_1,2026-12-27,90,776,SCCM,Stagecoach East,EM_SC_SCCM_5A_2,2026-12-20,97,69,0.775,0.841,newer,trips,0,0,0
+6,3,9335,SCCM,Stagecoach East,SE_SC_SCCM_6_8,2027-01-03,168,9202,SCCM,Stagecoach East,SE_SC_SCCM_6_5,2026-09-10,168,140,1,1,newer,trips,0,0,0
+6,3,9345,SCCM,Stagecoach East,SE_SC_SCCM_6_6,2026-12-20,106,9202,SCCM,Stagecoach East,SE_SC_SCCM_6_5,2026-09-10,168,106,0.757,1,newer,trips,0,0,0
+6,3,9335,SCCM,Stagecoach East,SE_SC_SCCM_6_8,2027-01-03,168,9345,SCCM,Stagecoach East,SE_SC_SCCM_6_6,2026-12-20,106,106,1,0.757,newer,trips,0,0,0
+6,3,9335,SCCM,Stagecoach East,SE_SC_SCCM_6_8,2027-01-03,168,9958,SCCM,Stagecoach East,SE_SC_SCCM_6_7,2026-12-27,82,82,1,0.586,newer,trips,0,0,0
+6,3,332,SCCM,Stagecoach East,EA_SC_SCCM_6_11,2026-12-27,90,331,SCCM,Stagecoach East,EA_SC_SCCM_6_10,2026-12-20,56,50,0.909,0.909,newer,trips,0,0,0
+6,3,337,SCCM,Stagecoach East,EA_SC_SCCM_6_12,2027-01-03,90,331,SCCM,Stagecoach East,EA_SC_SCCM_6_10,2026-12-20,56,55,1,0.917,newer,trips,0,0,0
+6,3,331,SCCM,Stagecoach East,EA_SC_SCCM_6_10,2026-12-20,56,338,SCCM,Stagecoach East,EA_SC_SCCM_6_9,2026-11-01,90,55,0.917,1,newer,trips,0,0,0
+6,3,337,SCCM,Stagecoach East,EA_SC_SCCM_6_12,2027-01-03,90,332,SCCM,Stagecoach East,EA_SC_SCCM_6_11,2026-12-27,90,55,1,0.917,newer,trips,0,0,0
+6,3,332,SCCM,Stagecoach East,EA_SC_SCCM_6_11,2026-12-27,90,338,SCCM,Stagecoach East,EA_SC_SCCM_6_9,2026-11-01,90,55,0.917,1,newer,trips,0,0,0
+6,3,337,SCCM,Stagecoach East,EA_SC_SCCM_6_12,2027-01-03,90,338,SCCM,Stagecoach East,EA_SC_SCCM_6_9,2026-11-01,90,60,1,1,newer,trips,0,0,0
+6,3,1004,SCCM,Stagecoach East,EM_SC_SCCM_6_2,2026-12-20,146,1016,SCCM,Stagecoach East,EM_SC_SCCM_6_4,2026-09-10,232,124,0.925,1,newer,trips,0,0,0
+6,3,1017,SCCM,Stagecoach East,EM_SC_SCCM_6_3,2027-01-03,232,1004,SCCM,Stagecoach East,EM_SC_SCCM_6_2,2026-12-20,146,124,1,0.925,newer,trips,0,0,0
+6,3,1015,SCCM,Stagecoach East,EM_SC_SCCM_6_1,2026-12-27,138,1004,SCCM,Stagecoach East,EM_SC_SCCM_6_2,2026-12-20,146,108,0.871,0.915,newer,trips,0,0,0
+6,3,1015,SCCM,Stagecoach East,EM_SC_SCCM_6_1,2026-12-27,138,1016,SCCM,Stagecoach East,EM_SC_SCCM_6_4,2026-09-10,232,118,0.881,1,newer,trips,0,0,0
+6,3,1017,SCCM,Stagecoach East,EM_SC_SCCM_6_3,2027-01-03,232,1015,SCCM,Stagecoach East,EM_SC_SCCM_6_1,2026-12-27,138,118,1,0.881,newer,trips,0,0,0
+6,3,1017,SCCM,Stagecoach East,EM_SC_SCCM_6_3,2027-01-03,232,1016,SCCM,Stagecoach East,EM_SC_SCCM_6_4,2026-09-10,232,134,1,1,newer,trips,0,0,0
+6,3,3730,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_6_4,2026-12-07,61,3739,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_6_3,2026-11-02,43,31,1,1,newer,trips,0,0,0
+6,3,3627,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_6_1,2026-12-07,61,3619,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_6_2,2026-11-02,44,32,0.97,1,newer,trips,0,0,0
+6,3,11469,SCSO,Stagecoach South,SW_SC_SCSO_6_4,2026-12-01,558,11512,SCSO,Stagecoach South,SW_SC_SCSO_6_3,2026-10-13,235,92,1,1,newer,trips,0,0,0
+6,3,9946,AUTO,Autocar,6,2026-09-01,3,9939,HAMS,Hams Travel,6,2024-09-02,3,3,1,1,newer,trips,0,0,0
+6,3,8417,SCSO,Stagecoach South,SE_SC_SCSO_6_6,2026-12-01,329,8540,SCSO,Stagecoach South,SE_SC_SCSO_6_5,2026-10-25,159,61,1,1,newer,trips,0,0,0
+6,3,5984,SBLB,Stagecoach Bluebird,S_SC_SBLB_6_3,2026-12-21,31,5985,SBLB,Stagecoach Bluebird,S_SC_SBLB_6_2,2026-10-28,31,10,1,1,newer,trips,0,0,0
+60,3,1270,SCCM,Stagecoach East,EM_SC_SCCM_60_3,2027-01-04,20,1275,SCCM,Stagecoach East,EM_SC_SCCM_60_4,2026-09-10,20,10,1,1,newer,trips,0,0,0
+60,3,1270,SCCM,Stagecoach East,EM_SC_SCCM_60_3,2027-01-04,20,1385,SCCM,Stagecoach East,EM_SC_SCCM_60_2,2026-12-21,10,10,1,1,newer,trips,0,0,0
+60,3,1385,SCCM,Stagecoach East,EM_SC_SCCM_60_2,2026-12-21,10,1275,SCCM,Stagecoach East,EM_SC_SCCM_60_4,2026-09-10,20,10,1,1,newer,trips,0,0,0
+60,3,1270,SCCM,Stagecoach East,EM_SC_SCCM_60_3,2027-01-04,20,1386,SCCM,Stagecoach East,EM_SC_SCCM_60_1,2026-12-29,10,10,1,1,newer,trips,0,0,0
+60,3,1386,SCCM,Stagecoach East,EM_SC_SCCM_60_1,2026-12-29,10,1275,SCCM,Stagecoach East,EM_SC_SCCM_60_4,2026-09-10,20,10,1,1,newer,trips,0,0,0
+60,3,1386,SCCM,Stagecoach East,EM_SC_SCCM_60_1,2026-12-29,10,1385,SCCM,Stagecoach East,EM_SC_SCCM_60_2,2026-12-21,10,10,1,1,newer,trips,0,0,0
+60,3,4401,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_60_1,2026-12-07,24,4422,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_60_2,2026-11-02,24,8,1,1,newer,trips,0,0,0
+60,3,6027,STWS,Stagecoach West Scotland,S_SC_STWS_60_1,2026-11-09,144,6030,STWS,Stagecoach West Scotland,S_SC_STWS_60_2,2026-09-28,122,29,1,1,newer,trips,0,0,0
+600,3,3970,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_600_4,2026-12-07,102,3998,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_600_3,2026-11-05,80,33,1,1,newer,trips,0,0,0
+600,3,3697,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_600_1,2026-12-07,110,3707,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_600_2,2026-11-05,86,32,1,1,newer,trips,0,0,0
+61,3,1564,SCCM,Stagecoach East,EM_SC_SCCM_61_3,2027-01-04,48,1556,SCCM,Stagecoach East,EM_SC_SCCM_61_1,2026-12-29,27,27,1,1,newer,trips,0,0,0
+61,3,1556,SCCM,Stagecoach East,EM_SC_SCCM_61_1,2026-12-29,27,1567,SCCM,Stagecoach East,EM_SC_SCCM_61_2,2026-12-21,21,21,1,0.778,newer,trips,0,0,0
+61,3,1556,SCCM,Stagecoach East,EM_SC_SCCM_61_1,2026-12-29,27,1568,SCCM,Stagecoach East,EM_SC_SCCM_61_4,2026-09-10,48,27,1,1,newer,trips,0,0,0
+61,3,1564,SCCM,Stagecoach East,EM_SC_SCCM_61_3,2027-01-04,48,1568,SCCM,Stagecoach East,EM_SC_SCCM_61_4,2026-09-10,48,27,1,1,newer,trips,0,0,0
+61,3,1564,SCCM,Stagecoach East,EM_SC_SCCM_61_3,2027-01-04,48,1567,SCCM,Stagecoach East,EM_SC_SCCM_61_2,2026-12-21,21,21,1,0.778,newer,trips,0,0,0
+61,3,1567,SCCM,Stagecoach East,EM_SC_SCCM_61_2,2026-12-21,21,1568,SCCM,Stagecoach East,EM_SC_SCCM_61_4,2026-09-10,48,21,0.778,1,newer,trips,0,0,0
+610,3,12609,SCSO,Stagecoach South,SW_SC_SCSO_610_1,2026-12-01,2,12608,SCSO,Stagecoach South,SW_SC_SCSO_610_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+62,3,1259,SCCM,Stagecoach East,EM_SC_SCCM_62_2,2026-12-21,9,1264,SCCM,Stagecoach East,EM_SC_SCCM_62_4,2026-09-10,18,9,1,1,newer,trips,0,0,0
+62,3,1265,SCCM,Stagecoach East,EM_SC_SCCM_62_3,2027-01-04,18,1259,SCCM,Stagecoach East,EM_SC_SCCM_62_2,2026-12-21,9,9,1,1,newer,trips,0,0,0
+62,3,1260,SCCM,Stagecoach East,EM_SC_SCCM_62_1,2026-12-29,9,1259,SCCM,Stagecoach East,EM_SC_SCCM_62_2,2026-12-21,9,9,1,1,newer,trips,0,0,0
+62,3,1260,SCCM,Stagecoach East,EM_SC_SCCM_62_1,2026-12-29,9,1264,SCCM,Stagecoach East,EM_SC_SCCM_62_4,2026-09-10,18,9,1,1,newer,trips,0,0,0
+62,3,1265,SCCM,Stagecoach East,EM_SC_SCCM_62_3,2027-01-04,18,1260,SCCM,Stagecoach East,EM_SC_SCCM_62_1,2026-12-29,9,9,1,1,newer,trips,0,0,0
+62,3,1265,SCCM,Stagecoach East,EM_SC_SCCM_62_3,2027-01-04,18,1264,SCCM,Stagecoach East,EM_SC_SCCM_62_4,2026-09-10,18,9,1,1,newer,trips,0,0,0
+63,3,1662,SCCM,Stagecoach East,EM_SC_SCCM_63_3,2027-01-04,10,1661,SCCM,Stagecoach East,EM_SC_SCCM_63_4,2026-09-10,10,5,1,1,newer,trips,0,0,0
+63,3,1728,SCCM,Stagecoach East,EM_SC_SCCM_63_2,2026-12-21,5,1661,SCCM,Stagecoach East,EM_SC_SCCM_63_4,2026-09-10,10,5,1,1,newer,trips,0,0,0
+63,3,1662,SCCM,Stagecoach East,EM_SC_SCCM_63_3,2027-01-04,10,1728,SCCM,Stagecoach East,EM_SC_SCCM_63_2,2026-12-21,5,5,1,1,newer,trips,0,0,0
+63,3,1729,SCCM,Stagecoach East,EM_SC_SCCM_63_1,2026-12-29,5,1661,SCCM,Stagecoach East,EM_SC_SCCM_63_4,2026-09-10,10,5,1,1,newer,trips,0,0,0
+63,3,1662,SCCM,Stagecoach East,EM_SC_SCCM_63_3,2027-01-04,10,1729,SCCM,Stagecoach East,EM_SC_SCCM_63_1,2026-12-29,5,5,1,1,newer,trips,0,0,0
+63,3,1729,SCCM,Stagecoach East,EM_SC_SCCM_63_1,2026-12-29,5,1728,SCCM,Stagecoach East,EM_SC_SCCM_63_2,2026-12-21,5,5,1,1,newer,trips,0,0,0
+63,3,8380,SCSO,Stagecoach South,SE_SC_SCSO_63_3,2026-12-01,176,8429,SCSO,Stagecoach South,SE_SC_SCSO_63_2,2026-10-07,76,29,1,1,newer,trips,0,0,0
+63,3,14129,SCNH,Stagecoach Midlands,WM_SC_SCNH_63_1,2026-11-21,61,14127,SCNH,Stagecoach Midlands,WM_SC_SCNH_63_2,2026-11-14,87,42,1,1,newer,trips,0,0,0
+638,3,2640,SK,SOUTH EAST LONDON & KENT BUS COMPANY LTD,59-638-_-y05-61717,2026-11-30,7,2639,SK,SOUTH EAST LONDON & KENT BUS COMPANY LTD,59-638-_-y05-61716,2026-11-13,7,7,1,1,newer,trips,0,0,0
+649,3,12446,SCSO,Stagecoach South,SW_SC_SCSO_649_1,2026-11-30,3,12406,SCSO,Stagecoach South,SW_SC_SCSO_649_2,2026-11-02,20,3,1,1,newer,trips,0,0,0
+65,3,8371,SCSO,Stagecoach South,SE_SC_SCSO_65_1,2026-12-01,230,8369,SCSO,Stagecoach South,SE_SC_SCSO_65_2,2026-11-01,200,37,1,1,newer,trips,0,0,0
+65X,3,12097,SCSO,Stagecoach South,SW_SC_SCSO_65X_1,2026-12-01,2,12098,SCSO,Stagecoach South,SW_SC_SCSO_65X_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+663,3,9950,BEAR,Bear Buses,663,2026-09-07,2,9925,FALC,Falcon Coaches,663,2023-09-01,2,2,1,1,newer,trips,0,0,0
+67,3,3631,BNSM,Bee Network,NW_04_BNSM_67_2,2026-11-29,304,3639,BNSM,Bee Network,NW_04_BNSM_67_1,2026-11-06,304,217,1,1,newer,trips,0,0,0
+67,3,14341,SCNH,Stagecoach Midlands,WM_SC_SCNH_67_1,2026-11-28,102,14342,SCNH,Stagecoach Midlands,WM_SC_SCNH_67_3,2026-11-14,102,67,1,1,newer,trips,0,0,0
+67,3,14343,SCNH,Stagecoach Midlands,WM_SC_SCNH_67_2,2026-12-12,102,14341,SCNH,Stagecoach Midlands,WM_SC_SCNH_67_1,2026-11-28,102,67,1,1,newer,trips,0,0,0
+67,3,14343,SCNH,Stagecoach Midlands,WM_SC_SCNH_67_2,2026-12-12,102,14342,SCNH,Stagecoach Midlands,WM_SC_SCNH_67_3,2026-11-14,102,67,1,1,newer,trips,0,0,0
+67A,3,4033,BNSM,Bee Network,NW_04_BNSM_67A_2,2026-11-29,23,4039,BNSM,Bee Network,NW_04_BNSM_67A_1,2026-11-06,23,23,1,1,newer,trips,0,0,0
+67A,3,14365,SCNH,Stagecoach Midlands,WM_SC_SCNH_67A_1,2026-11-28,59,14366,SCNH,Stagecoach Midlands,WM_SC_SCNH_67A_3,2026-11-14,59,29,1,1,newer,trips,0,0,0
+67A,3,14367,SCNH,Stagecoach Midlands,WM_SC_SCNH_67A_2,2026-12-12,59,14365,SCNH,Stagecoach Midlands,WM_SC_SCNH_67A_1,2026-11-28,59,29,1,1,newer,trips,0,0,0
+67A,3,14367,SCNH,Stagecoach Midlands,WM_SC_SCNH_67A_2,2026-12-12,59,14366,SCNH,Stagecoach Midlands,WM_SC_SCNH_67A_3,2026-11-14,59,29,1,1,newer,trips,0,0,0
+67B,3,14291,SCNH,Stagecoach Midlands,WM_SC_SCNH_67B_1,2026-11-28,85,14292,SCNH,Stagecoach Midlands,WM_SC_SCNH_67B_3,2026-11-14,85,38,1,1,newer,trips,0,0,0
+67B,3,14293,SCNH,Stagecoach Midlands,WM_SC_SCNH_67B_2,2026-12-12,81,14291,SCNH,Stagecoach Midlands,WM_SC_SCNH_67B_1,2026-11-28,85,38,1,1,newer,trips,0,0,0
+67B,3,14293,SCNH,Stagecoach Midlands,WM_SC_SCNH_67B_2,2026-12-12,81,14292,SCNH,Stagecoach Midlands,WM_SC_SCNH_67B_3,2026-11-14,85,38,1,1,newer,trips,0,0,0
+67C,3,15310,SCNH,Stagecoach Midlands,WM_SC_SCNH_67C_1,2026-11-28,12,15311,SCNH,Stagecoach Midlands,WM_SC_SCNH_67C_3,2026-11-14,12,4,1,1,newer,trips,0,0,0
+67C,3,15312,SCNH,Stagecoach Midlands,WM_SC_SCNH_67C_2,2026-12-12,12,15310,SCNH,Stagecoach Midlands,WM_SC_SCNH_67C_1,2026-11-28,12,4,1,1,newer,trips,0,0,0
+67C,3,15312,SCNH,Stagecoach Midlands,WM_SC_SCNH_67C_2,2026-12-12,12,15311,SCNH,Stagecoach Midlands,WM_SC_SCNH_67C_3,2026-11-14,12,4,1,1,newer,trips,0,0,0
+68,3,4957,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_68_1,2026-12-07,49,5073,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_68_2,2026-11-02,49,18,1,1,newer,trips,0,0,0
+69,3,11128,SCSO,Stagecoach South,SW_SC_SCSO_69_1,2026-11-30,93,11119,SCSO,Stagecoach South,SW_SC_SCSO_69_2,2026-10-31,505,49,0.845,0.845,newer,trips,0,0,0
+699,3,4164,1001,Arriva Merseyside,NW_06_1001_699_4,2027-09-27,120,4147,1001,Arriva Merseyside,NW_06_1001_699_3,2027-04-12,120,73,1,1,newer,trips,0,0,0
+699,3,4147,1001,Arriva Merseyside,NW_06_1001_699_3,2027-04-12,120,4163,1001,Arriva Merseyside,NW_06_1001_699_1,2026-09-28,120,73,1,1,newer,trips,0,0,0
+699,3,4164,1001,Arriva Merseyside,NW_06_1001_699_4,2027-09-27,120,4163,1001,Arriva Merseyside,NW_06_1001_699_1,2026-09-28,120,73,1,1,newer,trips,0,0,0
+699,3,4165,1001,Arriva Merseyside,NW_06_1001_699_2,2027-01-11,120,4163,1001,Arriva Merseyside,NW_06_1001_699_1,2026-09-28,120,73,1,1,newer,trips,0,0,0
+699,3,4147,1001,Arriva Merseyside,NW_06_1001_699_3,2027-04-12,120,4165,1001,Arriva Merseyside,NW_06_1001_699_2,2027-01-11,120,73,1,1,newer,trips,0,0,0
+699,3,4164,1001,Arriva Merseyside,NW_06_1001_699_4,2027-09-27,120,4165,1001,Arriva Merseyside,NW_06_1001_699_2,2027-01-11,120,73,1,1,newer,trips,0,0,0
+6A,3,3628,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_6A_1,2026-12-07,178,3638,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_6A_2,2026-11-02,117,65,1,1,newer,trips,0,0,0
+6S,3,10835,SCCM,Stagecoach East,SE_SC_SCCM_6S_1,2027-01-04,2,10831,SCCM,Stagecoach East,SE_SC_SCCM_6S_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+7,3,6,SCCM,Stagecoach East,EA_SC_SCCM_7_8,2027-01-03,201,33,SCCM,Stagecoach East,EA_SC_SCCM_7_7,2026-12-27,181,104,1,0.846,newer,trips,0,0,0
+7,3,33,SCCM,Stagecoach East,EA_SC_SCCM_7_7,2026-12-27,181,5,SCCM,Stagecoach East,EA_SC_SCCM_7_5,2026-11-01,184,104,0.852,1,newer,trips,0,0,0
+7,3,6,SCCM,Stagecoach East,EA_SC_SCCM_7_8,2027-01-03,201,5,SCCM,Stagecoach East,EA_SC_SCCM_7_5,2026-11-01,184,122,1,0.992,newer,trips,0,0,0
+7,3,15,SCCM,Stagecoach East,EA_SC_SCCM_7_6,2026-12-20,101,5,SCCM,Stagecoach East,EA_SC_SCCM_7_5,2026-11-01,184,100,0.82,0.99,newer,trips,0,0,0
+7,3,33,SCCM,Stagecoach East,EA_SC_SCCM_7_7,2026-12-27,181,15,SCCM,Stagecoach East,EA_SC_SCCM_7_6,2026-12-20,101,83,0.822,0.798,newer,trips,0,0,0
+7,3,6,SCCM,Stagecoach East,EA_SC_SCCM_7_8,2027-01-03,201,15,SCCM,Stagecoach East,EA_SC_SCCM_7_6,2026-12-20,101,101,1,0.821,newer,trips,0,0,0
+7,3,1754,SCCM,Stagecoach East,EM_SC_SCCM_7_2,2026-12-21,52,1769,SCCM,Stagecoach East,EM_SC_SCCM_7_4,2026-09-10,104,52,1,1,newer,trips,0,0,0
+7,3,1770,SCCM,Stagecoach East,EM_SC_SCCM_7_3,2027-01-04,104,1754,SCCM,Stagecoach East,EM_SC_SCCM_7_2,2026-12-21,52,52,1,1,newer,trips,0,0,0
+7,3,1756,SCCM,Stagecoach East,EM_SC_SCCM_7_1,2026-12-29,52,1754,SCCM,Stagecoach East,EM_SC_SCCM_7_2,2026-12-21,52,52,1,1,newer,trips,0,0,0
+7,3,1756,SCCM,Stagecoach East,EM_SC_SCCM_7_1,2026-12-29,52,1769,SCCM,Stagecoach East,EM_SC_SCCM_7_4,2026-09-10,104,52,1,1,newer,trips,0,0,0
+7,3,1770,SCCM,Stagecoach East,EM_SC_SCCM_7_3,2027-01-04,104,1756,SCCM,Stagecoach East,EM_SC_SCCM_7_1,2026-12-29,52,52,1,1,newer,trips,0,0,0
+7,3,1770,SCCM,Stagecoach East,EM_SC_SCCM_7_3,2027-01-04,104,1769,SCCM,Stagecoach East,EM_SC_SCCM_7_4,2026-09-10,104,52,1,1,newer,trips,0,0,0
+7,3,3953,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_7_3,2026-12-07,29,3956,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_7_2,2026-10-13,29,10,1,1,newer,trips,0,0,0
+7,3,3664,BNML,Bee Network,NW_04_BNML_7_2,2026-11-29,200,3692,BNML,Bee Network,NW_04_BNML_7_3,2026-10-25,200,109,1,1,newer,trips,0,0,0
+7,3,3664,BNML,Bee Network,NW_04_BNML_7_2,2026-11-29,200,3967,BNML,Bee Network,NW_04_BNML_7_1,2026-11-28,57,57,1,0.523,newer,trips,0,0,0
+7,3,3967,BNML,Bee Network,NW_04_BNML_7_1,2026-11-28,57,3692,BNML,Bee Network,NW_04_BNML_7_3,2026-10-25,200,57,0.523,1,newer,trips,0,0,0
+7,3,11420,SCSO,Stagecoach South,SW_SC_SCSO_7_5,2026-12-01,92,11428,SCSO,Stagecoach South,SW_SC_SCSO_7_4,2026-10-13,35,21,1,1,newer,trips,0,0,0
+7,3,8446,SCSO,Stagecoach South,SE_SC_SCSO_7_1,2026-12-01,326,8596,SCSO,Stagecoach South,SE_SC_SCSO_7_2,2026-10-25,159,61,1,1,newer,trips,0,0,0
+7,3,14175,WMB,West Midlands Bus,55-7-_-y11-1,2026-11-30,152,14176,WMB,West Midlands Bus,55-7-_-y11-0,2026-11-01,152,107,1,1,newer,trips,0,0,0
+7,3,6377,SBLB,Stagecoach Bluebird,S_SC_SBLB_7_1,2026-12-21,16,6487,SBLB,Stagecoach Bluebird,S_SC_SBLB_7_2,2026-10-28,16,4,1,1,newer,trips,0,0,0
+70,3,8403,SCSO,Stagecoach South,SE_SC_SCSO_70_1,2026-12-01,193,8399,SCSO,Stagecoach South,SE_SC_SCSO_70_2,2026-11-01,168,42,1,1,newer,trips,0,0,0
+702,3,5072,BNDB,Bee Network,NW_04_BNDB_702_2,2026-11-30,2,5112,BNDB,Bee Network,NW_04_BNDB_702_1,2026-09-02,2,2,1,1,newer,trips,0,0,0
+703,3,4728,BNML,Bee Network,NW_04_BNML_703_2,2026-11-30,2,4766,BNML,Bee Network,NW_04_BNML_703_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+704,3,4567,BNML,Bee Network,NW_04_BNML_704_2,2026-11-30,2,4604,BNML,Bee Network,NW_04_BNML_704_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+709,3,5291,BNFM,Bee Network,NW_04_BNFM_709_2,2026-11-30,2,5325,BNFM,Bee Network,NW_04_BNFM_709_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+71,3,8306,SCSO,Stagecoach South,SE_SC_SCSO_71_1,2026-12-01,276,8305,SCSO,Stagecoach South,SE_SC_SCSO_71_2,2026-11-01,248,67,1,1,newer,trips,0,0,0
+711,3,4867,BNSM,Bee Network,NW_04_BNSM_711_2,2026-11-30,2,4924,BNSM,Bee Network,NW_04_BNSM_711_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+715,3,5064,BNSM,Bee Network,NW_04_BNSM_715_2,2026-11-30,2,5108,BNSM,Bee Network,NW_04_BNSM_715_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+716,3,12839,CT,CT Coaches,40-716-_-y10-3,2026-11-23,8,12709,CT,CT Coaches,40-716-_-y10-2,2026-11-09,8,4,1,1,newer,trips,0,0,0
+716,3,4780,BNML,Bee Network,NW_04_BNML_716_2,2026-11-30,4,4844,BNML,Bee Network,NW_04_BNML_716_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+717,3,5206,BNSM,Bee Network,NW_04_BNSM_717_2,2026-11-30,2,5248,BNSM,Bee Network,NW_04_BNSM_717_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+718,3,5242,BNSM,Bee Network,NW_04_BNSM_718_2,2026-11-30,2,5293,BNSM,Bee Network,NW_04_BNSM_718_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+719,3,4886,BNML,Bee Network,NW_04_BNML_719_2,2026-11-30,2,4923,BNML,Bee Network,NW_04_BNML_719_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+72,3,8606,SCSO,Stagecoach South,SE_SC_SCSO_72_1,2026-12-01,141,8594,SCSO,Stagecoach South,SE_SC_SCSO_72_2,2026-11-01,122,32,1,1,newer,trips,0,0,0
+72,3,6316,SCFI,Stagecoach East Scotland,S_SC_SCFI_72_2,2026-12-07,144,6317,SCFI,Stagecoach East Scotland,S_SC_SCFI_72_3,2026-10-19,144,64,1,1,newer,trips,0,0,0
+72,3,6316,SCFI,Stagecoach East Scotland,S_SC_SCFI_72_2,2026-12-07,144,6324,SCFI,Stagecoach East Scotland,S_SC_SCFI_72_1,2026-12-02,94,64,1,1,newer,trips,0,0,0
+72,3,6324,SCFI,Stagecoach East Scotland,S_SC_SCFI_72_1,2026-12-02,94,6317,SCFI,Stagecoach East Scotland,S_SC_SCFI_72_3,2026-10-19,144,64,1,1,newer,trips,0,0,0
+720,3,5024,BNML,Bee Network,NW_04_BNML_720_2,2026-11-30,4,5113,BNML,Bee Network,NW_04_BNML_720_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+722,3,4852,BNFM,Bee Network,NW_04_BNFM_722_2,2026-11-30,2,4903,BNFM,Bee Network,NW_04_BNFM_722_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+73,3,5880,SCFI,Stagecoach East Scotland,S_SC_SCFI_73_1,2026-12-02,260,5875,SCFI,Stagecoach East Scotland,S_SC_SCFI_73_3,2026-10-19,368,148,1,1,newer,trips,0,0,0
+730,3,4187,BNML,Bee Network,NW_04_BNML_730_2,2026-11-30,4,4215,BNML,Bee Network,NW_04_BNML_730_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+731,3,4093,BNML,Bee Network,NW_04_BNML_731_2,2026-11-30,4,4117,BNML,Bee Network,NW_04_BNML_731_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+732,3,5004,BNML,Bee Network,NW_04_BNML_732_2,2026-11-30,2,5046,BNML,Bee Network,NW_04_BNML_732_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+733,3,4460,BNDB,Bee Network,NW_04_BNDB_733_2,2026-11-30,2,4483,BNDB,Bee Network,NW_04_BNDB_733_1,2026-09-01,2,2,1,1,newer,trips,0,0,0
+734,3,12992,CT,CT Coaches,40-734-_-y10-3,2026-11-23,6,13001,CT,CT Coaches,40-734-_-y10-2,2026-11-09,6,3,1,1,newer,trips,0,0,0
+734,3,4256,BNML,Bee Network,NW_04_BNML_734_2,2026-11-30,4,4296,BNML,Bee Network,NW_04_BNML_734_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+737,3,4997,BNML,Bee Network,NW_04_BNML_737_2,2026-11-30,4,5086,BNML,Bee Network,NW_04_BNML_737_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+738,3,5145,BNML,Bee Network,NW_04_BNML_738_2,2026-11-30,4,5225,BNML,Bee Network,NW_04_BNML_738_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+74,3,7692,SCFI,Stagecoach East Scotland,S_SC_SCFI_74_2,2026-12-07,36,7691,SCFI,Stagecoach East Scotland,S_SC_SCFI_74_3,2026-10-19,36,12,1,1,newer,trips,0,0,0
+74,3,7720,SCFI,Stagecoach East Scotland,S_SC_SCFI_74_1,2026-12-02,24,7691,SCFI,Stagecoach East Scotland,S_SC_SCFI_74_3,2026-10-19,36,12,1,1,newer,trips,0,0,0
+74,3,7692,SCFI,Stagecoach East Scotland,S_SC_SCFI_74_2,2026-12-07,36,7720,SCFI,Stagecoach East Scotland,S_SC_SCFI_74_1,2026-12-02,24,12,1,1,newer,trips,0,0,0
+745,3,4391,BNDB,Bee Network,NW_04_BNDB_745_2,2026-11-30,2,4412,BNDB,Bee Network,NW_04_BNDB_745_1,2026-09-01,2,2,1,1,newer,trips,0,0,0
+747,3,5010,BNML,Bee Network,NW_04_BNML_747_2,2026-11-30,2,5037,BNML,Bee Network,NW_04_BNML_747_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+74B,3,7112,SCFI,Stagecoach East Scotland,S_SC_SCFI_74B_1,2026-12-02,14,7108,SCFI,Stagecoach East Scotland,S_SC_SCFI_74B_3,2026-10-19,18,10,1,1,newer,trips,0,0,0
+75,3,3633,ARCT,Archway Travel,NW_05_ARCT_75_2,2026-11-12,74,3613,ARCT,Archway Travel,NW_05_ARCT_75_1,2026-09-14,74,42,1,1,newer,trips,0,0,0
+75,3,14117,SCNH,Stagecoach Midlands,WM_SC_SCNH_75_1,2026-11-28,15,14118,SCNH,Stagecoach Midlands,WM_SC_SCNH_75_3,2026-11-14,15,11,1,1,newer,trips,0,0,0
+75,3,14119,SCNH,Stagecoach Midlands,WM_SC_SCNH_75_2,2026-12-12,15,14117,SCNH,Stagecoach Midlands,WM_SC_SCNH_75_1,2026-11-28,15,11,1,1,newer,trips,0,0,0
+75,3,14119,SCNH,Stagecoach Midlands,WM_SC_SCNH_75_2,2026-12-12,15,14118,SCNH,Stagecoach Midlands,WM_SC_SCNH_75_3,2026-11-14,15,11,1,1,newer,trips,0,0,0
+75,3,10204,SCSO,Stagecoach South,SE_SC_SCSO_75_3,2026-12-01,2,10203,SCSO,Stagecoach South,SE_SC_SCSO_75_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+75,3,7907,SCFI,Stagecoach East Scotland,S_SC_SCFI_75_2,2026-12-07,35,7906,SCFI,Stagecoach East Scotland,S_SC_SCFI_75_3,2026-10-19,35,13,1,1,newer,trips,0,0,0
+75,3,7930,SCFI,Stagecoach East Scotland,S_SC_SCFI_75_1,2026-12-02,23,7906,SCFI,Stagecoach East Scotland,S_SC_SCFI_75_3,2026-10-19,35,13,1,1,newer,trips,0,0,0
+75,3,7907,SCFI,Stagecoach East Scotland,S_SC_SCFI_75_2,2026-12-07,35,7930,SCFI,Stagecoach East Scotland,S_SC_SCFI_75_1,2026-12-02,23,13,1,1,newer,trips,0,0,0
+752,3,4230,BNML,Bee Network,NW_04_BNML_752_2,2026-11-30,4,4259,BNML,Bee Network,NW_04_BNML_752_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+753,3,4173,BNML,Bee Network,NW_04_BNML_753_2,2026-11-30,4,4193,BNML,Bee Network,NW_04_BNML_753_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+756,3,4410,BNML,Bee Network,NW_04_BNML_756_2,2026-11-30,4,4456,BNML,Bee Network,NW_04_BNML_756_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+757,3,4261,BNML,Bee Network,NW_04_BNML_757_2,2026-11-30,4,4282,BNML,Bee Network,NW_04_BNML_757_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+758B,3,4943,BNML,Bee Network,NW_04_BNML_758B_2,2026-11-30,4,5043,BNML,Bee Network,NW_04_BNML_758B_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+75A,3,14337,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_5,2026-12-14,5,14241,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_3,2026-11-14,14,4,0.444,1,newer,trips,0,0,0
+75A,3,14338,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_4,2026-11-30,4,14241,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_3,2026-11-14,14,4,0.444,1,newer,trips,0,0,0
+75A,3,14337,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_5,2026-12-14,5,14338,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_4,2026-11-30,4,4,1,1,newer,trips,0,0,0
+75A,3,14597,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_1,2026-11-28,10,14241,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_3,2026-11-14,14,5,0.556,1,newer,trips,0,0,0
+75A,3,14598,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_2,2026-12-12,10,14597,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_1,2026-11-28,10,5,1,1,newer,trips,0,0,0
+75A,3,14598,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_2,2026-12-12,10,14241,SCNH,Stagecoach Midlands,WM_SC_SCNH_75A_3,2026-11-14,14,5,0.556,1,newer,trips,0,0,0
+75A,3,7952,SCFI,Stagecoach East Scotland,S_SC_SCFI_75A_1,2026-12-02,19,7939,SCFI,Stagecoach East Scotland,S_SC_SCFI_75A_3,2026-10-19,25,13,1,1,newer,trips,0,0,0
+75S,3,15155,SCNH,Stagecoach Midlands,WM_SC_SCNH_75S_1,2026-11-30,2,15156,SCNH,Stagecoach Midlands,WM_SC_SCNH_75S_3,2026-11-16,2,2,1,1,newer,trips,0,0,0
+75S,3,15157,SCNH,Stagecoach Midlands,WM_SC_SCNH_75S_2,2026-12-14,2,15155,SCNH,Stagecoach Midlands,WM_SC_SCNH_75S_1,2026-11-30,2,2,1,1,newer,trips,0,0,0
+75S,3,15157,SCNH,Stagecoach Midlands,WM_SC_SCNH_75S_2,2026-12-14,2,15156,SCNH,Stagecoach Midlands,WM_SC_SCNH_75S_3,2026-11-16,2,2,1,1,newer,trips,0,0,0
+76,3,14197,SCNH,Stagecoach Midlands,WM_SC_SCNH_76_1,2026-11-28,19,14196,SCNH,Stagecoach Midlands,WM_SC_SCNH_76_3,2026-11-14,19,13,1,1,newer,trips,0,0,0
+76,3,14198,SCNH,Stagecoach Midlands,WM_SC_SCNH_76_2,2026-12-12,19,14197,SCNH,Stagecoach Midlands,WM_SC_SCNH_76_1,2026-11-28,19,13,1,1,newer,trips,0,0,0
+76,3,14198,SCNH,Stagecoach Midlands,WM_SC_SCNH_76_2,2026-12-12,19,14196,SCNH,Stagecoach Midlands,WM_SC_SCNH_76_3,2026-11-14,19,13,1,1,newer,trips,0,0,0
+76,3,7960,SCFI,Stagecoach East Scotland,S_SC_SCFI_76_2,2026-12-07,29,7959,SCFI,Stagecoach East Scotland,S_SC_SCFI_76_3,2026-10-19,29,10,1,1,newer,trips,0,0,0
+76,3,7966,SCFI,Stagecoach East Scotland,S_SC_SCFI_76_1,2026-12-02,19,7959,SCFI,Stagecoach East Scotland,S_SC_SCFI_76_3,2026-10-19,29,10,1,1,newer,trips,0,0,0
+76,3,7960,SCFI,Stagecoach East Scotland,S_SC_SCFI_76_2,2026-12-07,29,7966,SCFI,Stagecoach East Scotland,S_SC_SCFI_76_1,2026-12-02,19,10,1,1,newer,trips,0,0,0
+763,3,4530,BNML,Bee Network,NW_04_BNML_763_2,2026-11-30,4,4600,BNML,Bee Network,NW_04_BNML_763_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+764,3,4420,BNML,Bee Network,NW_04_BNML_764_2,2026-11-30,4,4480,BNML,Bee Network,NW_04_BNML_764_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+765,3,4735,BNML,Bee Network,NW_04_BNML_765_2,2026-11-30,4,4800,BNML,Bee Network,NW_04_BNML_765_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+766,3,4345,BNML,Bee Network,NW_04_BNML_766_2,2026-11-30,4,4382,BNML,Bee Network,NW_04_BNML_766_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+76A,3,14451,SCNH,Stagecoach Midlands,WM_SC_SCNH_76A_1,2026-11-28,4,14452,SCNH,Stagecoach Midlands,WM_SC_SCNH_76A_3,2026-11-14,4,2,1,1,newer,trips,0,0,0
+76A,3,14453,SCNH,Stagecoach Midlands,WM_SC_SCNH_76A_2,2026-12-12,4,14451,SCNH,Stagecoach Midlands,WM_SC_SCNH_76A_1,2026-11-28,4,2,1,1,newer,trips,0,0,0
+76A,3,14453,SCNH,Stagecoach Midlands,WM_SC_SCNH_76A_2,2026-12-12,4,14452,SCNH,Stagecoach Midlands,WM_SC_SCNH_76A_3,2026-11-14,4,2,1,1,newer,trips,0,0,0
+76A,3,7486,SCFI,Stagecoach East Scotland,S_SC_SCFI_76A_1,2026-12-02,42,7452,SCFI,Stagecoach East Scotland,S_SC_SCFI_76A_3,2026-10-19,60,25,1,1,newer,trips,0,0,0
+76B,3,14765,SCNH,Stagecoach Midlands,WM_SC_SCNH_76B_1,2026-11-30,2,14766,SCNH,Stagecoach Midlands,WM_SC_SCNH_76B_3,2026-11-16,2,2,1,1,newer,trips,0,0,0
+76B,3,14767,SCNH,Stagecoach Midlands,WM_SC_SCNH_76B_2,2026-12-14,2,14765,SCNH,Stagecoach Midlands,WM_SC_SCNH_76B_1,2026-11-30,2,2,1,1,newer,trips,0,0,0
+76B,3,14767,SCNH,Stagecoach Midlands,WM_SC_SCNH_76B_2,2026-12-14,2,14766,SCNH,Stagecoach Midlands,WM_SC_SCNH_76B_3,2026-11-16,2,2,1,1,newer,trips,0,0,0
+77,3,14101,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_5,2026-11-28,43,14100,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_4,2026-11-14,43,24,1,1,newer,trips,0,0,0
+77,3,14102,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_6,2026-12-12,43,14100,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_4,2026-11-14,43,24,1,1,newer,trips,0,0,0
+77,3,14102,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_6,2026-12-12,43,14101,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_5,2026-11-28,43,24,1,1,newer,trips,0,0,0
+77,3,14567,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_1,2026-11-29,11,14568,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_3,2026-11-15,11,11,1,1,newer,trips,0,0,0
+77,3,14569,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_2,2026-12-13,11,14567,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_1,2026-11-29,11,11,1,1,newer,trips,0,0,0
+77,3,14569,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_2,2026-12-13,11,14568,SCNH,Stagecoach Midlands,WM_SC_SCNH_77_3,2026-11-15,11,11,1,1,newer,trips,0,0,0
+772,3,4849,BNML,Bee Network,NW_04_BNML_772_2,2026-11-30,4,4965,BNML,Bee Network,NW_04_BNML_772_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+776,3,4683,BNML,Bee Network,NW_04_BNML_776_2,2026-11-30,4,4775,BNML,Bee Network,NW_04_BNML_776_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+77A,3,835,SYRK,Stagecoach Yorkshire,EM_SC_SYRK_77A_1,2026-11-02,8,748,SCEM,Stagecoach East Midlands,EM_SC_SCEM_77A_1,2026-11-01,37,4,0.133,1,newer,trips,0,0,0
+77A,3,14188,SCNH,Stagecoach Midlands,WM_SC_SCNH_77A_1,2026-11-28,24,14189,SCNH,Stagecoach Midlands,WM_SC_SCNH_77A_3,2026-11-14,24,11,1,1,newer,trips,0,0,0
+77A,3,14190,SCNH,Stagecoach Midlands,WM_SC_SCNH_77A_2,2026-12-12,24,14188,SCNH,Stagecoach Midlands,WM_SC_SCNH_77A_1,2026-11-28,24,11,1,1,newer,trips,0,0,0
+77A,3,14190,SCNH,Stagecoach Midlands,WM_SC_SCNH_77A_2,2026-12-12,24,14189,SCNH,Stagecoach Midlands,WM_SC_SCNH_77A_3,2026-11-14,24,11,1,1,newer,trips,0,0,0
+77C,3,14431,SCNH,Stagecoach Midlands,WM_SC_SCNH_77C_2,2026-12-14,8,14433,SCNH,Stagecoach Midlands,WM_SC_SCNH_77C_3,2026-11-16,6,4,1,1,newer,trips,0,0,0
+77C,3,14431,SCNH,Stagecoach Midlands,WM_SC_SCNH_77C_2,2026-12-14,8,14432,SCNH,Stagecoach Midlands,WM_SC_SCNH_77C_1,2026-11-30,6,4,1,1,newer,trips,0,0,0
+77C,3,14432,SCNH,Stagecoach Midlands,WM_SC_SCNH_77C_1,2026-11-30,6,14433,SCNH,Stagecoach Midlands,WM_SC_SCNH_77C_3,2026-11-16,6,4,1,1,newer,trips,0,0,0
+77E,3,14247,SCNH,Stagecoach Midlands,WM_SC_SCNH_77E_2,2026-12-12,10,14250,SCNH,Stagecoach Midlands,WM_SC_SCNH_77E_3,2026-11-14,10,6,1,1,newer,trips,0,0,0
+77E,3,14247,SCNH,Stagecoach Midlands,WM_SC_SCNH_77E_2,2026-12-12,10,14248,SCNH,Stagecoach Midlands,WM_SC_SCNH_77E_1,2026-11-28,10,6,1,1,newer,trips,0,0,0
+77E,3,14248,SCNH,Stagecoach Midlands,WM_SC_SCNH_77E_1,2026-11-28,10,14250,SCNH,Stagecoach Midlands,WM_SC_SCNH_77E_3,2026-11-14,10,6,1,1,newer,trips,0,0,0
+78,3,14932,SCNH,Stagecoach Midlands,WM_SC_SCNH_78_1,2026-11-29,10,14933,SCNH,Stagecoach Midlands,WM_SC_SCNH_78_3,2026-11-15,10,10,1,1,newer,trips,0,0,0
+78,3,14934,SCNH,Stagecoach Midlands,WM_SC_SCNH_78_2,2026-12-13,10,14932,SCNH,Stagecoach Midlands,WM_SC_SCNH_78_1,2026-11-29,10,10,1,1,newer,trips,0,0,0
+78,3,14934,SCNH,Stagecoach Midlands,WM_SC_SCNH_78_2,2026-12-13,10,14933,SCNH,Stagecoach Midlands,WM_SC_SCNH_78_3,2026-11-15,10,10,1,1,newer,trips,0,0,0
+782,3,4846,BNML,Bee Network,NW_04_BNML_782_2,2026-11-30,4,4956,BNML,Bee Network,NW_04_BNML_782_1,2026-11-04,2,2,1,1,newer,trips,0,0,0
+783,3,4597,BNML,Bee Network,NW_04_BNML_783_2,2026-11-30,4,4665,BNML,Bee Network,NW_04_BNML_783_1,2026-11-04,2,2,1,1,newer,trips,0,0,0
+784,3,4781,BNSM,Bee Network,NW_04_BNSM_784_2,2026-11-30,4,4827,BNSM,Bee Network,NW_04_BNSM_784_1,2026-11-06,4,4,1,1,newer,trips,0,0,0
+786,3,5313,BNML,Bee Network,NW_04_BNML_786_2,2026-12-01,4,5384,BNML,Bee Network,NW_04_BNML_786_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+788,3,5230,BNSM,Bee Network,NW_04_BNSM_788_2,2026-11-30,2,5280,BNSM,Bee Network,NW_04_BNSM_788_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+789,3,4228,BNML,Bee Network,NW_04_BNML_789_2,2026-11-30,4,4260,BNML,Bee Network,NW_04_BNML_789_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+792,3,5437,BNML,Bee Network,NW_04_BNML_792_2,2026-11-30,6,5572,BNML,Bee Network,NW_04_BNML_792_1,2026-11-02,3,3,1,1,newer,trips,0,0,0
+796,3,4392,BNML,Bee Network,NW_04_BNML_796_2,2026-11-30,4,4448,BNML,Bee Network,NW_04_BNML_796_1,2026-11-04,2,2,1,1,newer,trips,0,0,0
+798,3,5219,BNML,Bee Network,NW_04_BNML_798_2,2026-11-30,4,5307,BNML,Bee Network,NW_04_BNML_798_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+799,3,4458,BNML,Bee Network,NW_04_BNML_799_2,2026-11-30,4,4506,BNML,Bee Network,NW_04_BNML_799_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+7E,3,6916,SBLB,Stagecoach Bluebird,S_SC_SBLB_7E_1,2027-01-08,3,6918,SBLB,Stagecoach Bluebird,S_SC_SBLB_7E_2,2026-10-30,3,2,1,1,newer,trips,0,0,0
+8,3,9886,SCCM,Stagecoach East,SE_SC_SCCM_8_7,2026-12-27,56,9853,SCCM,Stagecoach East,SE_SC_SCCM_8_6,2026-12-20,56,37,1,1,newer,trips,0,0,0
+8,3,10076,SCCM,Stagecoach East,SE_SC_SCCM_8_8,2027-01-03,92,9853,SCCM,Stagecoach East,SE_SC_SCCM_8_6,2026-12-20,56,37,1,1,newer,trips,0,0,0
+8,3,10076,SCCM,Stagecoach East,SE_SC_SCCM_8_8,2027-01-03,92,9886,SCCM,Stagecoach East,SE_SC_SCCM_8_7,2026-12-27,56,37,1,1,newer,trips,0,0,0
+8,3,9853,SCCM,Stagecoach East,SE_SC_SCCM_8_6,2026-12-20,56,9948,SCCM,Stagecoach East,SE_SC_SCCM_8_5,2026-09-10,92,37,1,1,newer,trips,0,0,0
+8,3,10076,SCCM,Stagecoach East,SE_SC_SCCM_8_8,2027-01-03,92,9948,SCCM,Stagecoach East,SE_SC_SCCM_8_5,2026-09-10,92,37,1,1,newer,trips,0,0,0
+8,3,11514,SCSO,Stagecoach South,SW_SC_SCSO_8_4,2026-12-01,228,11531,SCSO,Stagecoach South,SW_SC_SCSO_8_3,2026-10-13,99,39,1,1,newer,trips,0,0,0
+8,3,32,SCCM,Stagecoach East,EA_SC_SCCM_8_3,2027-01-03,116,31,SCCM,Stagecoach East,EA_SC_SCCM_8_4,2026-11-01,116,101,1,1,newer,trips,0,0,0
+8,3,61,SCCM,Stagecoach East,EA_SC_SCCM_8_1,2026-12-20,72,31,SCCM,Stagecoach East,EA_SC_SCCM_8_4,2026-11-01,116,71,0.703,1,newer,trips,0,0,0
+8,3,32,SCCM,Stagecoach East,EA_SC_SCCM_8_3,2027-01-03,116,61,SCCM,Stagecoach East,EA_SC_SCCM_8_1,2026-12-20,72,71,1,0.703,newer,trips,0,0,0
+8,3,102,SCCM,Stagecoach East,EA_SC_SCCM_8_2,2026-12-27,104,31,SCCM,Stagecoach East,EA_SC_SCCM_8_4,2026-11-01,116,61,0.604,1,newer,trips,0,0,0
+8,3,32,SCCM,Stagecoach East,EA_SC_SCCM_8_3,2027-01-03,116,102,SCCM,Stagecoach East,EA_SC_SCCM_8_2,2026-12-27,104,61,1,0.604,newer,trips,0,0,0
+8,3,14340,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_2,2026-11-14,38,14329,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_4,2026-08-29,25,14,1,1,newer,trips,0,0,0
+8,3,14344,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_3,2026-11-21,25,14340,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_2,2026-11-14,38,14,1,1,newer,trips,0,0,0
+8,3,14344,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_3,2026-11-21,25,14329,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_4,2026-08-29,25,14,1,1,newer,trips,0,0,0
+8,3,14345,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_1,2026-09-12,25,14329,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_4,2026-08-29,25,14,1,1,newer,trips,0,0,0
+8,3,14344,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_3,2026-11-21,25,14345,SCNH,Stagecoach Midlands,WM_SC_SCNH_8_1,2026-09-12,25,14,1,1,newer,trips,0,0,0
+800,3,5354,BNFM,Bee Network,NW_04_BNFM_800_2,2026-11-30,2,5387,BNFM,Bee Network,NW_04_BNFM_800_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+808,3,4875,BNML,Bee Network,NW_04_BNML_808_2,2026-11-30,3,4933,BNML,Bee Network,NW_04_BNML_808_1,2026-11-02,3,3,1,1,newer,trips,0,0,0
+81,3,4061,BNSM,Bee Network,NW_04_BNSM_81_2,2026-11-29,131,4065,BNSM,Bee Network,NW_04_BNSM_81_1,2026-11-06,131,82,1,1,newer,trips,0,0,0
+811,3,4576,BNML,Bee Network,NW_04_BNML_811_2,2026-11-30,4,4651,BNML,Bee Network,NW_04_BNML_811_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+815,3,4532,BNML,Bee Network,NW_04_BNML_815_2,2026-11-30,8,4658,BNML,Bee Network,NW_04_BNML_815_1,2026-11-02,4,4,1,1,newer,trips,0,0,0
+817,3,5414,BNML,Bee Network,NW_04_BNML_817_2,2026-11-30,3,5463,BNML,Bee Network,NW_04_BNML_817_1,2026-11-02,3,3,1,1,newer,trips,0,0,0
+82,3,4111,BNSM,Bee Network,NW_04_BNSM_82_2,2026-11-29,248,4121,BNSM,Bee Network,NW_04_BNSM_82_1,2026-11-06,248,174,1,1,newer,trips,0,0,0
+823,3,5252,BNSM,Bee Network,NW_04_BNSM_823_2,2026-11-30,2,5304,BNSM,Bee Network,NW_04_BNSM_823_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+828,3,4944,BNFM,Bee Network,NW_04_BNFM_828_2,2026-11-30,2,5001,BNFM,Bee Network,NW_04_BNFM_828_1,2026-11-03,2,2,1,1,newer,trips,0,0,0
+829,3,4519,BNSM,Bee Network,NW_04_BNSM_829_2,2026-11-30,3,4550,BNSM,Bee Network,NW_04_BNSM_829_1,2026-11-06,3,3,1,1,newer,trips,0,0,0
+82A,3,7591,WTRM,Watermill Coaches,WTRM_82A,2026-11-10,8,7589,VICT,Victoria Coaches,VICT_82A,2026-08-22,8,8,1,1,newer,trips,0,0,0
+83,3,3776,BNSM,Bee Network,NW_04_BNSM_83_2,2026-11-29,495,3780,BNSM,Bee Network,NW_04_BNSM_83_1,2026-11-06,495,329,1,1,newer,trips,0,0,0
+83,3,7110,WTRM,Watermill Coaches,WTRM_83,2026-11-10,94,7708,VICT,Victoria Coaches,VICT_83,2026-08-23,18,9,1,0.321,newer,trips,0,0,0
+831,3,5372,BNFM,Bee Network,NW_04_BNFM_831_2,2026-11-30,2,5416,BNFM,Bee Network,NW_04_BNFM_831_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+835,3,4836,BNSM,Bee Network,NW_04_BNSM_835_2,2026-11-30,2,4885,BNSM,Bee Network,NW_04_BNSM_835_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+836,3,3173,GATS,GEM Travel,NE_01_GEM_836_1,2026-11-23,2,3346,STNE,Stanley Taxis,NE_01_STL_836_1,2026-01-05,2,2,1,1,newer,trips,0,0,0
+836,3,4525,BNSM,Bee Network,NW_04_BNSM_836_2,2026-11-30,2,4547,BNSM,Bee Network,NW_04_BNSM_836_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+839,3,5261,BNFM,Bee Network,NW_04_BNFM_839_2,2026-11-30,2,5306,BNFM,Bee Network,NW_04_BNFM_839_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+84,3,3492,BNSM,Bee Network,NW_04_BNSM_84_2,2026-11-29,450,3494,BNSM,Bee Network,NW_04_BNSM_84_1,2026-11-06,450,368,1,1,newer,trips,0,0,0
+84,3,14071,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_3,2026-10-31,28,14074,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_2,2026-09-12,26,25,1,0.926,newer,trips,0,0,0
+84,3,14095,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_4,2026-11-14,44,14074,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_2,2026-09-12,26,22,0.88,0.846,newer,trips,0,0,0
+84,3,14096,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_1,2026-11-21,28,14095,SCNH,Stagecoach Midlands,WM_SC_SCNH_84_4,2026-11-14,44,22,0.846,0.88,newer,trips,0,0,0
+848,3,5095,BNSM,Bee Network,NW_04_BNSM_848_2,2026-11-30,2,5141,BNSM,Bee Network,NW_04_BNSM_848_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+84A,3,14622,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_1,2026-11-21,8,14324,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_4,2026-11-14,12,5,0.625,1,newer,trips,0,0,0
+84A,3,14324,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_4,2026-11-14,12,14468,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_2,2026-09-12,8,4,1,0.5,newer,trips,0,0,0
+84A,3,14469,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_3,2026-10-31,8,14468,SCNH,Stagecoach Midlands,WM_SC_SCNH_84A_2,2026-09-12,8,4,1,1,newer,trips,0,0,0
+85,3,3641,BNML,Bee Network,NW_04_BNML_85_2,2026-11-29,824,4018,BNML,Bee Network,NW_04_BNML_85_1,2026-11-02,295,273,1,1,newer,trips,0,0,0
+85,3,14068,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_3,2026-11-21,42,14026,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_2,2026-11-14,63,28,0.875,1,newer,trips,0,0,0
+85,3,14068,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_3,2026-11-21,42,14107,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_4,2026-10-31,42,22,0.815,0.786,newer,trips,0,0,0
+85,3,14026,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_2,2026-11-14,63,14109,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_1,2026-09-12,41,26,0.963,0.812,newer,trips,0,0,0
+85,3,14068,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_3,2026-11-21,42,14109,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_1,2026-09-12,41,22,0.815,0.786,newer,trips,0,0,0
+85,3,14107,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_4,2026-10-31,42,14109,SCNH,Stagecoach Midlands,WM_SC_SCNH_85_1,2026-09-12,41,27,1,1,newer,trips,0,0,0
+850,3,4955,BNFM,Bee Network,NW_04_BNFM_850_2,2026-11-30,2,5012,BNFM,Bee Network,NW_04_BNFM_850_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+852,3,5017,BNML,Bee Network,NW_04_BNML_852_2,2026-11-30,4,5103,BNML,Bee Network,NW_04_BNML_852_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+85A,3,3869,BNML,Bee Network,NW_04_BNML_85A_2,2026-11-30,194,4070,BNML,Bee Network,NW_04_BNML_85A_1,2026-11-02,64,60,1,1,newer,trips,0,0,0
+85B,3,14300,SCNH,Stagecoach Midlands,WM_SC_SCNH_85B_1,2026-11-21,8,14299,SCNH,Stagecoach Midlands,WM_SC_SCNH_85B_2,2026-11-14,12,6,1,1,newer,trips,0,0,0
+85H,3,14684,SCNH,Stagecoach Midlands,WM_SC_SCNH_85H_1,2026-11-23,2,14441,SCNH,Stagecoach Midlands,WM_SC_SCNH_85H_2,2026-11-16,4,2,0.667,1,newer,trips,0,0,0
+85K,3,14666,SCNH,Stagecoach Midlands,WM_SC_SCNH_85K_1,2026-11-23,2,14419,SCNH,Stagecoach Midlands,WM_SC_SCNH_85K_2,2026-11-16,4,2,0.667,1,newer,trips,0,0,0
+85S,3,14658,SCNH,Stagecoach Midlands,WM_SC_SCNH_85S_1,2026-11-23,2,14424,SCNH,Stagecoach Midlands,WM_SC_SCNH_85S_2,2026-11-16,4,2,0.667,1,newer,trips,0,0,0
+86,3,3467,BNML,Bee Network,NW_04_BNML_86_2,2026-11-29,1288,3622,BNML,Bee Network,NW_04_BNML_86_1,2026-11-02,456,398,1,1,newer,trips,0,0,0
+86,3,11792,SCSO,Stagecoach South,SW_SC_SCSO_86_1,2026-11-30,17,11794,SCSO,Stagecoach South,SW_SC_SCSO_86_2,2026-11-02,17,4,1,1,newer,trips,0,0,0
+86,3,14142,SCNH,Stagecoach Midlands,WM_SC_SCNH_86_1,2026-11-21,69,14140,SCNH,Stagecoach Midlands,WM_SC_SCNH_86_2,2026-11-14,99,40,1,1,newer,trips,0,0,0
+861,3,5218,BNSM,Bee Network,NW_04_BNSM_861_2,2026-11-30,2,5262,BNSM,Bee Network,NW_04_BNSM_861_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+862,3,5195,BNFM,Bee Network,NW_04_BNFM_862_2,2026-11-30,2,5233,BNFM,Bee Network,NW_04_BNFM_862_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+864,3,5034,BNML,Bee Network,NW_04_BNML_864_2,2026-11-30,2,5061,BNML,Bee Network,NW_04_BNML_864_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+865,3,5236,BNFM,Bee Network,NW_04_BNFM_865_2,2026-11-30,2,5290,BNFM,Bee Network,NW_04_BNFM_865_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+866,3,4824,BNML,Bee Network,NW_04_BNML_866_2,2026-12-01,4,4920,BNML,Bee Network,NW_04_BNML_866_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+867,3,4725,BNSM,Bee Network,NW_04_BNSM_867_2,2026-11-30,2,4765,BNSM,Bee Network,NW_04_BNSM_867_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+87,3,10413,SCSO,Stagecoach South,SE_SC_SCSO_87_1,2026-12-01,2,10412,SCSO,Stagecoach South,SE_SC_SCSO_87_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+87,3,14028,WMB,West Midlands Bus,57-87-_-y11-2,2027-01-03,457,14027,WMB,West Midlands Bus,57-87-_-y11-1,2026-12-04,457,393,1,1,newer,trips,0,0,0
+87,3,14027,WMB,West Midlands Bus,57-87-_-y11-1,2026-12-04,457,14031,WMB,West Midlands Bus,57-87-_-y11-0,2026-11-01,457,393,1,1,newer,trips,0,0,0
+87,3,14028,WMB,West Midlands Bus,57-87-_-y11-2,2027-01-03,457,14031,WMB,West Midlands Bus,57-87-_-y11-0,2026-11-01,457,393,1,1,newer,trips,0,0,0
+875,3,4734,BNSM,Bee Network,NW_04_BNSM_875_2,2026-11-30,2,4777,BNSM,Bee Network,NW_04_BNSM_875_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+880,3,4731,BNFM,Bee Network,NW_04_BNFM_880_2,2026-11-30,2,4773,BNFM,Bee Network,NW_04_BNFM_880_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+881,3,4871,BNFM,Bee Network,NW_04_BNFM_881_2,2026-11-30,2,4926,BNFM,Bee Network,NW_04_BNFM_881_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+887,3,4802,BNSM,Bee Network,NW_04_BNSM_887_2,2026-11-30,2,4837,BNSM,Bee Network,NW_04_BNSM_887_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+891,3,4554,BNSM,Bee Network,NW_04_BNSM_891_2,2026-11-30,2,4595,BNSM,Bee Network,NW_04_BNSM_891_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+892,3,4883,BNSM,Bee Network,NW_04_BNSM_892_2,2026-11-30,2,4935,BNSM,Bee Network,NW_04_BNSM_892_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+893,3,4645,BNSM,Bee Network,NW_04_BNSM_893_2,2026-11-30,3,4705,BNSM,Bee Network,NW_04_BNSM_893_1,2026-11-06,3,3,1,1,newer,trips,0,0,0
+894,3,4656,BNFM,Bee Network,NW_04_BNFM_894_2,2026-11-30,2,4687,BNFM,Bee Network,NW_04_BNFM_894_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+895,3,4843,BNFM,Bee Network,NW_04_BNFM_895_2,2026-11-30,2,4892,BNFM,Bee Network,NW_04_BNFM_895_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+898,3,4874,BNSM,Bee Network,NW_04_BNSM_898_2,2026-11-30,2,4928,BNSM,Bee Network,NW_04_BNSM_898_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+8A,3,306,SCCM,Stagecoach East,EA_SC_SCCM_8A_2,2026-12-29,48,304,SCCM,Stagecoach East,EA_SC_SCCM_8A_1,2026-12-21,24,24,1,1,newer,trips,0,0,0
+8A,3,304,SCCM,Stagecoach East,EA_SC_SCCM_8A_1,2026-12-21,24,309,SCCM,Stagecoach East,EA_SC_SCCM_8A_4,2026-11-02,48,24,1,1,newer,trips,0,0,0
+8A,3,310,SCCM,Stagecoach East,EA_SC_SCCM_8A_3,2027-01-04,48,304,SCCM,Stagecoach East,EA_SC_SCCM_8A_1,2026-12-21,24,24,1,1,newer,trips,0,0,0
+8A,3,306,SCCM,Stagecoach East,EA_SC_SCCM_8A_2,2026-12-29,48,309,SCCM,Stagecoach East,EA_SC_SCCM_8A_4,2026-11-02,48,24,1,1,newer,trips,0,0,0
+8A,3,310,SCCM,Stagecoach East,EA_SC_SCCM_8A_3,2027-01-04,48,306,SCCM,Stagecoach East,EA_SC_SCCM_8A_2,2026-12-29,48,24,1,1,newer,trips,0,0,0
+8A,3,310,SCCM,Stagecoach East,EA_SC_SCCM_8A_3,2027-01-04,48,309,SCCM,Stagecoach East,EA_SC_SCCM_8A_4,2026-11-02,48,24,1,1,newer,trips,0,0,0
+8A,3,14496,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_4,2026-11-14,36,14480,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_2,2026-08-29,24,13,1,1,newer,trips,0,0,0
+8A,3,14500,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_5,2026-11-21,24,14480,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_2,2026-08-29,24,13,1,1,newer,trips,0,0,0
+8A,3,14501,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_3,2026-09-12,24,14480,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_2,2026-08-29,24,13,1,1,newer,trips,0,0,0
+8A,3,14500,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_5,2026-11-21,24,14496,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_4,2026-11-14,36,13,1,1,newer,trips,0,0,0
+8A,3,14500,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_5,2026-11-21,24,14501,SCNH,Stagecoach Midlands,WM_SC_SCNH_8A_3,2026-09-12,24,13,1,1,newer,trips,0,0,0
+8B,3,14354,SCNH,Stagecoach Midlands,WM_SC_SCNH_8B_1,2026-11-21,24,14351,SCNH,Stagecoach Midlands,WM_SC_SCNH_8B_2,2026-11-14,36,12,1,1,newer,trips,0,0,0
+8S,3,6172,SBLB,Stagecoach Bluebird,S_SC_SBLB_8S_3,2026-12-21,10,6173,SBLB,Stagecoach Bluebird,S_SC_SBLB_8S_2,2026-11-05,8,6,1,1,newer,trips,0,0,0
+9,3,9635,SCCM,Stagecoach East,SE_SC_SCCM_9_3,2027-01-04,19,9614,SCCM,Stagecoach East,SE_SC_SCCM_9_4,2026-09-10,19,11,1,1,newer,trips,0,0,0
+9,3,10067,SCCM,Stagecoach East,SE_SC_SCCM_9_1,2026-12-21,11,9614,SCCM,Stagecoach East,SE_SC_SCCM_9_4,2026-09-10,19,11,1,1,newer,trips,0,0,0
+9,3,9635,SCCM,Stagecoach East,SE_SC_SCCM_9_3,2027-01-04,19,10067,SCCM,Stagecoach East,SE_SC_SCCM_9_1,2026-12-21,11,11,1,1,newer,trips,0,0,0
+9,3,10369,SCCM,Stagecoach East,SE_SC_SCCM_9_2,2026-12-29,8,10067,SCCM,Stagecoach East,SE_SC_SCCM_9_1,2026-12-21,11,8,0.727,1,newer,trips,0,0,0
+9,3,9635,SCCM,Stagecoach East,SE_SC_SCCM_9_3,2027-01-04,19,10369,SCCM,Stagecoach East,SE_SC_SCCM_9_2,2026-12-29,8,8,1,0.727,newer,trips,0,0,0
+9,3,12531,SCSO,Stagecoach South,SW_SC_SCSO_9_1,2026-12-01,35,12572,SCSO,Stagecoach South,SW_SC_SCSO_9_2,2026-10-13,10,5,1,1,newer,trips,0,0,0
+9,3,6799,SBLB,Stagecoach Bluebird,S_SC_SBLB_9_1,2026-12-21,49,6803,SBLB,Stagecoach Bluebird,S_SC_SBLB_9_2,2026-10-28,46,15,1,1,newer,trips,0,0,0
+90,3,4029,BNSM,Bee Network,NW_04_BNSM_90_2,2026-11-30,27,4051,BNSM,Bee Network,NW_04_BNSM_90_1,2026-11-06,27,17,1,1,newer,trips,0,0,0
+900,3,4689,BNSM,Bee Network,NW_04_BNSM_900_2,2026-11-30,2,4730,BNSM,Bee Network,NW_04_BNSM_900_1,2026-11-06,2,2,1,1,newer,trips,0,0,0
+905,3,8396,SCCM,Stagecoach East,SE_SC_SCCM_905_3,2027-01-03,126,8393,SCCM,Stagecoach East,SE_SC_SCCM_905_4,2026-09-10,126,107,1,1,newer,trips,0,0,0
+905,3,8428,SCCM,Stagecoach East,SE_SC_SCCM_905_1,2026-12-20,78,8393,SCCM,Stagecoach East,SE_SC_SCCM_905_4,2026-09-10,126,68,0.636,1,newer,trips,0,0,0
+905,3,8396,SCCM,Stagecoach East,SE_SC_SCCM_905_3,2027-01-03,126,8428,SCCM,Stagecoach East,SE_SC_SCCM_905_1,2026-12-20,78,68,1,0.636,newer,trips,0,0,0
+905,3,8396,SCCM,Stagecoach East,SE_SC_SCCM_905_3,2027-01-03,126,8526,SCCM,Stagecoach East,SE_SC_SCCM_905_2,2026-12-27,76,73,1,0.682,newer,trips,0,0,0
+91,3,150,BEES,Beestons,9-91-_-y08-25,2027-01-04,27,181,BEES,Beestons,9-91-_-y08-24,2026-11-09,76,13,1,0.812,newer,trips,0,0,0
+91,3,8314,SCSO,Stagecoach South,SE_SC_SCSO_91_3,2026-12-01,839,8313,SCSO,Stagecoach South,SE_SC_SCSO_91_2,2026-10-09,741,171,1,1,newer,trips,0,0,0
+915,3,4394,BNDB,Bee Network,NW_04_BNDB_915_2,2026-11-30,4,4423,BNDB,Bee Network,NW_04_BNDB_915_1,2026-09-02,4,4,1,1,newer,trips,0,0,0
+916,3,4842,BNDB,Bee Network,NW_04_BNDB_916_2,2026-11-30,3,4897,BNDB,Bee Network,NW_04_BNDB_916_1,2026-09-07,3,3,1,1,newer,trips,0,0,0
+91C,3,467,BEES,Beestons,9-91C-_-y08-4,2027-01-05,2,146,BEES,Beestons,9-91C-_-y08-3,2026-11-09,11,2,0.222,1,newer,trips,0,0,0
+925,3,4620,VISB,Vision Bus Ltd,NW_04_VISB_925_2,2026-11-30,2,4644,VISB,Vision Bus Ltd,NW_04_VISB_925_1,2025-11-03,2,2,1,1,newer,trips,0,0,0
+93,3,3989,BNSM,Bee Network,NW_04_BNSM_93_2,2026-11-29,233,4028,BNSM,Bee Network,NW_04_BNSM_93_1,2026-11-06,233,180,1,1,newer,trips,0,0,0
+93T,3,12844,TH,Tally Ho!,31-93T-_-y10-1,2026-11-14,8,12747,AW,Country Bus,31-93T-A-y10-1,2026-11-09,64,8,1,1,newer,trips,0,0,0
+94,3,3812,BNSM,Bee Network,NW_04_BNSM_94_2,2026-11-29,72,3818,BNSM,Bee Network,NW_04_BNSM_94_1,2026-11-06,72,50,1,1,newer,trips,0,0,0
+95,3,3829,BNSM,Bee Network,NW_04_BNSM_95_2,2026-11-29,147,3842,BNSM,Bee Network,NW_04_BNSM_95_1,2026-11-06,147,106,1,1,newer,trips,0,0,0
+96,3,14589,SCNH,Stagecoach Midlands,WM_SC_SCNH_96_4,2026-11-21,24,14588,SCNH,Stagecoach Midlands,WM_SC_SCNH_96_3,2026-11-14,36,12,1,1,newer,trips,0,0,0
+96,3,14638,SCNH,Stagecoach Midlands,WM_SC_SCNH_96_1,2026-11-21,26,14631,SCNH,Stagecoach Midlands,WM_SC_SCNH_96_2,2026-11-14,39,12,1,1,newer,trips,0,0,0
+961,3,15234,SCNH,Stagecoach Midlands,WM_SC_SCNH_961_1,2026-11-23,2,15229,SCNH,Stagecoach Midlands,WM_SC_SCNH_961_2,2026-11-16,4,2,1,1,newer,trips,0,0,0
+967,3,4752,BNFM,Bee Network,NW_04_BNFM_967_2,2026-11-30,2,4787,BNFM,Bee Network,NW_04_BNFM_967_1,2026-11-02,2,2,1,1,newer,trips,0,0,0
+968,3,4768,BNFM,Bee Network,NW_04_BNFM_968_2,2026-11-30,2,4793,BNFM,Bee Network,NW_04_BNFM_968_1,2026-11-03,2,2,1,1,newer,trips,0,0,0
+96A,3,14564,SCNH,Stagecoach Midlands,WM_SC_SCNH_96A_4,2026-11-21,28,14554,SCNH,Stagecoach Midlands,WM_SC_SCNH_96A_3,2026-11-14,42,14,1,1,newer,trips,0,0,0
+96A,3,14920,SCNH,Stagecoach Midlands,WM_SC_SCNH_96A_1,2026-11-21,28,14907,SCNH,Stagecoach Midlands,WM_SC_SCNH_96A_2,2026-11-14,42,14,1,1,newer,trips,0,0,0
+96S,3,14470,SCNH,Stagecoach Midlands,WM_SC_SCNH_96S_1,2026-11-21,65,14464,SCNH,Stagecoach Midlands,WM_SC_SCNH_96S_2,2026-11-14,97,35,1,1,newer,trips,0,0,0
+97,3,3748,BNSM,Bee Network,NW_04_BNSM_97_2,2026-11-29,181,3757,BNSM,Bee Network,NW_04_BNSM_97_1,2026-11-06,181,116,1,1,newer,trips,0,0,0
+98,3,3578,BNSM,Bee Network,NW_04_BNSM_98_2,2026-11-29,186,3582,BNSM,Bee Network,NW_04_BNSM_98_1,2026-11-06,186,139,1,1,newer,trips,0,0,0
+98,3,2141,ML,METROLINE TRAVEL LIMITED,54-98-_-y05-60561,2026-11-28,912,2144,ML,METROLINE TRAVEL LIMITED,54-98-_-y05-60560,2026-11-13,922,559,1,1,newer,trips,0,0,0
+984,3,5364,BNDB,Bee Network,NW_04_BNDB_984_2,2026-11-30,2,5407,BNDB,Bee Network,NW_04_BNDB_984_1,2026-09-02,2,2,1,1,newer,trips,0,0,0
+99,3,4306,BNSM,Bee Network,NW_04_BNSM_99_2,2026-11-30,93,4366,BNSM,Bee Network,NW_04_BNSM_99_1,2026-11-06,93,66,1,1,newer,trips,0,0,0
+990,3,4657,BNDB,Bee Network,NW_04_BNDB_990_2,2026-11-30,2,4688,BNDB,Bee Network,NW_04_BNDB_990_1,2026-09-01,2,2,1,1,newer,trips,0,0,0
+9A,3,8681,SCCM,Stagecoach East,SE_SC_SCCM_9A_1,2026-12-21,16,8678,SCCM,Stagecoach East,SE_SC_SCCM_9A_4,2026-09-10,32,16,1,1,newer,trips,0,0,0
+9A,3,8683,SCCM,Stagecoach East,SE_SC_SCCM_9A_3,2027-01-04,32,8681,SCCM,Stagecoach East,SE_SC_SCCM_9A_1,2026-12-21,16,16,1,1,newer,trips,0,0,0
+9A,3,8780,SCCM,Stagecoach East,SE_SC_SCCM_9A_2,2026-12-29,16,8681,SCCM,Stagecoach East,SE_SC_SCCM_9A_1,2026-12-21,16,16,1,1,newer,trips,0,0,0
+9A,3,8683,SCCM,Stagecoach East,SE_SC_SCCM_9A_3,2027-01-04,32,8678,SCCM,Stagecoach East,SE_SC_SCCM_9A_4,2026-09-10,32,16,1,1,newer,trips,0,0,0
+9A,3,8683,SCCM,Stagecoach East,SE_SC_SCCM_9A_3,2027-01-04,32,8780,SCCM,Stagecoach East,SE_SC_SCCM_9A_2,2026-12-29,16,16,1,1,newer,trips,0,0,0
+9B,3,8626,SCCM,Stagecoach East,SE_SC_SCCM_9B_3,2027-01-04,30,8623,SCCM,Stagecoach East,SE_SC_SCCM_9B_4,2026-09-10,30,15,1,1,newer,trips,0,0,0
+9B,3,8713,SCCM,Stagecoach East,SE_SC_SCCM_9B_1,2026-12-21,15,8623,SCCM,Stagecoach East,SE_SC_SCCM_9B_4,2026-09-10,30,15,1,1,newer,trips,0,0,0
+9B,3,8626,SCCM,Stagecoach East,SE_SC_SCCM_9B_3,2027-01-04,30,8713,SCCM,Stagecoach East,SE_SC_SCCM_9B_1,2026-12-21,15,15,1,1,newer,trips,0,0,0
+9B,3,8811,SCCM,Stagecoach East,SE_SC_SCCM_9B_2,2026-12-29,15,8713,SCCM,Stagecoach East,SE_SC_SCCM_9B_1,2026-12-21,15,15,1,1,newer,trips,0,0,0
+9B,3,8626,SCCM,Stagecoach East,SE_SC_SCCM_9B_3,2027-01-04,30,8811,SCCM,Stagecoach East,SE_SC_SCCM_9B_2,2026-12-29,15,15,1,1,newer,trips,0,0,0
+9D,3,8664,SCCM,Stagecoach East,SE_SC_SCCM_9D_1,2026-12-20,49,8660,SCCM,Stagecoach East,SE_SC_SCCM_9D_4,2026-09-10,74,49,1,1,newer,trips,0,0,0
+9D,3,8665,SCCM,Stagecoach East,SE_SC_SCCM_9D_2,2026-12-27,49,8664,SCCM,Stagecoach East,SE_SC_SCCM_9D_1,2026-12-20,49,49,1,1,newer,trips,0,0,0
+9D,3,8667,SCCM,Stagecoach East,SE_SC_SCCM_9D_3,2027-01-03,74,8664,SCCM,Stagecoach East,SE_SC_SCCM_9D_1,2026-12-20,49,49,1,1,newer,trips,0,0,0
+9D,3,8667,SCCM,Stagecoach East,SE_SC_SCCM_9D_3,2027-01-03,74,8665,SCCM,Stagecoach East,SE_SC_SCCM_9D_2,2026-12-27,49,49,1,1,newer,trips,0,0,0
+9D,3,8667,SCCM,Stagecoach East,SE_SC_SCCM_9D_3,2027-01-03,74,8660,SCCM,Stagecoach East,SE_SC_SCCM_9D_4,2026-09-10,74,49,1,1,newer,trips,0,0,0
+9E,3,7603,SBLB,Stagecoach Bluebird,S_SC_SBLB_9E_1,2027-01-08,2,7604,SBLB,Stagecoach Bluebird,S_SC_SBLB_9E_2,2026-10-30,2,2,1,1,newer,trips,0,0,0
+A,3,43,SCCM,Stagecoach East,EA_SC_SCCM_A_1,2026-12-20,358,35,SCCM,Stagecoach East,EA_SC_SCCM_A_4,2026-09-10,291,198,0.835,1,newer,trips,0,0,0
+A,3,88,SCCM,Stagecoach East,EA_SC_SCCM_A_2,2026-12-27,212,35,SCCM,Stagecoach East,EA_SC_SCCM_A_4,2026-09-10,291,134,0.565,1,newer,trips,0,0,0
+AS1,3,15038,SCNH,Stagecoach Midlands,WM_SC_SCNH_AS1_1,2026-11-30,3,15039,SCNH,Stagecoach Midlands,WM_SC_SCNH_AS1_3,2026-11-16,3,2,1,1,newer,trips,0,0,0
+AS1,3,15040,SCNH,Stagecoach Midlands,WM_SC_SCNH_AS1_2,2026-12-14,3,15038,SCNH,Stagecoach Midlands,WM_SC_SCNH_AS1_1,2026-11-30,3,2,1,1,newer,trips,0,0,0
+AS1,3,15040,SCNH,Stagecoach Midlands,WM_SC_SCNH_AS1_2,2026-12-14,3,15039,SCNH,Stagecoach Midlands,WM_SC_SCNH_AS1_3,2026-11-16,3,2,1,1,newer,trips,0,0,0
+B,3,85,SCCM,Stagecoach East,EA_SC_SCCM_B_2,2026-12-27,188,22,SCCM,Stagecoach East,EA_SC_SCCM_B_4,2026-09-10,204,100,0.775,1,newer,trips,0,0,0
+B,3,85,SCCM,Stagecoach East,EA_SC_SCCM_B_2,2026-12-27,188,20,SCCM,Stagecoach East,EA_SC_SCCM_B_1,2026-12-20,211,80,0.734,0.8,newer,trips,0,0,0
+B,3,20,SCCM,Stagecoach East,EA_SC_SCCM_B_1,2026-12-20,211,22,SCCM,Stagecoach East,EA_SC_SCCM_B_4,2026-09-10,204,109,0.845,1,newer,trips,0,0,0
+B14,3,2180,SK,SOUTH EAST LONDON & KENT BUS COMPANY LTD,59-B14-_-y05-57092,2026-11-27,391,2274,SK,SOUTH EAST LONDON & KENT BUS COMPANY LTD,59-B14-_-y05-57091,2026-11-13,314,201,1,0.922,newer,trips,0,0,0
+C1,3,5303,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C1_1,2026-12-07,68,5472,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C1_2,2026-11-02,60,20,1,1,newer,trips,0,0,0
+C2,3,5481,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C2_1,2026-12-07,35,5606,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C2_2,2026-11-02,30,10,1,1,newer,trips,0,0,0
+C3,3,5558,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C3_1,2026-12-07,34,5657,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C3_2,2026-11-02,30,10,1,1,newer,trips,0,0,0
+C4,3,5544,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C4_1,2026-12-07,34,5647,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_C4_2,2026-11-02,30,10,1,1,newer,trips,0,0,0
+C7,3,10111 9710,FESX,First Essex Ltd,PF0000599:431,2026-12-20,187,10082 10083,FESX,First Essex Ltd,PF0000599:328,2026-11-01,166,40,1,1,newer,trips,0,0,0
+CL-1,3,2607,RRS,Replacement Service,99-CEN-1-y05-8,2027-01-03,247,2608,RRS,Replacement Service,99-CEN-1-y05-6,2026-12-13,247,247,1,1,newer,trips,0,0,0
+CL-3,3,2606,RRS,Replacement Service,99-CEN-3-y05-7,2027-01-03,208,2605,RRS,Replacement Service,99-CEN-3-y05-5,2026-12-13,209,208,0.995,1,newer,trips,0,0,0
+CL12,3,2626,RRS,Replacement Service,99-CEN-T-y05-7,2027-01-03,205,2625,RRS,Replacement Service,99-CEN-T-y05-5,2026-12-13,205,205,1,1,newer,trips,0,0,0
+CityExplorer101,3,5487,1016,Maghull Coaches,NW_06_1016_City Explorer 101_2,2027-02-01,32,5504,1016,Maghull Coaches,NW_06_1016_City Explorer 101_1,2026-09-28,32,11,1,1,newer,trips,0,0,0
+D1,3,14210,SCNH,Stagecoach Midlands,WM_SC_SCNH_D1_1,2026-11-21,84,14208,SCNH,Stagecoach Midlands,WM_SC_SCNH_D1_2,2026-11-14,121,48,1,1,newer,trips,0,0,0
+DL-7,3,2592,RRS,Replacement Service,99-DIS-B-y05-108,2027-01-10,422,2566,RRS,Replacement Service,99-DIS-B-y05-107,2026-12-27,871,422,0.607,1,newer,trips,0,0,0
+ELF1,3,15488,SCNH,Stagecoach Midlands,WM_SC_SCNH_ELF1_2,2026-12-12,20,15487,SCNH,Stagecoach Midlands,WM_SC_SCNH_ELF1_1,2026-11-28,20,10,1,1,newer,trips,0,0,0
+ELF1,3,15487,SCNH,Stagecoach Midlands,WM_SC_SCNH_ELF1_1,2026-11-28,20,15489,SCNH,Stagecoach Midlands,WM_SC_SCNH_ELF1_3,2026-11-14,20,10,1,1,newer,trips,0,0,0
+ELF1,3,15488,SCNH,Stagecoach Midlands,WM_SC_SCNH_ELF1_2,2026-12-12,20,15489,SCNH,Stagecoach Midlands,WM_SC_SCNH_ELF1_3,2026-11-14,20,10,1,1,newer,trips,0,0,0
+FishbourneFerry,4,12332,WLK,Wightlink,44-ZZ8-_-y10-2,2026-12-18,546,13020,WLK,Wightlink,44-ZZ8-_-y10-1,2026-11-09,111,38,1,0.731,newer,trips,0,0,0
+HS4,3,9840,HAMS,Hams Travel,HS4,2026-09-03,3,9819,CHLK,Chalkwell Coaches,HS4,2023-09-01,3,3,1,1,newer,trips,0,0,0
+LondonCableCar,6,2664,CAB,London Cable Car,71-CAB-_-y05-50,2026-12-21,230,2565,CAB,London Cable Car,71-CAB-_-y05-42,2026-11-13,1016,230,0.762,1,newer,trips,0,0,0
+LondonCableCar,6,2666,CAB,London Cable Car,71-CAB-_-y05-52,2027-01-01,230,2565,CAB,London Cable Car,71-CAB-_-y05-42,2026-11-13,1016,230,0.762,1,newer,trips,0,0,0
+LondonCableCar,6,2653,CAB,London Cable Car,71-CAB-_-y05-54,2026-12-31,266,2664,CAB,London Cable Car,71-CAB-_-y05-50,2026-12-21,230,230,1,0.865,newer,trips,0,0,0
+LondonCableCar,6,2665,CAB,London Cable Car,71-CAB-_-y05-51,2026-12-26,230,2664,CAB,London Cable Car,71-CAB-_-y05-50,2026-12-21,230,230,1,1,newer,trips,0,0,0
+LondonCableCar,6,2666,CAB,London Cable Car,71-CAB-_-y05-52,2027-01-01,230,2664,CAB,London Cable Car,71-CAB-_-y05-50,2026-12-21,230,230,1,1,newer,trips,0,0,0
+LondonCableCar,6,2653,CAB,London Cable Car,71-CAB-_-y05-54,2026-12-31,266,2665,CAB,London Cable Car,71-CAB-_-y05-51,2026-12-26,230,230,1,0.865,newer,trips,0,0,0
+LondonCableCar,6,2666,CAB,London Cable Car,71-CAB-_-y05-52,2027-01-01,230,2665,CAB,London Cable Car,71-CAB-_-y05-51,2026-12-26,230,230,1,1,newer,trips,0,0,0
+LondonCableCar,6,2666,CAB,London Cable Car,71-CAB-_-y05-52,2027-01-01,230,2653,CAB,London Cable Car,71-CAB-_-y05-54,2026-12-31,266,230,0.865,1,newer,trips,0,0,0
+LondonCableCar,6,2704,CAB,London Cable Car,71-CAB-_-y05-53,2026-12-24,134,2565,CAB,London Cable Car,71-CAB-_-y05-42,2026-11-13,1016,122,0.404,0.91,newer,trips,0,0,0
+LondonCableCar,6,2704,CAB,London Cable Car,71-CAB-_-y05-53,2026-12-24,134,2664,CAB,London Cable Car,71-CAB-_-y05-50,2026-12-21,230,122,0.53,0.91,newer,trips,0,0,0
+LondonCableCar,6,2665,CAB,London Cable Car,71-CAB-_-y05-51,2026-12-26,230,2704,CAB,London Cable Car,71-CAB-_-y05-53,2026-12-24,134,122,0.91,0.53,newer,trips,0,0,0
+LondonCableCar,6,2666,CAB,London Cable Car,71-CAB-_-y05-52,2027-01-01,230,2704,CAB,London Cable Car,71-CAB-_-y05-53,2026-12-24,134,122,0.91,0.53,newer,trips,0,0,0
+LondonCableCar,6,2653,CAB,London Cable Car,71-CAB-_-y05-54,2026-12-31,266,2704,CAB,London Cable Car,71-CAB-_-y05-53,2026-12-24,134,122,0.91,0.459,newer,trips,0,0,0
+M,3,2630,RRS,Replacement Service,99-LOR-M-y05-178,2026-12-05,145,2629,RRS,Replacement Service,99-LOR-M-y05-177,2026-11-28,145,111,1,1,newer,trips,0,0,0
+M,3,2671,RRS,Replacement Service,99-LOR-M-y05-179,2027-02-13,76,2629,RRS,Replacement Service,99-LOR-M-y05-177,2026-11-28,145,76,0.685,1,newer,trips,0,0,0
+M,3,2671,RRS,Replacement Service,99-LOR-M-y05-179,2027-02-13,76,2630,RRS,Replacement Service,99-LOR-M-y05-178,2026-12-05,145,76,0.685,1,newer,trips,0,0,0
+M,3,2674,RRS,Replacement Service,99-LOR-M-y05-180,2027-03-07,69,2629,RRS,Replacement Service,99-LOR-M-y05-177,2026-11-28,145,69,0.622,1,newer,trips,0,0,0
+M,3,2674,RRS,Replacement Service,99-LOR-M-y05-180,2027-03-07,69,2630,RRS,Replacement Service,99-LOR-M-y05-178,2026-12-05,145,69,0.622,1,newer,trips,0,0,0
+M1,3,4743,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_M1_1,2026-12-07,66,4910,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_M1_2,2026-11-02,44,24,1,1,newer,trips,0,0,0
+M1,3,1149,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M1_3,2026-11-30,8,1148,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M1_2,2026-11-23,8,2,1,1,newer,trips,0,0,0
+M1,3,1148,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M1_2,2026-11-23,8,1049,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M1_1,2026-11-16,9,2,0.667,1,newer,trips,0,0,0
+M1,3,1149,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M1_3,2026-11-30,8,1049,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M1_1,2026-11-16,9,2,0.667,1,newer,trips,0,0,0
+M2,3,788,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M2_3,2026-11-30,44,789,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M2_2,2026-11-23,44,10,1,1,newer,trips,0,0,0
+M2,3,788,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M2_3,2026-11-30,44,806,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M2_1,2026-11-16,39,10,0.909,1,newer,trips,0,0,0
+M2,3,789,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M2_2,2026-11-23,44,806,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M2_1,2026-11-16,39,10,0.909,1,newer,trips,0,0,0
+M4,3,1582,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M4_2,2026-11-23,8,1580,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M4_1,2026-11-16,10,2,0.667,1,newer,trips,0,0,0
+M4,3,1583,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M4_3,2026-11-30,8,1580,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M4_1,2026-11-16,10,2,0.667,1,newer,trips,0,0,0
+M4,3,1583,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M4_3,2026-11-30,8,1582,SCEM,Stagecoach East Midlands,EM_SC_SCEM_M4_2,2026-11-23,8,2,1,1,newer,trips,0,0,0
+MK1,3,8701,SCCM,Stagecoach East,SE_SC_SCCM_MK1_1,2026-12-20,63,8692,SCCM,Stagecoach East,SE_SC_SCCM_MK1_4,2026-09-10,97,39,1,1,newer,trips,0,0,0
+MK1,3,8706,SCCM,Stagecoach East,SE_SC_SCCM_MK1_2,2026-12-27,63,8701,SCCM,Stagecoach East,SE_SC_SCCM_MK1_1,2026-12-20,63,39,1,1,newer,trips,0,0,0
+MK1,3,8709,SCCM,Stagecoach East,SE_SC_SCCM_MK1_3,2027-01-03,97,8701,SCCM,Stagecoach East,SE_SC_SCCM_MK1_1,2026-12-20,63,39,1,1,newer,trips,0,0,0
+MK1,3,8709,SCCM,Stagecoach East,SE_SC_SCCM_MK1_3,2027-01-03,97,8706,SCCM,Stagecoach East,SE_SC_SCCM_MK1_2,2026-12-27,63,39,1,1,newer,trips,0,0,0
+MK1,3,8709,SCCM,Stagecoach East,SE_SC_SCCM_MK1_3,2027-01-03,97,8692,SCCM,Stagecoach East,SE_SC_SCCM_MK1_4,2026-09-10,97,39,1,1,newer,trips,0,0,0
+MK1,3,9521,SCCM,Stagecoach East,SE_SC_SCCM_MK1_6,2026-12-20,62,9480,SCCM,Stagecoach East,SE_SC_SCCM_MK1_5,2026-09-10,95,36,1,1,newer,trips,0,0,0
+MK1,3,9551,SCCM,Stagecoach East,SE_SC_SCCM_MK1_8,2027-01-03,95,9480,SCCM,Stagecoach East,SE_SC_SCCM_MK1_5,2026-09-10,95,36,1,1,newer,trips,0,0,0
+MK1,3,9544,SCCM,Stagecoach East,SE_SC_SCCM_MK1_7,2026-12-27,62,9521,SCCM,Stagecoach East,SE_SC_SCCM_MK1_6,2026-12-20,62,36,1,1,newer,trips,0,0,0
+MK1,3,9551,SCCM,Stagecoach East,SE_SC_SCCM_MK1_8,2027-01-03,95,9521,SCCM,Stagecoach East,SE_SC_SCCM_MK1_6,2026-12-20,62,36,1,1,newer,trips,0,0,0
+MK1,3,9551,SCCM,Stagecoach East,SE_SC_SCCM_MK1_8,2027-01-03,95,9544,SCCM,Stagecoach East,SE_SC_SCCM_MK1_7,2026-12-27,62,36,1,1,newer,trips,0,0,0
+N1,3,10278,SCSO,Stagecoach South,SE_SC_SCSO_N1_1,2026-12-01,15,10259,SCSO,Stagecoach South,SE_SC_SCSO_N1_2,2026-10-26,15,5,1,1,newer,trips,0,0,0
+N1,3,7061,SBLB,Stagecoach Bluebird,S_SC_SBLB_N1_1,2027-01-08,6,7066,SBLB,Stagecoach Bluebird,S_SC_SBLB_N1_2,2026-10-30,6,3,1,1,newer,trips,0,0,0
+N133,3,2510,CX,Transport UK,21-133-N-y05-17,2026-11-21,72,2511,CX,Transport UK,21-133-N-y05-13,2026-11-13,72,18,1,1,newer,trips,0,0,0
+N19,3,2504,MN,ARRIVA LONDON NORTH LIMITED,8-N19-_-y05-61944,2026-11-20,82,2468,MN,ARRIVA LONDON NORTH LIMITED,8-N19-_-y05-61945,2026-11-13,82,32,1,1,newer,trips,0,0,0
+N2,3,2561,SL,ARRIVA LONDON SOUTH LIMITED,8-N2-_-y05-60661,2026-11-14,102,2541,SL,ARRIVA LONDON SOUTH LIMITED,8-N2-_-y05-60660,2026-11-13,102,49,1,1,newer,trips,0,0,0
+N250,3,2573,SL,ARRIVA LONDON SOUTH LIMITED,8-250-N-y05-58637,2026-11-14,72,2572,SL,ARRIVA LONDON SOUTH LIMITED,8-250-N-y05-58636,2026-11-13,72,18,1,1,newer,trips,0,0,0
+N9,3,2496,ML,METROLINE TRAVEL LIMITED,54-N9-_-y05-11,2026-11-21,112,2459,ML,METROLINE TRAVEL LIMITED,54-N9-_-y05-10,2026-11-13,112,49,1,1,newer,trips,0,0,0
+PR,3,15288,SCNH,Stagecoach Midlands,WM_SC_SCNH_PR_2,2026-12-12,89,15296,SCNH,Stagecoach Midlands,WM_SC_SCNH_PR_3,2026-11-14,88,64,1,1,newer,trips,0,0,0
+PR1,3,201,SCCM,Stagecoach East,EA_SC_SCCM_PR1_3,2027-01-03,382,200,SCCM,Stagecoach East,EA_SC_SCCM_PR1_4,2026-11-01,382,237,1,1,newer,trips,0,0,0
+PR1,3,203,SCCM,Stagecoach East,EA_SC_SCCM_PR1_1,2026-12-20,246,200,SCCM,Stagecoach East,EA_SC_SCCM_PR1_4,2026-11-01,382,236,0.996,1,newer,trips,0,0,0
+PR1,3,201,SCCM,Stagecoach East,EA_SC_SCCM_PR1_3,2027-01-03,382,203,SCCM,Stagecoach East,EA_SC_SCCM_PR1_1,2026-12-20,246,236,1,0.996,newer,trips,0,0,0
+PR1,3,239,SCCM,Stagecoach East,EA_SC_SCCM_PR1_2,2026-12-27,367,203,SCCM,Stagecoach East,EA_SC_SCCM_PR1_1,2026-12-20,246,223,0.945,0.996,newer,trips,0,0,0
+PR1,3,239,SCCM,Stagecoach East,EA_SC_SCCM_PR1_2,2026-12-27,367,200,SCCM,Stagecoach East,EA_SC_SCCM_PR1_4,2026-11-01,382,224,0.945,1,newer,trips,0,0,0
+PR1,3,201,SCCM,Stagecoach East,EA_SC_SCCM_PR1_3,2027-01-03,382,239,SCCM,Stagecoach East,EA_SC_SCCM_PR1_2,2026-12-27,367,224,1,0.945,newer,trips,0,0,0
+PR1,3,11807,DT,Dartline Coaches,30-PR1-_-y10-2,2026-12-02,1107,12715,DT,Dartline Coaches,30-PR1-_-y10-1,2026-11-09,216,134,1,0.788,newer,trips,0,0,0
+PR1A,3,12686,DT,Dartline Coaches,30-PR1-A-y10-2,2026-12-02,272,13026,DT,Dartline Coaches,30-PR1-A-y10-1,2026-11-09,34,34,1,1,newer,trips,0,0,0
+PR2,3,128,SCCM,Stagecoach East,EA_SC_SCCM_PR2_3,2027-01-03,378,127,SCCM,Stagecoach East,EA_SC_SCCM_PR2_4,2026-11-01,378,235,1,1,newer,trips,0,0,0
+PR2,3,139,SCCM,Stagecoach East,EA_SC_SCCM_PR2_1,2026-12-20,244,127,SCCM,Stagecoach East,EA_SC_SCCM_PR2_4,2026-11-01,378,234,0.996,1,newer,trips,0,0,0
+PR2,3,128,SCCM,Stagecoach East,EA_SC_SCCM_PR2_3,2027-01-03,378,139,SCCM,Stagecoach East,EA_SC_SCCM_PR2_1,2026-12-20,244,234,1,0.996,newer,trips,0,0,0
+PR2,3,142,SCCM,Stagecoach East,EA_SC_SCCM_PR2_2,2026-12-27,363,139,SCCM,Stagecoach East,EA_SC_SCCM_PR2_1,2026-12-20,244,221,0.944,0.995,newer,trips,0,0,0
+PR2,3,142,SCCM,Stagecoach East,EA_SC_SCCM_PR2_2,2026-12-27,363,127,SCCM,Stagecoach East,EA_SC_SCCM_PR2_4,2026-11-01,378,222,0.945,1,newer,trips,0,0,0
+PR2,3,128,SCCM,Stagecoach East,EA_SC_SCCM_PR2_3,2027-01-03,378,142,SCCM,Stagecoach East,EA_SC_SCCM_PR2_2,2026-12-27,363,222,1,0.945,newer,trips,0,0,0
+PR3,3,162,SCCM,Stagecoach East,EA_SC_SCCM_PR3_1,2026-12-20,253,170,SCCM,Stagecoach East,EA_SC_SCCM_PR3_4,2026-11-01,389,243,0.976,1,newer,trips,0,0,0
+PR3,3,171,SCCM,Stagecoach East,EA_SC_SCCM_PR3_3,2027-01-03,389,162,SCCM,Stagecoach East,EA_SC_SCCM_PR3_1,2026-12-20,253,243,1,0.976,newer,trips,0,0,0
+PR3,3,171,SCCM,Stagecoach East,EA_SC_SCCM_PR3_3,2027-01-03,389,170,SCCM,Stagecoach East,EA_SC_SCCM_PR3_4,2026-11-01,389,249,1,1,newer,trips,0,0,0
+PR3,3,202,SCCM,Stagecoach East,EA_SC_SCCM_PR3_2,2026-12-27,371,162,SCCM,Stagecoach East,EA_SC_SCCM_PR3_1,2026-12-20,253,223,0.918,0.974,newer,trips,0,0,0
+PR3,3,202,SCCM,Stagecoach East,EA_SC_SCCM_PR3_2,2026-12-27,371,170,SCCM,Stagecoach East,EA_SC_SCCM_PR3_4,2026-11-01,389,229,0.92,1,newer,trips,0,0,0
+PR3,3,171,SCCM,Stagecoach East,EA_SC_SCCM_PR3_3,2027-01-03,389,202,SCCM,Stagecoach East,EA_SC_SCCM_PR3_2,2026-12-27,371,229,1,0.92,newer,trips,0,0,0
+PR4,3,225,SCCM,Stagecoach East,EA_SC_SCCM_PR4_1,2026-12-20,201,236,SCCM,Stagecoach East,EA_SC_SCCM_PR4_4,2026-11-01,317,192,1,1,newer,trips,0,0,0
+PR4,3,237,SCCM,Stagecoach East,EA_SC_SCCM_PR4_3,2027-01-03,317,225,SCCM,Stagecoach East,EA_SC_SCCM_PR4_1,2026-12-20,201,192,1,1,newer,trips,0,0,0
+PR4,3,237,SCCM,Stagecoach East,EA_SC_SCCM_PR4_3,2027-01-03,317,236,SCCM,Stagecoach East,EA_SC_SCCM_PR4_4,2026-11-01,317,192,1,1,newer,trips,0,0,0
+PR4,3,232,SCCM,Stagecoach East,EA_SC_SCCM_PR4_2,2026-12-27,305,225,SCCM,Stagecoach East,EA_SC_SCCM_PR4_1,2026-12-20,201,181,0.943,1,newer,trips,0,0,0
+PR4,3,232,SCCM,Stagecoach East,EA_SC_SCCM_PR4_2,2026-12-27,305,236,SCCM,Stagecoach East,EA_SC_SCCM_PR4_4,2026-11-01,317,181,0.943,1,newer,trips,0,0,0
+PR4,3,237,SCCM,Stagecoach East,EA_SC_SCCM_PR4_3,2027-01-03,317,232,SCCM,Stagecoach East,EA_SC_SCCM_PR4_2,2026-12-27,305,181,1,0.943,newer,trips,0,0,0
+PR5,3,215,SCCM,Stagecoach East,EA_SC_SCCM_PR5_2,2026-12-27,291,211,SCCM,Stagecoach East,EA_SC_SCCM_PR5_1,2026-12-20,193,100,0.98,1,newer,trips,0,0,0
+PR5,3,211,SCCM,Stagecoach East,EA_SC_SCCM_PR5_1,2026-12-20,193,223,SCCM,Stagecoach East,EA_SC_SCCM_PR5_4,2026-11-01,293,102,1,1,newer,trips,0,0,0
+PR5,3,224,SCCM,Stagecoach East,EA_SC_SCCM_PR5_3,2027-01-03,293,211,SCCM,Stagecoach East,EA_SC_SCCM_PR5_1,2026-12-20,193,102,1,1,newer,trips,0,0,0
+PR5,3,215,SCCM,Stagecoach East,EA_SC_SCCM_PR5_2,2026-12-27,291,223,SCCM,Stagecoach East,EA_SC_SCCM_PR5_4,2026-11-01,293,100,0.98,1,newer,trips,0,0,0
+PR5,3,224,SCCM,Stagecoach East,EA_SC_SCCM_PR5_3,2027-01-03,293,215,SCCM,Stagecoach East,EA_SC_SCCM_PR5_2,2026-12-27,291,100,1,0.98,newer,trips,0,0,0
+PR5,3,224,SCCM,Stagecoach East,EA_SC_SCCM_PR5_3,2027-01-03,293,223,SCCM,Stagecoach East,EA_SC_SCCM_PR5_4,2026-11-01,293,102,1,1,newer,trips,0,0,0
+RedJetWestCowes,4,12968,RF,Red Funnel,44-ZZ5-_-y10-2,2026-11-24,118,13029,RF,Red Funnel,44-ZZ5-_-y10-1,2026-11-09,86,30,1,0.577,newer,trips,0,0,0
+RydeFastCat,4,12350,WLK,Wightlink,44-ZZ7-_-y10-2,2026-12-21,418,12966,WLK,Wightlink,44-ZZ7-_-y10-1,2026-11-09,132,52,1,1,newer,trips,0,0,0
+S,3,2613,RRS,Replacement Service,99-LOR-S-y05-143,2027-01-16,267,2612,RRS,Replacement Service,99-LOR-S-y05-142,2027-01-09,267,147,1,1,newer,trips,0,0,0
+S,3,2614,RRS,Replacement Service,99-LOR-S-y05-144,2027-01-23,267,2612,RRS,Replacement Service,99-LOR-S-y05-142,2027-01-09,267,147,1,1,newer,trips,0,0,0
+S,3,2615,RRS,Replacement Service,99-LOR-S-y05-145,2027-01-30,267,2612,RRS,Replacement Service,99-LOR-S-y05-142,2027-01-09,267,147,1,1,newer,trips,0,0,0
+S,3,2614,RRS,Replacement Service,99-LOR-S-y05-144,2027-01-23,267,2613,RRS,Replacement Service,99-LOR-S-y05-143,2027-01-16,267,147,1,1,newer,trips,0,0,0
+S,3,2615,RRS,Replacement Service,99-LOR-S-y05-145,2027-01-30,267,2613,RRS,Replacement Service,99-LOR-S-y05-143,2027-01-16,267,147,1,1,newer,trips,0,0,0
+S,3,2615,RRS,Replacement Service,99-LOR-S-y05-145,2027-01-30,267,2614,RRS,Replacement Service,99-LOR-S-y05-144,2027-01-23,267,147,1,1,newer,trips,0,0,0
+S,3,2654,RRS,Replacement Service,99-LOR-S-y05-146,2027-02-07,120,2612,RRS,Replacement Service,99-LOR-S-y05-142,2027-01-09,267,120,0.816,1,newer,trips,0,0,0
+S,3,2655,RRS,Replacement Service,99-LOR-S-y05-147,2027-02-14,120,2612,RRS,Replacement Service,99-LOR-S-y05-142,2027-01-09,267,120,0.816,1,newer,trips,0,0,0
+S,3,2654,RRS,Replacement Service,99-LOR-S-y05-146,2027-02-07,120,2613,RRS,Replacement Service,99-LOR-S-y05-143,2027-01-16,267,120,0.816,1,newer,trips,0,0,0
+S,3,2655,RRS,Replacement Service,99-LOR-S-y05-147,2027-02-14,120,2613,RRS,Replacement Service,99-LOR-S-y05-143,2027-01-16,267,120,0.816,1,newer,trips,0,0,0
+S,3,2654,RRS,Replacement Service,99-LOR-S-y05-146,2027-02-07,120,2614,RRS,Replacement Service,99-LOR-S-y05-144,2027-01-23,267,120,0.816,1,newer,trips,0,0,0
+S,3,2655,RRS,Replacement Service,99-LOR-S-y05-147,2027-02-14,120,2614,RRS,Replacement Service,99-LOR-S-y05-144,2027-01-23,267,120,0.816,1,newer,trips,0,0,0
+S,3,2654,RRS,Replacement Service,99-LOR-S-y05-146,2027-02-07,120,2615,RRS,Replacement Service,99-LOR-S-y05-145,2027-01-30,267,120,0.816,1,newer,trips,0,0,0
+S,3,2655,RRS,Replacement Service,99-LOR-S-y05-147,2027-02-14,120,2615,RRS,Replacement Service,99-LOR-S-y05-145,2027-01-30,267,120,0.816,1,newer,trips,0,0,0
+S,3,2655,RRS,Replacement Service,99-LOR-S-y05-147,2027-02-14,120,2654,RRS,Replacement Service,99-LOR-S-y05-146,2027-02-07,120,120,1,1,newer,trips,0,0,0
+S,3,2612,RRS,Replacement Service,99-LOR-S-y05-142,2027-01-09,267,2713,RRS,Replacement Service,99-LOR-S-y05-141,2026-11-22,12,12,1,0.082,newer,trips,0,0,0
+S,3,2613,RRS,Replacement Service,99-LOR-S-y05-143,2027-01-16,267,2713,RRS,Replacement Service,99-LOR-S-y05-141,2026-11-22,12,12,1,0.082,newer,trips,0,0,0
+S,3,2614,RRS,Replacement Service,99-LOR-S-y05-144,2027-01-23,267,2713,RRS,Replacement Service,99-LOR-S-y05-141,2026-11-22,12,12,1,0.082,newer,trips,0,0,0
+S,3,2615,RRS,Replacement Service,99-LOR-S-y05-145,2027-01-30,267,2713,RRS,Replacement Service,99-LOR-S-y05-141,2026-11-22,12,12,1,0.082,newer,trips,0,0,0
+S,3,2654,RRS,Replacement Service,99-LOR-S-y05-146,2027-02-07,120,2713,RRS,Replacement Service,99-LOR-S-y05-141,2026-11-22,12,12,1,0.1,newer,trips,0,0,0
+S,3,2655,RRS,Replacement Service,99-LOR-S-y05-147,2027-02-14,120,2713,RRS,Replacement Service,99-LOR-S-y05-141,2026-11-22,12,12,1,0.1,newer,trips,0,0,0
+S2,3,5099,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S2_1,2026-12-07,2,5110,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S2_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+S3,3,5305,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S3_1,2026-12-07,2,5309,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S3_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+S32,3,5444,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S32_1,2026-12-07,2,5459,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S32_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+S350A,3,4555,BNSM,Bee Network,NW_04_BNSM_S350A_2,2026-11-30,4,4615,BNSM,Bee Network,NW_04_BNSM_S350A_1,2026-11-06,4,4,1,1,newer,trips,0,0,0
+S350B,3,4507,BNSM,Bee Network,NW_04_BNSM_S350B_2,2026-11-30,4,4542,BNSM,Bee Network,NW_04_BNSM_S350B_1,2026-11-06,4,4,1,1,newer,trips,0,0,0
+S46,3,5234,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S46_1,2026-12-07,4,5244,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S46_2,2026-11-02,4,3,1,1,newer,trips,0,0,0
+S7,3,5626,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S7_1,2026-12-07,2,5635,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S7_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+S80,3,5186,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S80_1,2026-12-07,2,5196,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S80_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+S81,3,5446,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S81_1,2026-12-07,2,5462,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_S81_2,2026-11-02,2,2,1,1,newer,trips,0,0,0
+S84,3,4771,BNSM,Bee Network,NW_04_BNSM_S84_2,2026-11-30,4,4820,BNSM,Bee Network,NW_04_BNSM_S84_1,2026-11-06,4,4,1,1,newer,trips,0,0,0
+SB12,3,10628,SCCM,Stagecoach East,SE_SC_SCCM_SB12_3,2026-12-21,36,10559,SCCM,Stagecoach East,SE_SC_SCCM_SB12_2,2026-10-29,72,36,1,1,newer,trips,0,0,0
+SB12,3,10676,SCCM,Stagecoach East,SE_SC_SCCM_SB12_4,2026-12-29,36,10628,SCCM,Stagecoach East,SE_SC_SCCM_SB12_3,2026-12-21,36,36,1,1,newer,trips,0,0,0
+SB12,3,10706,SCCM,Stagecoach East,SE_SC_SCCM_SB12_1,2027-01-04,72,10559,SCCM,Stagecoach East,SE_SC_SCCM_SB12_2,2026-10-29,72,36,1,1,newer,trips,0,0,0
+SB12,3,10706,SCCM,Stagecoach East,SE_SC_SCCM_SB12_1,2027-01-04,72,10628,SCCM,Stagecoach East,SE_SC_SCCM_SB12_3,2026-12-21,36,36,1,1,newer,trips,0,0,0
+SB12,3,10706,SCCM,Stagecoach East,SE_SC_SCCM_SB12_1,2027-01-04,72,10676,SCCM,Stagecoach East,SE_SC_SCCM_SB12_4,2026-12-29,36,36,1,1,newer,trips,0,0,0
+SP1,3,10223,SCSO,Stagecoach South,SE_SC_SCSO_SP1_1,2026-12-01,8,10336,SCSO,Stagecoach South,SE_SC_SCSO_SP1_2,2026-11-02,4,3,1,1,newer,trips,0,0,0
+SP2,3,9891,SCSO,Stagecoach South,SE_SC_SCSO_SP2_1,2026-12-01,8,9996,SCSO,Stagecoach South,SE_SC_SCSO_SP2_2,2026-11-02,4,3,1,1,newer,trips,0,0,0
+SP3,3,9993,SCSO,Stagecoach South,SE_SC_SCSO_SP3_1,2026-12-01,8,10120,SCSO,Stagecoach South,SE_SC_SCSO_SP3_2,2026-11-02,4,3,1,1,newer,trips,0,0,0
+SP4,3,10189,SCSO,Stagecoach South,SE_SC_SCSO_SP4_1,2026-12-01,8,10310,SCSO,Stagecoach South,SE_SC_SCSO_SP4_2,2026-11-02,4,3,1,1,newer,trips,0,0,0
+T2,3,366,SCCM,Stagecoach East,EA_SC_SCCM_T2_2,2026-12-29,62,364,SCCM,Stagecoach East,EA_SC_SCCM_T2_1,2026-12-21,32,32,1,1,newer,trips,0,0,0
+T2,3,364,SCCM,Stagecoach East,EA_SC_SCCM_T2_1,2026-12-21,32,373,SCCM,Stagecoach East,EA_SC_SCCM_T2_4,2026-11-02,64,32,1,1,newer,trips,0,0,0
+T2,3,374,SCCM,Stagecoach East,EA_SC_SCCM_T2_3,2027-01-04,64,364,SCCM,Stagecoach East,EA_SC_SCCM_T2_1,2026-12-21,32,32,1,1,newer,trips,0,0,0
+T2,3,366,SCCM,Stagecoach East,EA_SC_SCCM_T2_2,2026-12-29,62,373,SCCM,Stagecoach East,EA_SC_SCCM_T2_4,2026-11-02,64,32,1,1,newer,trips,0,0,0
+T2,3,374,SCCM,Stagecoach East,EA_SC_SCCM_T2_3,2027-01-04,64,366,SCCM,Stagecoach East,EA_SC_SCCM_T2_2,2026-12-29,62,32,1,1,newer,trips,0,0,0
+T2,3,374,SCCM,Stagecoach East,EA_SC_SCCM_T2_3,2027-01-04,64,373,SCCM,Stagecoach East,EA_SC_SCCM_T2_4,2026-11-02,64,32,1,1,newer,trips,0,0,0
+T3,3,281,SCCM,Stagecoach East,EA_SC_SCCM_T3_2,2026-12-29,62,280,SCCM,Stagecoach East,EA_SC_SCCM_T3_1,2026-12-21,32,32,1,1,newer,trips,0,0,0
+T3,3,280,SCCM,Stagecoach East,EA_SC_SCCM_T3_1,2026-12-21,32,285,SCCM,Stagecoach East,EA_SC_SCCM_T3_4,2026-11-02,64,32,1,1,newer,trips,0,0,0
+T3,3,286,SCCM,Stagecoach East,EA_SC_SCCM_T3_3,2027-01-04,64,280,SCCM,Stagecoach East,EA_SC_SCCM_T3_1,2026-12-21,32,32,1,1,newer,trips,0,0,0
+T3,3,281,SCCM,Stagecoach East,EA_SC_SCCM_T3_2,2026-12-29,62,285,SCCM,Stagecoach East,EA_SC_SCCM_T3_4,2026-11-02,64,32,1,1,newer,trips,0,0,0
+T3,3,286,SCCM,Stagecoach East,EA_SC_SCCM_T3_3,2027-01-04,64,281,SCCM,Stagecoach East,EA_SC_SCCM_T3_2,2026-12-29,62,32,1,1,newer,trips,0,0,0
+T3,3,286,SCCM,Stagecoach East,EA_SC_SCCM_T3_3,2027-01-04,64,285,SCCM,Stagecoach East,EA_SC_SCCM_T3_4,2026-11-02,64,32,1,1,newer,trips,0,0,0
+T4,3,104,SCCM,Stagecoach East,EA_SC_SCCM_T4_2,2026-12-29,50,103,SCCM,Stagecoach East,EA_SC_SCCM_T4_1,2026-12-21,25,25,1,1,newer,trips,0,0,0
+T4,3,103,SCCM,Stagecoach East,EA_SC_SCCM_T4_1,2026-12-21,25,106,SCCM,Stagecoach East,EA_SC_SCCM_T4_4,2026-11-02,50,25,1,1,newer,trips,0,0,0
+T4,3,107,SCCM,Stagecoach East,EA_SC_SCCM_T4_3,2027-01-04,50,103,SCCM,Stagecoach East,EA_SC_SCCM_T4_1,2026-12-21,25,25,1,1,newer,trips,0,0,0
+T4,3,104,SCCM,Stagecoach East,EA_SC_SCCM_T4_2,2026-12-29,50,106,SCCM,Stagecoach East,EA_SC_SCCM_T4_4,2026-11-02,50,25,1,1,newer,trips,0,0,0
+T4,3,107,SCCM,Stagecoach East,EA_SC_SCCM_T4_3,2027-01-04,50,104,SCCM,Stagecoach East,EA_SC_SCCM_T4_2,2026-12-29,50,25,1,1,newer,trips,0,0,0
+T4,3,107,SCCM,Stagecoach East,EA_SC_SCCM_T4_3,2027-01-04,50,106,SCCM,Stagecoach East,EA_SC_SCCM_T4_4,2026-11-02,50,25,1,1,newer,trips,0,0,0
+U1,3,12327,FHAM,First,PH0006159:544,2026-11-02,49,12328,FHAM,First,UZ000FHAM:U1,2026-10-19,49,49,1,1,newer,trips,0,0,0
+U1,3,14070,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1_1,2026-11-28,184,14069,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1_3,2026-11-14,184,104,1,1,newer,trips,0,0,0
+U1,3,14080,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1_2,2026-12-12,167,14070,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1_1,2026-11-28,184,95,0.913,0.931,newer,trips,0,0,0
+U1,3,14080,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1_2,2026-12-12,167,14069,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1_3,2026-11-14,184,95,0.913,0.931,newer,trips,0,0,0
+U1A,3,14065,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1A_1,2026-11-28,208,14063,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1A_3,2026-11-14,208,113,1,1,newer,trips,0,0,0
+U1A,3,14543,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1A_2,2026-12-12,20,14065,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1A_1,2026-11-28,208,14,0.124,0.875,newer,trips,0,0,0
+U1A,3,14543,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1A_2,2026-12-12,20,14063,SCNH,Stagecoach Midlands,WM_SC_SCNH_U1A_3,2026-11-14,208,14,0.124,0.875,newer,trips,0,0,0
+U2,3,12645,FHAM,First,PH0006159:543,2026-11-09,76,12647,FHAM,First,UZ000FHAM:U2,2026-11-02,76,43,1,1,newer,trips,0,0,0
+U2,3,12645,FHAM,First,PH0006159:543,2026-11-09,76,12670,FHAM,First,PH0006159:535,2026-09-20,76,40,1,0.93,newer,trips,0,0,0
+U2,3,12647,FHAM,First,UZ000FHAM:U2,2026-11-02,76,12670,FHAM,First,PH0006159:535,2026-09-20,76,40,1,0.93,newer,trips,0,0,0
+U3,3,12057,WD,more Bus,43-U3-A-y10-1,2026-12-19,174,12031,WD,more Bus,43-U3-_-y10-1,2026-11-09,64,49,0.803,0.845,newer,trips,0,0,0
+W2,3,2589,RRS,Replacement Service,99-TFL-W-y05-16,2026-12-27,350,2610,RRS,Replacement Service,99-TFL-W-y05-15,2026-11-28,350,262,1,1,newer,trips,0,0,0
+WoolwichFerry,4,2724,WFF,Woolwich Ferry,35-WFF-c-y05-34,2026-12-28,69,2723,WFF,Woolwich Ferry,35-WFF-c-y05-33,2026-12-21,69,69,1,1,newer,trips,0,0,0
+WoolwichFerry,4,2725,WFF,Woolwich Ferry,35-WFF-c-y05-35,2027-01-02,69,2723,WFF,Woolwich Ferry,35-WFF-c-y05-33,2026-12-21,69,69,1,1,newer,trips,0,0,0
+WoolwichFerry,4,2725,WFF,Woolwich Ferry,35-WFF-c-y05-35,2027-01-02,69,2724,WFF,Woolwich Ferry,35-WFF-c-y05-34,2026-12-28,69,69,1,1,newer,trips,0,0,0
+X,3,2602,RRS,Replacement Service,99-LOR-X-y05-75,2026-12-05,291,2601,RRS,Replacement Service,99-LOR-X-y05-74,2026-11-28,291,152,1,1,newer,trips,0,0,0
+X1,3,13616,NADT,Adventure Travel,MGAX001,2026-05-17,16,13426,ANSL,Phil Anslow,MGAX001,2026-05-11,40,8,0.381,1,newer,trips,0,0,0
+X1,3,5784,SBLB,Stagecoach Bluebird,S_SC_SBLB_X1_1,2026-12-21,203,5777,SBLB,Stagecoach Bluebird,S_SC_SBLB_X1_2,2026-10-28,191,77,1,0.987,newer,trips,0,0,0
+X10,3,7516,SBLB,Stagecoach Bluebird,S_SC_SBLB_X10_3,2026-12-21,10,7519,SBLB,Stagecoach Bluebird,S_SC_SBLB_X10_2,2026-10-28,10,2,1,1,newer,trips,0,0,0
+X13,3,48,SCCM,Stagecoach East,EA_SC_SCCM_X13_3,2027-01-04,36,47,SCCM,Stagecoach East,EA_SC_SCCM_X13_4,2026-11-02,36,34,1,1,newer,trips,0,0,0
+X13,3,73,SCCM,Stagecoach East,EA_SC_SCCM_X13_1,2026-12-21,31,47,SCCM,Stagecoach East,EA_SC_SCCM_X13_4,2026-11-02,36,31,0.912,1,newer,trips,0,0,0
+X13,3,48,SCCM,Stagecoach East,EA_SC_SCCM_X13_3,2027-01-04,36,73,SCCM,Stagecoach East,EA_SC_SCCM_X13_1,2026-12-21,31,31,1,0.912,newer,trips,0,0,0
+X13,3,213,SCCM,Stagecoach East,EA_SC_SCCM_X13_2,2026-12-29,10,47,SCCM,Stagecoach East,EA_SC_SCCM_X13_4,2026-11-02,36,5,0.147,1,newer,trips,0,0,0
+X13,3,48,SCCM,Stagecoach East,EA_SC_SCCM_X13_3,2027-01-04,36,213,SCCM,Stagecoach East,EA_SC_SCCM_X13_2,2026-12-29,10,5,1,0.147,newer,trips,0,0,0
+X16,3,14644,SCNH,Stagecoach Midlands,WM_SC_SCNH_X16_1,2026-11-30,4,14645,SCNH,Stagecoach Midlands,WM_SC_SCNH_X16_3,2026-11-16,4,2,1,1,newer,trips,0,0,0
+X16,3,14646,SCNH,Stagecoach Midlands,WM_SC_SCNH_X16_2,2026-12-14,4,14644,SCNH,Stagecoach Midlands,WM_SC_SCNH_X16_1,2026-11-30,4,2,1,1,newer,trips,0,0,0
+X16,3,14646,SCNH,Stagecoach Midlands,WM_SC_SCNH_X16_2,2026-12-14,4,14645,SCNH,Stagecoach Midlands,WM_SC_SCNH_X16_3,2026-11-16,4,2,1,1,newer,trips,0,0,0
+X17,3,14007,SCNH,Stagecoach Midlands,WM_SC_SCNH_X17_1,2026-11-28,175,14008,SCNH,Stagecoach Midlands,WM_SC_SCNH_X17_3,2026-11-14,175,105,1,1,newer,trips,0,0,0
+X17,3,14009,SCNH,Stagecoach Midlands,WM_SC_SCNH_X17_2,2026-12-12,175,14007,SCNH,Stagecoach Midlands,WM_SC_SCNH_X17_1,2026-11-28,175,105,1,1,newer,trips,0,0,0
+X17,3,14009,SCNH,Stagecoach Midlands,WM_SC_SCNH_X17_2,2026-12-12,175,14008,SCNH,Stagecoach Midlands,WM_SC_SCNH_X17_3,2026-11-14,175,105,1,1,newer,trips,0,0,0
+X18,3,14014,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18_1,2026-11-28,189,14015,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18_3,2026-11-14,189,91,1,1,newer,trips,0,0,0
+X18,3,14016,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18_2,2026-12-12,189,14014,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18_1,2026-11-28,189,91,1,1,newer,trips,0,0,0
+X18,3,14016,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18_2,2026-12-12,189,14015,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18_3,2026-11-14,189,91,1,1,newer,trips,0,0,0
+X18A,3,14600,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18A_1,2026-11-30,8,14601,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18A_3,2026-11-16,8,4,1,1,newer,trips,0,0,0
+X18A,3,14602,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18A_2,2026-12-14,8,14600,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18A_1,2026-11-30,8,4,1,1,newer,trips,0,0,0
+X18A,3,14602,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18A_2,2026-12-14,8,14601,SCNH,Stagecoach Midlands,WM_SC_SCNH_X18A_3,2026-11-16,8,4,1,1,newer,trips,0,0,0
+X2,3,13615,NADT,Adventure Travel,MGAX002,2026-05-17,16,13546,ANSL,Phil Anslow,MGAX002,2026-05-11,37,8,0.381,1,newer,trips,0,0,0
+X20,3,14199,SCNH,Stagecoach Midlands,WM_SC_SCNH_X20_1,2026-11-28,39,14200,SCNH,Stagecoach Midlands,WM_SC_SCNH_X20_3,2026-11-14,39,33,1,1,newer,trips,0,0,0
+X20,3,14201,SCNH,Stagecoach Midlands,WM_SC_SCNH_X20_2,2026-12-12,39,14199,SCNH,Stagecoach Midlands,WM_SC_SCNH_X20_1,2026-11-28,39,33,1,1,newer,trips,0,0,0
+X20,3,14201,SCNH,Stagecoach Midlands,WM_SC_SCNH_X20_2,2026-12-12,39,14200,SCNH,Stagecoach Midlands,WM_SC_SCNH_X20_3,2026-11-14,39,33,1,1,newer,trips,0,0,0
+X21,3,14388,SCNH,Stagecoach Midlands,WM_SC_SCNH_X21_1,2026-11-28,9,14389,SCNH,Stagecoach Midlands,WM_SC_SCNH_X21_3,2026-11-14,9,8,1,1,newer,trips,0,0,0
+X21,3,14390,SCNH,Stagecoach Midlands,WM_SC_SCNH_X21_2,2026-12-12,9,14388,SCNH,Stagecoach Midlands,WM_SC_SCNH_X21_1,2026-11-28,9,8,1,1,newer,trips,0,0,0
+X21,3,14390,SCNH,Stagecoach Midlands,WM_SC_SCNH_X21_2,2026-12-12,9,14389,SCNH,Stagecoach Midlands,WM_SC_SCNH_X21_3,2026-11-14,9,8,1,1,newer,trips,0,0,0
+X30,3,14214,SCNH,Stagecoach Midlands,WM_SC_SCNH_X30_1,2026-11-23,26,14212,SCNH,Stagecoach Midlands,WM_SC_SCNH_X30_2,2026-11-16,52,26,1,1,newer,trips,0,0,0
+X4,3,4319,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X4_1,2026-12-07,134,4459,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X4_2,2026-11-02,88,27,1,1,newer,trips,0,0,0
+X4,3,4160,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X4_5,2026-12-07,135,4223,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X4_4,2026-11-02,89,34,1,1,newer,trips,0,0,0
+X43,3,3511,BPTR,The Burnley Bus Company,NW_05_BPTR_X43_3,2026-12-20,240,3509,BPTR,The Burnley Bus Company,NW_05_BPTR_X43_2,2026-11-01,253,152,0.874,0.968,newer,trips,0,0,0
+X5,3,9109,SCCM,Stagecoach East,SE_SC_SCCM_X5_1,2026-12-20,92,9064,SCCM,Stagecoach East,SE_SC_SCCM_X5_4,2026-09-10,154,71,0.798,1,newer,trips,0,0,0
+X5,3,9133,SCCM,Stagecoach East,SE_SC_SCCM_X5_3,2027-01-03,154,9109,SCCM,Stagecoach East,SE_SC_SCCM_X5_1,2026-12-20,92,71,1,0.798,newer,trips,0,0,0
+X5,3,9243,SCCM,Stagecoach East,SE_SC_SCCM_X5_2,2026-12-27,101,9109,SCCM,Stagecoach East,SE_SC_SCCM_X5_1,2026-12-20,92,62,0.873,0.775,newer,trips,0,0,0
+X5,3,9133,SCCM,Stagecoach East,SE_SC_SCCM_X5_3,2027-01-03,154,9064,SCCM,Stagecoach East,SE_SC_SCCM_X5_4,2026-09-10,154,89,1,1,newer,trips,0,0,0
+X5,3,9133,SCCM,Stagecoach East,SE_SC_SCCM_X5_3,2027-01-03,154,9243,SCCM,Stagecoach East,SE_SC_SCCM_X5_2,2026-12-27,101,80,1,0.899,newer,trips,0,0,0
+X5,3,9579,SCCM,Stagecoach East,SE_SC_SCCM_X5_10,2026-12-20,74,9538,SCCM,Stagecoach East,SE_SC_SCCM_X5_9,2026-09-10,108,58,0.967,1,newer,trips,0,0,0
+X5,3,9642,SCCM,Stagecoach East,SE_SC_SCCM_X5_12,2027-01-03,108,9579,SCCM,Stagecoach East,SE_SC_SCCM_X5_10,2026-12-20,74,58,1,0.967,newer,trips,0,0,0
+X5,3,9655,SCCM,Stagecoach East,SE_SC_SCCM_X5_11,2026-12-27,60,9579,SCCM,Stagecoach East,SE_SC_SCCM_X5_10,2026-12-20,74,42,0.724,0.955,newer,trips,0,0,0
+X5,3,9642,SCCM,Stagecoach East,SE_SC_SCCM_X5_12,2027-01-03,108,9538,SCCM,Stagecoach East,SE_SC_SCCM_X5_9,2026-09-10,108,60,1,1,newer,trips,0,0,0
+X5,3,9642,SCCM,Stagecoach East,SE_SC_SCCM_X5_12,2027-01-03,108,9655,SCCM,Stagecoach East,SE_SC_SCCM_X5_11,2026-12-27,60,44,1,0.733,newer,trips,0,0,0
+X5,3,10359,SCCM,Stagecoach East,SE_SC_SCCM_X5_6,2026-12-20,74,10302,SCCM,Stagecoach East,SE_SC_SCCM_X5_5,2026-09-10,108,58,0.967,1,newer,trips,0,0,0
+X5,3,10472,SCCM,Stagecoach East,SE_SC_SCCM_X5_8,2027-01-03,108,10302,SCCM,Stagecoach East,SE_SC_SCCM_X5_5,2026-09-10,108,60,1,1,newer,trips,0,0,0
+X5,3,10472,SCCM,Stagecoach East,SE_SC_SCCM_X5_8,2027-01-03,108,10359,SCCM,Stagecoach East,SE_SC_SCCM_X5_6,2026-12-20,74,58,1,0.967,newer,trips,0,0,0
+X5,3,10497,SCCM,Stagecoach East,SE_SC_SCCM_X5_7,2026-12-27,60,10359,SCCM,Stagecoach East,SE_SC_SCCM_X5_6,2026-12-20,74,42,0.724,0.955,newer,trips,0,0,0
+X5,3,10472,SCCM,Stagecoach East,SE_SC_SCCM_X5_8,2027-01-03,108,10497,SCCM,Stagecoach East,SE_SC_SCCM_X5_7,2026-12-27,60,44,1,0.733,newer,trips,0,0,0
+X5,3,3694,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X5_4,2026-12-07,254,3714,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X5_3,2026-11-02,178,60,1,1,newer,trips,0,0,0
+X5,3,3744,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X5_1,2026-12-07,235,3763,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X5_2,2026-11-02,165,55,1,1,newer,trips,0,0,0
+X6,3,3753,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X6_4,2026-12-07,98,3764,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X6_3,2026-11-02,70,40,1,1,newer,trips,0,0,0
+X6,3,3560,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X6_1,2026-12-07,97,3562,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X6_2,2026-11-02,70,40,1,1,newer,trips,0,0,0
+X66,3,2852,GNEL,Go North East Limited,NE_04_GNE_X66_3,2026-12-26,1238,3055,GNEL,Go North East Limited,NE_04_GNE_X66_1,2026-11-01,488,340,1,1,newer,trips,0,0,0
+X66,3,3110,GNEL,Go North East Limited,NE_04_GNE_X66_4,2026-12-24,182,3143,GNEL,Go North East Limited,NE_04_GNE_X66_2,2026-12-21,184,182,0.989,1,newer,trips,0,0,0
+X7,3,3883,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X7_1,2026-12-07,22,3892,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X7_2,2026-10-13,22,8,1,1,newer,trips,0,0,0
+X7,3,4490,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X7_4,2026-12-07,23,4509,SCCU,Stagecoach Cumbria and Lancashire,NW_SC_SCCU_X7_3,2026-10-13,23,8,1,1,newer,trips,0,0,0
+X7,3,5782,SCFI,Stagecoach East Scotland,S_SC_SCFI_X7_1,2026-12-02,112,5781,SCFI,Stagecoach East Scotland,S_SC_SCFI_X7_3,2026-10-19,151,49,1,1,newer,trips,0,0,0
+X8,3,14039,WMB,West Midlands Bus,58-X8-_-y11-27,2026-11-30,249,14041,WMB,West Midlands Bus,58-X8-_-y11-26,2026-11-01,249,211,1,1,newer,trips,0,0,0
+X92,3,5131,BNSM,Bee Network,NW_04_BNSM_X92_2,2026-11-30,3,5130,BNSM,Bee Network,NW_04_BNSM_X92_1,2026-09-17,3,3,1,1,newer,trips,0,0,0
+YarmouthFerry,4,12264,WLK,Wightlink,44-ZZ9-_-y10-2,2026-12-21,306,12972,WLK,Wightlink,44-ZZ9-_-y10-1,2026-11-09,80,34,1,0.63,newer,trips,0,0,0

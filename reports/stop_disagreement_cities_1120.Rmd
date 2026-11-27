@@ -1,0 +1,527 @@
+---
+title: "Who is right? Bus and coach, three TNDS editions, Friday 20 November 2026"
+output: md_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE, error = FALSE,
+                      fig.path = "figures/stopcity1120-", dpi = 110)
+library(data.table)
+library(ggplot2)
+library(sf)
+x <- readRDS(city_path)
+cats <- x$categories
+cmp <- x$comparisons
+fmt <- function(n) format(round(n), big.mark = ",", scientific = FALSE, trim = TRUE)
+pct <- function(p, d = 0) paste0(formatC(100 * p, format = "f", digits = d), "%")
+sgn <- function(p, d = 1) paste0(ifelse(p >= 0, "+", ""), pct(p, d))
+src_name <- c(tnds25 = "TNDS 2.5", tnds21 = "TNDS 2.1", tndsblend = "TNDS blend",
+              bods_txc = "BODS TransXChange", bods_gtfs = "BODS GTFS",
+              bustimes = "bustimes.org")
+cat_shape <- c(16, 17, 25, 17, 25, 15, 4)
+cl <- merge(x$class, cats[, .(cat, short, colour)], by = "cat")
+cl[, short := factor(short, levels = cats$short)]
+summ <- merge(x$summary, cats[, .(cat, short)], by = "cat")
+day_lab <- format(x$day, "%A %d %B %Y")
+share_of <- function(m, k) {
+  v <- summ[map == m & cat %in% k, sum(share)]
+  if (!length(v)) 0 else v
+}
+stops_of <- function(m, k) summ[map == m & cat %in% k, sum(stops)]
+tot <- x$totals
+lon <- tot[city == "London"]
+wm <- tot[city == "West Midlands"]
+ed_dir <- file.path("..", "data", "tnds_editions", "20261118")
+prev19 <- readRDS(file.path(dirname(city_path), "stop_city_20261119.Rds"))
+has_map <- exists("map_zones_path") && !is.null(map_zones_path) &&
+  file.exists(map_zones_path)
+```
+
+# Who is right? Bus and coach, three TNDS editions, `r day_lab`
+
+This is the second run of the [19 November comparison](stop_disagreement_cities.md).
+It uses the same two cities, the same seven categories and bustimes.org again
+as referee, with four changes:
+
+1. **Coach is counted as well as bus.**
+   - bustimes.org was scraped for bus and coach services.
+   - Each feed keeps route types 3 (bus) and 200 (coach).
+   - The BODS Coach feed supplies coach to every TransXChange-built feed, at
+     the stops and lines that feed lacks, as the yearly series does from 2024.
+   - A route-level **mode check** counts each line's departures as bus and as
+     coach in every source. It flags lines whose departures change mode
+     between two sources: a soft pass if the line's total still agrees, a
+     fail if it does not.
+2. **TNDS is converted three ways:**
+   - the 2.5 edition the pipeline uses;
+   - the 2.1 edition published beside it;
+   - a **blend**: 2.5 plus the 2.1-only files whose service 2.5 does not
+     carry.
+3. **Stop locations.** TNDS and BODS TransXChange were converted with
+   UK2GTFS 0.4.1, `stop_locations = "naptan_fill"`. A stop missing from the
+   pipeline's NaPTAN copy keeps its calls when the TransXChange file says
+   where it is. See the [stop location report](stop_location_quality.md).
+4. **The day is Friday 20 November.** The feeds are the same 18 November
+   downloads.
+
+```{r totals}
+cols <- intersect(c("bustimes", "tnds25", "tnds21", "tndsblend", "bods_txc", "bods_gtfs"), names(tot))
+tt <- tot[, c(list(City = city, Stops = fmt(stops)), lapply(.SD, fmt)), .SDcols = cols]
+setnames(tt, cols, src_name[cols])
+knitr::kable(tt, align = paste0("lr", strrep("r", length(cols))),
+             caption = paste("Bus and coach departures on", day_lab, "summed over every stop in each city"))
+rel <- tot[, c(list(City = city), lapply(.SD, function(v) sgn(v / bustimes - 1))),
+           .SDcols = setdiff(cols, "bustimes")]
+setnames(rel, setdiff(cols, "bustimes"), src_name[setdiff(cols, "bustimes")])
+knitr::kable(rel, caption = "Each feed's total against bustimes.org")
+```
+
+```{r shares}
+sh <- dcast(summ, short ~ map, value.var = "share", fill = 0)
+sh <- sh[match(cats$short, short)]
+sh[is.na(short), short := cats$short[is.na(sh$short)]]
+for (m in cmp$map) if (!m %in% names(sh)) sh[, (m) := 0]
+sh2 <- sh[, c(list(Category = short), lapply(.SD, function(v) pct(ifelse(is.na(v), 0, v), 1))),
+          .SDcols = cmp$map]
+setnames(sh2, cmp$map, cmp$label)
+knitr::kable(sh2, caption = "Share of each city's served stops in each category, every map")
+```
+
+```{r summary-numbers}
+red <- function(m) stops_of(m, 3)
+prev_red <- function(m) prev19$summary[map == m & cat == 3, sum(stops)]
+```
+
+**What changed since 19 November**
+
+- **TNDS 2.5 remains the better of the two published editions.**
+  - In London, 2.1 makes `r fmt(red("london_tnds21") - red("london_tnds25"))`
+    more stops red (TransXChange the odd one out), and its total is
+    `r sgn(lon$tnds21 / lon$bustimes - 1)` against bustimes.org, compared
+    with `r sgn(lon$tnds25 / lon$bustimes - 1)` for 2.5.
+  - The cause is cross-boundary copies. 2.1's South East zip carries Essex
+    County Council's copies of seven Stagecoach London routes, and those
+    routes count twice. 2.5 removes the copies.
+- **The blend is 2.5 with nothing lost.**
+  - It adds the 8 services 2.5 dropped that no 2.5 file carries.
+  - In London it is identical to 2.5.
+  - In the West Midlands it adds Arriva's 9 to Bridgnorth, and 11 red stops
+    in Wolverhampton turn grey.
+- **The two red stops traced to the frozen NaPTAN are fixed.**
+  - Brabham Court and SL12's Ferry Lane / Coldharbour Lane are now grey (all
+    agree), because their TfL files say where they are (`naptan_fill`).
+  - Red stops in London fell from `r fmt(prev_red("london_tnds"))` to
+    `r fmt(red("london_tnds25"))`. The rest are TNDS input, as found on 19
+    November.
+- **Adding coach changes little, and bus/coach labelling conflicts are rare.**
+  - Of about 1,100 lines matched in each pair of sources, three move between
+    bus and coach.
+  - Green Line 757 is a soft pass: the same 800 departures, a coach in TNDS
+    and a bus on bustimes.org.
+  - N40 and RA2 fail and are explained below.
+- **Two cross-region duplicates still count twice in TNDS.** The 439 in London
+  (TfL's file plus a superseded 2024 Go-Ahead version) and the X6 in the West Midlands
+  survive every filter. The scan finds 34 such pairs nationally.
+- **Unchanged from 19 November:**
+  - BODS GTFS still counts West Midlands Bus about twice
+    (`r sgn(wm$bods_gtfs / wm$bustimes - 1)`), which makes most West Midlands
+    stops dark green.
+  - BODS TransXChange does not carry TfL's own routes, so it has no London
+    map.
+
+## TNDS editions
+
+```{r editions}
+pairs <- fread(file.path(ed_dir, "pairs.csv"))
+only <- fread(file.path(ed_dir, "only21.csv"))
+added <- fread(file.path(ed_dir, "blend_added.csv"))
+xr <- fread(file.path(ed_dir, "cross_region_25.csv"))
+both <- pairs[in_21 == TRUE & in_25 == TRUE]
+n21 <- pairs[in_21 == TRUE, .N]; n25 <- pairs[in_25 == TRUE, .N]
+only25 <- pairs[in_21 == FALSE & in_25 == TRUE]
+diffs <- both[differs != "", .N, by = differs][order(-N)]
+```
+
+The two editions pair by file name almost one to one:
+
+- Of 2.1's `r fmt(n21)` files and 2.5's `r fmt(n25)`, `r fmt(nrow(both))`
+  are in both.
+- `r fmt(nrow(only))` are only in 2.1, `r fmt(sum(only$active))` of them
+  operating on 20 November.
+- `r fmt(nrow(only25))` are only in 2.5, all in Scotland.
+
+Both editions are written in their own schema, so byte comparison is
+meaningless. Instead each file's service code, lines, operator, operating
+period, journeys, and fingerprints of its stops, departure times and
+operating profiles were compared. `r fmt(both[differs == "", .N])` of the
+`r fmt(nrow(both))` paired files agree on all of them.
+
+```{r edition-diffs}
+if (nrow(diffs)) knitr::kable(diffs[, .(`Fields that differ` = differs, Files = N)],
+                              caption = "Paired files that differ, by what differs")
+```
+
+```{r only21}
+o <- only[active == TRUE]
+o[, kind := fifelse(covered >= 0.5, "carried by 2.5 under the same line (a cross-boundary copy)",
+                    "not carried by 2.5")]
+knitr::kable(o[, .(Files = .N, Journeys = fmt(sum(journeys))), by = .(`2.1-only file, active on the day` = kind)],
+             caption = "What 2.5 left out")
+knitr::kable(added[, .(Region = region, File = file, Line = lines, Operator = noc,
+                       Journeys = journeys, `Stops 2.5 serves on the line` = pct(covered))],
+             caption = "The files the blend adds to 2.5")
+```
+
+**So there is a 1:1 pairing.**
+
+- Every file in both editions carries the same timetable.
+- The 1,003 that differ do so only in notation. 2.1 writes St Andrew's Day
+  and the 2 January Scottish holiday as `<OtherPublicHoliday>` with a
+  description and date; 2.5 has named elements for them. These are mostly
+  Scottish files, plus a hundred Welsh and North West files that list every
+  holiday.
+- 2.5 is 2.1 minus 252 files, plus 17 Scottish files.
+
+**Of the 252 files left out of 2.5, 205 operate on 20 November.**
+
+- 197 are copies of a service 2.5 still carries under another region's file:
+  the cross-boundary deduplication 2.5 exists for. They include Essex
+  County Council's copies of the London routes 20, 167, 215, 275, 372, 462
+  and 498, which run into Essex.
+- 8 are services 2.5 lost outright. The blend adds them back.
+
+The tables below show what each edition does to the maps:
+
+- **London:**
+  - 2.1 is worse: the Essex copies double their routes across 278 stops that
+    are grey with 2.5.
+  - The blend adds no London file, so it equals 2.5.
+- **West Midlands:**
+  - 2.1 and the blend are identical. The one difference from 2.5 is Arriva's
+    9 to Bridgnorth (`twm_70-9-_-y11-1.xml`).
+  - Adding it turns 11 red stops grey (Bramstead Avenue, Tinacre Hill,
+    Wightwick Bank and others the 9 alone serves).
+  - It moves 11 stops in western Wolverhampton from black to yellow: the
+    feeds now agree with each other, and bustimes.org has fewer departures
+    there than either.
+
+**Recommendation.** On this evidence the blend is better than 2.5: it adds 8
+services and removes nothing, and 2.1 is worse than both. Making the blend
+the pipeline's edition means rebuilding the series, so it is left as a
+decision. The one known gap is that the blend's rule keeps out a genuine
+replacement by another operator on the same line (see Caveats).
+
+```{r edition-maps}
+ed_tab <- function(city_name, maps) {
+  d <- summ[map %in% maps]
+  d <- merge(d, cmp[, .(map, label)], by = "map")
+  w <- dcast(d, cat + short ~ label, value.var = "stops", fill = 0)
+  w[, Category := paste0(cat, ". ", short)]
+  w[, c("cat", "short") := NULL]
+  setcolorder(w, "Category")
+  knitr::kable(w, caption = paste(city_name, "- stops per category with each TNDS edition"))
+}
+ed_tab("London", c("london_tnds25", "london_tnds21", "london_tndsblend"))
+ed_tab("West Midlands", c("wm_tnds25", "wm_tnds21", "wm_tndsblend"))
+moves <- function(m1, m2) {  # not a/b: cl has a column b
+  w <- merge(cl[map == m1, .(stop_id, from = short)], cl[map == m2, .(stop_id, to = short)],
+             by = "stop_id")
+  w[from != to, .N, by = .(from, to)][order(-N)]
+}
+mv <- rbind(moves("london_tnds25", "london_tnds21")[, change := "London 2.5 -> 2.1"],
+            moves("london_tnds25", "london_tndsblend")[, change := "London 2.5 -> blend"],
+            moves("wm_tnds25", "wm_tnds21")[, change := "West Midlands 2.5 -> 2.1"],
+            moves("wm_tnds25", "wm_tndsblend")[, change := "West Midlands 2.5 -> blend"])
+knitr::kable(mv[, head(.SD, 6), by = change][, .(Change = change, From = from, To = to, Stops = N)],
+             caption = "Stops that change category when the TNDS edition changes (largest moves)")
+```
+
+### Services registered in two regions: the 439
+
+```{r xr}
+xr[, pair := paste(line, ":", region_a, noc_a, "/", region_b, noc_b)]
+knitr::kable(xr[order(-overlap)][, .(Line = line, `Region A` = region_a, `Operator A` = noc_a,
+                                     `Journeys A` = journeys_a, `Region B` = region_b,
+                                     `Operator B` = noc_b, `Journeys B` = journeys_b,
+                                     `Shared stops` = shared_stops, Overlap = pct(overlap))],
+             caption = "2.5 files in different regions, both operating on the day, with the same line and at least half the smaller file's stops in common")
+```
+
+**Why deduplication did not catch the 439**
+
+The 439 is in TNDS twice:
+
+- `tfl_51-439-_-y05-5.xml` in the London zip: Transport for London's
+  file, operator "METROBUS LIMITED" (NOC METR), valid 13 November 2026 to
+  23 December 2027, 201 journeys;
+- `square_LGEN_439_439.xml` in the South East zip: a Go-Ahead London export,
+  operator "London General" (NOC GAHL, ServiceCode "439"), 255 journeys. It
+  was exported on 9 November 2026, but its operating period starts on 2
+  March 2024 and has no end date. The file name inside it says the same
+  (`439_LGEN_490_439_20240302_...`).
+
+**The Go-Ahead file is a superseded version, not a second copy of the
+current one.**
+
+- Every journey leaves Waddon Marsh at the same minute in both files.
+- Beyond Purley the routes part:
+  - TfL's runs through the Kenley hail-and-ride section (Foxley Hill Road,
+    Oaks Road, Kenley Station, Beverley Road).
+  - Go-Ahead's runs along Godstone Road (Kenley Treatment Works, Legion
+    House, The Kenley Hotel).
+- bustimes.org and BODS GTFS follow TfL's routing exactly: 528 departures at
+  the stops only TfL's file serves, none at the stops only Go-Ahead's serves.
+  Both may draw on TfL's own London data, so this is agreement, not
+  independent proof. But the Go-Ahead file is the older one, and it is open
+  ended.
+- It is one of seven `square_LGEN_*` files in the South East zip, all open
+  ended from 2020-2024. Two more, the school routes 618 and 669, also have
+  current TfL files, which name other operators (ABLO and ELBG).
+
+Three stages could have removed it, and each misses it:
+
+1. **`txc_filter_files()`** runs on one region zip at a time, so it never
+   sees the two files together. Its rules also key on the operator
+   (NOC + ServiceCode, NOC + Description + Lines, NOC + CreationDateTime +
+   Lines), and the NOCs differ. The one rule that crosses operators, the
+   handover rule, also needs both files in the same call.
+2. **TNDS's own 2.5 deduplication** removes cross-boundary copies like the
+   Essex ones above. It left the 439 in, probably because the operator codes
+   differ.
+3. **`gtfs_deduplicate()`**, at read time, removes a journey only when
+   another has the same operator name and an identical itinerary. Here the
+   operator names differ and the itineraries share only their first stop
+   and time.
+
+A rule that keeps the newer of two versions works within one operator's
+files. It cannot act here, because the two versions come from different
+publishers, under different operators, in different region zips.
+
+On the London map the 439 still counts twice at 21 stops: TNDS 2.5 has 1,084
+departures where bustimes.org and BODS GTFS both have 524.
+
+**The other 33 pairs**
+
+- **Mostly one operator listed in two regions:**
+  - Arriva Cymru's Wrexham and Chester routes (NW/W);
+  - Midland Classic (EM/WM);
+  - the X6 (Arriva Midlands, EM/WM);
+  - the X16 (NE/S).
+- **The X6 is one current timetable published twice, and it still doubles.**
+  - The two files are Arriva Midlands' own export in the East Midlands zip
+    (`leics_AFCL_X6_X6.xml`) and the West Midlands supplier's file
+    (`cen_6-X6-0-y11-2.xml`). Both carry NOC AMID and both are current.
+  - They have the same 37 journeys on the day, with the same start times and
+    the same times at the timing points.
+  - `gtfs_deduplicate()` keeps both for two reasons:
+    - the agency records are named "Arriva" and "Arriva Midlands";
+    - the two suppliers time the stops between timing points differently,
+      and use a neighbouring stop code in a few places, so no itinerary
+      matches exactly.
+  - At all 13 shared West Midlands stops TNDS has exactly twice what
+    bustimes.org, BODS GTFS and BODS TransXChange agree on.
+
+A rule to remove them would have to run on the merged feed, matching on line,
+stops and times and ignoring the operator. It is left for a decision, because
+it would change the series. The scan only measures them
+(`scripts/tnds_editions/tnds_editions.py --dups-only`).
+
+## Bus or coach?
+
+```{r modecheck}
+mc <- x$mode_check
+mcs <- mc[, .N, by = .(a, b, result)]
+mcs <- dcast(mcs, a + b ~ result, value.var = "N", fill = 0)
+mcs[, Pair := paste(src_name[a], "vs", src_name[b])]
+knitr::kable(mcs[, c("Pair", intersect(c("pass", "soft pass", "fail", "timetable differs"), names(mcs))), with = FALSE],
+             caption = "Lines per pair of sources and city, by timetable and mode agreement")
+soft <- mc[result == "soft pass"]
+fail <- mc[result == "fail"]
+```
+
+```{r modecheck-lists}
+show_mc <- function(d, cap) {
+  if (!nrow(d)) return(NULL)
+  d <- d[order(city, line, a, b)]
+  knitr::kable(head(d[, .(City = city, Line = line, A = src_name[a], B = src_name[b],
+                          `A bus` = fmt(bus_a), `A coach` = fmt(coach_a),
+                          `B bus` = fmt(bus_b), `B coach` = fmt(coach_b),
+                          Operator = agency_b)], 40),
+               align = "llllrrrrl", caption = cap)
+}
+show_mc(soft, "Soft passes: departures change mode between the two sources, and the line's total agrees")
+show_mc(fail, "Fails: departures change mode and the total does not agree - for investigation")
+```
+
+**Bus and coach labels rarely conflict.** Three lines account for every soft
+pass and fail:
+
+- **Green Line 757 (Luton - London): soft pass.**
+  - TNDS calls it a coach; bustimes.org and BODS TransXChange (Arriva Beds &
+    Bucks) call it a bus. All three have the same 800 departures.
+  - BODS GTFS carries it twice: 880 departures as Arriva's bus and 800 as
+    Green Line's coach. That is a double count, not a label conflict, so it
+    appears as "timetable differs".
+- **N40 (National Express, Ealing Broadway - Heathrow): fail. TNDS carries an
+  extra copy.**
+  - bustimes.org and BODS TransXChange have one coach service, 66 departures
+    at 14 stops.
+  - TNDS has the same coach at 2 stops, plus a second registration under
+    "National Express Operations Limited", coded as a bus: 74 departures at 16
+    stops.
+  - Against BODS GTFS's 86 coach departures this is a soft pass only by
+    coincidence of totals. A soft pass that is not unanimous is worth a look.
+- **RA2 (First Berkshire RailAir, Guildford - Woking - Heathrow): fail. Likely
+  bustimes.org's.**
+  - Every feed agrees on 352 departures, as a bus.
+  - bustimes.org calls it a coach and has 313.
+  - The gap is at one stop (118 departures against 79), probably one the
+    route calls at twice.
+
+All other lines agree on mode. A "timetable differs" line here is an
+ordinary disagreement, already on the maps.
+
+## The maps
+
+```{r map-fn}
+zmap <- if (has_map) readRDS(map_zones_path) else NULL
+city_map <- function(m) {
+  d <- cl[map == m]
+  bb <- d[, .(xmin = quantile(x, 0.002), xmax = quantile(x, 0.998),
+              ymin = quantile(y, 0.002), ymax = quantile(y, 0.998))]
+  pad <- 1500
+  base <- list()
+  if (!is.null(zmap)) {
+    z <- suppressWarnings(st_crop(zmap, st_bbox(c(xmin = bb$xmin - pad, ymin = bb$ymin - pad,
+                                                  xmax = bb$xmax + pad, ymax = bb$ymax + pad),
+                                                crs = st_crs(zmap))))
+    base <- list(geom_sf(data = z, fill = "grey97", colour = "grey90", linewidth = 0.08))
+  }
+  lev <- levels(d$short)
+  d <- d[order(cat != 1)]
+  ggplot() + base +
+    geom_point(data = d, aes(x, y, colour = short, shape = short, fill = short, size = short),
+               stroke = 0.25, show.legend = TRUE) +
+    scale_size_manual(values = setNames(c(0.35, rep(1.0, 6)), cats$short), limits = lev,
+                      drop = FALSE, name = NULL) +
+    scale_colour_manual(values = setNames(cats$colour, cats$short), limits = lev,
+                        drop = FALSE, name = NULL) +
+    scale_fill_manual(values = setNames(cats$colour, cats$short), limits = lev,
+                      drop = FALSE, name = NULL) +
+    scale_shape_manual(values = setNames(cat_shape, cats$short), limits = lev,
+                       drop = FALSE, name = NULL) +
+    coord_sf(crs = 27700, datum = NA, xlim = c(bb$xmin - pad, bb$xmax + pad),
+             ylim = c(bb$ymin - pad, bb$ymax + pad), expand = FALSE) +
+    theme_void(base_size = 11) +
+    theme(legend.position = "bottom", legend.text = element_text(size = 9),
+          plot.background = element_rect(fill = "white", colour = NA)) +
+    guides(colour = guide_legend(ncol = 2, override.aes = list(size = 3)),
+           shape = guide_legend(ncol = 2), fill = guide_legend(ncol = 2),
+           size = guide_legend(ncol = 2))
+}
+cat_table <- function(m) {
+  d <- summ[map == m][order(cat)]
+  d[, .(Category = paste0(cat, ". ", cats$label[cat]), Stops = fmt(stops),
+        Share = pct(share, 1), `bustimes.org` = fmt(b), `BODS GTFS` = fmt(g),
+        `TXC feed` = fmt(t))]
+}
+route_table <- function(m, k, n = 8) {
+  r <- x$routes[map == m & cat == k]
+  if (!nrow(r)) return(NULL)
+  r[, err := switch(as.character(k), "2" = abs(g - b), "4" = abs(g - b),
+                    "3" = abs(t - b), "5" = abs(t - b), "6" = abs(g - b),
+                    pmax(abs(g - b), abs(t - b)))]
+  r <- r[order(-err)][seq_len(min(n, .N))]
+  r[, .(Line = line, Stops = stops, `bustimes.org` = fmt(b), `BODS GTFS` = fmt(g),
+        `TXC feed` = fmt(t))]
+}
+```
+
+Each map is drawn in the same way as on
+[19 November](stop_disagreement_cities.md#the-seven-categories). Grey: all
+agree; dark green: bustimes.org and the TransXChange feed agree; dark red:
+bustimes.org and BODS GTFS agree; light green and light red: no pair agrees,
+but one feed is clearly closer; yellow: the two feeds agree and bustimes.org
+differs; black: all disagree.
+
+```{r maps, results = "asis", fig.width = 10, fig.height = 8.5}
+for (i in seq_len(nrow(cmp))) {
+  m <- cmp$map[i]
+  cat("\n\n### ", cmp$label[i], "\n\n", sep = "")
+  print(city_map(m))
+  cat("\n\n")
+  print(knitr::kable(cat_table(m), align = "lrrrrr",
+                     caption = paste(cmp$label[i], "- stops per category, departures summed over them")))
+  for (k in c(3, 5, 6)) {
+    rt <- route_table(m, k, 6)
+    if (is.null(rt)) next
+    cat(sprintf("\n\n**%d. %s** - lines that differ most at these stops:\n\n", k, cats$label[k]))
+    print(knitr::kable(rt, align = "lrrrr"))
+  }
+}
+```
+
+## The red stops of 19 November
+
+```{r red-then-now}
+prev_cls <- prev19$class
+then_now <- function(m_then, m_now) {
+  s <- prev_cls[map == m_then & cat == 3, stop_id]
+  cl[map == m_now & stop_id %in% s, .N, by = short][order(-N)]
+}
+lr <- then_now("london_tnds", "london_tnds25")
+wr <- then_now("wm_tnds", "wm_tndsblend")
+```
+
+On 19 November `r fmt(prev_red("london_tnds"))` London stops and
+`r fmt(prev_red("wm_tnds"))` West Midlands stops were red for TNDS (bustimes.org
+and BODS GTFS agree, the TransXChange feed differs). The
+[investigation](stop_disagreement_cities.md) found one UK2GTFS cause and
+several input causes.
+
+- **The UK2GTFS cause is fixed.**
+  - Brabham Court (490000283N) and SL12's Ferry Lane / Coldharbour Lane
+    (490002508LF) were missing from the pipeline's 2 August NaPTAN, so every
+    call at them was deleted.
+  - With `naptan_fill` their TfL files place them. Both are now grey: 205 and
+    186 departures, matching bustimes.org.
+  - The London conversion placed 17 stops from the files and lost none.
+- **The missing-file cause is fixed by the blend.** The 11 red stops Arriva's
+  9 alone serves are grey on the West Midlands blend map.
+- **The input causes remain.** Stale or alternative registrations, the
+  Diamond versions and the 439 are TNDS's data, not the conversion.
+
+```{r red-table}
+knitr::kable(rbind(lr[, .(City = "London (2.5)", `Category on 20 November` = short, Stops = N)],
+                   wr[, .(City = "West Midlands (blend)", `Category on 20 November` = short, Stops = N)]),
+             caption = "Where the red stops of 19 November are now")
+```
+
+The day changed as well as the conversion. A stop that changed category for
+another reason (a Friday-only journey, a registration that started on 20
+November) is mixed in with these.
+
+## Caveats
+
+The [caveats of the 19 November report](stop_disagreement_cities.md#caveats)
+all apply. Four more apply here:
+
+- **Coach line names.** National Express numbers its services with leading
+  zeros (`022`), and bustimes.org and the feeds do not always agree on them.
+  The mode check matches on the normalised name, so a service numbered
+  differently in two sources is missing from it, not flagged.
+- **Shared line numbers.** Lines of the same number are counted together
+  within a city, so National Express's coach 200 shares a row with TfL's bus
+  200. The check flags only departures that move between the modes in
+  similar amounts (within a factor of two), so a coach and a bus that merely
+  share a number are not flagged. A real relabelling hidden inside a much
+  larger bus route of the same number would be missed.
+- **The blend's rule ignores the operator.** It adds a 2.1-only file only
+  when no 2.5 file operating on the day runs the same line over at least half
+  its stops. That keeps cross-boundary copies out even when their operators
+  differ (as on the 439). It also keeps out a genuine replacement by another
+  operator on the same line: Stagecoach South Wales's 130 and 150 are in 2.1
+  only, and 2.5 runs Adventure Travel's much smaller timetable on the same
+  route.
+- **Friday, not Thursday.** The two runs are a day apart. Differences
+  between them are not all down to the changes listed above.

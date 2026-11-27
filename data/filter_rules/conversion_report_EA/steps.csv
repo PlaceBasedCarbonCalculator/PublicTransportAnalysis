@@ -1,0 +1,8 @@
+"step","detail","n"
+"transxchange2gtfs","files converted",694
+"transxchange2gtfs","stops without a position",51
+"gtfs_deduplicate_copies","pairs of copies",0
+"gtfs_clean","stops removed: no coordinates",51
+"gtfs_clean","stop_times removed: stop has no location",483
+"gtfs_clean","trips removed",0
+"gtfs_deduplicate","identical trips removed",2
